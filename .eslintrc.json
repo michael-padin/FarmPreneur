@@ -1,3 +1,92 @@
 {
-  "extends": "next/core-web-vitals"
+  "parser": "@typescript-eslint/parser",
+
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "root": true,
+  "extends": [
+    "next",
+    "eslint:recommended",
+    "prettier",
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
+  ],
+  "plugins": [
+    "prettier",
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "import",
+    "simple-import-sort"
+  ],
+  "rules": {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    "prefer-const": "warn",
+    "no-var": "warn",
+    "no-unused-vars": "off",
+    "object-shorthand": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/array-type": [
+      "warn",
+      {
+        "default": "array"
+      }
+    ],
+    "@typescript-eslint/consistent-type-assertions": [
+      "warn",
+      {
+        "assertionStyle": "as",
+        "objectLiteralTypeAssertions": "never"
+      }
+    ],
+    "react/jsx-fragments": ["warn", "syntax"],
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": ["ts", "tsx"]
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  }
 }
