@@ -1,11 +1,12 @@
+import { Address } from "@prisma/client"
 import { compare } from "bcryptjs"
 import type { NextAuthConfig } from "next-auth"
 import { type Provider } from "next-auth/providers"
 import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 
-import { LoginSchema } from "./app/(auth)/login/_types"
 import { getUserByEmail } from "./services/user"
+import { LoginSchema } from "./types"
 
 const providers: Provider[] = [
   Credentials({
@@ -62,13 +63,11 @@ export default {
     jwt({ token, user }) {
       if (user) {
         token.role = user.role
-        token.address = user.address
       }
       return token
     },
     session({ session, token }) {
       session.user.role = token.role as string
-      session.user.address = token.address as string
       return session
     },
   },

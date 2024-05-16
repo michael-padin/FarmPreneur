@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
+import { Address } from "@prisma/client"
 import NextAuth, { DefaultSession } from "next-auth"
 import { Adapter } from "next-auth/adapters"
 
@@ -24,8 +25,6 @@ declare module "next-auth" {
      */
   }
   interface User {
-    /** The user's postal address. */
-    address: string | null
     role: string
     /**
      * By default, TypeScript merges new interface properties and overwrites existing ones.
