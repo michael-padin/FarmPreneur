@@ -7,13 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+type Profile {
+  bio String
+}
+
 model User {
   id               String         @id @default(auto()) @map("_id") @db.ObjectId
   name             String
   email            String         @unique
-  passwordHash     String
-  userType         UserType
-  profileImage     String?
+  image            String?
+  emailVerified    DateTime?
+  password         String
+  role             String
   contactNumber    String?
   address          Address        @relation(fields: [addressId], references: [id])
   products         Product[]      @relation("FarmerProducts")
@@ -23,9 +28,34 @@ model User {
   addressId        String         @db.ObjectId
   notifications    Notification[]
   chatRooms        UserChatRoom[]
+  profile          Profile
   sentMessages     Message[]      @relation("SentMessages")
   receivedMessages Message[]      @relation("ReceivedMessages")
   Transaction      Transaction[]
+  Account          Account[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model ChatRoom {
@@ -64,10 +94,11 @@ model Message {
 model Address {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   street       String
+  barangay     String
   city         String
-  state        String
+  province     String
   zip          String
-  country      String
+  country      String        @default("Philippines")
   users        User[]
   transactions Transaction[]
 }
