@@ -8,8 +8,8 @@ const SignUpFormTabs = () => {
   return (
     <Tabs defaultValue="company" className="">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="company">Donor</TabsTrigger>
-        <TabsTrigger value="organization">Donee</TabsTrigger>
+        <TabsTrigger value="company">Farmer</TabsTrigger>
+        <TabsTrigger value="organization">Buyer</TabsTrigger>
       </TabsList>
       <TabsContent value="company">
         <p className="py-5">
