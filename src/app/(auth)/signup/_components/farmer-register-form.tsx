@@ -44,11 +44,11 @@ const FarmerRegisterForm = () => {
       name: "",
       email: "",
       address: "",
-      mobileNumber: "+63",
+      contactNumber: "+63",
       description: "",
       password: "",
       confirmPassword: "",
-      role: "ORGANIZATION",
+      role: "FARMER",
     },
   })
 
@@ -73,9 +73,9 @@ const FarmerRegisterForm = () => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Four Company" {...field} />
+                  <Input placeholder="Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -113,7 +113,7 @@ const FarmerRegisterForm = () => {
 
           <FormField
             control={form.control}
-            name="mobileNumber"
+            name="contactNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Contact Number</FormLabel>
@@ -134,7 +134,7 @@ const FarmerRegisterForm = () => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Description about your company... "
+                    placeholder="Description about your farm... "
                   />
                 </FormControl>
                 <FormMessage />
