@@ -13,9 +13,8 @@ export const RegisterSchema = z
         text: z.string(),
       }),
     ),
-    mobileNumber: z.string().refine(() => true, {
+    contactNumber: z.string().refine((data) => isValidPhoneNumber(data, "PH"), {
       message: "Invalid mobile number",
-      path: ["mobileNumber"],
     }),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     description: z.string().min(8, "About must be at least 8 characters long"),
