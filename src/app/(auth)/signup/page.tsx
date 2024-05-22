@@ -17,12 +17,25 @@ export default async function SignupPage() {
     <div className="h-screen w-full overflow-hidden lg:grid lg:grid-cols-2 xl:min-h-screen">
       <div className="relative hidden h-full flex-col bg-muted p-10  dark:border-r lg:flex">
         <div className="absolute inset-0 ">
-          <Image src="/login.svg" alt="login image" objectFit="contain" fill />
+          <Image
+            src="/placeholder.svg"
+            alt="login image"
+            objectFit="cover"
+            fill
+          />
         </div>
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <h1 className="text-2xl font-black">
-            <Link href={"/"}>
-              <span className="text-primary">Share</span>Surplus
+          <h1 className="text-2xl font-black text-primary">
+            <Link href="/">
+              Farm2go
+              {/* <Link href={"/"} className="flex items-center gap-2">
+              <Image
+                src="./logo.svg"
+                alt="Farm2go logo"
+                width={50}
+                height={50}
+              />
+            </Link> */}
             </Link>
           </h1>
         </div>
