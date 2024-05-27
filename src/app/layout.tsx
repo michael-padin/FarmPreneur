@@ -1,4 +1,6 @@
 import "./globals.css"
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
@@ -33,7 +35,7 @@ export default async function RootLayout({
           defer
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`}
         ></script>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <SessionProvider session={session}>{children}</SessionProvider>
         </ThemeProvider>
         <Toaster />
