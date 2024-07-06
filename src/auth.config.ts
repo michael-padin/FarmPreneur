@@ -1,56 +1,23 @@
-import { Address } from "@prisma/client"
 import { compare } from "bcryptjs"
 import type { NextAuthConfig } from "next-auth"
 import { type Provider } from "next-auth/providers"
-import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 
 import { getUserByEmail } from "./services/user"
 import { LoginSchema } from "./types"
 
 const providers: Provider[] = [
-  Credentials({
-    async authorize(credentials) {
-      const validateFields = LoginSchema.safeParse(credentials)
-
-      if (validateFields.success) {
-        const { email, password } = validateFields.data
-        const user = await getUserByEmail(email)
-
-        /**
-         * if user is not found or if there is user but password is not provided
-         * but using credentials provider, return null
-         */
-        if (!user || !user.password) return null
-
-        // compare the actual password and the hash password
-        const passwordMatch = await compare(password, user.password)
-
-        const {
-          password: _,
-          emailVerified,
-          createdAt,
-          updatedAt,
-          profile,
-          ...newUser
-        } = user
-
-        if (passwordMatch) return newUser
-      }
-      return null
+  Google({
+    clientId: process.env.AUTH_GOOGLE_ID,
+    clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    authorization: {
+      params: {
+        prompt: "consent",
+        access_type: "offline",
+        response_type: "code",
+      },
     },
   }),
-  // Google({
-  //   clientId: process.env.AUTH_GOOGLE_ID,
-  //   clientSecret: process.env.AUTH_GOOGLE_SECRET,
-  //   authorization: {
-  //     params: {
-  //       prompt: "consent",
-  //       access_type: "offline",
-  //       response_type: "code",
-  //     },
-  //   },
-  // }),
 ]
 
 export default {

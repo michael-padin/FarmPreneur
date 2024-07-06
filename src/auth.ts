@@ -1,5 +1,4 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { Address } from "@prisma/client"
 import NextAuth, { DefaultSession } from "next-auth"
 import { Adapter } from "next-auth/adapters"
 
@@ -13,7 +12,6 @@ declare module "next-auth" {
   interface Session {
     user: {
       role: string
-      address: string
     } & DefaultSession["user"]
 
     /** The user's postal address. */
@@ -37,6 +35,6 @@ declare module "next-auth" {
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db) as Adapter,
-  session: { strategy: "jwt" },
+  session: { strategy: "database" },
   ...authConfig,
 })
