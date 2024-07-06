@@ -11,7 +11,7 @@ export const publicRoutes: string[] = ["/"]
  * These routes will redirect login in users to the /overview**
  * @type {string[]}
  */
-export const authRoutes: string[] = ["/login", "/signup"]
+export const authRoutes: string[] = ["/login", "/signup", "/verify"]
 
 /**
  *
