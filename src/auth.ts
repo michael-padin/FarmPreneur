@@ -6,35 +6,35 @@ import authConfig from "./auth.config"
 import { db } from "./lib/db"
 
 declare module "next-auth" {
-  /**
-   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
-  interface Session {
-    user: {
-      role: string
-    } & DefaultSession["user"]
+	/**
+	 * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+	 */
+	interface Session {
+		user: {
+			role: string
+		} & DefaultSession["user"]
 
-    /** The user's postal address. */
-    /**
-     * By default, TypeScript merges new interface properties and overwrites existing ones.
-     * In this case, the default session user properties will be overwritten,
-     * with the new ones defined above. To keep the default session user properties,
-     * you need to add them back into the newly declared interface.
-     */
-  }
-  interface User {
-    role: string
-    /**
-     * By default, TypeScript merges new interface properties and overwrites existing ones.
-     * In this case, the default session user properties will be overwritten,
-     * with the new ones defined above. To keep the default session user properties,
-     * you need to add them back into the newly declared interface.
-     */
-  }
+		/** The user's postal address. */
+		/**
+		 * By default, TypeScript merges new interface properties and overwrites existing ones.
+		 * In this case, the default session user properties will be overwritten,
+		 * with the new ones defined above. To keep the default session user properties,
+		 * you need to add them back into the newly declared interface.
+		 */
+	}
+	interface User {
+		role: string
+		/**
+		 * By default, TypeScript merges new interface properties and overwrites existing ones.
+		 * In this case, the default session user properties will be overwritten,
+		 * with the new ones defined above. To keep the default session user properties,
+		 * you need to add them back into the newly declared interface.
+		 */
+	}
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db) as Adapter,
-  session: { strategy: "database" },
-  ...authConfig,
+	adapter: PrismaAdapter(db) as Adapter,
+	session: { strategy: "database" },
+	...authConfig
 })

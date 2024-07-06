@@ -11,12 +11,12 @@ import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { Button } from "@/components/ui/button"
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -36,65 +36,65 @@ import { register } from "../action"
 // }
 
 const FarmerRegisterForm = () => {
-  const [tags, setTags] = useState<Tag[]>([])
-  const [isPending, startTransition] = useTransition()
-  const form = useForm<RegisterType>({
-    resolver: zodResolver(RegisterSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      address: "",
-      contactNumber: "+63",
-      description: "",
-      password: "",
-      confirmPassword: "",
-      role: "FARMER",
-    },
-  })
+	const [tags, setTags] = useState<Tag[]>([])
+	const [isPending, startTransition] = useTransition()
+	const form = useForm<RegisterType>({
+		resolver: zodResolver(RegisterSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			address: "",
+			contactNumber: "+63",
+			description: "",
+			password: "",
+			confirmPassword: "",
+			role: "FARMER"
+		}
+	})
 
-  const onSubmit = async (data: RegisterType) => {
-    startTransition(() => {
-      register(data).then((res) => {
-        if (res.success) {
-          toast.success(res.success)
-        } else {
-          toast.error(res.error)
-        }
-      })
-    })
-  }
+	const onSubmit = async (data: RegisterType) => {
+		startTransition(() => {
+			register(data).then((res) => {
+				if (res.success) {
+					toast.success(res.success)
+				} else {
+					toast.error(res.error)
+				}
+			})
+		})
+	}
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <fieldset disabled={isPending} className="space-y-3">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="@email.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
+	return (
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)}>
+				<fieldset disabled={isPending} className="space-y-3">
+					<FormField
+						control={form.control}
+						name="name"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Name</FormLabel>
+								<FormControl>
+									<Input placeholder="Name" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Email</FormLabel>
+								<FormControl>
+									<Input placeholder="@email.com" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					{/* <FormField
             control={form.control}
             name="address"
             render={({ field }) => (
@@ -109,40 +109,40 @@ const FarmerRegisterForm = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
-          <FormField
-            control={form.control}
-            name="contactNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Contact Number</FormLabel>
-                <FormControl>
-                  <FGSinglePhoneINput {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+					<FormField
+						control={form.control}
+						name="contactNumber"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Contact Number</FormLabel>
+								<FormControl>
+									<FGSinglePhoneINput {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    placeholder="Description about your farm... "
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+					<FormField
+						control={form.control}
+						name="description"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Description</FormLabel>
+								<FormControl>
+									<Textarea
+										{...field}
+										placeholder="Description about your farm... "
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-          <FormField
+					{/* <FormField
             control={form.control}
             name="preferredFoods"
             render={({ field }) => (
@@ -166,42 +166,42 @@ const FarmerRegisterForm = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <FGPasswordInput {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <FGPasswordInput {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+					<FormField
+						control={form.control}
+						name="password"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Password</FormLabel>
+								<FormControl>
+									<FGPasswordInput {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="confirmPassword"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Confirm Password</FormLabel>
+								<FormControl>
+									<FGPasswordInput {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-          <Button type="submit" className="w-full">
-            {isPending ? <Loader2 className="animate-spin" /> : "Register"}
-          </Button>
-        </fieldset>
-      </form>
-    </Form>
-  )
+					<Button type="submit" className="w-full">
+						{isPending ? <Loader2 className="animate-spin" /> : "Register"}
+					</Button>
+				</fieldset>
+			</form>
+		</Form>
+	)
 }
 
 export default FarmerRegisterForm
