@@ -58,7 +58,7 @@ export default function ProductCard({
 	description
 }: ProductCardProps) {
 	return (
-		<div className="relative overflow-hidden rounded-lg bg-white ">
+		<div className="relative overflow-hidden rounded-lg bg-white">
 			<Carousel className="w-full overflow-hidden rounded-md">
 				<CarouselContent>
 					{images.length > 0 ? (
@@ -92,10 +92,10 @@ export default function ProductCard({
 						/>
 					)}
 				</CarouselContent>
-				<CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white ">
+				<CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white">
 					<ChevronLeftIcon className="h-5 w-5" />
 				</CarouselPrevious>
-				<CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white ">
+				<CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white">
 					<ChevronRightIcon className="h-5 w-5" />
 				</CarouselNext>
 			</Carousel>
@@ -105,9 +105,9 @@ export default function ProductCard({
 						<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
 						<AvatarFallback>{`${"fa"}`}</AvatarFallback>
 					</Avatar>
-					<p className="text-sm  text-[#222325]">{farmer}</p>
+					<p className="text-sm text-[#222325]">{farmer}</p>
 				</div>
-				<Link href={`${"/products/1"}`} className="hover:underline ">
+				<Link href={`${"/products/1"}`} className="hover:underline">
 					<h2 className="text-base font-semibold">{title}</h2>
 				</Link>
 				<p className="text-sm">{truncateText(description, 75)}</p>

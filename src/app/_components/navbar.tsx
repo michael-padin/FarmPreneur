@@ -13,7 +13,7 @@ const navItems = [
 const Navbar = () => {
 	return (
 		<nav>
-			<ul className="mt-4 hidden flex-col items-center rounded-lg border p-4  font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 lg:flex rtl:space-x-reverse">
+			<ul className="mt-4 hidden flex-col items-center rounded-lg border p-4 font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 lg:flex rtl:space-x-reverse">
 				{navItems.map((item, idx) => (
 					<li key={idx}>
 						<Link
