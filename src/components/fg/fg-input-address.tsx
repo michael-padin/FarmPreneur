@@ -41,8 +41,8 @@ export const FGInputAddress = ({
 	}
 
 	const handleClose = (e: KeyboardEvent<HTMLInputElement>) => {
-		e.key === "Escape" && setPlaceListOpen(false)
-		e.key === "Tab" && setPlaceListOpen(false)
+		if (e.key === "Escape") setPlaceListOpen(false)
+		if (e.key === "Tab") setPlaceListOpen(false)
 	}
 
 	const handleSelect = (placeName: string) => {
@@ -67,7 +67,7 @@ export const FGInputAddress = ({
 				<CommandList
 					className={`absolute left-0 right-0 top-[46px] z-20 rounded-lg bg-background ${
 						placePredictions.length > 0
-							? "border animate-in fade-in-0 zoom-in-95 "
+							? "border animate-in fade-in-0 zoom-in-95"
 							: ""
 					}`}
 				>
