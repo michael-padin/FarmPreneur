@@ -2,7 +2,6 @@
 import { MinusIcon, PlusIcon } from "lucide-react"
 import Link from "next/link"
 
-import Navbar from "@/app/_components/navbar"
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/XQyO7EHnAuO
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/carousel"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { Navbar } from "@/app/_components"
 
 export default function Component() {
 	return (
