@@ -24,7 +24,7 @@ export default function Component() {
 	return (
 		<>
 			<header className="fixed inset-x-0 top-0 z-10 border-b bg-white">
-				<div className="container mx-auto flex h-20 items-center justify-between px-4 ">
+				<div className="container mx-auto flex h-20 items-center justify-between px-4">
 					<Link
 						className="flex items-center gap-2 text-3xl font-black text-[#404145]"
 						href="/"
@@ -64,10 +64,10 @@ export default function Component() {
 								/>
 							</CarouselItem>
 						</CarouselContent>
-						<CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white ">
+						<CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white">
 							<ChevronLeftIcon className="h-5 w-5" />
 						</CarouselPrevious>
-						<CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white ">
+						<CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/50 p-2 text-gray-900 hover:bg-white">
 							<ChevronRightIcon className="h-5 w-5" />
 						</CarouselNext>
 					</Carousel>
@@ -83,7 +83,7 @@ export default function Component() {
 							<p className="text-sm text-gray-500 dark:text-gray-400">Farmer</p>
 						</div>
 					</div>
-					<div className="grid gap-8 ">
+					<div className="grid gap-8">
 						<h1 className="text-2xl font-bold">Organic Apples</h1>
 						<p className="text-gray-500 dark:text-gray-400">
 							Crisp, delicious organic apples grown without synthetic pesticides
@@ -99,7 +99,7 @@ export default function Component() {
 							<Label className="text-base" htmlFor="quantity">
 								Quantity
 							</Label>
-							<div className="flex  items-center gap-2">
+							<div className="flex items-center gap-2">
 								<div className="flex w-[100px] items-center justify-between gap-2 rounded-md bg-gray-100 px-3 py-2 dark:bg-gray-800">
 									<Button
 										className="h-4 w-4 text-gray-500 hover:bg-transparent dark:text-gray-400"

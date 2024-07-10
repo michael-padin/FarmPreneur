@@ -15,7 +15,7 @@ const Home = async () => {
 	return (
 		<>
 			<header className="fixed inset-x-0 top-0 z-10 border-b bg-white">
-				<div className="container mx-auto flex h-20 items-center justify-between px-4 ">
+				<div className="container mx-auto flex h-20 items-center justify-between px-4">
 					<Link
 						className="flex items-center gap-2 text-3xl font-black text-[#404145]"
 						href="/"
@@ -27,10 +27,10 @@ const Home = async () => {
 				</div>
 			</header>
 			<main className="">
-				<section className=" m-auto w-full pb-6 pt-24 ">
+				<section className="m-auto w-full pb-6 pt-24">
 					{/* <div className="absolute  inset-0  bg-black/20 backdrop-blur-sm"></div> */}
-					<div className="container relative  mx-auto h-full rounded-lg bg-primary  px-4 md:px-6">
-						<div className="my-4 flex items-center  justify-center py-20">
+					<div className="container relative mx-auto h-full rounded-lg bg-primary px-4 md:px-6">
+						<div className="my-4 flex items-center justify-center py-20">
 							<Vegan
 								className="absolute -bottom-5 left-10 h-32 w-32 stroke-white"
 								strokeWidth={1}
@@ -69,7 +69,7 @@ const Home = async () => {
 				</section>
 
 				<section className="container mx-auto px-4">
-					<div className="flex  justify-between">
+					<div className="flex justify-between">
 						<h2 className="mb-4 text-2xl font-bold">Featured Products</h2>
 						<Link
 							href="/products"

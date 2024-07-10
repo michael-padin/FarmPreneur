@@ -28,7 +28,7 @@ const ProductsPage = () => {
 	return (
 		<div className="container mx-auto">
 			<header className="fixed inset-x-0 top-0 z-10 border-b bg-white">
-				<div className="container mx-auto flex h-20 items-center justify-between px-4 ">
+				<div className="container mx-auto flex h-20 items-center justify-between px-4">
 					<Link
 						className="flex items-center gap-2 text-3xl font-black text-[#404145]"
 						href="/"
