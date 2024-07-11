@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import NextAuth from "next-auth"
 
 import {
 	apiAuthPrefix,
@@ -7,10 +6,7 @@ import {
 	DEFAULT_LOGIN_REDIRECT,
 	publicRoutes
 } from "@/routes"
-
-import authConfig from "./auth.config"
-
-const { auth } = NextAuth(authConfig)
+import { auth } from "./auth"
 
 export default auth((req): Response | void | Promise<Response | void> => {
 	const { nextUrl } = req
@@ -46,7 +42,7 @@ export default auth((req): Response | void | Promise<Response | void> => {
 	 * if ang user dili wala naka login unya ang user ni adto
 	 * og protected route ih redirect ni sa login page
 	 */
-	if (isLoggedIn && isPublicRoute) {
+	if (!isLoggedIn && !isPublicRoute) {
 		return Response.redirect(new URL("/login", nextUrl))
 	}
 
