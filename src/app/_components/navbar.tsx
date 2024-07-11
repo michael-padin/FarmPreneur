@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 
 const navItems = [
 	{ name: "Become a farmer", link: "signup" },
@@ -11,6 +12,8 @@ const navItems = [
 ]
 
 const Navbar = () => {
+	const session = useSession()
+
 	return (
 		<nav>
 			<ul className="mt-4 hidden flex-col items-center rounded-lg border p-4 font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 lg:flex rtl:space-x-reverse">
