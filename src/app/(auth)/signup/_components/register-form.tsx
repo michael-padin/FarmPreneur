@@ -160,7 +160,7 @@ const RegisterForm = () => {
             )}
           /> */}
 
-					<FormField
+					{/* <FormField
 						control={form.control}
 						name="preferredFoods"
 						render={({ field }) => (
@@ -184,7 +184,7 @@ const RegisterForm = () => {
 								<FormMessage />
 							</FormItem>
 						)}
-					/>
+					/> */}
 
 					<FormField
 						control={form.control}
