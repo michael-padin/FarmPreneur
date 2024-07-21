@@ -5,8 +5,6 @@ import Link from "next/link"
 import GoogleButton from "@/app/_components/google-button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
-import SignUpFormTabs from "./_components/form-tabs"
-
 export const metadata: Metadata = {
 	title: "Sign up",
 	description:
