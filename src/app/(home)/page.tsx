@@ -1,24 +1,10 @@
-import { Apple, Banana, Carrot, Vegan } from "lucide-react"
-import Link from "next/link"
-
-import { categories, products } from "@/data"
-import { cn } from "@/lib/utils"
-
-import { auth } from "@/auth"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import Footer from "../_components/footer"
 import {
-	BottomNav,
 	Categories,
-	CategoryCard,
 	DailyDiscovery,
 	DesktopNav,
 	Features,
-	MobileNav,
-	ProductCard
+	MobileNav
 } from "./_components"
-import { Navbar } from "../_components"
 
 const Home = async () => {
 	return (
