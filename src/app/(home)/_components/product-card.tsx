@@ -3,15 +3,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 
-const settings: Settings = {
-	dots: true,
-	infinite: true,
-	speed: 500,
-	swipe: true,
-	slidesToShow: 1,
-	slidesToScroll: 1
-}
-
 const formatPrice = (price: number, unit: string) => {
 	return (
 		<>
@@ -19,13 +10,6 @@ const formatPrice = (price: number, unit: string) => {
 			{`${price.toFixed(2)}/${unit}`}
 		</>
 	)
-}
-
-const truncateText = (description: string, maxLength: number) => {
-	if (description.length > maxLength) {
-		return description.substring(0, maxLength) + "..."
-	}
-	return description
 }
 
 interface ProductCardProps {
