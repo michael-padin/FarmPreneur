@@ -1,12 +1,11 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Tag, TagInput } from "emblor"
+import { Tag } from "emblor"
 import { Loader2 } from "lucide-react"
 import React, { useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import { FGInputAddress } from "@/components/fg/fg-input-address"
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { Button } from "@/components/ui/button"
@@ -36,7 +35,6 @@ import { register } from "../action"
 // }
 
 const FarmerRegisterForm = () => {
-	const [tags, setTags] = useState<Tag[]>([])
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<RegisterType>({
 		resolver: zodResolver(RegisterSchema),
