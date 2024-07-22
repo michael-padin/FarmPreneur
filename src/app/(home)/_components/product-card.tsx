@@ -1,22 +1,4 @@
-import {
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	Star,
-	Stars,
-	UserIcon
-} from "lucide-react"
 import Link from "next/link"
-import Slider, { Settings } from "react-slick"
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious
-} from "@/components/ui/carousel"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
