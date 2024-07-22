@@ -4,8 +4,6 @@ import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
 
-import LoginForm from "./_components/login-form"
-
 export const metadata: Metadata = {
 	title: "Log in",
 	description:
