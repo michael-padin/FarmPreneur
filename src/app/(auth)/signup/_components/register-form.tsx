@@ -1,9 +1,8 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Tag } from "emblor"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import React, { useState, useTransition } from "react"
+import React, { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -19,26 +18,13 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 
 import { RegisterSchema, RegisterType } from "../_types"
 import { register } from "../action"
 
-//THIS SHOULD BE FETCH FROM ADMIN
-
-// export async function getSkill() {
-//   try {
-//     const res = await fetch("/api/skills");
-//     return await res.json();
-//   } catch (error) {
-//     console.log("Failed");
-//   }
-// }
-
 const RegisterForm = () => {
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
-	const [tags, setTags] = useState<Tag[]>([])
 	const form = useForm<RegisterType>({
 		resolver: zodResolver(RegisterSchema),
 		defaultValues: {
@@ -64,22 +50,6 @@ const RegisterForm = () => {
 				}
 			})
 		})
-	}
-
-	const getLatLng = async (address: string) => {
-		const response = await fetch(
-			`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-				address
-			)}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-		)
-		const data = await response.json()
-
-		if (data.status === "OK") {
-			const { lat, lng } = data.results[0].geometry.location
-			return { lat, lng }
-		} else {
-			throw new Error("Error getting latitude and longitude")
-		}
 	}
 
 	return (
