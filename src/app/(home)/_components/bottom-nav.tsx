@@ -2,7 +2,7 @@
 import { useRef, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, User, Bell, Bookmark, ShoppingCart } from "lucide-react"
+import { Home, User, Bell, Bookmark } from "lucide-react"
 import IconBadge from "@/components/fg/fg-icon-badge"
 
 const navItems = [
@@ -36,7 +36,6 @@ const BottomNav = () => {
 				>
 					{navItems.map((item) => {
 						const isActive = pathname === item.href
-						const IconComponent = item.icon
 						return (
 							<Link
 								key={item.name}
