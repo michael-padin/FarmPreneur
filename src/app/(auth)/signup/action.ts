@@ -4,7 +4,6 @@ import { hash } from "bcryptjs"
 import { db } from "@/lib/db"
 import { getUserByEmail } from "@/services/user"
 
-import { dummyOrganizations } from "./_data/data"
 import { RegisterSchema, RegisterType } from "./_types"
 
 export const register = async (data: RegisterType) => {
