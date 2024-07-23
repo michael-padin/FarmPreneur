@@ -53,7 +53,7 @@ export function InputOTPForm() {
 				<FormField
 					control={form.control}
 					name="pin"
-					render={({ field }) => (
+					render={() => (
 						<FormItem>
 							<FormLabel>One-Time Password</FormLabel>
 							<FormControl>
