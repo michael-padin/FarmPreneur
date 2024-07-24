@@ -41,7 +41,6 @@ export const FGCombobox = ({
 	onChange,
 	value,
 	placeholder,
-	disabled = false,
 	showOtherValue = false,
 	showSearchBar = true
 }: FGCombobox) => {
