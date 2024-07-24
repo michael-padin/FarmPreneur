@@ -9,7 +9,17 @@ import { Command, CommandGroup, CommandItem } from "@/components/ui/command"
 
 type Options = Record<"value" | "label", string>
 
-export function SSMultiSeleect({ options, onChange, placeholder }: any) {
+interface SSMultiSeleectProps {
+	options: Options[]
+	onChange: (options: Options[]) => void
+	placeholder?: string
+}
+
+export function SSMultiSeleect({
+	options,
+	onChange,
+	placeholder
+}: SSMultiSeleectProps) {
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	const [open, setOpen] = React.useState(false)
 	const [selected, setSelected] = React.useState<Options[]>([options[4]])
@@ -46,7 +56,7 @@ export function SSMultiSeleect({ options, onChange, placeholder }: any) {
 	)
 
 	const selectables = options.filter(
-		(framework: any) => !selected.includes(framework)
+		(framework) => !selected.includes(framework)
 	)
 
 	return (
@@ -94,7 +104,7 @@ export function SSMultiSeleect({ options, onChange, placeholder }: any) {
 				{open && selectables.length > 0 ? (
 					<div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
 						<CommandGroup className="h-[200px] overflow-auto">
-							{selectables.map((framework: any) => {
+							{selectables.map((framework) => {
 								return (
 									<CommandItem
 										key={framework.value}
