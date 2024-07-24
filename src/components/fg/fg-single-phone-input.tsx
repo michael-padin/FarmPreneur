@@ -61,12 +61,7 @@ type CountrySelectProps = {
 	options: CountrySelectOption[]
 }
 
-const CountrySelect = ({
-	disabled,
-	value,
-	onChange,
-	options
-}: CountrySelectProps) => {
+const CountrySelect = ({ disabled }: CountrySelectProps) => {
 	return (
 		<Button
 			type="button"
