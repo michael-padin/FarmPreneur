@@ -21,14 +21,7 @@ interface FGSelectProps {
 	showTooltip?: boolean
 }
 
-export const FGSelect = ({
-	onChange,
-	value,
-	listOptions,
-	placeholder,
-	disabled,
-	showTooltip = false
-}: FGSelectProps) => {
+export const FGSelect = ({ onChange, value, listOptions }: FGSelectProps) => {
 	return (
 		<Select onValueChange={onChange} value={value}>
 			<FormControl>
