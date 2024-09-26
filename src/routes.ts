@@ -4,7 +4,13 @@
  * @type {string[]}
  */
 
-export const publicRoutes: string[] = ["/"]
+export const protectedRoutes: string[] = [
+	"/notifications",
+	"/cart",
+	"/profile",
+	"/settings",
+	"/dashboard"
+]
 
 /**
  *  An array of routes that are use for authentication
@@ -14,7 +20,6 @@ export const publicRoutes: string[] = ["/"]
 export const authRoutes: string[] = ["/login", "/signup", "/verify"]
 
 /**
- *
  *  The prefix for API authentication routes
  *  Routes that start with this prefix are used for use for API
  *  purposes
