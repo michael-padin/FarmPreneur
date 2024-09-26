@@ -4,25 +4,27 @@ import {
 	apiAuthPrefix,
 	authRoutes,
 	DEFAULT_LOGIN_REDIRECT,
-	publicRoutes
+	protectedRoutes
 } from "@/routes"
 import { auth } from "./auth"
 
 export default auth((req): Response | void | Promise<Response | void> => {
 	const { nextUrl } = req
+	const { pathname } = nextUrl
 
 	const isLoggedIn = !!req.auth
 
 	// route or path gamiton pag api auth
 	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
 
-	// route or path gamiton pag public dili need ih authenticate
-	const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
+	const isProtectedRoute = protectedRoutes.some((route) =>
+		pathname.startsWith(route)
+	)
 
 	// route gamiton pag login or register
-	const isAuthRoute = authRoutes.includes(nextUrl.pathname)
+	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
 
-	// if api auth route, dili need ih redirect sa login or what
+	// if api auth route, dili need ih redirect sa login
 	if (isApiAuthRoute) {
 		return
 	}
@@ -39,10 +41,10 @@ export default auth((req): Response | void | Promise<Response | void> => {
 	}
 
 	/**
-	 * if ang user dili wala naka login unya ang user ni adto
+	 * if ang user  wala naka login unya ang user ni adto
 	 * og protected route ih redirect ni sa login page
 	 */
-	if (!isLoggedIn && !isPublicRoute) {
+	if (!isLoggedIn && isProtectedRoute) {
 		return Response.redirect(new URL("/login", nextUrl))
 	}
 
