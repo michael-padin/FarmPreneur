@@ -2,13 +2,19 @@ import { compare } from "bcryptjs"
 import type { NextAuthConfig } from "next-auth"
 import { type Provider } from "next-auth/providers"
 import Google from "next-auth/providers/google"
-import CredentialsProvider from "next-auth/providers/credentials"
+import Credentials from "next-auth/providers/credentials"
+import Resend from "next-auth/providers/resend"
+import { encode as defaultEncode } from "next-auth/jwt"
 
 import { getUserByEmail } from "./services/user"
 import { LoginSchema } from "./types"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { db } from "./lib/db"
+
+const adapter = PrismaAdapter(db)
 
 const providers: Provider[] = [
-	CredentialsProvider({
+	Credentials({
 		async authorize(credentials) {
 			const validateFields = LoginSchema.safeParse(credentials)
 
@@ -49,6 +55,30 @@ export default {
 	debug: process.env.NODE_ENV === "development",
 	pages: {
 		signIn: "/login"
+	},
+	jwt: {
+		encode: async function (params) {
+			if (params.token?.credentials) {
+				const sessionToken = crypto.randomUUID()
+
+				if (!params.token.sub) {
+					throw new Error("No user ID found in token")
+				}
+
+				const createdSession = await adapter?.createSession?.({
+					sessionToken: sessionToken,
+					userId: params.token.sub,
+					expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+				})
+
+				if (!createdSession) {
+					throw new Error("Failed to create session")
+				}
+
+				return sessionToken
+			}
+			return defaultEncode(params)
+		}
 	},
 	callbacks: {
 		session({ session, user }) {
