@@ -4,6 +4,8 @@ import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import SignUpFormTabs from "./_components/form-tabs"
+import RegisterForm from "./_components/register-form"
 
 export const metadata: Metadata = {
 	title: "Sign up",
@@ -30,7 +32,21 @@ export default async function SignupPage() {
 							</p>
 						</div>
 						{/* <SignUpFormTabs /> */}
-						<GoogleButton />
+						<div className="grid gap-6">
+							<RegisterForm />
+							<div className="relative">
+								<div className="absolute inset-0 flex items-center">
+									<span className="w-full border-t" />
+								</div>
+								<div className="relative flex justify-center text-xs uppercase">
+									<span className="bg-background px-2 text-muted-foreground">
+										Or continue with
+									</span>
+								</div>
+							</div>
+							<GoogleButton />
+						</div>
+
 						<div className="mt-4 text-center text-sm">
 							Already have an account?{" "}
 							<Link href="/login" className="underline">

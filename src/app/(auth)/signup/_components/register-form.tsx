@@ -28,14 +28,9 @@ const RegisterForm = () => {
 	const form = useForm<RegisterType>({
 		resolver: zodResolver(RegisterSchema),
 		defaultValues: {
-			name: "",
 			email: "",
-			address: "",
-			contactNumber: "+63",
-			description: "",
 			password: "",
-			confirmPassword: "",
-			role: "BUYER"
+			confirmPassword: ""
 		}
 	})
 
@@ -58,19 +53,6 @@ const RegisterForm = () => {
 				<fieldset disabled={isPending} className="space-y-3">
 					<FormField
 						control={form.control}
-						name="name"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Name</FormLabel>
-								<FormControl>
-									<Input placeholder="Name" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
 						name="email"
 						render={({ field }) => (
 							<FormItem>
@@ -82,78 +64,6 @@ const RegisterForm = () => {
 							</FormItem>
 						)}
 					/>
-					{/* <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <FGInputAddress
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-					<FormField
-						control={form.control}
-						name="contactNumber"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Contact Number</FormLabel>
-								<FormControl>
-									<FGSinglePhoneINput {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					{/* 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    placeholder="Description about your organization ... "
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-
-					{/* <FormField
-						control={form.control}
-						name="preferredFoods"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Preferred products</FormLabel>
-								<FormControl>
-									<TagInput
-										className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-										{...field}
-										placeholder="Bananas, Oranges, Lettuce"
-										tags={tags}
-										setTags={(newTags) => {
-											setTags(newTags)
-											form.setValue(
-												"preferredFoods",
-												newTags as [Tag, ...Tag[]]
-											)
-										}}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/> */}
 
 					<FormField
 						control={form.control}
