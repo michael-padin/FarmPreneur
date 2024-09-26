@@ -3,6 +3,8 @@ import Image from "next/image"
 import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
+import { ResendSignIn } from "@/app/_components/resend-signin"
+import LoginForm from "./_components/login-form"
 
 export const metadata: Metadata = {
 	title: "Log in",
@@ -27,8 +29,21 @@ export default async function LoginPage() {
 							Enter your credentials below to login to your account
 						</p>
 					</div>
-					{/* <LoginForm /> */}
-					<GoogleButton />
+					<div className="grid gap-6">
+						<LoginForm />
+						<div className="relative">
+							<div className="absolute inset-0 flex items-center">
+								<span className="w-full border-t" />
+							</div>
+							<div className="relative flex justify-center text-xs uppercase">
+								<span className="bg-background px-2 text-muted-foreground">
+									Or continue with
+								</span>
+							</div>
+						</div>
+						<GoogleButton />
+					</div>
+					{/* <ResendSignIn /> */}
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{" "}
 						<Link href="/signup" className="underline">
