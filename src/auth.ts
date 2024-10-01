@@ -12,18 +12,11 @@ declare module "next-auth" {
 	interface Session {
 		user: {
 			role: string
+			isProfileComplete: boolean
+			password: string | null
 		} & DefaultSession["user"]
 
 		/** The user's postal address. */
-		/**
-		 * By default, TypeScript merges new interface properties and overwrites existing ones.
-		 * In this case, the default session user properties will be overwritten,
-		 * with the new ones defined above. To keep the default session user properties,
-		 * you need to add them back into the newly declared interface.
-		 */
-	}
-	interface User {
-		role: string | null
 		/**
 		 * By default, TypeScript merges new interface properties and overwrites existing ones.
 		 * In this case, the default session user properties will be overwritten,
