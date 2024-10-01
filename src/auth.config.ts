@@ -82,8 +82,14 @@ export default {
 	},
 	callbacks: {
 		session({ session, user }) {
-			session.user.id = ""
-			return session
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { password, ...newUser } = session.user
+			return {
+				...session,
+				user: {
+					...newUser
+				}
+			}
 		}
 	},
 	secret: process.env.AUTH_SECRET
