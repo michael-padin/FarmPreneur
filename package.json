@@ -10,8 +10,9 @@
 		"lint": "eslint",
 		"lint:fix": "next lint --fix",
 		"typeCheck": "tsc --noEmit",
-		"db:push": "prisma db push",
-		"db:seed": "prisma db seed",
+		"db:push": "pnpm prisma db push",
+		"db:seed": "pnpm prisma db seed",
+		"db:studio": "pnpm prisma studio",
 		"db:generate": "prisma generate",
 		"prettier": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}",
 		"prepare": "husky"
