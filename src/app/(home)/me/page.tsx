@@ -4,6 +4,9 @@ import { getUserByEmail } from "@/services/user"
 import { auth } from "@/auth"
 import { Icons } from "@/components/icons"
 import Link from "next/link"
+import { Separator } from "@/components/ui/separator"
+import Recommend from "../_components/recommend"
+import { redirect } from "next/navigation"
 
 const getUser = async () => {
 	// const res = await getUserByEmail()
@@ -15,12 +18,14 @@ export default async function BuyerProfilePage() {
 	const session = await auth()
 	const user = session?.user
 
+	if (!user) redirect("/login")
+
 	return (
 		<>
 			<MobileNav />
-			<div className="min-h-screen bg-gray-100 pt-[72px]">
+			<div className="min-h-screen bg-gray-100 pb-16 pt-[72px]">
 				<div className="mx-auto">
-					<div className="space-y-4 bg-primary px-6 pb-4">
+					<div className="space-y-4 bg-primary px-2 pb-4">
 						<div className="flex items-center gap-6">
 							<div className="">
 								<div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-gray-300">
@@ -36,17 +41,20 @@ export default async function BuyerProfilePage() {
 							</div>
 							<div className="space-y-2">
 								<h1 className="text-2xl font-bold text-primary-foreground">
-									{user!.name}
+									{user?.name}
 								</h1>
 								<div className="flex items-center space-x-2 text-sm text-white">
 									<p>
 										Joined:{" "}
 										<span className="">
-											{new Date(user!.createdAt).toLocaleDateString("en-US", {
-												year: "numeric",
-												month: "long",
-												day: "numeric"
-											})}
+											{new Date(user?.createdAt ?? "").toLocaleDateString(
+												"en-US",
+												{
+													year: "numeric",
+													month: "long",
+													day: "numeric"
+												}
+											)}
 										</span>
 									</p>
 								</div>
@@ -67,13 +75,13 @@ export default async function BuyerProfilePage() {
 						</div>
 					</div>
 					{/* MARK: purchases */}
-					<div className="bg-background p-4">
-						<div className="flex items-center justify-between py-2">
+					<div className="bg-background p-2">
+						{/* <div className="flex items-center justify-between py-2">
 							<h2 className="font-semibold">My Profile</h2>
 							<Link href={`/orders`}>
 								<Icons.chevronRight className="text-foreground" />
 							</Link>
-						</div>
+						</div> */}
 						<div className="flex items-center justify-between py-2">
 							<h2 className="font-semibold">My Orders</h2>
 							<Link href={`/orders`}>
@@ -96,6 +104,15 @@ export default async function BuyerProfilePage() {
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
+				<div className="">
+					<div className="mt-2 flex justify-between p-2">
+						<h3>You May Also Like</h3>
+						<p>See all</p>
+					</div>
+					<div className="bg-background p-2">
+						<Recommend />
 					</div>
 				</div>
 			</div>
