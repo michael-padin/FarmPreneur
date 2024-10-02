@@ -1,10 +1,8 @@
 import { MobileNav } from "../_components"
 import Image from "next/image"
-import { getUserByEmail } from "@/services/user"
 import { auth } from "@/auth"
 import { Icons } from "@/components/icons"
 import Link from "next/link"
-import { Separator } from "@/components/ui/separator"
 import Recommend from "../_components/recommend"
 import { redirect } from "next/navigation"
 
@@ -16,9 +14,8 @@ const getUser = async () => {
 
 export default async function BuyerProfilePage() {
 	const session = await auth()
-	const user = session?.user
-
-	if (!user) redirect("/login")
+	if (!session) redirect("/login")
+	const user = session.user
 
 	return (
 		<>
@@ -31,7 +28,7 @@ export default async function BuyerProfilePage() {
 								<div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-gray-300">
 									<Image
 										placeholder="empty"
-										src={user?.image || "/placeholder.svg"}
+										src={user.image || "/placeholder.svg"}
 										alt="user avatar"
 										fill
 										objectFit="covert"
@@ -41,13 +38,13 @@ export default async function BuyerProfilePage() {
 							</div>
 							<div className="space-y-2">
 								<h1 className="text-2xl font-bold text-primary-foreground">
-									{user?.name}
+									{user.name}
 								</h1>
 								<div className="flex items-center space-x-2 text-sm text-white">
 									<p>
 										Joined:{" "}
 										<span className="">
-											{new Date(user?.createdAt ?? "").toLocaleDateString(
+											{new Date(user.createdAt ?? "").toLocaleDateString(
 												"en-US",
 												{
 													year: "numeric",
@@ -63,7 +60,7 @@ export default async function BuyerProfilePage() {
 						<div className="w-full">
 							<div className="flex">
 								<Link
-									href="/dashboard"
+									href="/register-farmer"
 									className="flex items-center gap-2 rounded-lg bg-white p-2 text-primary"
 								>
 									<span className="text-sm font-semibold">
