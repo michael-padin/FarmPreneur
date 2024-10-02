@@ -20,3 +20,16 @@ export const getUserByEmail = async (email: string) => {
 	const { password, ...newUser } = user!
 	return newUser
 }
+
+export const getUserFarmerById = async (id: string) => {
+	return await db.user.findFirst({
+		where: { id: id },
+		select: {
+			image: true,
+			id: true,
+			name: true,
+			contactNumber: true,
+			farmDetails: true
+		}
+	})
+}
