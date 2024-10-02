@@ -35,10 +35,10 @@ export default auth((req): Response | void | Promise<Response | void> => {
 	 */
 	if (isAuthRoute) {
 		if (isLoggedIn) {
-			if (req.auth?.user.isProfileComplete) {
-				return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
+			if (req.auth?.user.role === "FARMER") {
+				return NextResponse.redirect(new URL("/dashboard", nextUrl))
 			}
-			return NextResponse.redirect(new URL("/complete-profile", nextUrl))
+			return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
 		}
 		return
 	}
