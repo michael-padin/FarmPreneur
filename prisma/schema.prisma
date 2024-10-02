@@ -254,8 +254,10 @@ model User {
   image                String?
   accounts             Account[]
   sessions             Session[]
+  isApproved           Boolean                @default(false)
   role                 String?
   password             String?
+  contactNumber        String?
   // Optional for WebAuthn support
   Authenticators       Authenticator[]
   profilePicture       String?
