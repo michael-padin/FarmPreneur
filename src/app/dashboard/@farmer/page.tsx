@@ -33,6 +33,7 @@ import {
 	TableHeader,
 	TableRow
 } from "@/components/ui/table"
+import { ClassAttributes, HTMLAttributes, JSX, SVGProps } from "react"
 
 export default function FarmerDashboard() {
 	return (
@@ -420,7 +421,7 @@ export default function FarmerDashboard() {
 	)
 }
 
-function BellIcon(props) {
+function BellIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			{...props}
@@ -440,7 +441,7 @@ function BellIcon(props) {
 	)
 }
 
-function HomeIcon(props) {
+function HomeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			{...props}
@@ -460,7 +461,7 @@ function HomeIcon(props) {
 	)
 }
 
-function LeafIcon(props) {
+function LeafIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			{...props}
@@ -480,7 +481,11 @@ function LeafIcon(props) {
 	)
 }
 
-function LineChart(props) {
+function LineChart(
+	props: JSX.IntrinsicAttributes &
+		ClassAttributes<HTMLDivElement> &
+		HTMLAttributes<HTMLDivElement>
+) {
 	return (
 		<div {...props}>
 			<ResponsiveLine
@@ -553,7 +558,9 @@ function LineChart(props) {
 	)
 }
 
-function LineChartIcon(props) {
+function LineChartIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
 	return (
 		<svg
 			{...props}
@@ -573,7 +580,9 @@ function LineChartIcon(props) {
 	)
 }
 
-function MoveHorizontalIcon(props) {
+function MoveHorizontalIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
 	return (
 		<svg
 			{...props}
@@ -594,7 +603,7 @@ function MoveHorizontalIcon(props) {
 	)
 }
 
-function PackageIcon(props) {
+function PackageIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			{...props}
@@ -616,7 +625,9 @@ function PackageIcon(props) {
 	)
 }
 
-function ShoppingCartIcon(props) {
+function ShoppingCartIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
 	return (
 		<svg
 			{...props}
