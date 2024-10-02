@@ -2,13 +2,13 @@
 import { useRef, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, User, Bell, Bookmark } from "lucide-react"
+import { Home, User, Bell, Heart } from "lucide-react"
 import IconBadge from "@/components/fg/fg-icon-badge"
 
 const navItems = [
 	{ name: "Home", icon: Home, href: "/" },
+	{ name: "Likes", icon: Heart, href: "/likes" },
 	{ name: "Notifications", icon: Bell, href: "/notifications" },
-	{ name: "Bookmarks", icon: Bookmark, href: "/bookmarks" },
 	{ name: "Me", icon: User, href: "/me" }
 ]
 
