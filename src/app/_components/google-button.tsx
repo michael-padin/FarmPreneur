@@ -6,10 +6,7 @@ const GoogleButton = () => {
 		<form
 			action={async () => {
 				"use server"
-				await signIn("google", {
-					redirectTo: "/dashboard/overview",
-					redirect: true
-				})
+				await signIn("google")
 			}}
 		>
 			<Button variant="outline" className="w-full" type="submit">
