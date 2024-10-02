@@ -14,6 +14,7 @@ declare module "next-auth" {
 			role: string
 			password: string | null
 			createdAt: string
+			isApproved: boolean
 		} & DefaultSession["user"]
 
 		/** The user's postal address. */
