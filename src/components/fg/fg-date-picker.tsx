@@ -36,7 +36,6 @@ export const FGDatePicker = ({ value, onChange }: FGDatePickerProps) => {
 					mode="single"
 					selected={value}
 					onSelect={(value) => value && onChange(value)}
-					initialFocus
 				/>
 			</PopoverContent>
 		</Popover>
