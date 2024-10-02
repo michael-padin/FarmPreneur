@@ -7,21 +7,25 @@ import Link from "next/link"
 import IconBadge from "@/components/fg/fg-icon-badge"
 
 const MobileNav = () => {
-	const session = useSession()
+	const { status } = useSession()
+	const isAuthenticated = status === "authenticated"
+
 	return (
-		<div className="fixed z-10 w-full bg-primary p-4 lg:hidden">
+		<div
+			className={`fixed z-10 w-full ${isAuthenticated ? "bg-primary" : "bg-white"} p-4 lg:hidden`}
+		>
 			<div className="flex items-center justify-between gap-4 lg:container">
-				{session.status === "authenticated" ? (
+				{isAuthenticated ? (
 					<div className="w-full">
 						<Input placeholder="Search" className="w-full" />
 					</div>
 				) : (
 					<div>
-						<h1 className="text-xl font-bold text-foreground">FarmPreneur</h1>
+						<h1 className="text-xl font-bold text-primary">FarmPreneur</h1>
 					</div>
 				)}
 
-				{session.status === "authenticated" ? (
+				{isAuthenticated ? (
 					<div className="flex items-center gap-4 text-primary-foreground">
 						<IconBadge
 							icon={ShoppingCart}
