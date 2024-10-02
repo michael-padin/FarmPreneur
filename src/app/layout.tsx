@@ -9,6 +9,7 @@ import { SessionProvider } from "next-auth/react"
 import { auth } from "@/auth"
 import ThemeProvider from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const inter = Poppins({
 	subsets: ["latin"],
@@ -36,7 +37,9 @@ export default async function RootLayout({
 					src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`}
 				></script>
 				<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-					<SessionProvider session={session}>{children}</SessionProvider>
+					<SessionProvider session={session}>
+						<TooltipProvider>{children}</TooltipProvider>
+					</SessionProvider>
 				</ThemeProvider>
 				<Toaster />
 			</body>
