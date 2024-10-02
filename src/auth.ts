@@ -12,8 +12,8 @@ declare module "next-auth" {
 	interface Session {
 		user: {
 			role: string
-			isProfileComplete: boolean
 			password: string | null
+			createdAt: string
 		} & DefaultSession["user"]
 
 		/** The user's postal address. */
