@@ -19,6 +19,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { Navbar } from "@/app/_components"
+import { JSX, SVGProps } from "react"
 
 export default function Component() {
 	return (
@@ -142,7 +143,9 @@ export default function Component() {
 	)
 }
 
-function ChevronLeftIcon(props) {
+function ChevronLeftIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
 	return (
 		<svg
 			{...props}
@@ -161,7 +164,9 @@ function ChevronLeftIcon(props) {
 	)
 }
 
-function ChevronRightIcon(props) {
+function ChevronRightIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
 	return (
 		<svg
 			{...props}

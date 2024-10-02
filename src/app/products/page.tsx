@@ -22,7 +22,6 @@ import { Label } from "@/components/ui/label"
 import { products } from "@/data"
 
 import Navbar from "../_components/navbar"
-import ProductCard from "../_components/product-card"
 
 const ProductsPage = () => {
 	return (
@@ -76,7 +75,7 @@ const ProductsPage = () => {
 									</AccordionTrigger>
 									<AccordionContent>
 										<div className="grid gap-4">
-											<Slider defaultValue={[10, 50]} max={100} step={1} />
+											{/* <Slider defaultValue={[10, 50]} max={100} step={1} /> */}
 											<div className="flex items-center justify-between">
 												<span>₱10</span>
 												<span>₱100</span>
@@ -131,7 +130,7 @@ const ProductsPage = () => {
 							</DropdownMenu>
 						</div>
 					</div>
-					<div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+					{/* <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 						{products.map((product, index) => (
 							<ProductCard
 								description={product.description}
@@ -165,7 +164,7 @@ const ProductsPage = () => {
 								unit={product.unit}
 							/>
 						))}
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</div>
