@@ -15,8 +15,7 @@ export const register = async (data: RegisterType) => {
 
 	// const { email, password, name, address, description, mobileNumber, role } =
 	//   parsedData.data
-	const { email, password, name, address, description, mobileNumber, role } =
-		parsedData.data
+	const { email, password } = parsedData.data
 
 	const hashedPassword = await hash(password, 10)
 
@@ -49,20 +48,9 @@ export const register = async (data: RegisterType) => {
 
 	await db.user.create({
 		data: {
-			name,
 			email,
-			address,
-			mobileNumber,
-			description,
-			role,
-			password: hashedPassword,
-			preferredFoods: {
-				createMany: {
-					data: data.preferredFoods.map((food) => ({
-						text: food.text
-					}))
-				}
-			}
+			role: "BUYER",
+			password: hashedPassword
 		}
 	})
 
