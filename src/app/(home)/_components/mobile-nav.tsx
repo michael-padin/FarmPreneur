@@ -9,7 +9,7 @@ import IconBadge from "@/components/fg/fg-icon-badge"
 const MobileNav = () => {
 	const session = useSession()
 	return (
-		<div className="fixed z-10 w-full bg-background p-4 lg:hidden">
+		<div className="fixed z-10 w-full bg-primary p-4 lg:hidden">
 			<div className="flex items-center justify-between gap-4 lg:container">
 				{session.status === "authenticated" ? (
 					<div className="w-full">
