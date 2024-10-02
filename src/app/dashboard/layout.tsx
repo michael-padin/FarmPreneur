@@ -1,3 +1,5 @@
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 import React from "react"
 
 interface DashboardLayoutProps {
@@ -5,8 +7,14 @@ interface DashboardLayoutProps {
 	admin: React.ReactNode
 }
 
-const DashboardLayout = ({ farmer, admin }: DashboardLayoutProps) => {
-	const role = "FARMER"
+const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
+	const session = await auth()
+
+	if (!session) {
+		redirect("/login")
+	}
+
+	const role = session?.user.role
 
 	return <div>{role === "FARMER" ? farmer : admin}</div>
 }
