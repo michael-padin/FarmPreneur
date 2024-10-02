@@ -9,7 +9,7 @@ const navItems = [
 	{ name: "Home", icon: Home, href: "/" },
 	{ name: "Notifications", icon: Bell, href: "/notifications" },
 	{ name: "Bookmarks", icon: Bookmark, href: "/bookmarks" },
-	{ name: "Profile", icon: User, href: "/profile" }
+	{ name: "Me", icon: User, href: "/me" }
 ]
 
 const BottomNav = () => {
