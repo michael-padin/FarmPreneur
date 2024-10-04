@@ -27,7 +27,7 @@ const BottomNav = () => {
 	}, [pathname])
 
 	return (
-		<nav className="fixed bottom-0 left-0 right-0 z-50 bg-background">
+		<nav className="fixed bottom-0 left-0 right-0 z-40 bg-background">
 			<div className="mx-auto max-w-screen-xl shadow-2xl shadow-black">
 				<div
 					ref={navRef}
