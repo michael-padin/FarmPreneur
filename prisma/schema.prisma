@@ -255,7 +255,7 @@ model User {
   accounts             Account[]
   sessions             Session[]
   isApproved           Boolean                @default(false)
-  role                 String?
+  role                 ROLE?
   password             String?
   contactNumber        String?
   // Optional for WebAuthn support
@@ -273,23 +273,23 @@ model User {
 
 // MARK: PRODUCT
 model Product {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  title             String
-  description       String
-  category          String
-  price             Float
-  unit              String
-  quantityAvailable Int
-  images            String[]
-  location          String
-  farmer            User      @relation(fields: [farmerId], references: [id]) // Farmer creates the product
-  farmerId          String    @db.ObjectId
-  isApproved        Boolean   @default(false) // For marketplace admin approval
-  orders            Order[] // Products can have multiple orders
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  Category          Category? @relation(fields: [categoryId], references: [id])
-  categoryId        String?   @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  category    String
+  price       Float
+  unit        String?
+  quantity    Int
+  images      String[]
+  location    String
+  farmer      User      @relation(fields: [farmerId], references: [id]) // Farmer creates the product
+  farmerId    String    @db.ObjectId
+  isApproved  Boolean   @default(false) // For marketplace admin approval
+  orders      Order[] // Products can have multiple orders
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?   @db.ObjectId
 }
 
 // MARK: ORDER
