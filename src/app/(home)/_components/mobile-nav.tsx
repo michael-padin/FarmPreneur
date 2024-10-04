@@ -27,12 +27,14 @@ const MobileNav = () => {
 
 				{isAuthenticated ? (
 					<div className="flex items-center gap-4 text-primary-foreground">
-						<IconBadge
-							icon={ShoppingCart}
-							count={12}
-							variant="ghost"
-							className="hover:bg-transparent hover:text-white"
-						/>
+						<Link href={`/cart`}>
+							<IconBadge
+								icon={ShoppingCart}
+								count={12}
+								variant="ghost"
+								className="hover:bg-transparent hover:text-white"
+							/>
+						</Link>
 						<IconBadge
 							icon={MessageCircleMore}
 							count={12}
