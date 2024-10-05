@@ -4,6 +4,138 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Contact Us</title>
+		<style>
+			* {
+					margin: 0;
+					padding: 0;
+					box-sizing: border-box;
+					font-family: "Poppins", sans-serif;
+				}
+			body {
+    				display: flex;
+    				justify-content: center;
+    				align-items: center;
+    				min-height: 100vh;
+    				background: #FFD700;
+				}
+			h2{
+				text-align: center;
+				font-family: Copperplate;
+				font-size: 70px;
+
+			}
+			hr{
+				width: 500px;
+				margin: 10px auto;
+			}
+			.members{
+				display: flex;
+			}
+			.team{
+				margin: 8px;
+				position: relative;
+				text-align: center;
+			}
+			img{
+				width: 170px;
+				height: 170px;
+				border-radius: 100%;
+				margin: 30px;
+				cursor: pointer;
+            	transition: transform 0.3s ease, box-shadow 0.3s ease; 
+			}
+			img:hover {
+            transform: scale(1.1); 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+        }
+			h4{
+				text-align: center;
+				font-family:'Poppins', sans-serif;
+				font-size: 20px;
+				margin: 7px;
+			}
+			p {
+			text-align: left;
+            display: none;
+            font-family: "Poppins", sans-serif;
+            font-size: 12px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            bottom: 120px; 
+            transform: translateX(-50%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .team:hover p {
+            display: block;
+            opacity: 1;
+            transform: translateY(-10px); 
+        }
+		</style>
 	</head>
-	<body></body>
+	<body>
+		<div>
+			<h2>PINOY BIG MICHAEL</h2>
+			<hr>
+			<div class="members">
+				<div class="team">
+					<img src="img/lexter.png">
+					<h4>HACKER</h4>
+					<p>Name: Lexter C. Villarta<br>
+					   Address: Carcar City<br>
+					   Phone: 0966xxxxxxx<br>
+					   Email:lextervillarta@gmail.com
+					</p>
+				</div>
+				<div class="team">
+					<img src="img/margie.png">
+					<h4>HIPSTER</h4>
+					<p>Name: Margie D. Alconera<br>
+						Address: Argao, Cebu<br>
+						Phone: 0966xxxxxxx<br>
+						Email:margiealconera@gmail.com
+					 </p>
+			
+				</div>
+				<div class="team">
+					<img src="img/michael.png">
+					<h4>HACKER</h4>
+					<p>Name: Michael G. Padin<br>
+						Address: Carcar City<br>
+						Phone: 0966xxxxxxx<br>
+						Email:michaelpadin@gmail.com
+					 </p>
+				
+				</div>
+				<div class="team">
+					<img src="img/stephanie.jpg">
+					<h4>HIPSTER</h4>
+					<p>Name: Stephanie M. Bitanga<br>
+						Address: Sibonga, Cebu<br>
+						Phone: 0966xxxxxxx<br>
+						Email:stephaniebitanga@gmail.com
+					 </p>
+					
+				</div>
+				<div class="team">
+					<img src="img/jim.jpg">
+					<h4>HUSTLER</h4>
+					<p>Name: James P. Villamora<br>
+						Address: Argao, Cebu<br>
+						Phone: 0966xxxxxxx<br>
+						Email:jamesvillamora@gmail.com
+					 </p>
+					
+				</div>
+			</div>
+		</div>
+	
+
+
+
+	</body>
 </html>
