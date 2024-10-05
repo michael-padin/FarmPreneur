@@ -21,11 +21,16 @@ export default async function LoginPage() {
 						className="flex items-center justify-center gap-2 text-3xl font-black text-[#404145] lg:hidden"
 						href="/"
 					>
-						<img src="/logo.svg" alt="" className="h-[100px] w-[100px]" />
+						<h1 className="text-primary">FarmPreneur</h1>
+						<img
+							src="/logo.svg"
+							alt=""
+							className="sr-only h-[100px] w-[100px] lg:not-sr-only"
+						/>
 					</Link>
-					<div className="grid gap-2 text-center">
-						<h1 className="text-3xl font-bold">Login</h1>
-						<p className="text-balance text-muted-foreground">
+					<div className="space-y-2">
+						<h1 className="text-center text-3xl font-bold">Login</h1>
+						<p className="text-balance text-center text-muted-foreground">
 							Enter your credentials below to login to your account
 						</p>
 					</div>

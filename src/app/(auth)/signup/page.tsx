@@ -13,19 +13,26 @@ export const metadata: Metadata = {
 
 export default async function SignupPage() {
 	return (
-		<div className="h-screen w-full overflow-hidden lg:grid lg:grid-cols-2 xl:min-h-screen">
+		<div className="h-screen w-full lg:grid lg:grid-cols-2 lg:overflow-hidden xl:min-h-screen">
 			<div className="mx-auto flex items-center justify-center p-4">
 				<div className="mx-auto grid gap-6 md:w-[400px]">
 					<Link
 						className="flex items-center justify-center gap-2 text-3xl font-black text-[#404145] lg:hidden"
 						href="/"
 					>
-						<img src="/logo.svg" alt="" className="h-[100px] w-[100px]" />
+						<h1 className="text-primary">FarmPreneur</h1>
+						<img
+							src="/logo.svg"
+							alt=""
+							className="sr-only h-[100px] w-[100px] lg:not-sr-only"
+						/>
 					</Link>
-					<h1 className="text-center text-3xl font-bold">Sign Up</h1>
-					<p className="text-balance text-center text-muted-foreground">
-						Enter your information to create an account
-					</p>
+					<div className="space-y-2">
+						<h1 className="text-center text-3xl font-bold">Sign Up</h1>
+						<p className="text-balance text-center text-muted-foreground">
+							Enter your information to create an account
+						</p>
+					</div>
 
 					{/* <SignUpFormTabs /> */}
 					<div className="grid gap-6">
