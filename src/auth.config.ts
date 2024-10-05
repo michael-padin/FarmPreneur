@@ -81,6 +81,12 @@ export default {
 		}
 	},
 	callbacks: {
+		async jwt({ token, user, account }) {
+			if (account?.provider === "credentials") {
+				token.credentials = true
+			}
+			return token
+		},
 		session({ session, user }) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { password, ...newUser } = session.user
