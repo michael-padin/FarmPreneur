@@ -38,9 +38,9 @@ export default async function BuyerProfilePage() {
 									/>
 								</div>
 							</div>
-							<div className="space-y-2">
+							<div className="space-y-2 truncate">
 								<h1 className="text-2xl font-bold text-primary-foreground">
-									{user.name}
+									{user.name || user.email}
 								</h1>
 								<div className="flex items-center space-x-2 text-sm text-white">
 									<p>
