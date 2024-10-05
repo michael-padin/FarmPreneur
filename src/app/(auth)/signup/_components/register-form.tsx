@@ -104,11 +104,7 @@ const RegisterForm = () => {
 							<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput
-										{...field}
-										autoComplete="new-password"
-										type="password"
-									/>
+									<FGPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -121,11 +117,7 @@ const RegisterForm = () => {
 							<FormItem>
 								<FormLabel>Confirm Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput
-										{...field}
-										autoComplete="new-password"
-										type="password"
-									/>
+									<FGPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
