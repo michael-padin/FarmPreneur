@@ -20,22 +20,13 @@ import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { Navbar } from "@/app/_components"
 import { JSX, SVGProps } from "react"
+import { MobileNav } from "@/app/(home)/_components"
+import ProductBottomNav from "./_components/bottom-nav"
 
 export default function Component() {
 	return (
 		<>
-			<header className="fixed inset-x-0 top-0 z-10 border-b bg-white">
-				<div className="container mx-auto flex h-20 items-center justify-between px-4">
-					<Link
-						className="flex items-center gap-2 text-3xl font-black text-[#404145]"
-						href="/"
-					>
-						<img src="/logo.svg" alt="" className="h-[50px] w-[50px]" />
-						Farm2go
-					</Link>
-					<Navbar />
-				</div>
-			</header>
+			<MobileNav />
 			<div className="lg:gap-12b container mx-auto grid items-start gap-6 px-4 py-24 md:grid-cols-2">
 				<div className="grid gap-4">
 					<Carousel className="overflow-hidden rounded-lg">
@@ -91,12 +82,14 @@ export default function Component() {
 							or fertilizers. Perfect for snacking, baking, or adding to salads.
 						</p>
 						<div className="flex items-center gap-4">
-							<div className="text-2xl font-bold">₱100/kg</div>
+							<div className="text-2xl font-bold">
+								<span className="text-xs">₱</span>100/kg
+							</div>
 							<div className="rounded-lg bg-gray-100 px-3 py-1 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
 								Fruits
 							</div>
 						</div>
-						<div className="grid gap-2">
+						{/* <div className="grid gap-2">
 							<Label className="text-base" htmlFor="quantity">
 								Quantity
 							</Label>
@@ -122,23 +115,11 @@ export default function Component() {
 								</div>
 							</div>
 						</div>
-					</div>
-					<div className="flex w-1/2 gap-2">
-						<Link
-							href="/login"
-							className={cn(buttonVariants({ variant: "outline" }), "w-1/2")}
-						>
-							Add to Cart
-						</Link>
-						<Link
-							href="/login"
-							className={cn(buttonVariants({ variant: "default" }), "w-1/2")}
-						>
-							Buy Now
-						</Link>
+						 */}
 					</div>
 				</div>
 			</div>
+			<ProductBottomNav />
 		</>
 	)
 }
