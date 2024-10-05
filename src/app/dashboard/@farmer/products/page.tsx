@@ -31,6 +31,7 @@ import {
 	TableRow
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Link from "next/link"
 
 // export const description =
 // 	"An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions."
@@ -43,9 +44,9 @@ export default function ProductsPage() {
 					<TabsList>
 						<TabsTrigger value="all">All</TabsTrigger>
 						<TabsTrigger value="active">Active</TabsTrigger>
-						<TabsTrigger value="draft">Draft</TabsTrigger>
-						<TabsTrigger value="archived" className="hidden sm:flex">
-							Archived
+						<TabsTrigger value="pending">Pending</TabsTrigger>
+						<TabsTrigger value="denied" className="hidden sm:flex">
+							Denied
 						</TabsTrigger>
 					</TabsList>
 					<div className="ml-auto flex items-center gap-2">
@@ -64,8 +65,8 @@ export default function ProductsPage() {
 								<DropdownMenuCheckboxItem checked>
 									Active
 								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
+								<DropdownMenuCheckboxItem>Pending</DropdownMenuCheckboxItem>
+								<DropdownMenuCheckboxItem>Denied</DropdownMenuCheckboxItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 						<Button size="sm" variant="outline" className="h-8 gap-1">
@@ -74,11 +75,13 @@ export default function ProductsPage() {
 								Export
 							</span>
 						</Button>
-						<Button size="sm" className="h-8 gap-1">
-							<PlusCircle className="h-3.5 w-3.5" />
-							<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-								Add Product
-							</span>
+						<Button size="sm" className="" asChild>
+							<Link href="/dashboard/products/create" className="h-8 gap-1">
+								<PlusCircle className="h-3.5 w-3.5" />
+								<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+									Add Product
+								</span>
+							</Link>
 						</Button>
 					</div>
 				</div>
@@ -124,14 +127,13 @@ export default function ProductsPage() {
 												width="64"
 											/>
 										</TableCell>
-										<TableCell className="font-medium">
-											Laser Lemonade Machine
-										</TableCell>
+										<TableCell className="font-medium">Talong</TableCell>
 										<TableCell>
-											<Badge variant="outline">Draft</Badge>
+											<Badge variant="outline">Denied</Badge>
 										</TableCell>
 										<TableCell className="hidden md:table-cell">
-											$499.99
+											<span className="text-xs text-gray-500">₱</span>
+											50
 										</TableCell>
 										<TableCell className="hidden md:table-cell">25</TableCell>
 										<TableCell className="hidden md:table-cell">
@@ -167,14 +169,13 @@ export default function ProductsPage() {
 												width="64"
 											/>
 										</TableCell>
-										<TableCell className="font-medium">
-											Hypernova Headphones
-										</TableCell>
+										<TableCell className="font-medium">Kalbasa</TableCell>
 										<TableCell>
 											<Badge variant="outline">Active</Badge>
 										</TableCell>
 										<TableCell className="hidden md:table-cell">
-											$129.99
+											<span className="text-xs text-gray-500">₱</span>
+											50
 										</TableCell>
 										<TableCell className="hidden md:table-cell">100</TableCell>
 										<TableCell className="hidden md:table-cell">
@@ -210,14 +211,13 @@ export default function ProductsPage() {
 												width="64"
 											/>
 										</TableCell>
-										<TableCell className="font-medium">
-											AeroGlow Desk Lamp
-										</TableCell>
+										<TableCell className="font-medium">Kamatis</TableCell>
 										<TableCell>
 											<Badge variant="outline">Active</Badge>
 										</TableCell>
 										<TableCell className="hidden md:table-cell">
-											$39.99
+											<span className="text-xs text-gray-500">₱</span>
+											50
 										</TableCell>
 										<TableCell className="hidden md:table-cell">50</TableCell>
 										<TableCell className="hidden md:table-cell">
@@ -253,15 +253,11 @@ export default function ProductsPage() {
 												width="64"
 											/>
 										</TableCell>
-										<TableCell className="font-medium">
-											TechTonic Energy Drink
-										</TableCell>
+										<TableCell className="font-medium">Ampalaya</TableCell>
 										<TableCell>
-											<Badge variant="secondary">Draft</Badge>
+											<Badge variant="secondary">Denied</Badge>
 										</TableCell>
-										<TableCell className="hidden md:table-cell">
-											$2.99
-										</TableCell>
+										<TableCell className="hidden md:table-cell"></TableCell>
 										<TableCell className="hidden md:table-cell">0</TableCell>
 										<TableCell className="hidden md:table-cell">
 											2023-12-25 11:59 PM
@@ -296,14 +292,13 @@ export default function ProductsPage() {
 												width="64"
 											/>
 										</TableCell>
-										<TableCell className="font-medium">
-											Gamer Gear Pro Controller
-										</TableCell>
+										<TableCell className="font-medium">Pechay</TableCell>
 										<TableCell>
 											<Badge variant="outline">Active</Badge>
 										</TableCell>
 										<TableCell className="hidden md:table-cell">
-											$59.99
+											<span className="text-xs text-gray-500">₱</span>
+											50
 										</TableCell>
 										<TableCell className="hidden md:table-cell">75</TableCell>
 										<TableCell className="hidden md:table-cell">
@@ -339,14 +334,13 @@ export default function ProductsPage() {
 												width="64"
 											/>
 										</TableCell>
-										<TableCell className="font-medium">
-											Luminous VR Headset
-										</TableCell>
+										<TableCell className="font-medium">Lettuce</TableCell>
 										<TableCell>
 											<Badge variant="outline">Active</Badge>
 										</TableCell>
 										<TableCell className="hidden md:table-cell">
-											$199.99
+											<span className="text-xs text-gray-500">₱</span>
+											50
 										</TableCell>
 										<TableCell className="hidden md:table-cell">30</TableCell>
 										<TableCell className="hidden md:table-cell">
