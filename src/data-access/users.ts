@@ -33,3 +33,13 @@ export const getUserFarmerById = async (id: string) => {
 		}
 	})
 }
+
+export const createUserCustomer = async (data: {
+	email: string
+	password: string
+	name: string
+}) => {
+	await db.user.create({
+		data
+	})
+}

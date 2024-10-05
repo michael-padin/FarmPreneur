@@ -22,25 +22,25 @@ export default async function SignupPage() {
 					>
 						<img src="/logo.svg" alt="" className="h-[100px] w-[100px]" />
 					</Link>
-					<h1 className="text-3xl font-bold">Sign Up</h1>
-					<p className="text-balance text-muted-foreground">
+					<h1 className="text-center text-3xl font-bold">Sign Up</h1>
+					<p className="text-balance text-center text-muted-foreground">
 						Enter your information to create an account
 					</p>
 
 					{/* <SignUpFormTabs /> */}
 					<div className="grid gap-6">
-						<RegisterForm />
+						<GoogleButton />
 						<div className="relative">
 							<div className="absolute inset-0 flex items-center">
 								<span className="w-full border-t" />
 							</div>
 							<div className="relative flex justify-center text-xs uppercase">
 								<span className="bg-background px-2 text-muted-foreground">
-									Or continue with
+									Or
 								</span>
 							</div>
 						</div>
-						<GoogleButton />
+						<RegisterForm />
 					</div>
 
 					<div className="mt-4 text-center text-sm">

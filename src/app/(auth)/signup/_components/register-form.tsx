@@ -49,8 +49,36 @@ const RegisterForm = () => {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)}>
+			<form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
 				<fieldset disabled={isPending} className="space-y-3">
+					<div className="flex gap-3">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>First Name</FormLabel>
+									<FormControl>
+										<Input {...field} placeholder="John" autoComplete="off" />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Last Name</FormLabel>
+									<FormControl>
+										<Input placeholder="Doe" {...field} autoComplete="off" />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
 					<FormField
 						control={form.control}
 						name="email"
@@ -58,7 +86,11 @@ const RegisterForm = () => {
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input placeholder="@email.com" {...field} />
+									<Input
+										placeholder="@email.com"
+										{...field}
+										autoComplete="off"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -72,7 +104,11 @@ const RegisterForm = () => {
 							<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} />
+									<FGPasswordInput
+										{...field}
+										autoComplete="new-password"
+										type="password"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -85,14 +121,18 @@ const RegisterForm = () => {
 							<FormItem>
 								<FormLabel>Confirm Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} />
+									<FGPasswordInput
+										{...field}
+										autoComplete="new-password"
+										type="password"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 
-					<Button type="submit" className="w-full">
+					<Button type="submit" className="w-full" disabled={isPending}>
 						{isPending ? <Loader2 className="animate-spin" /> : "Register"}
 					</Button>
 				</fieldset>
