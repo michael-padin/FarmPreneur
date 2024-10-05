@@ -47,7 +47,7 @@ const LoginForm = () => {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<fieldset disabled={isPending} className="space-y-6">
+				<fieldset disabled={isPending} className="space-y-3">
 					<FormField
 						control={form.control}
 						name="email"
@@ -82,17 +82,9 @@ const LoginForm = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type="submit" className="w-full">
+					<Button type="submit" className="w-full" disabled={isPending}>
 						{isPending ? <Loader2 className="animate-spin" /> : "Log in"}
 					</Button>
-					{/* <Button
-            variant="outline"
-            type="button"
-            className="w-full"
-            onClick={() => "login"}
-          >
-            Login with Google
-          </Button> */}
 				</fieldset>
 			</form>
 		</Form>
