@@ -24,8 +24,8 @@ export const register = async (data: RegisterType) => {
 		if (existingUser) return { error: "User already exists" }
 
 		await createUserCustomerUseCase({
-			...data,
 			name: `${data.firstName} ${data.lastName}`,
+			email,
 			password: hashedPassword
 		})
 
