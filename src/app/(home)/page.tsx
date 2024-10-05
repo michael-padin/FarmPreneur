@@ -8,7 +8,7 @@ import {
 
 const Home = async () => {
 	return (
-		<>
+		<div>
 			<header>
 				<MobileNav />
 				<DesktopNav />
@@ -52,7 +52,7 @@ const Home = async () => {
 				<DailyDiscovery />
 			</main>
 			{/* <Footer /> */}
-		</>
+		</div>
 	)
 }
 

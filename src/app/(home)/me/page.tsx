@@ -17,6 +17,8 @@ export default async function BuyerProfilePage() {
 	if (!session) redirect("/login")
 	const user = session.user
 
+	if (!user) redirect("/login")
+
 	return (
 		<>
 			<MobileNav />
