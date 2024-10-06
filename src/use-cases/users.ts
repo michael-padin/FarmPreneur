@@ -4,6 +4,7 @@ import {
 	getUserById,
 	getUserFarmerById,
 	saveVerificationCode,
+	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
 
@@ -41,4 +42,11 @@ export const saveVerificationCodeUseCase = async (
 
 export const updateVerifiedUserUseCase = async (userId: string) => {
 	return await updateVerifiedUser(userId)
+}
+
+export const UpdateUserPasswordByEmailUseCase = async (data: {
+	email: string
+	password: string
+}) => {
+	return await updateUserPasswordByEmail(data)
 }
