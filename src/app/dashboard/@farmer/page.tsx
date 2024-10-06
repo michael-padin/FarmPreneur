@@ -14,8 +14,6 @@ export default async function FarmerDashboard() {
 
 	const farmer = await getUserFarmer(session.user.id!)
 
-	console.log(farmer)
-
 	if (!farmer) redirect("/login")
 
 	if (!session?.user.isApproved) redirect("/admin-approval")

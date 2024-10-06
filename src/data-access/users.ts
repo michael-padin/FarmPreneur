@@ -44,12 +44,6 @@ export const saveVerificationCode = async (
 	code: string,
 	expirationTime: Date
 ) => {
-	console.log({
-		userId,
-		code,
-		expirationTime
-	})
-
 	await db.user.update({
 		where: { id: userId },
 		data: {

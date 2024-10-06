@@ -26,7 +26,6 @@ interface DesktopSidebarProps {
 
 export const DesktopSidebar = ({ name }: DesktopSidebarProps) => {
 	const pathname = usePathname()
-	console.log("pathname", pathname)
 
 	const isActiveLink = (path: string) => pathname === path
 	return (
@@ -115,8 +114,6 @@ interface MobileSidebarProps {
 
 export const MobileSidebar = ({ name }: MobileSidebarProps) => {
 	const pathname = usePathname()
-	console.log("pathname", pathname)
-
 	const isActiveLink = (path: string) => pathname === path
 	return (
 		<>
