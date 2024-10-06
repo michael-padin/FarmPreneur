@@ -1,24 +1,19 @@
 import { db } from "@/lib/db"
 
 export const getUserById = async (id: string) => {
-	const user = await db.user.findUnique({
+	return await db.user.findFirst({
 		where: {
 			id: id
 		}
 	})
-	const { password, ...newUser } = user!
-	return newUser
 }
 
 export const getUserByEmail = async (email: string) => {
-	const user = await db.user.findUnique({
+	return await db.user.findUnique({
 		where: {
 			email: email
 		}
 	})
-
-	const { password, ...newUser } = user!
-	return newUser
 }
 
 export const getUserFarmerById = async (id: string) => {
@@ -39,7 +34,38 @@ export const createUserCustomer = async (data: {
 	password: string
 	name: string
 }) => {
-	await db.user.create({
+	return await db.user.create({
 		data
+	})
+}
+
+export const saveVerificationCode = async (
+	userId: string,
+	code: string,
+	expirationTime: Date
+) => {
+	console.log({
+		userId,
+		code,
+		expirationTime
+	})
+
+	await db.user.update({
+		where: { id: userId },
+		data: {
+			verificationCode: code,
+			verificationExpires: expirationTime
+		}
+	})
+}
+
+export const updateVerifiedUser = async (userId: string) => {
+	await db.user.update({
+		where: { id: userId },
+		data: {
+			isVerified: true,
+			verificationCode: null,
+			verificationExpires: null
+		}
 	})
 }
