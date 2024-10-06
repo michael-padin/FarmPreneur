@@ -20,8 +20,11 @@ import { Input } from "@/components/ui/input"
 import { LoginSchema, LoginType } from "../_types"
 import { siginInWithCredentials } from "../action"
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
+import { useRouter } from "next/navigation"
+import { resendCode } from "../../verify/actions"
 
 const LoginForm = () => {
+	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -34,13 +37,26 @@ const LoginForm = () => {
 	const onSubmit = async (data: LoginType) => {
 		startTransition(() => {
 			siginInWithCredentials(data).then((res) => {
-				if (res?.success) {
-					toast.success(res?.success)
+				if (res.error) {
+					toast.error(res.error)
 				} else {
-					toast.error(res?.error)
+					if (!res.data?.isVerified) {
+						resendCode(res.data!.id!).then((res) => {
+							if (res.error) {
+								toast.error(res.error)
+							} else {
+								toast.success("Code Resent ", {
+									description: "A new code has been sent to your email"
+								})
+							}
+						})
+						return router.push(`/verify/${res.data?.id}`)
+					}
+					if (res.data?.role === "FARMER" || res.data?.role === "ADMIN") {
+						return router.push("/dashboard")
+					}
+					return router.push("/")
 				}
-
-				console.log(res)
 			})
 		})
 	}

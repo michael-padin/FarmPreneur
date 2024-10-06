@@ -3,29 +3,31 @@ import { AuthError } from "next-auth"
 import { z } from "zod"
 
 import { signIn } from "@/auth"
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 
 import { LoginSchema } from "./_types"
+import { getUserByEmailUseCase } from "@/use-cases/users"
 
 export const siginInWithCredentials = async (
 	data: z.infer<typeof LoginSchema>
 ) => {
-	const validatetFields = LoginSchema.safeParse(data)
+	const validatedFields = LoginSchema.safeParse(data)
 
-	if (!validatetFields.success) {
+	if (!validatedFields.success) {
 		return { error: "Invalid fields" }
 	}
 
-	const { email, password } = validatetFields.data
+	const { email, password } = validatedFields.data
 
 	try {
 		await signIn("credentials", {
 			email,
 			password,
-			redirectTo: DEFAULT_LOGIN_REDIRECT
+			redirect: false
 		})
 
-		return { success: "Logged in" }
+		const user = await getUserByEmailUseCase(email)
+
+		return { success: "Logged in", data: user }
 	} catch (error) {
 		// @TODO: handle error
 		if (error instanceof AuthError) {
@@ -40,5 +42,3 @@ export const siginInWithCredentials = async (
 		throw error
 	}
 }
-
-// export const sigInWithGoogle = async () => await signIn("google");
