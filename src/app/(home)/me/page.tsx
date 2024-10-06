@@ -5,6 +5,7 @@ import { Icons } from "@/components/icons"
 import Link from "next/link"
 import Recommend from "../_components/recommend"
 import { redirect } from "next/navigation"
+import { SignOutButton } from "./_components/signout-button"
 
 const getUser = async () => {
 	// const res = await getUserByEmail()
@@ -102,6 +103,9 @@ export default async function BuyerProfilePage() {
 									<span className="text-xs">To Rate</span>
 								</div>
 							</div>
+						</div>
+						<div className="flex justify-end">
+							<SignOutButton />
 						</div>
 					</div>
 				</div>
