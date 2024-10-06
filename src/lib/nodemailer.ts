@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer"
+import { render } from "@react-email/components"
+import { OTPEmail } from "@/components/fg/fp-otp-email"
+import { MailOptions } from "nodemailer/lib/json-transport"
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
@@ -14,8 +17,8 @@ export const sendEmail = async (
 	text: string,
 	html: string
 ) => {
-	const mailOptions = {
-		from: process.env.EMAIL_USER,
+	const mailOptions: MailOptions = {
+		from: "no-reply@farmpremneur@gmail.com",
 		to,
 		subject,
 		text,
@@ -29,4 +32,20 @@ export const sendEmail = async (
 		console.error("Error sending email:", error)
 		throw error // Optionally re-throw to handle it further up
 	}
+}
+
+export const sendOTPEmail = async (
+	to: string,
+	otp: string,
+	companyName: string,
+	recipientName = "Valued Customer"
+) => {
+	const html = await render(
+		OTPEmail({
+			otp,
+			companyName,
+			recipientName
+		})
+	)
+	await sendEmail(to, "Email Verification", otp, html)
 }
