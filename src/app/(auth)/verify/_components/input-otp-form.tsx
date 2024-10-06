@@ -4,82 +4,126 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
-	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
 import {
 	InputOTP,
 	InputOTPGroup,
-	InputOTPSeparator,
 	InputOTPSlot
 } from "@/components/ui/input-otp"
-import { toast } from "@/components/ui/use-toast"
+import { useCallback, useEffect, useState, useTransition } from "react"
+import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
+import { useRouter } from "next/navigation"
+import { resendCode, verifyCode } from "../actions"
+import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
+import { VerificationFormSchema, VerificationType } from "../types"
 
-const FormSchema = z.object({
-	pin: z.string().min(6, {
-		message: "Your one-time password must be 6 characters."
-	})
-})
+export function InputOTPForm({ userId }: { userId: string }) {
+	const router = useRouter()
+	const [canResend, setCanResend] = useState(false)
+	const [timeLeft, setTimeLeft] = useState(600) // 5 minutes in seconds
 
-export function InputOTPForm() {
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
+	const [isPending, startTransition] = useTransition()
+	const [isResending, startResending] = useTransition()
+	const form = useForm<VerificationType>({
+		resolver: zodResolver(VerificationFormSchema),
 		defaultValues: {
-			pin: ""
+			userId: userId,
+			code: ""
 		}
 	})
 
-	function onSubmit(data: z.infer<typeof FormSchema>) {
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			)
+	const formatTime = (seconds: number) => {
+		const minutes = Math.floor(seconds / 60)
+		const remainingSeconds = seconds % 60
+		return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
+	}
+
+	useEffect(() => {
+		if (timeLeft > 0) {
+			const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+			return () => clearTimeout(timer)
+		} else {
+			setCanResend(true)
+		}
+	}, [timeLeft])
+
+	function onSubmit(data: VerificationType) {
+		startTransition(() => {
+			verifyCode(data).then((res) => {
+				if (res.error) {
+					toast.error(res.error)
+				} else {
+					toast.success("Email verified")
+					router.push("/login")
+				}
+			})
 		})
 	}
 
+	const handleResend = useCallback(() => {
+		// Here you would typically call your API to resend the OTP
+		setTimeLeft(300)
+		setCanResend(false)
+		startResending(() => {
+			resendCode(userId).then((res) => {
+				if (res.error) {
+					toast.error(res.error)
+				} else {
+					toast.success("Code Resent ", {
+						description: "A new code has been sent to your email"
+					})
+				}
+			})
+		})
+	}, [userId])
+
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="mx-auto w-2/3 space-y-6"
+			>
 				<FormField
 					control={form.control}
-					name="pin"
-					render={() => (
-						<FormItem>
-							<FormLabel>One-Time Password</FormLabel>
+					name="code"
+					render={({ field }) => (
+						<FormItem className="flex flex-col">
 							<FormControl>
-								<InputOTP maxLength={6}>
+								<InputOTP maxLength={6} {...field}>
 									<InputOTPGroup>
 										<InputOTPSlot index={0} />
 										<InputOTPSlot index={1} />
 										<InputOTPSlot index={2} />
-									</InputOTPGroup>
-									<InputOTPSeparator />
-									<InputOTPGroup>
 										<InputOTPSlot index={3} />
 										<InputOTPSlot index={4} />
 										<InputOTPSlot index={5} />
 									</InputOTPGroup>
 								</InputOTP>
 							</FormControl>
-							<FormDescription>
-								Please enter the one-time password sent to your phone.
-							</FormDescription>
+
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-
-				<Button type="submit">Submit</Button>
+				<p className="mt-4 text-center text-sm text-gray-500">
+					Time remaining: {formatTime(timeLeft)}
+				</p>
+				<FGSubmitBtn disabled={isPending || isResending} text="Verify" />
+				<Button
+					variant="outline"
+					className="w-full"
+					onClick={handleResend}
+					disabled={!canResend || isResending}
+				>
+					Resend
+				</Button>
 			</form>
 		</Form>
 	)
