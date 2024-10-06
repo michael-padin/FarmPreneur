@@ -115,15 +115,17 @@ export function InputOTPForm({ userId }: { userId: string }) {
 				<p className="mt-4 text-center text-sm text-gray-500">
 					Time remaining: {formatTime(timeLeft)}
 				</p>
-				<FGSubmitBtn disabled={isPending || isResending} text="Verify" />
-				<Button
-					variant="outline"
-					className="w-full"
-					onClick={handleResend}
-					disabled={!canResend || isResending}
-				>
-					Resend
-				</Button>
+				<div className="space-y-2">
+					<FGSubmitBtn disabled={isPending || isResending} text="Verify" />
+					<Button
+						variant="outline"
+						className="w-full"
+						onClick={handleResend}
+						disabled={!canResend || isResending}
+					>
+						Resend
+					</Button>
+				</div>
 			</form>
 		</Form>
 	)

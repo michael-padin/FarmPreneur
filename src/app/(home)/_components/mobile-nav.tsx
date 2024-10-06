@@ -1,21 +1,19 @@
-"use client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircleMore, Search, ShoppingCart } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import IconBadge from "@/components/fg/fg-icon-badge"
+import { auth } from "@/auth"
 
-const MobileNav = () => {
-	const { status } = useSession()
-	const isAuthenticated = status === "authenticated"
-
+const MobileNav = async () => {
+	const session = await auth()
 	return (
 		<div
-			className={`fixed z-10 w-full ${isAuthenticated ? "bg-primary" : "bg-white"} p-4 lg:hidden`}
+			className={`fixed z-10 w-full ${session?.user ? "bg-primary" : "bg-white"} p-4 lg:hidden`}
 		>
 			<div className="flex items-center justify-between gap-4 lg:container">
-				{isAuthenticated ? (
+				{session?.user ? (
 					<div className="w-full">
 						<Input placeholder="Search" className="w-full" />
 					</div>
@@ -25,7 +23,7 @@ const MobileNav = () => {
 					</div>
 				)}
 
-				{isAuthenticated ? (
+				{session?.user ? (
 					<div className="flex items-center gap-4 text-primary-foreground">
 						<Link href={`/cart`}>
 							<IconBadge

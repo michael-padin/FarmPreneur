@@ -7,11 +7,11 @@ import {
 } from "@/utils/generateVerificationCode"
 import { getUserByEmail } from "@/services/user"
 import { RegisterSchema, RegisterType } from "./_types"
-import { redirect } from "next/navigation"
 import {
 	createUserCustomerUseCase,
 	saveVerificationCodeUseCase
 } from "@/use-cases/users"
+import { sendOTPEmail } from "@/lib/nodemailer"
 
 export const register = async (data: RegisterType) => {
 	const parsedData = RegisterSchema.safeParse(data)
@@ -43,11 +43,22 @@ export const register = async (data: RegisterType) => {
 		const otp = generateOTP()
 		const otpExpiration = generateExpiration()
 
+		console.log("Saving verification code...")
 		await saveVerificationCodeUseCase(newUser.id, otp, otpExpiration)
 
-		redirect(`/verify/${newUser.id}`)
+		await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
+
+		return {
+			success: "Account created, please check your email",
+			data: {
+				userId: newUser.id
+			}
+		}
 	} catch (error) {
-		if (error instanceof Error) return { error: error.message }
-		return { error: "Error creating user" }
+		if (error instanceof Error) {
+			console.log(error.message)
+			return { error: error.message }
+		}
+		throw error
 	}
 }

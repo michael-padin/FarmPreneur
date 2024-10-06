@@ -41,7 +41,8 @@ const RegisterForm = () => {
 				if (res.error) {
 					toast.error(res.error)
 				} else {
-					router.push(`/verify?email=${form.getValues("email")}`)
+					toast.success("Account created, please check your email")
+					router.push(`verify/${res.data?.userId}`)
 				}
 			})
 		})
