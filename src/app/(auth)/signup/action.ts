@@ -1,10 +1,17 @@
 "use server"
 import { hash } from "bcryptjs"
 
+import {
+	generateExpiration,
+	generateOTP
+} from "@/utils/generateVerificationCode"
 import { getUserByEmail } from "@/services/user"
-
 import { RegisterSchema, RegisterType } from "./_types"
-import { createUserCustomerUseCase } from "@/use-cases/users"
+import { redirect } from "next/navigation"
+import {
+	createUserCustomerUseCase,
+	saveVerificationCodeUseCase
+} from "@/use-cases/users"
 
 export const register = async (data: RegisterType) => {
 	const parsedData = RegisterSchema.safeParse(data)
@@ -13,8 +20,6 @@ export const register = async (data: RegisterType) => {
 		return { error: "Invalid fields" }
 	}
 
-	// const { email, password, name, address, description, mobileNumber, role } =
-	//   parsedData.data
 	const { email, password } = parsedData.data
 
 	try {
@@ -23,20 +28,26 @@ export const register = async (data: RegisterType) => {
 		const existingUser = await getUserByEmail(email)
 		if (existingUser) return { error: "User already exists" }
 
-		await createUserCustomerUseCase({
+		const newUser = await createUserCustomerUseCase({
 			name: `${data.firstName} ${data.lastName}`,
 			email,
 			password: hashedPassword
 		})
 
-		return { success: "User created" }
+		if (!newUser) return { error: "Error creating user" }
+
 		/**
 		 * @todo Send email to user for verification
 		 */
+		// Generate OTP and expiration (e.g., 5 minutes)
+		const otp = generateOTP()
+		const otpExpiration = generateExpiration()
+
+		await saveVerificationCodeUseCase(newUser.id, otp, otpExpiration)
+
+		redirect(`/verify/${newUser.id}`)
 	} catch (error) {
-		if (error instanceof Error) console.log(error.message)
+		if (error instanceof Error) return { error: error.message }
 		return { error: "Error creating user" }
 	}
 }
-
-// export const sigInWithGoogle = async () => await signIn("google");

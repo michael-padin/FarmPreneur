@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -28,6 +27,8 @@ const RegisterForm = () => {
 	const form = useForm<RegisterType>({
 		resolver: zodResolver(RegisterSchema),
 		defaultValues: {
+			firstName: "",
+			lastName: "",
 			email: "",
 			password: "",
 			confirmPassword: ""
@@ -37,11 +38,10 @@ const RegisterForm = () => {
 	const onSubmit = async (data: RegisterType) => {
 		startTransition(() => {
 			register(data).then((res) => {
-				if (res.success) {
-					toast.success(res.success)
-					router.push("/login")
-				} else {
+				if (res.error) {
 					toast.error(res.error)
+				} else {
+					router.push(`/verify?email=${form.getValues("email")}`)
 				}
 			})
 		})
