@@ -30,18 +30,18 @@ export default auth((req): Response | void | Promise<Response | void> => {
 	}
 
 	/**
-	 * if route or ang user ni navigate sa login or register and user is already logged in
+	 * if route or ang user ni navigate sa login o	r register and user is already logged in
 	 * ih redirect ni sa overview page
 	 */
-	if (isAuthRoute) {
-		if (isLoggedIn) {
-			if (req.auth?.user.role === "FARMER") {
-				return NextResponse.redirect(new URL("/dashboard", nextUrl))
-			}
-			return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
-		}
-		return
-	}
+	// if (isAuthRoute) {
+	// 	if (isLoggedIn) {
+	// 		if (req.auth?.user.role === "FARMER") {
+	// 			return NextResponse.redirect(new URL("/dashboard", nextUrl))
+	// 		}
+	// 		return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
+	// 	}
+	// 	return
+	// }
 
 	/**
 	 * if ang user  wala naka login unya ang user ni adto
