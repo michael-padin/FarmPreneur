@@ -2,6 +2,7 @@ import nodemailer from "nodemailer"
 import { render } from "@react-email/components"
 import { OTPEmail } from "@/components/fg/fp-otp-email"
 import { MailOptions } from "nodemailer/lib/json-transport"
+import { FPResetPasswordEmail } from "@/components/fg/fp-reset-password-email"
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
@@ -48,4 +49,23 @@ export const sendOTPEmail = async (
 		})
 	)
 	await sendEmail(to, "Email Verification", otp, html)
+}
+
+export const sendResetPasswordEmail = async (
+	to: string,
+	name: string,
+	resetPasswordLink: string
+) => {
+	const html = await render(
+		FPResetPasswordEmail({
+			name,
+			resetPasswordLink
+		})
+	)
+	try {
+		await sendEmail(to, "Password Reset", "Password Reset", html)
+	} catch (error) {
+		console.error("Error sending email:", error)
+		throw error // Optionally re-throw to handle it further up
+	}
 }
