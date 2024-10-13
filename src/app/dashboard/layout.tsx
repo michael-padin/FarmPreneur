@@ -10,13 +10,13 @@ interface DashboardLayoutProps {
 const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
 	const session = await auth()
 
-	if (!session) {
+	if (!session || !["FARMER", "ADMIN"].includes(session?.user.role)) {
 		redirect("/login")
 	}
 
 	const role = session?.user.role
 
-	return <div>{role === "FARMER" ? farmer : admin}</div>
+	return <div>{role === "ADMIN" ? farmer : admin}</div>
 }
 
 export default DashboardLayout
