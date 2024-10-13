@@ -46,13 +46,7 @@ const providers: Provider[] = [
 	}),
 	Google({
 		clientId: process.env.AUTH_GOOGLE_ID,
-		clientSecret: process.env.AUTH_GOOGLE_SECRET,
-		profile(profile) {
-			return {
-				...profile,
-				isVerified: true
-			}
-		}
+		clientSecret: process.env.AUTH_GOOGLE_SECRET
 	})
 ]
 
@@ -93,9 +87,35 @@ export default {
 			}
 			return token
 		},
-		session({ session, user }) {
+		async session({ session, user }) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { password, ...newUser } = session.user
+			const userResponse = await db.user.findUnique({
+				where: {
+					id: user.id
+				},
+				select: {
+					accounts: {
+						select: {
+							provider: true
+						}
+					}
+				}
+			})
+
+			if (userResponse?.accounts[0].provider === "google") {
+				const updatedUser = await adapter?.updateUser?.({
+					id: user.id,
+					isVerified: true
+				})
+				return {
+					...session,
+					user: {
+						...newUser,
+						...updatedUser
+					}
+				}
+			}
 			return {
 				...session,
 				user: {
