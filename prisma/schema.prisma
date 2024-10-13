@@ -254,7 +254,7 @@ model User {
   image                String?
   accounts             Account[]
   sessions             Session[]
-  isApproved           Boolean                @default(false)
+  isSellerApproved     Boolean                @default(false)
   role                 ROLE?
   password             String?
   contactNumber        String?
