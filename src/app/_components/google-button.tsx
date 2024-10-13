@@ -1,5 +1,4 @@
 import { signIn } from "@/auth"
-import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
