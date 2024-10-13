@@ -11,7 +11,7 @@ declare module "next-auth" {
 	 */
 	interface Session {
 		user: {
-			role: string
+			role: "FARMER" | "BUYER" | "ADMIN"
 			password: string | null
 			createdAt: string
 			isApproved: boolean
@@ -25,6 +25,10 @@ declare module "next-auth" {
 		 * with the new ones defined above. To keep the default session user properties,
 		 * you need to add them back into the newly declared interface.
 		 */
+	}
+
+	interface User {
+		isVerified: boolean
 	}
 }
 
