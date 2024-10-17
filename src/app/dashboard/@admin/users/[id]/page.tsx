@@ -70,9 +70,9 @@ export default function UserDetails({ params }: { params: { id: string } }) {
 		}
 	}
 
-	const handleRoleChange = (value: User["role"]) => {
+	const handleRoleChange = (value: string) => {
 		if (user) {
-			setUser({ ...user, role: value })
+			setUser({ ...user, role: value as User["role"] })
 		}
 	}
 
