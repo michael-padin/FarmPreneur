@@ -1,27 +1,5 @@
-"use client"
-
-import { useState } from "react"
-import {
-	Bell,
-	ChevronDown,
-	Layout,
-	LogOut,
-	Menu,
-	Settings,
-	ShoppingCart,
-	Users
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
+
 import {
 	Table,
 	TableBody,
@@ -32,107 +10,11 @@ import {
 } from "@/components/ui/table"
 
 export default function AdminDashboard() {
-	const [sidebarOpen, setSidebarOpen] = useState(false)
-
 	return (
 		<div className="flex h-screen overflow-hidden">
-			{/* Sidebar */}
-			<aside
-				className={`min-h-screen w-64 bg-gray-800 p-4 text-white ${
-					sidebarOpen ? "block" : "hidden"
-				} md:block`}
-			>
-				<nav>
-					<ul className="space-y-2">
-						<li>
-							<a
-								href="#"
-								className="flex items-center space-x-2 rounded p-2 hover:bg-gray-700"
-							>
-								<Layout className="h-5 w-5" />
-								<span>Dashboard</span>
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								className="flex items-center space-x-2 rounded p-2 hover:bg-gray-700"
-							>
-								<ShoppingCart className="h-5 w-5" />
-								<span>Orders</span>
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								className="flex items-center space-x-2 rounded p-2 hover:bg-gray-700"
-							>
-								<Users className="h-5 w-5" />
-								<span>Customers</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</aside>
-
 			{/* Main Content */}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				{/* Header */}
-				<header className="z-10 bg-white shadow-sm">
-					<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="md:hidden"
-							onClick={() => setSidebarOpen(!sidebarOpen)}
-						>
-							<Menu className="h-6 w-6" />
-						</Button>
-						<div className="flex-1 md:flex md:items-center md:gap-12">
-							<Input
-								type="search"
-								placeholder="Search..."
-								className="max-w-sm"
-							/>
-						</div>
-						<div className="flex items-center gap-4">
-							<Button variant="ghost" size="icon">
-								<Bell className="h-5 w-5" />
-							</Button>
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="ghost" className="flex items-center gap-2">
-										<img
-											alt="Avatar"
-											className="rounded-full"
-											height="32"
-											src="/placeholder.svg?height=32&width=32"
-											style={{
-												aspectRatio: "32/32",
-												objectFit: "cover"
-											}}
-											width="32"
-										/>
-										<span className="hidden md:inline-block">John Doe</span>
-										<ChevronDown className="h-4 w-4" />
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent align="end">
-									<DropdownMenuLabel>My Account</DropdownMenuLabel>
-									<DropdownMenuSeparator />
-									<DropdownMenuItem>
-										<Settings className="mr-2 h-4 w-4" />
-										<span>Settings</span>
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<LogOut className="mr-2 h-4 w-4" />
-										<span>Log out</span>
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-						</div>
-					</div>
-				</header>
 
 				{/* Main Content */}
 				<main className="flex-1 overflow-y-auto bg-gray-100 p-4">
