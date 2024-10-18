@@ -11,7 +11,7 @@ declare module "next-auth" {
 	 */
 	interface Session {
 		user: {
-			role: "FARMER" | "BUYER" | "ADMIN"
+			role: "FARMER" | "CUSTOMER" | "ADMIN"
 			password: string | null
 			createdAt: string
 			isApproved: boolean
