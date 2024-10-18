@@ -145,7 +145,7 @@
 
 // enum UserType {
 //   FARMER
-//   BUYER
+//   CUSTOMER
 //   ADMIN
 // }
 
@@ -247,31 +247,31 @@ model Authenticator {
 
 // MARK: USER
 model User {
-  id                   String                 @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String?
-  email                String?                @unique
-  emailVerified        DateTime?
-  image                String?
-  accounts             Account[]
-  sessions             Session[]
-  isSellerApproved     Boolean                @default(false)
-  role                 ROLE?
-  password             String?
-  contactNumber        String?
-  isVerified           Boolean                @default(false)
-  verificationCode     String?
-  verificationExpires  DateTime?
+  id                       String                   @id @default(auto()) @map("_id") @db.ObjectId
+  name                     String?
+  email                    String?                  @unique
+  emailVerified            DateTime?
+  image                    String?
+  accounts                 Account[]
+  sessions                 Session[]
+  farmerApproval           FarmerApproval?
+  role                     ROLE
+  password                 String?
+  contactNumber            String?
+  isVerified               Boolean                  @default(false)
+  verificationCode         String?
+  verificationExpires      DateTime?
   // Optional for WebAuthn support
-  Authenticators       Authenticator[]
-  profilePicture       String?
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  products             Product[]
-  buyerOrders          Order[]                @relation("BuyerOrders")
-  farmerOrders         Order[]                @relation("FarmerOrders")
-  VerificationDocument VerificationDocument[]
-  farmDetails          Farm[]
-  Notification         Notification[]
+  Authenticators           Authenticator[]
+  profilePicture           String?
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+  products                 Product[]
+  buyerOrders              Order[]                  @relation("BuyerOrders")
+  farmerOrders             Order[]                  @relation("FarmerOrders")
+  VerificationDocument     VerificationDocument[]
+  farmDetails              Farm[]
+  Notification             Notification[]
 }
 
 // MARK: PRODUCT
@@ -365,6 +365,12 @@ enum DocumentType {
   FARM_CERTIFICATION
 }
 
+enum FarmerApproval {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum Status {
   PENDING
   IN_PROGRESS
@@ -385,6 +391,6 @@ enum NotificationType {
 
 enum ROLE {
   FARMER
-  BUYER
+  CUSTOMER
   ADMIN
 }
