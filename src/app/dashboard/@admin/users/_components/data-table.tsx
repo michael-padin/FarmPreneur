@@ -33,15 +33,24 @@ import {
 	SheetTrigger
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Filter, RotateCcw } from "lucide-react"
+import { Filter, MoreHorizontal, RotateCcw } from "lucide-react"
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import CopyToClipboard from "@/app/dashboard/_components/copy-to-clipboard"
+import Link from "next/link"
+import { FarmerApprovalBadge, RoleBadge, VerificationBadge } from "./badges"
+import { getCommonPinningStyles } from "@/lib/data-table"
+import { formatDate } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
@@ -67,8 +76,13 @@ export function DataTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			sorting,
+			columnPinning: { right: ["actions"] },
 			columnFilters,
 			columnVisibility
+		},
+		initialState: {
+			sorting: [{ id: "createdAt", desc: true }],
+			columnPinning: { right: ["actions"] }
 		}
 	})
 
@@ -108,8 +122,8 @@ export function DataTable<TData, TValue>({
 							<div className="grid gap-4 py-4">
 								<div className="space-y-2">
 									<Label htmlFor="role">Role</Label>
-									<div className="grid grid-cols-3 gap-2">
-										{["FARMER", "BUYER", "ADMIN"].map((role) => (
+									<div className="flex flex-wrap gap-2 lg:grid lg:grid-cols-3 lg:gap-2">
+										{["FARMER", "CUSTOMER", "ADMIN"].map((role) => (
 											<Label
 												key={role}
 												className="flex items-center space-x-2 rounded-md border p-2"
@@ -145,7 +159,7 @@ export function DataTable<TData, TValue>({
 								</div>
 								<div className="space-y-2">
 									<Label htmlFor="verification">Verification Status</Label>
-									<div className="grid grid-cols-2 gap-2">
+									<div className="flex flex-wrap gap-2 lg:grid lg:grid-cols-3 lg:gap-2">
 										{["Verified", "Unverified"].map((status) => (
 											<Label
 												key={status}
@@ -185,7 +199,11 @@ export function DataTable<TData, TValue>({
 					</Sheet>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button variant="outline" size="sm" className="h-8">
+							<Button
+								variant="outline"
+								size="sm"
+								className="hidden h-8 lg:block"
+							>
 								Columns
 							</Button>
 						</DropdownMenuTrigger>
@@ -216,18 +234,24 @@ export function DataTable<TData, TValue>({
 						onClick={resetAll}
 					>
 						<RotateCcw className="mr-2 h-4 w-4" />
-						Reset All
+						Reset
 					</Button>
 				</div>
 			</div>
-			<div className="rounded-md border">
+			<div className="hidden overflow-hidden rounded-md border md:block">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead
+											key={header.id}
+											colSpan={header.colSpan}
+											style={{
+												...getCommonPinningStyles({ column: header.column })
+											}}
+										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -248,7 +272,12 @@ export function DataTable<TData, TValue>({
 									data-state={row.getIsSelected() && "selected"}
 								>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
+										<TableCell
+											key={cell.id}
+											style={{
+												...getCommonPinningStyles({ column: cell.column })
+											}}
+										>
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext()
@@ -269,6 +298,80 @@ export function DataTable<TData, TValue>({
 						)}
 					</TableBody>
 				</Table>
+			</div>
+			<div className="block md:hidden">
+				{table.getRowModel().rows?.length ? (
+					table.getRowModel().rows.map((row) => (
+						<Card key={row.id} className="mb-4">
+							<CardContent className="space-y-2 p-4">
+								<div className="mb-2 flex items-center justify-between">
+									<div className="font-semibold">{row.getValue("name")}</div>
+									<RoleBadge role={row.getValue("role")} />
+								</div>
+								<div className="flex items-center space-x-2">
+									<span className="text-xs">{row.getValue("id")}</span>
+									<CopyToClipboard value={row.getValue("id")} />
+								</div>
+								<div className="mb-2 text-sm text-gray-500">
+									{row.getValue("email")}
+								</div>
+
+								<div className="flex items-center justify-between text-xs">
+									<div className="col-span-2">Email Verification: </div>
+									<VerificationBadge isVerified={row.getValue("isVerified")} />
+								</div>
+								{row.getValue("role") === "FARMER" ? (
+									<div className="flex items-center justify-between text-xs">
+										<div className="col-span-2">Farmer Approval: </div>
+										<FarmerApprovalBadge
+											status={row.getValue("farmerApproval")}
+										/>
+									</div>
+								) : (
+									<div className="flex items-center justify-between text-xs">
+										<div className="col-span-2">Farmer Approval: </div>
+										<Badge variant="secondary">N/A</Badge>
+									</div>
+								)}
+								<div className="flex items-center justify-between text-xs">
+									<span className="col-span-2">Created: </span>
+									<span>{formatDate(row.getValue("createdAt"))}</span>
+								</div>
+								<div className="mt-4 flex items-center justify-end">
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant="ghost" size="sm">
+												<MoreHorizontal className="h-4 w-4" />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end">
+											<DropdownMenuItem asChild>
+												<Link href={`/users/${row.getValue("id")}`}>
+													View details
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link href={`/users/${row.getValue("id")}/edit`}>
+													Edit user
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuSeparator />
+											<DropdownMenuItem
+												onClick={() =>
+													console.log("Delete user", row.getValue("id"))
+												}
+											>
+												Delete user
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</CardContent>
+						</Card>
+					))
+				) : (
+					<div className="p-4 text-center">No results.</div>
+				)}
 			</div>
 			<DataTablePagination table={table} />
 		</div>
