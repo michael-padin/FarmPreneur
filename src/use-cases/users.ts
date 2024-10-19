@@ -1,9 +1,12 @@
+import { UpdateUserTypes } from "@/app/dashboard/@admin/users/types"
 import {
 	createUserCustomer,
 	getUserByEmail,
 	getUserById,
 	getUserFarmerById,
+	getUsers,
 	saveVerificationCode,
+	updateUser,
 	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
@@ -49,4 +52,14 @@ export const UpdateUserPasswordByEmailUseCase = async (data: {
 	password: string
 }) => {
 	return await updateUserPasswordByEmail(data)
+}
+
+export const getUsersUseCase = async () => {
+	return await getUsers()
+}
+
+export const updateUserUseCase = async (
+	data: UpdateUserTypes & { id: string }
+) => {
+	return await updateUser(data)
 }
