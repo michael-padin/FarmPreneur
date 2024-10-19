@@ -34,37 +34,39 @@ interface DashboardLayoutProps {
 const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
 	const session = await auth()
 
-	if (!session || !["FARMER", "ADMIN"].includes(session?.user.role)) {
+	if (!session) {
+		redirect("/login")
+	}
+
+	if (!session.user || !["FARMER", "ADMIN"].includes(session?.user.role)) {
 		redirect("/login")
 	}
 
 	const role = session?.user.role
 
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body className={inter.className}>
-				<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-					<SessionProvider session={session}>
-						<TooltipProvider>
-							<SidebarProvider>
-								<DashboardSidebar
-									role={role as "FARMER" | "ADMIN"}
-									farmName={session.user.name || "Admin"}
-								/>
-								<SidebarInset className="overflow-hidden">
-									<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-										<SidebarTrigger className="-ml-1" />
-										<Separator orientation="vertical" className="mr-2 h-4" />
-									</header>
-									{role === "ADMIN" ? admin : farmer}
-								</SidebarInset>
-							</SidebarProvider>
-						</TooltipProvider>
-					</SessionProvider>
-				</ThemeProvider>
-				<Toaster />
-			</body>
-		</html>
+		<>
+			<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+				<SessionProvider session={session}>
+					<TooltipProvider>
+						<SidebarProvider>
+							<DashboardSidebar
+								role={role as "FARMER" | "ADMIN"}
+								farmName={session.user.name || "Admin"}
+							/>
+							<SidebarInset className="overflow-hidden">
+								<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+									<SidebarTrigger className="-ml-1" />
+									<Separator orientation="vertical" className="mr-2 h-4" />
+								</header>
+								{role === "ADMIN" ? admin : farmer}
+							</SidebarInset>
+						</SidebarProvider>
+					</TooltipProvider>
+				</SessionProvider>
+			</ThemeProvider>
+			<Toaster />
+		</>
 	)
 }
 
