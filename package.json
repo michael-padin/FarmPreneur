@@ -5,7 +5,7 @@
 	"scripts": {
 		"postinstall": "pnpm prisma generate",
 		"dev": "next dev",
-		"build": "next build && pnpm prisma generate --no-engine",
+		"build": "next build",
 		"start": "next start",
 		"lint": "eslint",
 		"lint:fix": "next lint --fix",
