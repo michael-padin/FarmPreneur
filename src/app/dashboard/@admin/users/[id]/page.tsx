@@ -25,7 +25,7 @@ type User = {
 	emailVerified: Date | null
 	image: string | null
 	isSellerApproved: boolean
-	role: "FARMER" | "BUYER" | "ADMIN" | null
+	role: "FARMER" | "CUSTOMER" | "ADMIN" | null
 	contactNumber: string | null
 	isVerified: boolean
 	profilePicture: string | null
@@ -49,7 +49,7 @@ export default function UserDetails({ params }: { params: { id: string } }) {
 				emailVerified: new Date(),
 				image: null,
 				isSellerApproved: Math.random() > 0.5,
-				role: ["FARMER", "BUYER", "ADMIN"][
+				role: ["FARMER", "CUSTOMER", "ADMIN"][
 					Math.floor(Math.random() * 3)
 				] as User["role"],
 				contactNumber: "+1234567890",
@@ -169,7 +169,7 @@ export default function UserDetails({ params }: { params: { id: string } }) {
 										</SelectTrigger>
 										<SelectContent>
 											<SelectItem value="FARMER">Farmer</SelectItem>
-											<SelectItem value="BUYER">Buyer</SelectItem>
+											<SelectItem value="CUSTOMER">Customer</SelectItem>
 											<SelectItem value="ADMIN">Admin</SelectItem>
 										</SelectContent>
 									</Select>

@@ -20,7 +20,7 @@ type User = {
 	id: string
 	name: string
 	email: string
-	role: "FARMER" | "BUYER" | "ADMIN"
+	role: "FARMER" | "CUSTOMER" | "ADMIN"
 	isSellerApproved: boolean
 	isVerified: boolean
 	createdAt: string
@@ -40,7 +40,7 @@ export default function UserDetails() {
 				id: id as string,
 				name: `User ${id}`,
 				email: `user${id}@example.com`,
-				role: ["FARMER", "BUYER", "ADMIN"][
+				role: ["FARMER", "CUSTOMER", "ADMIN"][
 					Math.floor(Math.random() * 3)
 				] as User["role"],
 				isSellerApproved: Math.random() > 0.5,
@@ -128,7 +128,7 @@ export default function UserDetails() {
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="FARMER">Farmer</SelectItem>
-									<SelectItem value="BUYER">Buyer</SelectItem>
+									<SelectItem value="CUSTOMER">Customer</SelectItem>
 									<SelectItem value="ADMIN">Admin</SelectItem>
 								</SelectContent>
 							</Select>
