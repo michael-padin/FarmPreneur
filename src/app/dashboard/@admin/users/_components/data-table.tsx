@@ -238,7 +238,7 @@ export function DataTable<TData, TValue>({
 					</Button>
 				</div>
 			</div>
-			<div className="hidden overflow-hidden rounded-md border md:block">
+			<div className="overflow-hidden rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -299,7 +299,7 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="block md:hidden">
+			{/* <div className="block md:hidden">
 				{table.getRowModel().rows?.length ? (
 					table.getRowModel().rows.map((row) => (
 						<Card key={row.id} className="mb-4">
@@ -372,7 +372,7 @@ export function DataTable<TData, TValue>({
 				) : (
 					<div className="p-4 text-center">No results.</div>
 				)}
-			</div>
+			</div> */}
 			<DataTablePagination table={table} />
 		</div>
 	)
