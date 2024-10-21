@@ -4,6 +4,8 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { getUsersUseCase } from "@/use-cases/users"
 
+export const revalidate = 4
+
 const UsersPage = async () => {
 	const session = await auth()
 	if (!session || session.user.role !== "ADMIN") {
