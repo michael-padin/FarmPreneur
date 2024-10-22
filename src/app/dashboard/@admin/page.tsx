@@ -17,11 +17,9 @@ export default function AdminDashboard() {
 				{/* Header */}
 
 				{/* Main Content */}
-				<main className="flex-1 overflow-y-auto bg-gray-100 p-4">
+				<main className="flex-1 overflow-y-auto p-4">
 					<div className="mx-auto max-w-7xl">
-						<h1 className="mb-4 text-2xl font-semibold text-gray-900">
-							Dashboard
-						</h1>
+						<h1 className="mb-4 text-2xl font-semibold">Dashboard</h1>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 							<Card>
 								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -126,9 +124,7 @@ export default function AdminDashboard() {
 							</Card>
 						</div>
 						<div className="mt-6">
-							<h2 className="mb-4 text-xl font-semibold text-gray-900">
-								Recent Orders
-							</h2>
+							<h2 className="mb-4 text-xl font-semibold">Recent Orders</h2>
 							<Card>
 								<Table>
 									<TableHeader>
