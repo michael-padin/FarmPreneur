@@ -3,7 +3,6 @@ import { redirect } from "next/navigation"
 import React from "react"
 
 import DashboardSidebar from "./_components/sidebar"
-import { Poppins } from "next/font/google"
 import { Metadata } from "next"
 import ThemeProvider from "@/components/theme-provider"
 import { SessionProvider } from "next-auth/react"
@@ -16,11 +15,9 @@ import {
 	SidebarTrigger
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-
-const inter = Poppins({
-	subsets: ["latin"],
-	weight: ["300", "400", "500", "600", "700", "800", "900"]
-})
+import { ModeToggle } from "@/components/mode-toggle"
+import { Bell, MessageCircle } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -34,11 +31,11 @@ interface DashboardLayoutProps {
 const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
 	const session = await auth()
 
-	if (!session) {
-		redirect("/login")
-	}
-
-	if (!session.user || !["FARMER", "ADMIN"].includes(session?.user.role)) {
+	if (
+		!session ||
+		!session.user ||
+		!["FARMER", "ADMIN"].includes(session?.user.role)
+	) {
 		redirect("/login")
 	}
 
@@ -55,9 +52,22 @@ const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
 								farmName={session.user.name || "Admin"}
 							/>
 							<SidebarInset className="overflow-hidden">
-								<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-									<SidebarTrigger className="-ml-1" />
-									<Separator orientation="vertical" className="mr-2 h-4" />
+								<header className="w-full border-b px-4">
+									<div className="flex w-full items-center">
+										<div className="flex h-16 shrink-0 items-center gap-2">
+											<SidebarTrigger className="-ml-1" />
+											<Separator orientation="vertical" className="mr-2 h-4" />
+										</div>
+										<div className="flex w-full items-center justify-end gap-2">
+											<ModeToggle />
+											<Button variant="ghost" size="icon" className="size-8">
+												<Bell className="size-4" />
+											</Button>
+											<Button variant="ghost" size="icon" className="size-8">
+												<MessageCircle className="size-4" />
+											</Button>
+										</div>
+									</div>
 								</header>
 								{role === "ADMIN" ? admin : farmer}
 							</SidebarInset>
