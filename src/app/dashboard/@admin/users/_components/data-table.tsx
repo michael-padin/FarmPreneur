@@ -33,24 +33,16 @@ import {
 	SheetTrigger
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Filter, MoreHorizontal, RotateCcw } from "lucide-react"
+import { Filter, RotateCcw } from "lucide-react"
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import CopyToClipboard from "@/app/dashboard/_components/copy-to-clipboard"
-import Link from "next/link"
-import { FarmerApprovalBadge, RoleBadge, VerificationBadge } from "./badges"
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { formatDate } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
@@ -76,12 +68,10 @@ export function DataTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			sorting,
-			columnPinning: { right: ["actions"] },
 			columnFilters,
 			columnVisibility
 		},
 		initialState: {
-			sorting: [{ id: "createdAt", desc: true }],
 			columnPinning: { right: ["actions"] }
 		}
 	})
@@ -94,7 +84,7 @@ export function DataTable<TData, TValue>({
 		table.resetPagination()
 	}, [table])
 	return (
-		<div>
+		<>
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
 				<Input
 					placeholder="Filter emails..."
@@ -199,11 +189,7 @@ export function DataTable<TData, TValue>({
 					</Sheet>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button
-								variant="outline"
-								size="sm"
-								className="hidden h-8 lg:block"
-							>
+							<Button variant="outline" size="sm" className="h-8">
 								Columns
 							</Button>
 						</DropdownMenuTrigger>
@@ -238,7 +224,7 @@ export function DataTable<TData, TValue>({
 					</Button>
 				</div>
 			</div>
-			<div className="overflow-hidden rounded-md border">
+			<div className="rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -374,6 +360,6 @@ export function DataTable<TData, TValue>({
 				)}
 			</div> */}
 			<DataTablePagination table={table} />
-		</div>
+		</>
 	)
 }
