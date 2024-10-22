@@ -3,7 +3,6 @@ import type { NextAuthConfig } from "next-auth"
 import { type Provider } from "next-auth/providers"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
-import Resend from "next-auth/providers/resend"
 import { encode as defaultEncode } from "next-auth/jwt"
 
 import { getUserByEmail } from "./services/user"
