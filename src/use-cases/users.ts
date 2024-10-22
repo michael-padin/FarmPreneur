@@ -1,6 +1,8 @@
 import { UpdateUserTypes } from "@/app/dashboard/@admin/users/types"
 import {
 	createUserCustomer,
+	deleteUserById,
+	deleteUsersById,
 	getUserByEmail,
 	getUserById,
 	getUserFarmerById,
@@ -62,4 +64,11 @@ export const updateUserUseCase = async (
 	data: UpdateUserTypes & { id: string }
 ) => {
 	return await updateUser(data)
+}
+
+export const deleteUserByIdUseCase = async (id: string) => {
+	return await deleteUserById(id)
+}
+export const deleteUsersByIdUseCase = async (ids: string[]) => {
+	return await deleteUsersById(ids)
 }
