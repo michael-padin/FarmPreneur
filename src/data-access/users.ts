@@ -95,6 +95,9 @@ export const getUsers = async () => {
 			createdAt: true,
 			image: true,
 			contactNumber: true
+		},
+		orderBy: {
+			createdAt: "desc"
 		}
 	})
 }
