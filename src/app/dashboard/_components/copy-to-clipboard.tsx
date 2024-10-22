@@ -34,7 +34,7 @@ const CopyToClipboard = ({ value }: { value: string }) => {
 				</Button>
 			</TooltipTrigger>
 			<TooltipContent>
-				<p>{isCopied ? "Copied!" : value}</p>
+				<p>{isCopied ? "Copied!" : "Copy ID"}</p>
 			</TooltipContent>
 		</Tooltip>
 	)
