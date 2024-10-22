@@ -12,6 +12,7 @@ import {
 	saveVerificationCodeUseCase
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
+import { revalidatePath } from "next/cache"
 
 export const register = async (data: RegisterType) => {
 	const parsedData = RegisterSchema.safeParse(data)
@@ -47,6 +48,8 @@ export const register = async (data: RegisterType) => {
 		await saveVerificationCodeUseCase(newUser.id, otp, otpExpiration)
 
 		await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
+
+		revalidatePath("/dashboard/users")
 
 		return {
 			success: "Account created, please check your email",
