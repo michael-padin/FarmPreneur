@@ -26,22 +26,22 @@ import { DeleteUsersDialog } from "./delete-user-dialog"
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getUsersUseCase>>[0]
 >[] = [
-	{
-		enableHiding: true,
-		accessorKey: "id",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="ID" />
-		),
-		cell: ({ row }) => {
-			const id = row.getValue("id") as string
-			return (
-				<div className="flex items-center space-x-2">
-					<CopyToClipboard value={id} />
-					<span>{id}</span>
-				</div>
-			)
-		}
-	},
+	// {
+	// 	enableHiding: true,
+	// 	accessorKey: "id",
+	// 	header: ({ column }) => (
+	// 		<DataTableColumnHeader column={column} title="ID" />
+	// 	),
+	// 	cell: ({ row }) => {
+	// 		const id = row.getValue("id") as string
+	// 		return (
+	// 			<div className="flex items-center space-x-2">
+	// 				<CopyToClipboard value={id} />
+	// 				<span>{id}</span>
+	// 			</div>
+	// 		)
+	// 	}
+	// },
 	{
 		accessorKey: "name",
 		header: ({ column }) => (
@@ -131,6 +131,9 @@ export const columns: ColumnDef<
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
 							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
+								Copy ID
+							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
 								<Link href={`/users/${user.id}`}>View details</Link>
 							</DropdownMenuItem>
