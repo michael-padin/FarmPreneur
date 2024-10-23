@@ -4,8 +4,17 @@ import { deleteUsersByIdUseCase, updateUserUseCase } from "@/use-cases/users"
 import { UpdateUserTypes, updateUserSchema } from "./types"
 import { getErrorMessage } from "@/lib/handle-error"
 import { hash } from "bcryptjs"
+import { upsertAddressUseCase } from "@/use-cases/address"
 
-export const updateUser = async (user: UpdateUserTypes & { id: string }) => {
+export const updateUser = async (
+	user: UpdateUserTypes & {
+		id: string
+		address: {
+			userId: string
+			id: string
+		}
+	}
+) => {
 	const parsedData = updateUserSchema.safeParse(user)
 
 	console.log(user)
@@ -20,13 +29,23 @@ export const updateUser = async (user: UpdateUserTypes & { id: string }) => {
 		if (user.password) {
 			hashedPassword = await hash(user.password, 10)
 		}
-		await updateUserUseCase({ ...user, password: hashedPassword })
+
+		await Promise.all([
+			await updateUserUseCase({ ...user, password: hashedPassword }),
+			await upsertAddressUseCase({
+				...user.address,
+				userId: user.id,
+				id: user.address.id
+			})
+		])
 		revalidatePath("/dashboard/users")
 		return {
 			data: null,
 			error: null
 		}
 	} catch (error) {
+		console.log(error)
+
 		return {
 			data: null,
 			error: getErrorMessage(error)
