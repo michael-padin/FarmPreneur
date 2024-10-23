@@ -33,3 +33,38 @@ export interface DataTableFilterOption<TData> {
 	filterOperator?: string
 	isMulti?: boolean
 }
+
+//MARK:MAPBOX
+export interface FeatureCollection {
+	id: string
+	type: "Feature"
+	place_type: string[]
+	relevance: number
+	properties: Properties
+	text: string
+	place_name: string
+	center: number[]
+	geometry: Geometry
+	context: Context[]
+	bbox?: number[] // bbox is optional and present in some objects
+}
+
+export interface Properties {
+	accuracy?: string // accuracy is optional
+	mapbox_id: string
+	wikidata?: string // wikidata is optional and present in some objects
+	short_code?: string // short_code is optional
+}
+
+export interface Geometry {
+	type: "Point"
+	coordinates: number[]
+}
+
+export interface Context {
+	id: string
+	mapbox_id: string
+	text: string
+	wikidata?: string // wikidata is optional
+	short_code?: string // short_code is optional
+}
