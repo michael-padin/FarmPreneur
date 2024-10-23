@@ -247,31 +247,33 @@ model Authenticator {
 
 // MARK: USER
 model User {
-  id                       String                   @id @default(auto()) @map("_id") @db.ObjectId
-  name                     String?
-  email                    String?                  @unique
-  emailVerified            DateTime?
-  image                    String?
-  accounts                 Account[]
-  sessions                 Session[]
-  farmerApproval           FarmerApproval?
-  role                     ROLE
-  password                 String?
-  contactNumber            String?
-  isVerified               Boolean                  @default(false)
-  verificationCode         String?
-  verificationExpires      DateTime?
+  id                   String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String?
+  email                String?                @unique
+  emailVerified        DateTime?
+  image                String?
+  accounts             Account[]
+  sessions             Session[]
+  farmerApproval       FarmerApproval?
+  role                 ROLE
+  password             String?
+  contactNumber        String?
+  isVerified           Boolean                @default(false)
+  verificationCode     String?
+  verificationExpires  DateTime?
   // Optional for WebAuthn support
-  Authenticators           Authenticator[]
-  profilePicture           String?
-  createdAt                DateTime                 @default(now())
-  updatedAt                DateTime                 @updatedAt
-  products                 Product[]
-  buyerOrders              Order[]                  @relation("BuyerOrders")
-  farmerOrders             Order[]                  @relation("FarmerOrders")
-  VerificationDocument     VerificationDocument[]
-  farmDetails              Farm[]
-  Notification             Notification[]
+  Authenticators       Authenticator[]
+  profilePicture       String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  products             Product[]
+  buyerOrders          Order[]                @relation("BuyerOrders")
+  farmerOrders         Order[]                @relation("FarmerOrders")
+  VerificationDocument VerificationDocument[]
+  farmDetails          Farm[]
+  addressId            String?                @db.ObjectId
+  Notification         Notification[]
+  Address              Address?
 }
 
 // MARK: PRODUCT
@@ -310,6 +312,8 @@ model Order {
   Product           Product  @relation(fields: [productId], references: [id]) // Order refers to the product
   farmerId          String   @db.ObjectId
   Farmer            User     @relation("FarmerOrders", fields: [farmerId], references: [id]) // Order refers to the product
+  Address           Address? @relation(fields: [addressId], references: [id])
+  addressId         String?  @db.ObjectId
 }
 
 // MARK: CATEGORY
@@ -356,6 +360,25 @@ model Notification {
   type      NotificationType // Type of notification (e.g., ORDER_STATUS, NEW_MESSAGE, etc.)
 
   user User @relation(fields: [userId], references: [id]) // Relation back to the User
+}
+
+model Address {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique @db.ObjectId // Reference to the user receiving the notification
+  fullAddress  String
+  street       String?
+  city         String?
+  state        String?
+  country      String?
+  postalCode   String?
+  latitude     Float
+  longitude    Float
+  Note         String?
+  locationType String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Order        Order[]
 }
 
 // MARK: ENUMS
