@@ -94,7 +94,9 @@ export const getUsers = async () => {
 			isVerified: true,
 			createdAt: true,
 			image: true,
-			contactNumber: true
+			contactNumber: true,
+			Address: true,
+			updatedAt: true
 		},
 		orderBy: {
 			createdAt: "desc"
