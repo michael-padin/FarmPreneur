@@ -1,6 +1,4 @@
 "use client"
-
-import CopyToClipboard from "@/app/dashboard/_components/copy-to-clipboard"
 import { DataTableColumnHeader } from "@/app/dashboard/_components/data-table-column-header"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,7 +10,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { ROLE } from "@prisma/client"
+import { Address, ROLE } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
@@ -22,6 +20,12 @@ import { UpdateUserSheet } from "./update-user-sheet"
 import { useState } from "react"
 import { getUsersUseCase } from "@/use-cases/users"
 import { DeleteUsersDialog } from "./delete-user-dialog"
+import { toast } from "sonner"
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger
+} from "@/components/ui/tooltip"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getUsersUseCase>>[0]
@@ -47,7 +51,11 @@ export const columns: ColumnDef<
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Name" />
 		),
-		enableSorting: true
+		enableSorting: true,
+		cell: ({ row }) => {
+			const name = row.original.name
+			return <span className="text-nowrap">{name}</span>
+		}
 	},
 	{
 		accessorKey: "email",
@@ -78,11 +86,39 @@ export const columns: ColumnDef<
 		}
 	},
 	{
+		accessorKey: "Address",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Address" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const address = row.getValue("Address") as Address
+			return (
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<p className="w-[200px] truncate">{address?.fullAddress}</p>
+					</TooltipTrigger>
+					<TooltipContent className="w-[200px]">
+						<p>{address?.fullAddress}</p>
+					</TooltipContent>
+				</Tooltip>
+			)
+		},
+		size: 40
+	},
+	{
 		accessorKey: "createdAt",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Created At" />
 		),
 		cell: ({ cell }) => formatDate(cell.getValue() as Date)
+	},
+	{
+		accessorKey: "updatedAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Updated At" />
+		),
+		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
 	},
 
 	{
@@ -131,7 +167,12 @@ export const columns: ColumnDef<
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
 							<DropdownMenuLabel>Actions</DropdownMenuLabel>
-							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
+							<DropdownMenuItem
+								onSelect={async () => {
+									await navigator.clipboard.writeText(row.original.id)
+									toast.success("user id copied!")
+								}}
+							>
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
@@ -150,7 +191,7 @@ export const columns: ColumnDef<
 				</>
 			)
 		},
-		size: 40,
+		size: 20,
 		enableHiding: false
 	}
 ]
