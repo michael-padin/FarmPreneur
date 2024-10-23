@@ -2,7 +2,6 @@ import * as React from "react"
 import * as RPNInput from "react-phone-number-input"
 import flags from "react-phone-number-input/flags"
 
-import { Button } from "@/components/ui/button"
 import { Input, InputProps } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
@@ -62,16 +61,7 @@ type CountrySelectProps = {
 }
 
 const CountrySelect = ({ disabled }: CountrySelectProps) => {
-	return (
-		<Button
-			type="button"
-			variant={"outline"}
-			className={cn("flex gap-1 rounded-e-none rounded-s-lg border-r-0 px-3")}
-			disabled={disabled}
-		>
-			<FlagComponent country="PH" countryName="Philippines" />
-		</Button>
-	)
+	return <FlagComponent country="PH" countryName="Philippines" />
 }
 
 const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
