@@ -46,6 +46,8 @@ import { updateUser } from "../actions"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 
 import { RoleBadge } from "./badges"
+import MapboxLocationPicker from "@/components/fg/fg-map-box-location-picker"
+import { resendCode } from "@/app/(auth)/verify/actions"
 
 export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	const [isUpdatePending, startUpdateTransition] = useTransition()
@@ -60,6 +62,17 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			image: user.image,
 			farmerApproval: user.farmerApproval,
 			role: user.role,
+			address: user.Address || {
+				fullAddress: "",
+				street: "",
+				city: "",
+				state: "",
+				country: "",
+				postalCode: "",
+				latitude: 0,
+				longitude: 0,
+				locationType: ""
+			},
 			password: ""
 		}
 	})
@@ -73,15 +86,31 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			image: user.image,
 			farmerApproval: user.farmerApproval,
 			role: user.role,
-			password: ""
+			password: "",
+			address: user.Address || {
+				fullAddress: "",
+				street: "",
+				city: "",
+				state: "",
+				country: "",
+				postalCode: "",
+				latitude: 0,
+				longitude: 0,
+				locationType: ""
+			}
 		})
 	}, [user, form])
 
 	const onSubmit = async (data: UpdateUserTypes) => {
 		startUpdateTransition(() => {
 			updateUser({
-				id: user.id,
-				...data
+				...data,
+				address: {
+					...data.address,
+					userId: user.id,
+					id: user.Address?.id || ""
+				},
+				id: user.id
 			}).then(({ error }) => {
 				if (error) {
 					toast.error(error)
@@ -96,7 +125,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 
 	return (
 		<Sheet {...props}>
-			<SheetContent className="flex w-full flex-col gap-6 overflow-y-scroll sm:max-w-md">
+			<SheetContent className="w-full space-y-6 overflow-y-scroll sm:w-[540px]">
 				<SheetHeader>
 					<SheetTitle>Edit User</SheetTitle>
 					<SheetDescription>
@@ -106,10 +135,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 				</SheetHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<fieldset
-							className="flex flex-col gap-4"
-							disabled={isUpdatePending}
-						>
+						<fieldset className="space-y-4" disabled={isUpdatePending}>
 							<FormField
 								control={form.control}
 								name="image"
@@ -261,17 +287,67 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 								control={form.control}
 								name="isVerified"
 								render={({ field }) => (
-									<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+									<FormItem className="inline-block">
+										<FormLabel>Email Verification</FormLabel>
 										<FormControl>
-											<Checkbox
-												checked={field.value}
-												onCheckedChange={field.onChange}
+											<div className="flex items-center gap-2">
+												<Checkbox
+													checked={field.value}
+													onCheckedChange={field.onChange}
+													className="h-5 w-5"
+												/>
+												{/* TODO: Add resend code button */}
+												{/* <div className="text-muted-foreground">OR</div>
+												<div>
+													<Button
+														variant="outline"
+														size="sm"
+														className="ml-2"
+														type="button"
+														onClick={async () => {
+															await resendCode(user.id)
+														}}
+													>
+														Send Email Verification
+													</Button>
+												</div> */}
+											</div>
+										</FormControl>
+										<FormDescription>
+											Is this user verified?
+											{/* i want button to send verification email */}
+										</FormDescription>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="address"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Address</FormLabel>
+										<FormControl>
+											<MapboxLocationPicker
+												mapboxApiKey={
+													process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
+												}
+												onAddressSelect={(address) => {
+													form.setValue("address", address, {
+														shouldValidate: true
+													})
+												}}
+												defaultCenter={{
+													lat: user.Address?.latitude || 9.882696,
+													lng: user.Address?.longitude || 123.605887
+												}} // Optional
+												defaultZoom={14} // Optional
+												defaultValue={
+													user.Address?.fullAddress ||
+													"Argao, Cebu, Philippines"
+												}
 											/>
 										</FormControl>
-										<div className="space-y-1 leading-none">
-											<FormLabel>Verified</FormLabel>
-											<FormDescription>Is this user verified?</FormDescription>
-										</div>
+										<FormMessage />
 									</FormItem>
 								)}
 							/>
@@ -281,7 +357,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 										Cancel
 									</Button>
 								</SheetClose>
-								<Button disabled={isUpdatePending}>
+								<Button disabled={isUpdatePending} type="submit">
 									{isUpdatePending && (
 										<Icons.spinner
 											className="mr-2 size-4 animate-spin"

@@ -17,8 +17,6 @@ export const updateUser = async (
 ) => {
 	const parsedData = updateUserSchema.safeParse(user)
 
-	console.log(user)
-
 	if (!parsedData.success) {
 		return { error: "Invalid fields" }
 	}
