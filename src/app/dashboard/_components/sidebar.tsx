@@ -10,8 +10,12 @@ import {
 	SidebarGroupLabel,
 	SidebarHeader,
 	SidebarMenu,
+	SidebarMenuBadge,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarMenuSub,
+	SidebarMenuSubButton,
+	SidebarMenuSubItem,
 	SidebarRail
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
@@ -37,7 +41,30 @@ export default function DashboardSidebar({
 				icon: Home
 			},
 			...(role === "ADMIN"
-				? [{ name: "Users", url: "/dashboard/users", icon: Users }]
+				? [
+						{
+							name: "Users",
+							url: "/dashboard/users",
+							icon: Users,
+							items: [
+								{
+									name: "Customers",
+									url: "/dashboard/users/customers"
+									// icon: UserCheck
+								},
+								{
+									name: "Farmers",
+									url: "/dashboard/users/farmers"
+									// icon: Sprout
+								},
+								{
+									name: "Pending Farmers",
+									url: "/dashboard/users/waiting-for-approval"
+									// icon: Hourglass
+								}
+							]
+						}
+					]
 				: []),
 			{
 				name: "Products",
@@ -93,8 +120,32 @@ export default function DashboardSidebar({
 										<Link href={item.url}>
 											<item.icon />
 											<span>{item.name}</span>
+											<SidebarMenuBadge>24</SidebarMenuBadge>
 										</Link>
 									</SidebarMenuButton>
+									{item.items && (
+										<SidebarMenuSub>
+											{item.items.map((subItem) => (
+												<SidebarMenuSubItem key={subItem.name}>
+													<SidebarMenuSubButton
+														asChild
+														isActive={
+															pathName.split("/")[3] ===
+															subItem.url.split("/")[3]
+														}
+														// size="sm"
+													>
+														<Link href={subItem.url}>
+															{/* {subItem.icon && <subItem.icon />} */}
+															<span>{subItem.name}</span>
+															{/* TODO: Add Badge number for pending farmers */}
+															{/* <SidebarMenuBadge>24</SidebarMenuBadge> */}
+														</Link>
+													</SidebarMenuSubButton>
+												</SidebarMenuSubItem>
+											))}
+										</SidebarMenuSub>
+									)}
 								</SidebarMenuItem>
 							))}
 						</SidebarMenu>
