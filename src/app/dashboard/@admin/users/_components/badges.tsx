@@ -2,7 +2,13 @@
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { FarmerApproval, ROLE } from "@prisma/client"
-import { CheckCircle, Shield, ShoppingCart, Wheat, XCircle } from "lucide-react"
+import {
+	CheckCircle,
+	Shield,
+	ShoppingCart,
+	Tractor,
+	XCircle
+} from "lucide-react"
 
 export const RoleBadge = ({
 	role,
@@ -31,7 +37,7 @@ export const RoleBadge = ({
 			case "CUSTOMER":
 				return <ShoppingCart className="mr-1 h-4 w-4" />
 			case "FARMER":
-				return <Wheat className="mr-1 h-4 w-4" />
+				return <Tractor className="mr-1 h-4 w-4" />
 			default:
 				return null
 		}
