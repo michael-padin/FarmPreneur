@@ -31,11 +31,6 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
-				<script
-					async
-					defer
-					src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`}
-				></script>
 				<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 					<SessionProvider session={session}>
 						<TooltipProvider>{children}</TooltipProvider>
