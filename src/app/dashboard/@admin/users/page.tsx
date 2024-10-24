@@ -28,7 +28,7 @@ const UsersPage = async () => {
 		<Card className="border-0 lg:border">
 			<CardHeader className="p-4 lg:p-6">
 				<CardTitle>All Users</CardTitle>
-				<CardDescription>Manager users.</CardDescription>
+				<CardDescription>Manage users.</CardDescription>
 			</CardHeader>
 			<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
 				<DataTable columns={columns} data={users} />
