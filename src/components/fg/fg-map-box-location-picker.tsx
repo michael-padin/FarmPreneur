@@ -34,7 +34,6 @@ interface AddressInputProps {
 	defaultCenter?: LatLng
 	defaultZoom?: number
 	readonly?: boolean
-	mapAspectRatio?: "square" | "video"
 }
 
 export default function AddressInput({
@@ -42,8 +41,7 @@ export default function AddressInput({
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
 	defaultZoom = 14,
-	readonly = false,
-	mapAspectRatio = "video"
+	readonly = false
 }: AddressInputProps) {
 	const { toast } = useToast()
 	const commandListRef = useRef<HTMLDivElement>(null)
@@ -297,14 +295,14 @@ export default function AddressInput({
 					</Command>
 					<div
 						ref={mapContainer}
-						className={`aspect-${mapAspectRatio} w-full rounded-md`}
+						className={`aspect-square w-full rounded-md lg:aspect-video`}
 						aria-label="Map"
 					/>
 				</div>
 			) : (
 				<div
 					ref={mapContainer}
-					className={`aspect-${mapAspectRatio} w-full rounded-md`}
+					className={`aspect-square w-full rounded-md lg:aspect-video`}
 					aria-label="Map"
 				/>
 			)}

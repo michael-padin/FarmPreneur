@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/drawer"
 import { getUsersUseCase } from "@/use-cases/users"
 import AddressInput from "@/components/fg/fg-map-box-location-picker"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 interface AddressDetailsDrawerDialogProps {
 	user: Awaited<ReturnType<typeof getUsersUseCase>>[0]
@@ -60,8 +59,6 @@ export const AddressDetailsDrawerDialog = ({
 								lng: user.Address?.longitude || 0
 							}}
 							defaultValue={user.Address?.fullAddress}
-							defaultZoom={15}
-							mapAspectRatio="video"
 						/>
 					</div>
 				</DialogContent>
@@ -92,7 +89,6 @@ export const AddressDetailsDrawerDialog = ({
 							lng: user.Address?.longitude || 0
 						}}
 						defaultValue={user.Address?.fullAddress}
-						mapAspectRatio="square"
 					/>
 				</div>
 				<DrawerFooter className="pt-2">
