@@ -25,7 +25,7 @@ export function useMapbox({
 
 			mapRef.current = new mapboxgl.Map({
 				container,
-				style: "mapbox://styles/mokiiiiieeeee/cm2kz7nae00ck01pp87yzbaah",
+				style: "mapbox://styles/mokiiiiieeeee/cm2nggekh003c01r4b330fpox",
 				center: [defaultCenter.lng, defaultCenter.lat],
 				zoom: defaultZoom || 15,
 				attributionControl: false,
