@@ -95,7 +95,9 @@ export const AddressDetailsDrawerDialog = ({
 					/>
 				</div>
 				<DrawerFooter className="pt-2">
-					<DrawerClose asChild>Close</DrawerClose>
+					<DrawerClose asChild>
+						<Button>Close</Button>
+					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
