@@ -328,9 +328,6 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 										<FormLabel>Address</FormLabel>
 										<FormControl>
 											<MapboxLocationPicker
-												mapboxApiKey={
-													process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
-												}
 												onAddressSelect={(address) => {
 													form.setValue("address", address, {
 														shouldValidate: true

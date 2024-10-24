@@ -10,7 +10,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Address, ROLE } from "@prisma/client"
+import { ROLE } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
@@ -21,12 +21,7 @@ import { useState } from "react"
 import { getUsersUseCase } from "@/use-cases/users"
 import { DeleteUsersDialog } from "./delete-user-dialog"
 import { toast } from "sonner"
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger
-} from "@/components/ui/tooltip"
+import { AddressDetailsDrawerDialog } from "./address-details"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getUsersUseCase>>[0]
@@ -93,19 +88,8 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			const address = row.getValue("Address") as Address
-			return (
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<p className="w-[200px] truncate">{address?.fullAddress}</p>
-						</TooltipTrigger>
-						<TooltipContent className="w-[200px]">
-							<p>{address?.fullAddress}</p>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
-			)
+			const user = row.original
+			return <AddressDetailsDrawerDialog user={user} />
 		},
 		size: 40
 	},

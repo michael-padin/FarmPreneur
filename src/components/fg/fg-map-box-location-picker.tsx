@@ -29,19 +29,21 @@ const DEFAULT_CENTER: LatLng = {
 }
 
 interface AddressInputProps {
-	mapboxApiKey: string
-	onAddressSelect: (address: Address) => void
+	onAddressSelect?: (address: Address) => void
 	defaultValue?: string
 	defaultCenter?: LatLng
 	defaultZoom?: number
+	readonly?: boolean
+	mapAspectRatio?: "square" | "video"
 }
 
 export default function AddressInput({
-	mapboxApiKey,
 	onAddressSelect,
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
-	defaultZoom = 14
+	defaultZoom = 14,
+	readonly = false,
+	mapAspectRatio = "video"
 }: AddressInputProps) {
 	const { toast } = useToast()
 	const commandListRef = useRef<HTMLDivElement>(null)
@@ -49,6 +51,7 @@ export default function AddressInput({
 	const [inputValue, setInputValue] = useState(defaultValue)
 	const [suggestions, setSuggestions] = useState<FeatureCollection[]>([])
 	const [loading, setLoading] = useState(false)
+	const mapboxApiKey = process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
 
 	const mapContainer = useRef<HTMLDivElement>(null)
 
@@ -84,7 +87,7 @@ export default function AddressInput({
 					lngLat.lng
 				)
 				setInputValue(data.features[0].place_name)
-				onAddressSelect(newAddress)
+				onAddressSelect?.(newAddress)
 			}
 		} catch (error) {
 			console.error("Error reverse geocoding:", error)
@@ -149,7 +152,7 @@ export default function AddressInput({
 			updateMarkerPosition(lng, lat)
 
 			const newAddress = createAddressFromFeature(suggestion, lat, lng)
-			onAddressSelect(newAddress)
+			onAddressSelect?.(newAddress)
 		},
 		[onAddressSelect, updateMarkerPosition]
 	)
@@ -184,7 +187,7 @@ export default function AddressInput({
 							longitude
 						)
 						setInputValue(data.features[0].place_name)
-						onAddressSelect(newAddress)
+						onAddressSelect?.(newAddress)
 					}
 				} catch (error) {
 					console.error("Error reverse geocoding:", error)
@@ -230,70 +233,81 @@ export default function AddressInput({
 	)
 
 	return (
-		<div className="space-y-4">
-			<Command className="relative overflow-visible">
-				<div className="flex space-x-2">
-					<Input
-						ref={inputRef}
-						value={inputValue}
-						onChange={(e) => handleInputChange(e.target.value)}
-						onFocus={() => setOpen(true)}
-						onClick={() => setOpen(true)}
-						placeholder="Search address..."
-						className="w-full"
-						aria-label="Search address"
+		<div>
+			{!readonly ? (
+				<div className="w-full space-y-4">
+					<Command className="relative overflow-visible">
+						<div className="flex space-x-2">
+							<>
+								<Input
+									ref={inputRef}
+									value={inputValue}
+									onChange={(e) => handleInputChange(e.target.value)}
+									onFocus={() => setOpen(true)}
+									onClick={() => setOpen(true)}
+									placeholder="Search address..."
+									className="w-full"
+									aria-label="Search address"
+								/>
+								<Button
+									variant="outline"
+									size="icon"
+									onClick={(e) => {
+										e.preventDefault()
+										e.stopPropagation()
+										getCurrentLocation()
+									}}
+									title="Use current location"
+									type="button"
+									aria-label="Use current location"
+								>
+									<Crosshair className="h-4 w-4" />
+								</Button>
+							</>
+						</div>
+						{open && (
+							<CommandList
+								className="absolute left-0 right-0 top-[46px] z-20 rounded-lg border bg-background shadow-md"
+								ref={commandListRef}
+							>
+								<CommandEmpty>No results found.</CommandEmpty>
+								<CommandGroup
+									heading={loading ? "Searching..." : "Suggestions"}
+									className="p-2"
+								>
+									{loading ? (
+										<div className="flex items-center justify-center py-4">
+											<Loader2 className="h-6 w-6 animate-spin text-primary" />
+										</div>
+									) : (
+										suggestions.map((suggestion) => (
+											<CommandItem
+												key={suggestion.id}
+												onSelect={() => handleSelect(suggestion)}
+												className="cursor-pointer"
+											>
+												<MapPin className="mr-2 h-4 w-4" />
+												{suggestion.place_name}
+											</CommandItem>
+										))
+									)}
+								</CommandGroup>
+							</CommandList>
+						)}
+					</Command>
+					<div
+						ref={mapContainer}
+						className={`aspect-${mapAspectRatio} w-full rounded-md`}
+						aria-label="Map"
 					/>
-					<Button
-						variant="outline"
-						size="icon"
-						onClick={(e) => {
-							e.preventDefault()
-							e.stopPropagation()
-							getCurrentLocation()
-						}}
-						title="Use current location"
-						type="button"
-						aria-label="Use current location"
-					>
-						<Crosshair className="h-4 w-4" />
-					</Button>
 				</div>
-
-				{open && (
-					<CommandList
-						className="absolute left-0 right-0 top-[46px] z-20 rounded-lg border bg-background shadow-md"
-						ref={commandListRef}
-					>
-						<CommandEmpty>No results found.</CommandEmpty>
-						<CommandGroup
-							heading={loading ? "Searching..." : "Suggestions"}
-							className="p-2"
-						>
-							{loading ? (
-								<div className="flex items-center justify-center py-4">
-									<Loader2 className="h-6 w-6 animate-spin text-primary" />
-								</div>
-							) : (
-								suggestions.map((suggestion) => (
-									<CommandItem
-										key={suggestion.id}
-										onSelect={() => handleSelect(suggestion)}
-										className="cursor-pointer"
-									>
-										<MapPin className="mr-2 h-4 w-4" />
-										{suggestion.place_name}
-									</CommandItem>
-								))
-							)}
-						</CommandGroup>
-					</CommandList>
-				)}
-			</Command>
-			<div
-				ref={mapContainer}
-				className="aspect-video w-full rounded-md"
-				aria-label="Map"
-			/>
+			) : (
+				<div
+					ref={mapContainer}
+					className={`aspect-${mapAspectRatio} w-full rounded-md`}
+					aria-label="Map"
+				/>
+			)}
 		</div>
 	)
 }
