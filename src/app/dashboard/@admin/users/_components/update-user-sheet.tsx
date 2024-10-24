@@ -337,7 +337,6 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 													lat: user.Address?.latitude || 9.882696,
 													lng: user.Address?.longitude || 123.605887
 												}} // Optional
-												defaultZoom={14} // Optional
 												defaultValue={
 													user.Address?.fullAddress ||
 													"Argao, Cebu, Philippines"

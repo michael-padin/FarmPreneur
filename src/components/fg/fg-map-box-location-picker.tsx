@@ -40,7 +40,7 @@ export default function AddressInput({
 	onAddressSelect,
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
-	defaultZoom = 14,
+	defaultZoom = 16,
 	readonly = false
 }: AddressInputProps) {
 	const { toast } = useToast()

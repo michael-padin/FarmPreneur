@@ -25,10 +25,27 @@ export function useMapbox({
 
 			mapRef.current = new mapboxgl.Map({
 				container,
-				style: "mapbox://styles/mapbox/standard-satellite",
+				style: "mapbox://styles/mokiiiiieeeee/cm2kz7nae00ck01pp87yzbaah",
 				center: [defaultCenter.lng, defaultCenter.lat],
-				zoom: defaultZoom
+				zoom: defaultZoom || 15,
+				attributionControl: false,
+				pitch: 60,
+				pitchWithRotate: true
 			})
+			// mapRef.current.addControl(
+			// 	new mapboxgl.GeolocateControl({
+			// 		positionOptions: {
+			// 			enableHighAccuracy: true
+			// 		},
+			// 		trackUserLocation: true,
+			// 		showUserHeading: false
+			// 	})
+			// )
+			mapRef.current.addControl(
+				new mapboxgl.NavigationControl({
+					visualizePitch: true
+				})
+			)
 
 			markerRef.current = new mapboxgl.Marker({
 				draggable: true,
@@ -53,7 +70,7 @@ export function useMapbox({
 		if (mapRef.current && markerRef.current) {
 			mapRef.current.flyTo({
 				center: [lng, lat],
-				zoom: 14
+				zoom: 20
 			})
 			markerRef.current.setLngLat([lng, lat])
 		}

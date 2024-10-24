@@ -1,12 +1,12 @@
 import { UpdateUserTypes } from "@/app/dashboard/@admin/users/types"
 import { db } from "@/lib/db"
-import { unstable_noStore } from "next/cache"
 
 export const getUserById = async (id: string) => {
 	return await db.user.findFirst({
 		where: {
 			id: id
-		}
+		},
+		cacheStrategy: { ttl: 60 }
 	})
 }
 
@@ -100,6 +100,10 @@ export const getUsers = async () => {
 		},
 		orderBy: {
 			createdAt: "desc"
+		},
+		cacheStrategy: {
+			swr: 60,
+			ttl: 60
 		}
 	})
 }
