@@ -12,9 +12,9 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 
-const getUsers = unstable_cache(async () => {
+const getUsers = async () => {
 	return await getUsersUseCase()
-})
+}
 
 const UsersPage = async () => {
 	const session = await auth()
