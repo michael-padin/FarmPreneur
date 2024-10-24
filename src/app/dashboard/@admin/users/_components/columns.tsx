@@ -24,6 +24,7 @@ import { toast } from "sonner"
 import {
 	Tooltip,
 	TooltipContent,
+	TooltipProvider,
 	TooltipTrigger
 } from "@/components/ui/tooltip"
 
@@ -94,14 +95,16 @@ export const columns: ColumnDef<
 		cell: ({ row }) => {
 			const address = row.getValue("Address") as Address
 			return (
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<p className="w-[200px] truncate">{address?.fullAddress}</p>
-					</TooltipTrigger>
-					<TooltipContent className="w-[200px]">
-						<p>{address?.fullAddress}</p>
-					</TooltipContent>
-				</Tooltip>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<p className="w-[200px] truncate">{address?.fullAddress}</p>
+						</TooltipTrigger>
+						<TooltipContent className="w-[200px]">
+							<p>{address?.fullAddress}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			)
 		},
 		size: 40

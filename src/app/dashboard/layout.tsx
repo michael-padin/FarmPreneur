@@ -5,9 +5,6 @@ import React from "react"
 import DashboardSidebar from "./_components/sidebar"
 import { Metadata } from "next"
 import ThemeProvider from "@/components/theme-provider"
-import { SessionProvider } from "next-auth/react"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { Toaster } from "sonner"
 
 import {
 	SidebarInset,
@@ -44,38 +41,33 @@ const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
 	return (
 		<>
 			<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-				<SessionProvider session={session}>
-					<TooltipProvider>
-						<SidebarProvider>
-							<DashboardSidebar
-								role={role as "FARMER" | "ADMIN"}
-								farmName={session.user.name || "Admin"}
-							/>
-							<SidebarInset className="overflow-hidden">
-								<header className="w-full border-b px-4">
-									<div className="flex w-full items-center">
-										<div className="flex h-16 shrink-0 items-center gap-2">
-											<SidebarTrigger className="-ml-1" />
-											<Separator orientation="vertical" className="mr-2 h-4" />
-										</div>
-										<div className="flex w-full items-center justify-end gap-2">
-											<ModeToggle />
-											<Button variant="ghost" size="icon" className="size-8">
-												<Bell className="size-4" />
-											</Button>
-											<Button variant="ghost" size="icon" className="size-8">
-												<MessageCircle className="size-4" />
-											</Button>
-										</div>
-									</div>
-								</header>
-								{role === "ADMIN" ? admin : farmer}
-							</SidebarInset>
-						</SidebarProvider>
-					</TooltipProvider>
-				</SessionProvider>
+				<SidebarProvider>
+					<DashboardSidebar
+						role={role as "FARMER" | "ADMIN"}
+						farmName={session.user.name || "Admin"}
+					/>
+					<SidebarInset className="overflow-hidden">
+						<header className="w-full border-b px-4">
+							<div className="flex w-full items-center">
+								<div className="flex h-16 shrink-0 items-center gap-2">
+									<SidebarTrigger className="-ml-1" />
+									<Separator orientation="vertical" className="mr-2 h-4" />
+								</div>
+								<div className="flex w-full items-center justify-end gap-2">
+									<ModeToggle />
+									<Button variant="ghost" size="icon" className="size-8">
+										<Bell className="size-4" />
+									</Button>
+									<Button variant="ghost" size="icon" className="size-8">
+										<MessageCircle className="size-4" />
+									</Button>
+								</div>
+							</div>
+						</header>
+						{role === "ADMIN" ? admin : farmer}
+					</SidebarInset>
+				</SidebarProvider>
 			</ThemeProvider>
-			<Toaster />
 		</>
 	)
 }
