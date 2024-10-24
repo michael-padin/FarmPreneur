@@ -17,6 +17,11 @@ export default auth((req): Response | void | Promise<Response | void> => {
 	// route or path gamiton pag api auth
 	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
 
+	// if api auth route, dili need ih redirect sa login
+	if (isApiAuthRoute) {
+		return
+	}
+
 	const isProtectedRoute = protectedRoutes.some((route) =>
 		pathname.startsWith(route)
 	)
@@ -24,21 +29,17 @@ export default auth((req): Response | void | Promise<Response | void> => {
 	// route gamiton pag login or register
 	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
 
-	// if api auth route, dili need ih redirect sa login
-	if (isApiAuthRoute) {
-		return
-	}
-
 	/**
 	 * if route or ang user ni navigate sa login o	r register and user is already logged in
 	 * ih redirect ni sa overview page
 	 */
 	if (isAuthRoute) {
 		if (isLoggedIn) {
-			if (req.auth?.user.role === "FARMER" || req.auth?.user.role === "ADMIN") {
-				return NextResponse.redirect(new URL("/dashboard", nextUrl))
+			if (req.auth) {
+				return NextResponse.redirect(
+					new URL(DEFAULT_LOGIN_REDIRECT(req.auth?.user.role), nextUrl)
+				)
 			}
-			return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
 		}
 		return
 	}

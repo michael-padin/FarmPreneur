@@ -4,6 +4,7 @@ import { Adapter } from "next-auth/adapters"
 
 import authConfig from "./auth.config"
 import { db } from "./lib/db"
+import { ROLE } from "@prisma/client"
 
 declare module "next-auth" {
 	/**
@@ -11,7 +12,7 @@ declare module "next-auth" {
 	 */
 	interface Session {
 		user: {
-			role: "FARMER" | "CUSTOMER" | "ADMIN"
+			role: ROLE
 			password: string | null
 			createdAt: string
 			isApproved: boolean

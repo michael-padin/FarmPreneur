@@ -4,6 +4,8 @@
  * @type {string[]}
  */
 
+import { ROLE } from "@prisma/client"
+
 export const protectedRoutes: string[] = [
 	"/notifications",
 	"/cart",
@@ -31,4 +33,15 @@ export const apiAuthPrefix: string = "/api/auth"
  *  The default redirect path after loging in
  * @type {string[]}
  */
-export const DEFAULT_LOGIN_REDIRECT: string = "/"
+export const DEFAULT_LOGIN_REDIRECT = (role: ROLE) => {
+	switch (role) {
+		case ROLE.CUSTOMER:
+			return "/dashboard"
+		case ROLE.FARMER:
+			return "/dashboard"
+		case ROLE.ADMIN:
+			return "/dashboard"
+		default:
+			return "/"
+	}
+}

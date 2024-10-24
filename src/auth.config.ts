@@ -89,32 +89,32 @@ export default {
 		async session({ session, user }) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { password, ...newUser } = session.user
-			const userResponse = await db.user.findUnique({
-				where: {
-					id: user.id
-				},
-				select: {
-					accounts: {
-						select: {
-							provider: true
-						}
-					}
-				}
-			})
+			// const userResponse = await db.user.findUnique({
+			// 	where: {
+			// 		id: user.id
+			// 	},
+			// 	select: {
+			// 		accounts: {
+			// 			select: {
+			// 				provider: true
+			// 			}
+			// 		}
+			// 	}
+			// })
 
-			if (userResponse?.accounts[0].provider === "google") {
-				const updatedUser = await adapter?.updateUser?.({
-					id: user.id,
-					isVerified: true
-				})
-				return {
-					...session,
-					user: {
-						...newUser,
-						...updatedUser
-					}
-				}
-			}
+			// if (userResponse?.accounts[0].provider === "google") {
+			// 	const updatedUser = await adapter?.updateUser?.({
+			// 		id: user.id,
+			// 		isVerified: true
+			// 	})
+			// 	return {
+			// 		...session,
+			// 		user: {
+			// 			...newUser,
+			// 			...updatedUser
+			// 		}
+			// 	}
+			// }
 			return {
 				...session,
 				user: {
