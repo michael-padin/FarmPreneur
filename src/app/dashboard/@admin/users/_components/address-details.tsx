@@ -61,6 +61,7 @@ export const AddressDetailsDrawerDialog = ({
 							}}
 							defaultValue={user.Address?.fullAddress}
 							defaultZoom={15}
+							mapAspectRatio="video"
 						/>
 					</div>
 				</DialogContent>
