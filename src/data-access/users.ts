@@ -152,12 +152,14 @@ export const getFarmers = async () => {
 			farmDetails: true,
 			farmerOrders: true,
 			farmerApproval: true,
+			products: true,
 			isVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
 			Address: true,
-			updatedAt: true
+			updatedAt: true,
+			_count: true
 		},
 		orderBy: {
 			createdAt: "desc"

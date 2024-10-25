@@ -14,7 +14,11 @@ import {
 	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
-import { transformCustomerRecord } from "@/utils/transform"
+import { db } from "@/lib/db"
+import {
+	transformCustomerRecord,
+	transformFarmerRecord
+} from "@/utils/transform"
 
 export const getUserByIdUseCase = async (id: string) => {
 	return await getUserById(id)
@@ -63,7 +67,8 @@ export const getUsersUseCase = async () => {
 	return await getUsers()
 }
 export const getFarmersUseCase = async () => {
-	return await getFarmers()
+	const farmers = await getFarmers()
+	return farmers.map(transformFarmerRecord)
 }
 export const getCustomersUseCase = async () => {
 	const customers = await getCustomers()

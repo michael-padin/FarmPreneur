@@ -1,4 +1,4 @@
-import { getCustomers } from "@/data-access/users"
+import { getCustomers, getFarmers } from "@/data-access/users"
 
 export function transformCustomerRecord(
 	user: Awaited<ReturnType<typeof getCustomers>>[0]
@@ -18,5 +18,20 @@ export function transformCustomerRecord(
 		orderCount: orders.length,
 		totalSpend,
 		status: isActive ? "Active" : "Inactive"
+	}
+}
+export function transformFarmerRecord(
+	user: Awaited<ReturnType<typeof getFarmers>>[0]
+) {
+	const totalSales = user.farmerOrders.reduce(
+		(acc, order) => acc + order.totalPrice,
+		0
+	)
+	const productCount = user.products.length
+
+	return {
+		...user,
+		totalSales,
+		productCount
 	}
 }

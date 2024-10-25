@@ -16,14 +16,14 @@ import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import { useState } from "react"
-import { getUsersUseCase } from "@/use-cases/users"
+import { getFarmersUseCase } from "@/use-cases/users"
 import { toast } from "sonner"
 import { RoleBadge, VerificationBadge } from "../../_components/badges"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
 import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 
 export const columns: ColumnDef<
-	Awaited<ReturnType<typeof getUsersUseCase>>[0]
+	Awaited<ReturnType<typeof getFarmersUseCase>>[0]
 >[] = [
 	// {
 	// 	enableHiding: true,
@@ -67,18 +67,18 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		accessorKey: "role",
+		accessorKey: "productCount",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Role" />
+			<DataTableColumnHeader column={column} title="Products" />
 		),
-		enableSorting: true,
-		cell: ({ row }) => {
-			const role = row.getValue("role") as ROLE
-			return <RoleBadge role={role} />
-		},
-		filterFn: (row, id, value: string[]) => {
-			return value.length === 0 ? true : value.includes(row.getValue(id))
-		}
+		enableSorting: true
+	},
+	{
+		accessorKey: "totalSales",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Total Sales" />
+		),
+		enableSorting: true
 	},
 	{
 		accessorKey: "Address",
@@ -162,12 +162,10 @@ export const columns: ColumnDef<
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/${user.id}`}>View details</Link>
+								<Link href={`/dashboard/users/${user.id}`}>Details</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
-								<Link href={`/dashboard/users/edit/${user.id}`}>
-									View details
-								</Link>
+								<Link href={`/dashboard/users/edit/${user.id}`}>Edit</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>

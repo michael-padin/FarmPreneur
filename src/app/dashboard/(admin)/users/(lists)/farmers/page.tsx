@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getUsersUseCase } from "@/use-cases/users"
+import { getFarmersUseCase } from "@/use-cases/users"
 import {
 	Card,
 	CardContent,
@@ -8,13 +8,11 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { UsersNav } from "../_components/users-nav"
-import { DataTable } from "../_components/data-table"
-import { columns } from "../_components/columns"
-import { getFarmers } from "@/data-access/users"
+import { columns } from "./_components/columns"
+import { DataTable } from "./_components/data-table"
 
-const getUsers = async () => {
-	return await getUsersUseCase()
+const getFarmers = async () => {
+	return await getFarmersUseCase()
 }
 
 // After
@@ -42,7 +40,7 @@ const UsersPage = async () => {
 			<Card className="">
 				<CardHeader className="p-4 lg:p-6">
 					<CardTitle>Farmers</CardTitle>
-					<CardDescription>Manager farmers account</CardDescription>
+					<CardDescription>Manage farmers account</CardDescription>
 				</CardHeader>
 				<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
 					<DataTable columns={columns} data={farmers} />
