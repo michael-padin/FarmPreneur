@@ -3,6 +3,7 @@ import {
 	createUserCustomer,
 	deleteUserById,
 	deleteUsersById,
+	getCustomers,
 	getFarmers,
 	getUserByEmail,
 	getUserById,
@@ -13,6 +14,7 @@ import {
 	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
+import { transformCustomerRecord } from "@/utils/transform"
 
 export const getUserByIdUseCase = async (id: string) => {
 	return await getUserById(id)
@@ -62,6 +64,10 @@ export const getUsersUseCase = async () => {
 }
 export const getFarmersUseCase = async () => {
 	return await getFarmers()
+}
+export const getCustomersUseCase = async () => {
+	const customers = await getCustomers()
+	return customers.map(transformCustomerRecord)
 }
 
 export const updateUserUseCase = async (

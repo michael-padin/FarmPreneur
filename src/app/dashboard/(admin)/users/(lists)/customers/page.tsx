@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getUsersUseCase } from "@/use-cases/users"
+import { getCustomersUseCase } from "@/use-cases/users"
 import {
 	Card,
 	CardContent,
@@ -8,37 +8,28 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { UsersNav } from "../_components/users-nav"
-import { DataTable } from "../_components/data-table"
-import { columns } from "../_components/columns"
+import { columns } from "./_components/columns"
+import { DataTable } from "./_components/data-table"
 
-const getUsers = async () => {
-	return await getUsersUseCase()
+const getCustomers = async () => {
+	return await getCustomersUseCase()
 }
 
-// After
-type Params = Promise<{ slug: string }>
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
-
-export async function generateMetadata(props: {
-	params: Params
-	searchParams: SearchParams
-}) {
-	const searchParams = await props.searchParams
-	const query = searchParams
-}
-
-const UsersPage = async () => {
+const CustomersPage = async () => {
 	const session = await auth()
 	if (!session || session.user.role !== "ADMIN") {
 		redirect("/login")
 	}
 
-	const users = await getUsers()
+	const users = await getCustomers()
+
+	if (users.length === 0) {
+		return <div>No customers found</div>
+	}
 
 	return (
 		<>
-			<Card className="border-0 lg:border">
+			<Card className="">
 				<CardHeader className="p-4 lg:p-6">
 					<CardTitle>Customers</CardTitle>
 					<CardDescription>Manage customers account</CardDescription>
@@ -51,4 +42,4 @@ const UsersPage = async () => {
 	)
 }
 
-export default UsersPage
+export default CustomersPage

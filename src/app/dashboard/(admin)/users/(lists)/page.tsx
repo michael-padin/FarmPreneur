@@ -10,7 +10,6 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { UsersNav } from "./_components/users-nav"
 
 const getUsers = async () => {
 	return await getUsersUseCase()
@@ -38,7 +37,7 @@ const UsersPage = async () => {
 
 	return (
 		<>
-			<Card className="border-0 lg:border">
+			<Card className="">
 				<CardHeader className="p-4 lg:p-6">
 					<CardTitle>All Users</CardTitle>
 					<CardDescription>Manage users.</CardDescription>

@@ -39,7 +39,7 @@ const UsersPage = async () => {
 
 	return (
 		<>
-			<Card className="border-0 lg:border">
+			<Card className="">
 				<CardHeader className="p-4 lg:p-6">
 					<CardTitle>Farmers</CardTitle>
 					<CardDescription>Manager farmers account</CardDescription>

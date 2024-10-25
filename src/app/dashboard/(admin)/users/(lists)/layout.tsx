@@ -8,7 +8,7 @@ const AdminUsersLayout = async ({
 	return (
 		<div className="px-1 py-5 lg:p-5">
 			<UsersNav />
-			<div>{children}</div>
+			<div className="px-2 lg:px-0">{children}</div>
 		</div>
 	)
 }

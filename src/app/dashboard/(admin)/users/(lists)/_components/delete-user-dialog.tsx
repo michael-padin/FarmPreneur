@@ -1,5 +1,4 @@
 "use client"
-
 import { TrashIcon } from "@radix-ui/react-icons"
 import { type Row } from "@tanstack/react-table"
 import { toast } from "sonner"
@@ -29,11 +28,13 @@ import { Icons } from "@/components/icons"
 import { useTransition } from "react"
 import { deleteUsers } from "../actions"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { getUsersUseCase } from "@/use-cases/users"
+import { getCustomersUseCase, getUsersUseCase } from "@/use-cases/users"
 
 interface DeleteUsersDialogProps
 	extends React.ComponentPropsWithoutRef<typeof Dialog> {
-	users: Row<Awaited<ReturnType<typeof getUsersUseCase>>[0]>["original"][]
+	users: Row<
+		Awaited<ReturnType<typeof getUsersUseCase | typeof getCustomersUseCase>>[0]
+	>["original"][]
 	showTrigger?: boolean
 	onSuccess?: () => void
 }

@@ -20,11 +20,13 @@ import {
 	DrawerTitle,
 	DrawerTrigger
 } from "@/components/ui/drawer"
-import { getUsersUseCase } from "@/use-cases/users"
+import { getCustomersUseCase, getUsersUseCase } from "@/use-cases/users"
 import { useMapbox } from "@/hooks/use-mapbox"
 
 interface AddressDetailsDrawerDialogProps {
-	user: Awaited<ReturnType<typeof getUsersUseCase>>[0]
+	user: Awaited<
+		ReturnType<typeof getUsersUseCase | typeof getCustomersUseCase>
+	>[0]
 }
 
 export const AddressDetailsDrawerDialog = ({
