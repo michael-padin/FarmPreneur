@@ -1,4 +1,4 @@
-import { Address } from "@/app/dashboard/@admin/users/types"
+import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
 
 export const upsertAddress = async (
@@ -10,8 +10,7 @@ export const upsertAddress = async (
 			locationType: data.locationType,
 			fullAddress: data.fullAddress,
 			street: data.street,
-			city: data.city,
-			state: data.state,
+			region: data.region,
 			country: data.country,
 			postalCode: data.postalCode,
 			latitude: data.latitude,
@@ -22,8 +21,7 @@ export const upsertAddress = async (
 			locationType: data.locationType,
 			fullAddress: data.fullAddress,
 			street: data.street,
-			city: data.city,
-			state: data.state,
+			region: data.region,
 			country: data.country,
 			postalCode: data.postalCode,
 			latitude: data.latitude,

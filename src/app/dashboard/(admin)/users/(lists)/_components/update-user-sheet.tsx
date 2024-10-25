@@ -65,8 +65,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			address: user.Address || {
 				fullAddress: "",
 				street: "",
-				city: "",
-				state: "",
+				region: "",
 				country: "",
 				postalCode: "",
 				latitude: 0,
@@ -90,8 +89,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			address: user.Address || {
 				fullAddress: "",
 				street: "",
-				city: "",
-				state: "",
+				region: "",
 				country: "",
 				postalCode: "",
 				latitude: 0,

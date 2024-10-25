@@ -1,4 +1,4 @@
-import { UpdateUserTypes } from "@/app/dashboard/@admin/users/types"
+import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
 
 export const getUserById = async (id: string) => {
@@ -137,4 +137,34 @@ export const deleteUsersById = async (ids: string[]) => {
 	return await db.$transaction([
 		db.user.deleteMany({ where: { id: { in: ids } } })
 	])
+}
+
+export const getFarmers = async () => {
+	return await db.user.findMany({
+		where: {
+			role: "FARMER"
+		},
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			role: true,
+			farmDetails: true,
+			farmerOrders: true,
+			farmerApproval: true,
+			isVerified: true,
+			createdAt: true,
+			image: true,
+			contactNumber: true,
+			Address: true,
+			updatedAt: true
+		},
+		orderBy: {
+			createdAt: "desc"
+		},
+		cacheStrategy: {
+			swr: 60,
+			ttl: 60
+		}
+	})
 }

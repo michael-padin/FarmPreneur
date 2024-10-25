@@ -21,11 +21,10 @@ export const metadata: Metadata = {
 	description: "Your dashboard"
 }
 interface DashboardLayoutProps {
-	farmer: React.ReactNode
-	admin: React.ReactNode
+	children: React.ReactNode
 }
 
-const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
+const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
 	const session = await auth()
 
 	if (
@@ -64,7 +63,7 @@ const DashboardLayout = async ({ farmer, admin }: DashboardLayoutProps) => {
 								</div>
 							</div>
 						</header>
-						{role === "ADMIN" ? admin : farmer}
+						{children}
 					</SidebarInset>
 				</SidebarProvider>
 			</ThemeProvider>

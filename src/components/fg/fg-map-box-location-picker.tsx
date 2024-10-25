@@ -15,7 +15,7 @@ import { useToast } from "@/components/ui/use-toast"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Feature, FeatureCollection } from "@/types"
 import { useClickOutside } from "@/hooks/use-click-outside-ref"
-import { Address } from "@/app/dashboard/@admin/users/types"
+import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { useMapbox } from "@/hooks/use-mapbox"
 
 interface LatLng {

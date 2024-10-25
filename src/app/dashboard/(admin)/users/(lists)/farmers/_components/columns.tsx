@@ -14,14 +14,13 @@ import { ROLE } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { RoleBadge, VerificationBadge } from "./badges"
 import { formatDate } from "@/lib/utils"
-import { UpdateUserSheet } from "./update-user-sheet"
 import { useState } from "react"
 import { getUsersUseCase } from "@/use-cases/users"
-import { DeleteUsersDialog } from "./delete-user-dialog"
 import { toast } from "sonner"
-import { AddressDetailsDrawerDialog } from "./address-details"
+import { RoleBadge, VerificationBadge } from "../../_components/badges"
+import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
+import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getUsersUseCase>>[0]
@@ -133,11 +132,11 @@ export const columns: ColumnDef<
 
 			return (
 				<>
-					<UpdateUserSheet
+					{/* <UpdateUserSheet
 						user={user}
 						open={showUpdateUserSheet}
 						onOpenChange={setShowUpdateUserSheet}
-					/>
+					/> */}
 					<DeleteUsersDialog
 						open={showDeleteUserDialog}
 						onOpenChange={setShowDeleteUserDialog}
@@ -163,10 +162,12 @@ export const columns: ColumnDef<
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/users/${user.id}`}>View details</Link>
+								<Link href={`/dashboard/users/${user.id}`}>View details</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
-								Edit
+								<Link href={`/dashboard/users/edit/${user.id}`}>
+									View details
+								</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>

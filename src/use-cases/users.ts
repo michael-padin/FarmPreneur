@@ -1,8 +1,9 @@
-import { UpdateUserTypes } from "@/app/dashboard/@admin/users/types"
+import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import {
 	createUserCustomer,
 	deleteUserById,
 	deleteUsersById,
+	getFarmers,
 	getUserByEmail,
 	getUserById,
 	getUserFarmerById,
@@ -58,6 +59,9 @@ export const UpdateUserPasswordByEmailUseCase = async (data: {
 
 export const getUsersUseCase = async () => {
 	return await getUsers()
+}
+export const getFarmersUseCase = async () => {
+	return await getFarmers()
 }
 
 export const updateUserUseCase = async (

@@ -39,7 +39,7 @@ const MotionCard = motion(Card)
 export function Dashboard() {
 	return (
 		<main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-			<div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+			{/* <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
 				<MotionCard
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -264,7 +264,7 @@ export function Dashboard() {
 						))}
 					</CardContent>
 				</MotionCard>
-			</div>
+			</div> */}
 		</main>
 	)
 }
