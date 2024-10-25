@@ -1,70 +1,69 @@
-import { useEffect, useRef, useCallback } from "react"
+import { useRef, useCallback, useEffect } from "react"
 import mapboxgl from "mapbox-gl"
 
 interface UseMapboxProps {
 	mapboxApiKey: string
 	defaultCenter: { lng: number; lat: number }
-	defaultZoom: number
-	onMarkerDragEnd: (lngLat: mapboxgl.LngLat) => void
+	defaultZoom?: number
+	onMarkerDragEnd?: (lngLat: mapboxgl.LngLat) => void
+	draggable?: boolean
 }
 
 export function useMapbox({
 	mapboxApiKey,
 	defaultCenter,
-	defaultZoom,
-	onMarkerDragEnd
+	defaultZoom = 15,
+	onMarkerDragEnd,
+	draggable = false
 }: UseMapboxProps) {
 	const mapRef = useRef<mapboxgl.Map | null>(null)
 	const markerRef = useRef<mapboxgl.Marker | null>(null)
 
-	const initializeMap = useCallback(
-		(container: HTMLElement) => {
-			if (mapRef.current) return
+	const initializeMap = useCallback((container: HTMLElement) => {
+		if (mapRef.current) return
 
-			mapboxgl.accessToken = mapboxApiKey
+		mapboxgl.accessToken = mapboxApiKey
 
-			mapRef.current = new mapboxgl.Map({
-				container,
-				style: "mapbox://styles/mokiiiiieeeee/cm2nggekh003c01r4b330fpox",
-				center: [defaultCenter.lng, defaultCenter.lat],
-				zoom: defaultZoom || 15,
-				attributionControl: false,
-				pitch: 60,
-				pitchWithRotate: true
+		mapRef.current = new mapboxgl.Map({
+			container,
+			style: "mapbox://styles/mokiiiiieeeee/cm2nggekh003c01r4b330fpox",
+			center: [defaultCenter.lng, defaultCenter.lat],
+			zoom: defaultZoom,
+			attributionControl: false,
+			pitch: 60,
+			pitchWithRotate: true
+		})
+		// mapRef.current.addControl(
+		// 	new mapboxgl.GeolocateControl({
+		// 		positionOptions: {
+		// 			enableHighAccuracy: true
+		// 		},
+		// 		trackUserLocation: true,
+		// 		showUserHeading: false
+		// 	})
+		// )
+		mapRef.current.addControl(
+			new mapboxgl.NavigationControl({
+				visualizePitch: true
 			})
-			// mapRef.current.addControl(
-			// 	new mapboxgl.GeolocateControl({
-			// 		positionOptions: {
-			// 			enableHighAccuracy: true
-			// 		},
-			// 		trackUserLocation: true,
-			// 		showUserHeading: false
-			// 	})
-			// )
-			mapRef.current.addControl(
-				new mapboxgl.NavigationControl({
-					visualizePitch: true
-				})
-			)
+		)
 
-			markerRef.current = new mapboxgl.Marker({
-				draggable: true,
-				color: "#16a34a"
-			})
-				.setLngLat([defaultCenter.lng, defaultCenter.lat])
-				.addTo(mapRef.current)
+		markerRef.current = new mapboxgl.Marker({
+			draggable,
+			color: "#16a34a"
+		})
+			.setLngLat([defaultCenter.lng, defaultCenter.lat])
+			.addTo(mapRef.current)
 
-			markerRef.current.on("dragend", () => {
-				const lngLat = markerRef.current!.getLngLat()
-				onMarkerDragEnd(lngLat)
-			})
+		markerRef.current.on("dragend", () => {
+			const lngLat = markerRef.current!.getLngLat()
+			onMarkerDragEnd?.(lngLat)
+		})
 
-			mapRef.current.on("load", () => {
-				mapRef.current?.resize()
-			})
-		},
-		[mapboxApiKey, defaultCenter, defaultZoom, onMarkerDragEnd]
-	)
+		mapRef.current.on("load", () => {
+			mapRef.current?.resize()
+		})
+	}, [])
 
 	const updateMarkerPosition = useCallback((lng: number, lat: number) => {
 		if (mapRef.current && markerRef.current) {

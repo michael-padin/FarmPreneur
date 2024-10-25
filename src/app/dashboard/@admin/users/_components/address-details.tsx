@@ -21,7 +21,7 @@ import {
 	DrawerTrigger
 } from "@/components/ui/drawer"
 import { getUsersUseCase } from "@/use-cases/users"
-import AddressInput from "@/components/fg/fg-map-box-location-picker"
+import { useMapbox } from "@/hooks/use-mapbox"
 
 interface AddressDetailsDrawerDialogProps {
 	user: Awaited<ReturnType<typeof getUsersUseCase>>[0]
@@ -44,7 +44,10 @@ export const AddressDetailsDrawerDialog = ({
 						</span>
 					</DialogTrigger>
 				</div>
-				<DialogContent className="max-w-screen-lg">
+				<DialogContent
+					className="max-w-screen-lg"
+					onOpenAutoFocus={(e) => e.preventDefault()}
+				>
 					<DialogHeader>
 						<DialogTitle>
 							<span className="text-primary">{user.name}&apos;s</span> Address
@@ -52,13 +55,9 @@ export const AddressDetailsDrawerDialog = ({
 						<DialogDescription>{user.Address?.fullAddress}</DialogDescription>
 					</DialogHeader>
 					<div className="w-full">
-						<AddressInput
-							readonly
-							defaultCenter={{
-								lat: user.Address?.latitude || 0,
-								lng: user.Address?.longitude || 0
-							}}
-							defaultValue={user.Address?.fullAddress}
+						<MapBox
+							lng={user.Address?.longitude}
+							lat={user.Address?.latitude}
 						/>
 					</div>
 				</DialogContent>
@@ -71,10 +70,12 @@ export const AddressDetailsDrawerDialog = ({
 			<div>
 				<p className="w-[180px] truncate">{user.Address?.fullAddress}</p>
 				<DrawerTrigger asChild>
-					<span className="text-xs text-primary">View in map</span>
+					<span className="cursor-pointer text-xs text-primary">
+						View in map
+					</span>
 				</DrawerTrigger>
 			</div>
-			<DrawerContent>
+			<DrawerContent onOpenAutoFocus={(e) => e.preventDefault()}>
 				<DrawerHeader className="text-left">
 					<DrawerTitle>
 						<span className="text-primary">{user.name}&apos;s</span> Address
@@ -82,14 +83,7 @@ export const AddressDetailsDrawerDialog = ({
 					<DrawerDescription>{user.Address?.fullAddress}</DrawerDescription>
 				</DrawerHeader>
 				<div className="w-full px-4">
-					<AddressInput
-						readonly
-						defaultCenter={{
-							lat: user.Address?.latitude || 0,
-							lng: user.Address?.longitude || 0
-						}}
-						defaultValue={user.Address?.fullAddress}
-					/>
+					<MapBox lng={user.Address?.longitude} lat={user.Address?.latitude} />
 				</div>
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>
@@ -98,5 +92,33 @@ export const AddressDetailsDrawerDialog = ({
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
+	)
+}
+
+export const MapBox = ({
+	lng = 0,
+	lat = 0
+}: {
+	lng?: number
+	lat?: number
+}) => {
+	const mapContainer = React.useRef<HTMLDivElement>(null)
+	const { initializeMap } = useMapbox({
+		mapboxApiKey: process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!,
+		defaultCenter: { lng, lat }
+	})
+
+	React.useEffect(() => {
+		if (mapContainer.current) {
+			initializeMap(mapContainer.current)
+		}
+	}, [initializeMap])
+
+	return (
+		<div
+			ref={mapContainer}
+			className={`aspect-square w-full rounded-md lg:aspect-video`}
+			aria-label="Map"
+		/>
 	)
 }

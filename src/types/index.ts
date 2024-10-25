@@ -35,36 +35,84 @@ export interface DataTableFilterOption<TData> {
 }
 
 //MARK:MAPBOX
-export interface FeatureCollection {
-	id: string
+export type RoutablePoint = {
+	name: string
+	latitude: number
+	longitude: number
+}
+
+export type Coordinates = {
+	longitude: number
+	latitude: number
+	accuracy?: string
+	routable_points?: RoutablePoint[]
+}
+
+export type BoundingBox = [number, number, number, number]
+
+export type Context = {
+	address?: {
+		mapbox_id: string
+		address_number: string
+		street_name: string
+		name: string
+	}
+	street?: {
+		mapbox_id: string
+		name: string
+	}
+	postcode?: {
+		mapbox_id: string
+		name: string
+	}
+	locality?: {
+		mapbox_id: string
+		name: string
+	}
+	place?: {
+		mapbox_id: string
+		name: string
+		wikidata_id?: string
+	}
+	region?: {
+		mapbox_id: string
+		name: string
+		wikidata_id?: string
+	}
+	country?: {
+		mapbox_id: string
+		name: string
+		wikidata_id: string
+		country_code?: string
+		country_code_alpha_3?: string
+	}
+}
+
+export type FeatureProperties = {
+	mapbox_id: string
+	feature_type: string
+	full_address: string
+	name: string
+	name_preferred: string
+	coordinates: Coordinates
+	place_formatted: string
+	bbox?: BoundingBox
+	context: Context
+	additional_feature_types?: string[]
+}
+
+export type Feature = {
 	type: "Feature"
-	place_type: string[]
-	relevance: number
-	properties: Properties
-	text: string
-	place_name: string
-	center: number[]
-	geometry: Geometry
-	context: Context[]
-	bbox?: number[] // bbox is optional and present in some objects
-}
-
-export interface Properties {
-	accuracy?: string // accuracy is optional
-	mapbox_id: string
-	wikidata?: string // wikidata is optional and present in some objects
-	short_code?: string // short_code is optional
-}
-
-export interface Geometry {
-	type: "Point"
-	coordinates: number[]
-}
-
-export interface Context {
 	id: string
-	mapbox_id: string
-	text: string
-	wikidata?: string // wikidata is optional
-	short_code?: string // short_code is optional
+	geometry: {
+		type: "Point"
+		coordinates: [number, number]
+	}
+	properties: FeatureProperties
+}
+
+export type FeatureCollection = {
+	type: "FeatureCollection"
+	features: Feature[]
+	attribution: string
 }

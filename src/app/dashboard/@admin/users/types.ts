@@ -11,8 +11,7 @@ export interface UpdateTaskSheetProps
 const addressSchema = z.object({
 	fullAddress: z.string(),
 	street: z.string().nullable(),
-	city: z.string().nullable(),
-	state: z.string().nullable(),
+	region: z.string().nullable(),
 	country: z.string().nullable(),
 	postalCode: z.string().nullable(),
 	latitude: z.number(),

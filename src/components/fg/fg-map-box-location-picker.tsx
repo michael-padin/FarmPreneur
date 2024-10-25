@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/command"
 import { useToast } from "@/components/ui/use-toast"
 import "mapbox-gl/dist/mapbox-gl.css"
-import { FeatureCollection } from "@/types"
+import { Feature, FeatureCollection } from "@/types"
 import { useClickOutside } from "@/hooks/use-click-outside-ref"
 import { Address } from "@/app/dashboard/@admin/users/types"
 import { useMapbox } from "@/hooks/use-mapbox"
@@ -40,14 +40,16 @@ export default function AddressInput({
 	onAddressSelect,
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
-	defaultZoom = 16,
+	defaultZoom,
 	readonly = false
 }: AddressInputProps) {
 	const { toast } = useToast()
 	const commandListRef = useRef<HTMLDivElement>(null)
 	const [open, setOpen] = useState(false)
 	const [inputValue, setInputValue] = useState(defaultValue)
-	const [suggestions, setSuggestions] = useState<FeatureCollection[]>([])
+	const [suggestions, setSuggestions] = useState<FeatureCollection["features"]>(
+		[]
+	)
 	const [loading, setLoading] = useState(false)
 	const mapboxApiKey = process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
 
@@ -57,6 +59,7 @@ export default function AddressInput({
 	const debounceTimeout = useRef<NodeJS.Timeout>(undefined)
 
 	const { initializeMap, updateMarkerPosition } = useMapbox({
+		draggable: true,
 		mapboxApiKey,
 		defaultCenter,
 		defaultZoom,
@@ -74,17 +77,19 @@ export default function AddressInput({
 	async function handleMarkerDragEnd(lngLat: mapboxgl.LngLat) {
 		try {
 			const response = await fetch(
-				`https://api.mapbox.com/geocoding/v5/mapbox.places/${lngLat.lng},${lngLat.lat}.json?access_token=${mapboxApiKey}`
+				`https://api.mapbox.com/search/geocode/v6/reverse?longitude=${lngLat.lng}&latitude=${lngLat.lat}&access_token=${mapboxApiKey}`
 			)
-			const data = await response.json()
-			if (data.features && data.features.length > 0) {
-				const feature: FeatureCollection = data.features[0]
+
+			const featureData: FeatureCollection = await response.json()
+
+			if (featureData.features && featureData.features.length > 0) {
+				const feature = featureData.features[0]
 				const newAddress = createAddressFromFeature(
 					feature,
 					lngLat.lat,
 					lngLat.lng
 				)
-				setInputValue(data.features[0].place_name)
+				setInputValue(featureData.features[0].properties.full_address)
 				onAddressSelect?.(newAddress)
 			}
 		} catch (error) {
@@ -107,9 +112,9 @@ export default function AddressInput({
 			setLoading(true)
 			try {
 				const response = await fetch(
-					`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxApiKey}`
+					`https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(query)}&proximity=ip&access_token=${mapboxApiKey}`
 				)
-				const data = await response.json()
+				const data: FeatureCollection = await response.json()
 				setSuggestions(data.features || [])
 			} catch (error) {
 				console.error("Error fetching suggestions:", error)
@@ -142,11 +147,11 @@ export default function AddressInput({
 	)
 
 	const handleSelect = useCallback(
-		(suggestion: FeatureCollection) => {
-			setInputValue(suggestion.place_name)
+		(suggestion: Feature) => {
+			setInputValue(suggestion.properties.full_address)
 			setOpen(false)
 
-			const [lng, lat] = suggestion.center
+			const [lng, lat] = suggestion.geometry.coordinates
 			updateMarkerPosition(lng, lat)
 
 			const newAddress = createAddressFromFeature(suggestion, lat, lng)
@@ -173,18 +178,18 @@ export default function AddressInput({
 
 				try {
 					const response = await fetch(
-						`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${mapboxApiKey}`
+						`https://api.mapbox.com/search/geocode/v6/reverse?longitude=${longitude}&latitude=${latitude}&access_token=${mapboxApiKey}`
 					)
-					const data = await response.json()
+					const data: FeatureCollection = await response.json()
 
 					if (data.features && data.features.length > 0) {
-						const feature: FeatureCollection = data.features[0]
+						const feature = data.features[0]
 						const newAddress = createAddressFromFeature(
 							feature,
 							latitude,
 							longitude
 						)
-						setInputValue(data.features[0].place_name)
+						setInputValue(data.features[0].properties.full_address)
 						onAddressSelect?.(newAddress)
 					}
 				} catch (error) {
@@ -209,20 +214,13 @@ export default function AddressInput({
 
 	const createAddressFromFeature = useMemo(
 		() =>
-			(feature: FeatureCollection, lat: number, lng: number): Address => {
+			(feature: Feature, lat: number, lng: number): Address => {
 				return {
-					fullAddress: feature.place_name,
-					street: feature.text,
-					city:
-						feature.context?.find((c) => c.id.startsWith("place"))?.text || "",
-					state:
-						feature.context?.find((c) => c.id.startsWith("region"))?.text || "",
-					country:
-						feature.context?.find((c) => c.id.startsWith("country"))?.text ||
-						"",
-					postalCode:
-						feature.context?.find((c) => c.id.startsWith("postcode"))?.text ||
-						"",
+					fullAddress: feature.properties.full_address,
+					street: feature.properties.context.street?.name || "",
+					region: feature.properties.context.region?.name || "",
+					country: feature.properties.context.country?.name || "",
+					postalCode: feature.properties.context.postcode?.name || "",
 					latitude: lat,
 					longitude: lng
 				}
@@ -271,7 +269,6 @@ export default function AddressInput({
 								<CommandEmpty>No results found.</CommandEmpty>
 								<CommandGroup
 									heading={loading ? "Searching..." : "Suggestions"}
-									className="p-2"
 								>
 									{loading ? (
 										<div className="flex items-center justify-center py-4">
@@ -284,8 +281,10 @@ export default function AddressInput({
 												onSelect={() => handleSelect(suggestion)}
 												className="cursor-pointer"
 											>
-												<MapPin className="mr-2 h-4 w-4" />
-												{suggestion.place_name}
+												<div>
+													<MapPin className="mr-2 h-4 w-4" />
+												</div>
+												{suggestion.properties.full_address}
 											</CommandItem>
 										))
 									)}

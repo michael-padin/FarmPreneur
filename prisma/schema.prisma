@@ -368,8 +368,7 @@ model Address {
   userId       String   @unique @db.ObjectId // Reference to the user receiving the notification
   fullAddress  String
   street       String?
-  city         String?
-  state        String?
+  region        String?
   country      String?
   postalCode   String?
   latitude     Float
