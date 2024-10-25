@@ -5,6 +5,7 @@ import {
 	deleteUsersById,
 	getCustomers,
 	getFarmers,
+	getPendingFarmers,
 	getUserByEmail,
 	getUserById,
 	getUserFarmerById,
@@ -69,6 +70,9 @@ export const getUsersUseCase = async () => {
 export const getFarmersUseCase = async () => {
 	const farmers = await getFarmers()
 	return farmers.map(transformFarmerRecord)
+}
+export const getPendingFarmersUseCase = async () => {
+	return await getPendingFarmers()
 }
 export const getCustomersUseCase = async () => {
 	const customers = await getCustomers()

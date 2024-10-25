@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getUsersUseCase } from "@/use-cases/users"
+import { getPendingFarmersUseCase } from "@/use-cases/users"
 import {
 	Card,
 	CardContent,
@@ -9,10 +9,10 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 import { DataTable } from "../_components/data-table"
-import { columns } from "../_components/columns"
+import { columns } from "./_components/columns"
 
-const getUsers = async () => {
-	return await getUsersUseCase()
+const getPendingFarmers = async () => {
+	return await getPendingFarmersUseCase()
 }
 
 const UsersPage = async () => {
@@ -21,7 +21,7 @@ const UsersPage = async () => {
 		redirect("/login")
 	}
 
-	const users = await getUsers()
+	const users = await getPendingFarmers()
 
 	return (
 		<>

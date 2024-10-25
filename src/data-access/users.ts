@@ -170,6 +170,38 @@ export const getFarmers = async () => {
 		}
 	})
 }
+export const getPendingFarmers = async () => {
+	return await db.user.findMany({
+		where: {
+			role: "FARMER",
+			farmerApproval: "PENDING"
+		},
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			role: true,
+			farmDetails: true,
+			farmerOrders: true,
+			farmerApproval: true,
+			products: true,
+			isVerified: true,
+			createdAt: true,
+			image: true,
+			contactNumber: true,
+			Address: true,
+			updatedAt: true,
+			_count: true
+		},
+		orderBy: {
+			createdAt: "desc"
+		},
+		cacheStrategy: {
+			swr: 60,
+			ttl: 60
+		}
+	})
+}
 export const getCustomers = async () => {
 	return await db.user.findMany({
 		where: {
