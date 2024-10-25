@@ -66,7 +66,7 @@ export const AddressDetailsDrawerDialog = ({
 	}
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
+		<Drawer open={open} onOpenChange={setOpen} dismissible={false}>
 			<div>
 				<p className="w-[180px] truncate">{user.Address?.fullAddress}</p>
 				<DrawerTrigger asChild>
@@ -87,7 +87,7 @@ export const AddressDetailsDrawerDialog = ({
 				</div>
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>
-						<Button>Close</Button>
+						<Button onClick={() => setOpen(false)}>Close</Button>
 					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
@@ -117,7 +117,7 @@ export const MapBox = ({
 	return (
 		<div
 			ref={mapContainer}
-			className={`aspect-square w-full rounded-md lg:aspect-video`}
+			className={`aspect-square rounded-md lg:aspect-video`}
 			aria-label="Map"
 		/>
 	)
