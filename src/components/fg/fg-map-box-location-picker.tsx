@@ -54,7 +54,7 @@ export default function AddressInput({
 	const mapContainer = useRef<HTMLDivElement>(null)
 
 	const inputRef = useRef<HTMLInputElement>(null)
-	const debounceTimeout = useRef<NodeJS.Timeout>()
+	const debounceTimeout = useRef<NodeJS.Timeout>(undefined)
 
 	const { initializeMap, updateMarkerPosition } = useMapbox({
 		mapboxApiKey,

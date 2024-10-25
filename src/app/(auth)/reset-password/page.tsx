@@ -3,11 +3,10 @@ import Image from "next/image"
 import NewPasswordForm from "./_components/new-password-form"
 import { redirect } from "next/navigation"
 
-export default async function ResetPasswordPage({
-	searchParams
-}: {
-	searchParams?: { [key: string]: string | string[] | undefined }
+export default async function ResetPasswordPage(props: {
+	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+	const searchParams = await props.searchParams
 	if (!searchParams?.token) {
 		return redirect("/login")
 	}

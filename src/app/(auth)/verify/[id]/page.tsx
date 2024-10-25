@@ -4,11 +4,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
-export default async function verifyPage({
-	params
-}: {
-	params: { id: string }
+export default async function verifyPage(props: {
+	params: Promise<{ id: string }>
 }) {
+	const params = await props.params
 	if (!params.id) return redirect("/login")
 	const user = await getUserByIdUseCase(params.id)
 	if (!user) return redirect("/login")

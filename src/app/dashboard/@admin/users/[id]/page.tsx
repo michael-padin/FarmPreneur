@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -33,7 +33,10 @@ type User = {
 	updatedAt: Date
 }
 
-export default function UserDetails({ params }: { params: { id: string } }) {
+export default function UserDetails(props: {
+	params: Promise<{ id: string }>
+}) {
+	const params = use(props.params)
 	const id = params.id
 	const [user, setUser] = useState<User | null>(null)
 	const [isEditing, setIsEditing] = useState(false)

@@ -3,7 +3,6 @@ import { columns } from "./_components/columns"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { getUsersUseCase } from "@/use-cases/users"
-import { unstable_cache } from "next/cache"
 import {
 	Card,
 	CardContent,

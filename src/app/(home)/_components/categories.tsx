@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Apple, Carrot, Egg, Bean } from "lucide-react"
 import {
@@ -7,7 +5,6 @@ import {
 	CarouselContent,
 	CarouselItem
 } from "@/components/ui/carousel"
-import { Label } from "@/components/ui/label"
 
 const categories = [
 	{ name: "Fruits", icon: Apple },
