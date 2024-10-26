@@ -26,22 +26,6 @@ import { AddressDetailsDrawerDialog } from "./address-details"
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getUsersUseCase>>[0]
 >[] = [
-	// {
-	// 	enableHiding: true,
-	// 	accessorKey: "id",
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader column={column} title="ID" />
-	// 	),
-	// 	cell: ({ row }) => {
-	// 		const id = row.getValue("id") as string
-	// 		return (
-	// 			<div className="flex items-center space-x-2">
-	// 				<CopyToClipboard value={id} />
-	// 				<span>{id}</span>
-	// 			</div>
-	// 		)
-	// 	}
-	// },
 	{
 		accessorKey: "name",
 		header: ({ column }) => (
@@ -166,9 +150,7 @@ export const columns: ColumnDef<
 								<Link href={`/dashboard/users/${user.id}`}>View details</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
-								<Link href={`/dashboard/users/edit/${user.id}`}>
-									View details
-								</Link>
+								<Link href={`/dashboard/users/edit/${user.id}`}>Edit</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>

@@ -8,8 +8,9 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { columns } from "./_components/columns"
 import { DataTable } from "./_components/data-table"
+import { Suspense } from "react"
+import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
 
 const getCustomers = async () => {
 	return await getCustomersUseCase()
@@ -21,11 +22,7 @@ const CustomersPage = async () => {
 		redirect("/login")
 	}
 
-	const users = await getCustomers()
-
-	if (users.length === 0) {
-		return <div>No customers found</div>
-	}
+	const customersPromise = getCustomers()
 
 	return (
 		<>
@@ -35,7 +32,9 @@ const CustomersPage = async () => {
 					<CardDescription>Manage customers account</CardDescription>
 				</CardHeader>
 				<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
-					<DataTable columns={columns} data={users} />
+					<Suspense fallback={<DataTableSkeleton />}>
+						<DataTable data={customersPromise} />
+					</Suspense>
 				</CardContent>
 			</Card>
 		</>

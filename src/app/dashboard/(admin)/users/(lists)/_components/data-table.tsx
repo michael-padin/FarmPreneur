@@ -1,7 +1,6 @@
 "use client"
 
 import {
-	ColumnDef,
 	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
@@ -21,7 +20,7 @@ import {
 	TableHeader,
 	TableRow
 } from "@/components/ui/table"
-import { useCallback, useState } from "react"
+import { use, useCallback, useState } from "react"
 import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
 import { Input } from "@/components/ui/input"
 import {
@@ -43,22 +42,20 @@ import {
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { getCommonPinningStyles } from "@/lib/data-table"
+import { getUsersUseCase } from "@/use-cases/users"
+import { columns } from "./columns"
 
-interface DataTableProps<TData, TValue> {
-	columns: ColumnDef<TData, TValue>[]
-	data: TData[]
+interface DataTableProps {
+	data: Promise<Awaited<ReturnType<typeof getUsersUseCase>>>
 }
 
-export function DataTable<TData, TValue>({
-	columns,
-	data
-}: DataTableProps<TData, TValue>) {
+export function DataTable({ data }: DataTableProps) {
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 	const table = useReactTable({
-		data,
-		columns,
+		data: use(data),
+		columns: columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		getCoreRowModel: getCoreRowModel(),

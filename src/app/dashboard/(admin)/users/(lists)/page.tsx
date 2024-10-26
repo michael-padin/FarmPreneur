@@ -10,22 +10,14 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { Suspense } from "react"
+import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
 
 const getUsers = async () => {
 	return await getUsersUseCase()
 }
 
-// After
-type Params = Promise<{ slug: string }>
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
-
-export async function generateMetadata(props: {
-	params: Params
-	searchParams: SearchParams
-}) {
-	const searchParams = await props.searchParams
-	const query = searchParams
-}
+export async function generateMetadata() {}
 
 const UsersPage = async () => {
 	const session = await auth()
@@ -33,7 +25,7 @@ const UsersPage = async () => {
 		redirect("/login")
 	}
 
-	const users = await getUsers()
+	const usersPromise = getUsers()
 
 	return (
 		<>
@@ -43,7 +35,9 @@ const UsersPage = async () => {
 					<CardDescription>Manage users.</CardDescription>
 				</CardHeader>
 				<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
-					<DataTable columns={columns} data={users} />
+					<Suspense fallback={<DataTableSkeleton />}>
+						<DataTable data={usersPromise} />
+					</Suspense>
 				</CardContent>
 			</Card>
 		</>

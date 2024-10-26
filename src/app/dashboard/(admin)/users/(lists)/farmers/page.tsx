@@ -1,6 +1,3 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
-import { getFarmersUseCase } from "@/use-cases/users"
 import {
 	Card,
 	CardContent,
@@ -8,23 +5,16 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { columns } from "./_components/columns"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
+import { getFarmersUseCase } from "@/use-cases/users"
+
+import { Suspense } from "react"
+import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
 import { DataTable } from "./_components/data-table"
 
 const getFarmers = async () => {
 	return await getFarmersUseCase()
-}
-
-// After
-type Params = Promise<{ slug: string }>
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
-
-export async function generateMetadata(props: {
-	params: Params
-	searchParams: SearchParams
-}) {
-	const searchParams = await props.searchParams
-	const query = searchParams
 }
 
 const UsersPage = async () => {
@@ -32,21 +22,20 @@ const UsersPage = async () => {
 	if (!session || session.user.role !== "ADMIN") {
 		redirect("/login")
 	}
-
-	const farmers = await getFarmers()
+	const farmerListPromise = getFarmers()
 
 	return (
-		<>
-			<Card className="">
-				<CardHeader className="p-4 lg:p-6">
-					<CardTitle>Farmers</CardTitle>
-					<CardDescription>Manage farmers account</CardDescription>
-				</CardHeader>
-				<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
-					<DataTable columns={columns} data={farmers} />
-				</CardContent>
-			</Card>
-		</>
+		<Card className="">
+			<CardHeader className="p-4 lg:p-6">
+				<CardTitle>Farmers</CardTitle>
+				<CardDescription>Manage farmers account</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Suspense fallback={<DataTableSkeleton />}>
+					<DataTable data={farmerListPromise} />
+				</Suspense>
+			</CardContent>
+		</Card>
 	)
 }
 

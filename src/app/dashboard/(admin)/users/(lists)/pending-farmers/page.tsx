@@ -8,8 +8,9 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { DataTable } from "../_components/data-table"
-import { columns } from "./_components/columns"
+import { Suspense } from "react"
+import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
+import { DataTable } from "./_components/data-table"
 
 const getPendingFarmers = async () => {
 	return await getPendingFarmersUseCase()
@@ -21,20 +22,20 @@ const UsersPage = async () => {
 		redirect("/login")
 	}
 
-	const users = await getPendingFarmers()
+	const usersPromise = getPendingFarmers()
 
 	return (
-		<>
-			<Card className="">
-				<CardHeader className="p-4 lg:p-6">
-					<CardTitle>Farmers Waiting for Approval</CardTitle>
-					<CardDescription>Manage pending farmers</CardDescription>
-				</CardHeader>
-				<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
-					<DataTable columns={columns} data={users} />
-				</CardContent>
-			</Card>
-		</>
+		<Card className="">
+			<CardHeader className="p-4 lg:p-6">
+				<CardTitle>Farmers Waiting for Approval</CardTitle>
+				<CardDescription>Manage pending farmers</CardDescription>
+			</CardHeader>
+			<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
+				<Suspense fallback={<DataTableSkeleton />}>
+					<DataTable data={usersPromise} />
+				</Suspense>
+			</CardContent>
+		</Card>
 	)
 }
 
