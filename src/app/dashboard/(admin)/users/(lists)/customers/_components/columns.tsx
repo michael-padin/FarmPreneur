@@ -165,7 +165,7 @@ export const columns: ColumnDef<
 								<Link href={`/dashboard/users/${user.id}`}>Details</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/edit/${user.id}`}>Edit</Link>
+								<Link href={`/dashboard/users/${user.id}/edit`}>Edit</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>

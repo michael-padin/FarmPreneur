@@ -112,16 +112,10 @@ export const columns: ColumnDef<
 		id: "actions",
 		cell: function Cell({ row }) {
 			const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false)
-			const [showUpdateUserSheet, setShowUpdateUserSheet] = useState(false)
 			const user = row.original
 
 			return (
 				<>
-					<UpdateUserSheet
-						user={user}
-						open={showUpdateUserSheet}
-						onOpenChange={setShowUpdateUserSheet}
-					/>
 					<DeleteUsersDialog
 						open={showDeleteUserDialog}
 						onOpenChange={setShowDeleteUserDialog}
@@ -147,10 +141,10 @@ export const columns: ColumnDef<
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/${user.id}`}>View details</Link>
+								<Link href={`/dashboard/users/${user.id}`}>Details</Link>
 							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
-								<Link href={`/dashboard/users/edit/${user.id}`}>Edit</Link>
+							<DropdownMenuItem asChild>
+								<Link href={`/dashboard/users/${user.id}/edit`}>Edit</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>

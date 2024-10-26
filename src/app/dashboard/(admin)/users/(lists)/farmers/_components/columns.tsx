@@ -10,7 +10,6 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { ROLE } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
@@ -18,29 +17,13 @@ import { formatDate } from "@/lib/utils"
 import { useState } from "react"
 import { getFarmersUseCase } from "@/use-cases/users"
 import { toast } from "sonner"
-import { RoleBadge, VerificationBadge } from "../../_components/badges"
+import { VerificationBadge } from "../../_components/badges"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
 import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getFarmersUseCase>>[0]
 >[] = [
-	// {
-	// 	enableHiding: true,
-	// 	accessorKey: "id",
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader column={column} title="ID" />
-	// 	),
-	// 	cell: ({ row }) => {
-	// 		const id = row.getValue("id") as string
-	// 		return (
-	// 			<div className="flex items-center space-x-2">
-	// 				<CopyToClipboard value={id} />
-	// 				<span>{id}</span>
-	// 			</div>
-	// 		)
-	// 	}
-	// },
 	{
 		accessorKey: "name",
 		header: ({ column }) => (
@@ -164,8 +147,8 @@ export const columns: ColumnDef<
 							<DropdownMenuItem asChild>
 								<Link href={`/dashboard/users/${user.id}`}>Details</Link>
 							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => setShowUpdateUserSheet(true)}>
-								<Link href={`/dashboard/users/edit/${user.id}`}>Edit</Link>
+							<DropdownMenuItem asChild>
+								<Link href={`/dashboard/users/${user.id}/edit`}>Edit</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>
