@@ -17,6 +17,8 @@ import { Feature, FeatureCollection } from "@/types"
 import { useClickOutside } from "@/hooks/use-click-outside-ref"
 import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { useMapbox } from "@/hooks/use-mapbox"
+import { ClassValue } from "clsx"
+import { AspectRatio } from "../ui/aspect-ratio"
 
 interface LatLng {
 	lat: number
@@ -34,6 +36,7 @@ interface AddressInputProps {
 	defaultCenter?: LatLng
 	defaultZoom?: number
 	readonly?: boolean
+	mapClassName?: ClassValue
 }
 
 export default function AddressInput({
@@ -41,7 +44,8 @@ export default function AddressInput({
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
 	defaultZoom,
-	readonly = false
+	readonly = false,
+	mapClassName
 }: AddressInputProps) {
 	const { toast } = useToast()
 	const commandListRef = useRef<HTMLDivElement>(null)
@@ -292,17 +296,17 @@ export default function AddressInput({
 							</CommandList>
 						)}
 					</Command>
-					<div
+					<AspectRatio
 						ref={mapContainer}
-						className={`aspect-square w-full rounded-md lg:aspect-video`}
-						aria-label="Map"
+						ratio={3 / 2}
+						className="w-full rounded-lg"
 					/>
 				</div>
 			) : (
-				<div
+				<AspectRatio
 					ref={mapContainer}
-					className={`aspect-square w-full rounded-md lg:aspect-video`}
-					aria-label="Map"
+					ratio={3 / 2}
+					className="w-full rounded-lg"
 				/>
 			)}
 		</div>
