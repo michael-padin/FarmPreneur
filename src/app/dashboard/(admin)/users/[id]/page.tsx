@@ -1,253 +1,412 @@
 "use client"
 
-import { useState, useEffect, use } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { buttonVariants } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import {
+	MapPin,
+	Phone,
+	Mail,
+	Calendar,
+	Briefcase,
+	CheckCircle,
+	XCircle,
+	User,
+	Tractor,
+	FileText,
+	MapPinned
+} from "lucide-react"
+import { motion } from "framer-motion"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 
-type User = {
-	id: string
-	name: string | null
-	email: string | null
-	emailVerified: Date | null
-	image: string | null
-	isSellerApproved: boolean
-	role: "FARMER" | "CUSTOMER" | "ADMIN" | null
-	contactNumber: string | null
-	isVerified: boolean
-	profilePicture: string | null
-	createdAt: Date
-	updatedAt: Date
+// Mock data based on the schema (same as before)
+const user = {
+	id: "1",
+	name: "John Doe",
+	email: "john@example.com",
+	emailVerified: new Date("2023-01-01"),
+	image: "/placeholder.svg?height=100&width=100",
+	role: "TractorER",
+	contactNumber: "+1234567890",
+	isVerified: true,
+	profilePicture: "/placeholder.svg?height=100&width=100",
+	createdAt: new Date("2022-01-01"),
+	farmDetails: [
+		{
+			id: "1",
+			name: "Green Acres Tractor",
+			description:
+				"Organic vegetable farm specializing in heirloom varieties and sustainable farming practices.",
+			location: "Countryside, State",
+			yearsOfExperience: 10,
+			size: 50,
+			products: ["Tomatoes", "Lettuce", "Carrots", "Peppers", "Cucumbers"],
+			images: [
+				"/placeholder.svg?height=200&width=200",
+				"/placeholder.svg?height=200&width=200",
+				"/placeholder.svg?height=200&width=200"
+			]
+		}
+	],
+	verificationDocuments: [
+		{
+			id: "1",
+			type: "GOVERNMENT_ID",
+			url: "/placeholder.svg?height=50&width=50"
+		},
+		{
+			id: "2",
+			type: "FARM_CERTIFICATION",
+			url: "/placeholder.svg?height=50&width=50"
+		},
+		{
+			id: "3",
+			type: "BUSINESS_LICENSE",
+			url: "/placeholder.svg?height=50&width=50"
+		}
+	],
+	address: {
+		fullAddress: "123 Farm Road, Countryside, State, 12345",
+		street: "123 Farm Road",
+		region: "State",
+		country: "Country",
+		postalCode: "12345",
+		latitude: 40.7128,
+		longitude: -74.006
+	}
 }
 
-export default function UserDetails(props: {
-	params: Promise<{ id: string }>
-}) {
-	const params = use(props.params)
-	const id = params.id
-	const [user, setUser] = useState<User | null>(null)
+export default function UserDetailsPage() {
 	const [isEditing, setIsEditing] = useState(false)
 
-	useEffect(() => {
-		// In a real application, you would fetch the user data from an API
-		// For this example, we'll use mock data
-		if (id) {
-			const mockUser: User = {
-				id: id as string,
-				name: `User ${id}`,
-				email: `user${id}@example.com`,
-				emailVerified: new Date(),
-				image: null,
-				isSellerApproved: Math.random() > 0.5,
-				role: ["FARMER", "CUSTOMER", "ADMIN"][
-					Math.floor(Math.random() * 3)
-				] as User["role"],
-				contactNumber: "+1234567890",
-				isVerified: Math.random() > 0.3,
-				profilePicture: null,
-				createdAt: new Date(
-					Date.now() - Math.floor(Math.random() * 10000000000)
-				),
-				updatedAt: new Date()
-			}
-			setUser(mockUser)
-		}
-	}, [id])
-
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (user) {
-			setUser({ ...user, [e.target.name]: e.target.value })
-		}
-	}
-
-	const handleRoleChange = (value: string) => {
-		if (user) {
-			setUser({ ...user, role: value as User["role"] })
-		}
-	}
-
-	const handleCheckboxChange = (name: string, checked: boolean) => {
-		if (user) {
-			setUser({ ...user, [name]: checked })
-		}
-	}
-
-	const handleSave = () => {
-		// In a real application, you would send the updated user data to an API
-		console.log("Saving user:", user)
-		setIsEditing(false)
-	}
-
-	if (!user) {
-		return <div>Loading...</div>
+	const fadeIn = {
+		hidden: { opacity: 0 },
+		visible: { opacity: 1, transition: { duration: 0.5 } }
 	}
 
 	return (
-		<Card className="mx-auto w-full max-w-4xl">
-			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle className="text-2xl font-bold">User Profile</CardTitle>
-				<Button onClick={() => setIsEditing(!isEditing)}>
-					{isEditing ? "Cancel" : "Edit"}
-				</Button>
-			</CardHeader>
-			<CardContent>
-				<Tabs defaultValue="details" className="w-full">
-					<TabsList>
-						<TabsTrigger value="details">Details</TabsTrigger>
-						<TabsTrigger value="security">Security</TabsTrigger>
-						{user.role === "FARMER" && (
-							<TabsTrigger value="seller">Seller Info</TabsTrigger>
-						)}
-					</TabsList>
-					<TabsContent value="details">
-						<div className="space-y-6">
-							<div className="flex items-center space-x-4">
-								<Avatar className="h-20 w-20">
-									<AvatarImage
-										src={user.profilePicture || undefined}
-										alt={user.name || "User"}
-									/>
-									<AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
-								</Avatar>
-								<div>
-									<h3 className="text-2xl font-semibold">{user.name}</h3>
-									<p className="text-sm text-muted-foreground">{user.email}</p>
-								</div>
+		<div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
+			<motion.div initial="hidden" animate="visible" variants={fadeIn}>
+				<Card>
+					<CardHeader>
+						<div className="flex justify-between">
+							<div className="space-y-1.5">
+								<CardTitle>User Information</CardTitle>
+								<CardDescription>
+									View and manage your personal details
+								</CardDescription>
 							</div>
-							<Separator />
-							<div className="grid gap-4 md:grid-cols-2">
-								<div className="space-y-2">
-									<Label htmlFor="name">Name</Label>
-									<Input
-										id="name"
-										name="name"
-										value={user.name || ""}
-										onChange={handleInputChange}
-										disabled={!isEditing}
-									/>
-								</div>
-								<div className="space-y-2">
-									<Label htmlFor="email">Email</Label>
-									<Input
-										id="email"
-										name="email"
-										type="email"
-										value={user.email || ""}
-										onChange={handleInputChange}
-										disabled={!isEditing}
-									/>
-								</div>
-								<div className="space-y-2">
-									<Label htmlFor="contactNumber">Contact Number</Label>
-									<Input
-										id="contactNumber"
-										name="contactNumber"
-										value={user.contactNumber || ""}
-										onChange={handleInputChange}
-										disabled={!isEditing}
-									/>
-								</div>
-								<div className="space-y-2">
-									<Label htmlFor="role">Role</Label>
-									<Select
-										value={user.role || undefined}
-										onValueChange={handleRoleChange}
-										disabled={!isEditing}
-									>
-										<SelectTrigger id="role">
-											<SelectValue placeholder="Select a role" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="FARMER">Farmer</SelectItem>
-											<SelectItem value="CUSTOMER">Customer</SelectItem>
-											<SelectItem value="ADMIN">Admin</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-							</div>
-							<div className="flex space-x-4">
-								<div className="flex items-center space-x-2">
-									<Checkbox
-										id="isVerified"
-										checked={user.isVerified}
-										onCheckedChange={(checked) =>
-											handleCheckboxChange("isVerified", checked as boolean)
-										}
-										disabled={!isEditing}
-									/>
-									<Label htmlFor="isVerified">Verified</Label>
-								</div>
-								{user.role === "FARMER" && (
-									<div className="flex items-center space-x-2">
-										<Checkbox
-											id="isSellerApproved"
-											checked={user.isSellerApproved}
-											onCheckedChange={(checked) =>
-												handleCheckboxChange(
-													"isSellerApproved",
-													checked as boolean
-												)
-											}
-											disabled={!isEditing}
-										/>
-										<Label htmlFor="isSellerApproved">Seller Approved</Label>
-									</div>
+							<Link
+								href="/dashboard/users"
+								className={cn(
+									buttonVariants({
+										variant: "default"
+									})
 								)}
-							</div>
+							>
+								Edit{" "}
+							</Link>
 						</div>
-					</TabsContent>
-					<TabsContent value="security">
-						<div className="space-y-4">
-							<div className="space-y-2">
-								<Label>Email Verification</Label>
-								<Badge variant={user.emailVerified ? "default" : "destructive"}>
-									{user.emailVerified ? "Verified" : "Not Verified"}
-								</Badge>
-							</div>
-							<Button variant="outline">Change Password</Button>
-						</div>
-					</TabsContent>
-					{user.role === "FARMER" && (
-						<TabsContent value="seller">
-							<div className="space-y-4">
-								<div className="space-y-2">
-									<Label>Seller Status</Label>
-									<Badge
-										variant={user.isSellerApproved ? "default" : "outline"}
-									>
-										{user.isSellerApproved ? "Approved" : "Pending Approval"}
-									</Badge>
-								</div>
-								<Button variant="outline">View Farm Details</Button>
-								<Button variant="outline">Manage Products</Button>
-							</div>
-						</TabsContent>
-					)}
-				</Tabs>
-				<Separator className="my-6" />
-				<div className="flex items-center justify-between text-sm text-muted-foreground">
-					<span>Created: {user.createdAt.toLocaleDateString()}</span>
-					<span>Last Updated: {user.updatedAt.toLocaleDateString()}</span>
-				</div>
-				{isEditing && (
-					<Button onClick={handleSave} className="mt-6 w-full">
-						Save Changes
-					</Button>
-				)}
-			</CardContent>
-		</Card>
+					</CardHeader>
+					<CardContent>
+						<Tabs defaultValue="overview" className="w-full">
+							<TabsList className="mb-8 grid w-full grid-cols-2 lg:grid-cols-4">
+								<TabsTrigger
+									value="overview"
+									className="flex items-center justify-center"
+								>
+									<User className="mr-2 h-4 w-4" /> Overview
+								</TabsTrigger>
+								<TabsTrigger
+									value="farm"
+									className="flex items-center justify-center"
+								>
+									<Tractor className="mr-2 h-4 w-4" /> Farm Details
+								</TabsTrigger>
+								<TabsTrigger
+									value="documents"
+									className="flex items-center justify-center"
+								>
+									<FileText className="mr-2 h-4 w-4" /> Documents
+								</TabsTrigger>
+								<TabsTrigger
+									value="address"
+									className="flex items-center justify-center"
+								>
+									<MapPinned className="mr-2 h-4 w-4" /> Address
+								</TabsTrigger>
+							</TabsList>
+							<TabsContent value="overview">
+								<Card>
+									<CardHeader>
+										<CardTitle>Overview</CardTitle>
+										<CardDescription></CardDescription>
+									</CardHeader>
+									<CardContent className="space-y-6">
+										<div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+											<Avatar className="h-24 w-24">
+												<AvatarImage
+													src={user.profilePicture}
+													alt={user.name}
+												/>
+												<AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+											</Avatar>
+											<div className="text-center sm:text-left">
+												<h2 className="text-2xl font-bold">{user.name}</h2>
+												<p className="text-muted-foreground">{user.email}</p>
+												<div className="mt-2">
+													<Badge
+														variant={
+															user.isVerified ? "default" : "destructive"
+														}
+														className="text-xs"
+													>
+														{user.isVerified ? "Verified" : "Unverified"}
+													</Badge>
+												</div>
+											</div>
+										</div>
+										<Separator />
+										<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+											<div className="space-y-2">
+												<Label htmlFor="role">Role</Label>
+												<Input
+													id="role"
+													value={user.role}
+													readOnly={!isEditing}
+													className="bg-muted"
+												/>
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="contactNumber">Contact Number</Label>
+												<div className="relative">
+													<Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+													<Input
+														id="contactNumber"
+														value={user.contactNumber}
+														readOnly={!isEditing}
+														className="bg-muted pl-10"
+													/>
+												</div>
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="emailVerified">Email Verified</Label>
+												<div className="relative">
+													<Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+													<Input
+														id="emailVerified"
+														value={user.emailVerified.toLocaleDateString()}
+														readOnly
+														className="bg-muted pl-10"
+													/>
+												</div>
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="memberSince">Member Since</Label>
+												<div className="relative">
+													<Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+													<Input
+														id="memberSince"
+														value={user.createdAt.toLocaleDateString()}
+														readOnly
+														className="bg-muted pl-10"
+													/>
+												</div>
+											</div>
+										</div>
+									</CardContent>
+								</Card>
+							</TabsContent>
+							<TabsContent value="farm">
+								<Card>
+									<CardHeader>
+										<CardTitle>Farm Details</CardTitle>
+										<CardDescription>
+											Information about your farm
+										</CardDescription>
+									</CardHeader>
+									<CardContent className="space-y-6">
+										{user.farmDetails.map((farm) => (
+											<div key={farm.id} className="space-y-6">
+												<div className="flex flex-col items-start justify-between space-y-2 sm:flex-row sm:items-center sm:space-y-0">
+													<h3 className="text-xl font-semibold">{farm.name}</h3>
+													<Badge variant="secondary">{farm.location}</Badge>
+												</div>
+												<p className="text-muted-foreground">
+													{farm.description}
+												</p>
+												<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+													<div className="flex items-center space-x-2">
+														<Briefcase className="h-4 w-4 text-muted-foreground" />
+														<span>
+															{farm.yearsOfExperience} years of experience
+														</span>
+													</div>
+													<div className="flex items-center space-x-2">
+														<MapPin className="h-4 w-4 text-muted-foreground" />
+														<span>{farm.size} acres</span>
+													</div>
+												</div>
+												<div>
+													<Label className="mb-2 block">Products</Label>
+													<div className="flex flex-wrap gap-2">
+														{farm.products.map((product, index) => (
+															<Badge key={index} variant="outline">
+																{product}
+															</Badge>
+														))}
+													</div>
+												</div>
+												<div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+													{farm.images.map((image, index) => (
+														<img
+															key={index}
+															src={image}
+															alt={`Farm image ${index + 1}`}
+															className="h-40 w-full rounded-lg object-cover"
+														/>
+													))}
+												</div>
+											</div>
+										))}
+									</CardContent>
+								</Card>
+							</TabsContent>
+							<TabsContent value="documents">
+								<Card>
+									<CardHeader>
+										<CardTitle>Verification Documents</CardTitle>
+										<CardDescription>
+											Your submitted verification documents
+										</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<ScrollArea className="h-[400px] w-full rounded-md border p-4">
+											{user.verificationDocuments.map((doc, index) => (
+												<div
+													key={doc.id}
+													className="mb-4 flex items-center space-x-4"
+												>
+													<img
+														src={doc.url}
+														alt={doc.type}
+														className="h-16 w-16 rounded-md object-cover"
+													/>
+													<div className="flex-1">
+														<p className="font-medium">
+															{doc.type.replace("_", " ")}
+														</p>
+														<p className="text-sm text-muted-foreground">
+															Uploaded document
+														</p>
+													</div>
+													{user.isVerified ? (
+														<CheckCircle className="h-5 w-5 text-green-500" />
+													) : (
+														<XCircle className="h-5 w-5 text-red-500" />
+													)}
+													{index !== user.verificationDocuments.length - 1 && (
+														<Separator className="my-4" />
+													)}
+												</div>
+											))}
+										</ScrollArea>
+									</CardContent>
+								</Card>
+							</TabsContent>
+							<TabsContent value="address">
+								<Card>
+									<CardHeader>
+										<CardTitle>Address Information</CardTitle>
+										<CardDescription>
+											Your registered address details
+										</CardDescription>
+									</CardHeader>
+									<CardContent className="space-y-6">
+										<div className="space-y-2">
+											<Label htmlFor="fullAddress">Full Address</Label>
+											<Textarea
+												id="fullAddress"
+												value={user.address.fullAddress}
+												readOnly={!isEditing}
+												className="min-h-[100px] bg-muted"
+											/>
+										</div>
+										<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+											<div className="space-y-2">
+												<Label htmlFor="street">Street</Label>
+												<Input
+													id="street"
+													value={user.address.street}
+													readOnly={!isEditing}
+													className="bg-muted"
+												/>
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="region">Region</Label>
+												<Input
+													id="region"
+													value={user.address.region}
+													readOnly={!isEditing}
+													className="bg-muted"
+												/>
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="country">Country</Label>
+												<Input
+													id="country"
+													value={user.address.country}
+													readOnly={!isEditing}
+													className="bg-muted"
+												/>
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="postalCode">Postal Code</Label>
+												<Input
+													id="postalCode"
+													value={user.address.postalCode}
+													readOnly={!isEditing}
+													className="bg-muted"
+												/>
+											</div>
+										</div>
+										<div className="space-y-2">
+											<Label>Coordinates</Label>
+											<div className="grid grid-cols-2 gap-4">
+												<Input
+													value={`Latitude: ${user.address.latitude}`}
+													readOnly
+													className="bg-muted"
+												/>
+												<Input
+													value={`Longitude: ${user.address.longitude}`}
+													readOnly
+													className="bg-muted"
+												/>
+											</div>
+										</div>
+									</CardContent>
+								</Card>
+							</TabsContent>
+						</Tabs>
+					</CardContent>
+				</Card>
+			</motion.div>
+		</div>
 	)
 }
