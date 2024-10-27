@@ -2,9 +2,28 @@ import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
 
 export const getUserById = async (id: string) => {
-	return await db.user.findFirst({
+	return await db.user.findUnique({
 		where: {
 			id: id
+		},
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			role: true,
+			farmerApproval: true,
+			verificationCode: true,
+			verificationExpires: true,
+			isVerified: true,
+			createdAt: true,
+			image: true,
+			contactNumber: true,
+			Address: true,
+			updatedAt: true,
+			products: true,
+			buyerOrders: true,
+			farmerOrders: true,
+			farmDetails: true
 		},
 		cacheStrategy: { ttl: 60 }
 	})
