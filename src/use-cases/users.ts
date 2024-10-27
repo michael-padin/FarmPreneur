@@ -15,7 +15,6 @@ import {
 	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
-import { db } from "@/lib/db"
 import {
 	transformCustomerRecord,
 	transformFarmerRecord
