@@ -29,6 +29,7 @@ export function useMapbox({
 			style: "mapbox://styles/mokiiiiieeeee/cm2nggekh003c01r4b330fpox",
 			center: [defaultCenter.lng, defaultCenter.lat],
 			zoom: defaultZoom,
+			projection: "mercator",
 			attributionControl: false,
 			pitch: 60,
 			pitchWithRotate: true
@@ -68,8 +69,7 @@ export function useMapbox({
 	const updateMarkerPosition = useCallback((lng: number, lat: number) => {
 		if (mapRef.current && markerRef.current) {
 			mapRef.current.flyTo({
-				center: [lng, lat],
-				zoom: 20
+				center: [lng, lat]
 			})
 			markerRef.current.setLngLat([lng, lat])
 		}
