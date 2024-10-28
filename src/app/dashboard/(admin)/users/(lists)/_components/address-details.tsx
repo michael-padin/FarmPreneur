@@ -39,7 +39,7 @@ export const AddressDetailsDrawerDialog = ({
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<div>
-					<p className="w-[180px] truncate">{user.Address?.fullAddress}</p>
+					<p className="w-[180px] truncate">{user.address?.fullAddress}</p>
 					<DialogTrigger asChild>
 						<span className="cursor-pointer text-xs text-primary">
 							View in map
@@ -52,14 +52,14 @@ export const AddressDetailsDrawerDialog = ({
 				>
 					<DialogHeader>
 						<DialogTitle>
-							<span className="text-primary">{user.name}&apos;s</span> Address
+							<span className="text-primary">{user.name}&apos;s</span> address
 						</DialogTitle>
-						<DialogDescription>{user.Address?.fullAddress}</DialogDescription>
+						<DialogDescription>{user.address?.fullAddress}</DialogDescription>
 					</DialogHeader>
 					<div className="w-full">
 						<MapBox
-							lng={user.Address?.longitude}
-							lat={user.Address?.latitude}
+							lng={user.address?.longitude}
+							lat={user.address?.latitude}
 						/>
 					</div>
 				</DialogContent>
@@ -70,7 +70,7 @@ export const AddressDetailsDrawerDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen} dismissible={false}>
 			<div>
-				<p className="w-[180px] truncate">{user.Address?.fullAddress}</p>
+				<p className="w-[180px] truncate">{user.address?.fullAddress}</p>
 				<DrawerTrigger asChild>
 					<span className="cursor-pointer text-xs text-primary">
 						View in map
@@ -80,12 +80,12 @@ export const AddressDetailsDrawerDialog = ({
 			<DrawerContent onOpenAutoFocus={(e) => e.preventDefault()}>
 				<DrawerHeader className="text-left">
 					<DrawerTitle>
-						<span className="text-primary">{user.name}&apos;s</span> Address
+						<span className="text-primary">{user.name}&apos;s</span> address
 					</DrawerTitle>
-					<DrawerDescription>{user.Address?.fullAddress}</DrawerDescription>
+					<DrawerDescription>{user.address?.fullAddress}</DrawerDescription>
 				</DrawerHeader>
 				<div className="w-full px-4">
-					<MapBox lng={user.Address?.longitude} lat={user.Address?.latitude} />
+					<MapBox lng={user.address?.longitude} lat={user.address?.latitude} />
 				</div>
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>

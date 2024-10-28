@@ -62,7 +62,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			image: user.image,
 			farmerApproval: user.farmerApproval,
 			role: user.role,
-			address: user.Address || {
+			address: user.address || {
 				fullAddress: "",
 				street: "",
 				region: "",
@@ -86,7 +86,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			farmerApproval: user.farmerApproval,
 			role: user.role,
 			password: "",
-			address: user.Address || {
+			address: user.address || {
 				fullAddress: "",
 				street: "",
 				region: "",
@@ -106,7 +106,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 				address: {
 					...data.address,
 					userId: user.id,
-					id: user.Address?.id || ""
+					id: user.address?.id || ""
 				},
 				id: user.id
 			}).then(({ error }) => {
@@ -323,7 +323,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 								name="address"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Address</FormLabel>
+										<FormLabel>address</FormLabel>
 										<FormControl>
 											<MapboxLocationPicker
 												onAddressSelect={(address) => {
@@ -332,11 +332,11 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 													})
 												}}
 												defaultCenter={{
-													lat: user.Address?.latitude || 9.882696,
-													lng: user.Address?.longitude || 123.605887
+													lat: user.address?.latitude || 9.882696,
+													lng: user.address?.longitude || 123.605887
 												}} // Optional
 												defaultValue={
-													user.Address?.fullAddress ||
+													user.address?.fullAddress ||
 													"Argao, Cebu, Philippines"
 												}
 											/>

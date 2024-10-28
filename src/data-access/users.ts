@@ -18,12 +18,12 @@ export const getUserById = async (id: string) => {
 			createdAt: true,
 			image: true,
 			contactNumber: true,
-			Address: true,
+			address: true,
 			updatedAt: true,
 			products: true,
 			buyerOrders: true,
 			farmerOrders: true,
-			farmDetails: true
+			farm: true
 		},
 		cacheStrategy: { ttl: 60 }
 	})
@@ -45,7 +45,7 @@ export const getUserFarmerById = async (id: string) => {
 			id: true,
 			name: true,
 			contactNumber: true,
-			farmDetails: true
+			farm: true
 		}
 	})
 }
@@ -114,7 +114,7 @@ export const getUsers = async () => {
 			createdAt: true,
 			image: true,
 			contactNumber: true,
-			Address: true,
+			address: true,
 			updatedAt: true
 		},
 		orderBy: {
@@ -168,7 +168,7 @@ export const getFarmers = async () => {
 			name: true,
 			email: true,
 			role: true,
-			farmDetails: true,
+			farm: true,
 			farmerOrders: true,
 			farmerApproval: true,
 			products: true,
@@ -176,7 +176,7 @@ export const getFarmers = async () => {
 			createdAt: true,
 			image: true,
 			contactNumber: true,
-			Address: true,
+			address: true,
 			updatedAt: true,
 			_count: true
 		},
@@ -200,7 +200,7 @@ export const getPendingFarmers = async () => {
 			name: true,
 			email: true,
 			role: true,
-			farmDetails: true,
+			farm: true,
 			farmerOrders: true,
 			farmerApproval: true,
 			products: true,
@@ -208,7 +208,7 @@ export const getPendingFarmers = async () => {
 			createdAt: true,
 			image: true,
 			contactNumber: true,
-			Address: true,
+			address: true,
 			updatedAt: true,
 			_count: true
 		},
@@ -236,7 +236,7 @@ export const getCustomers = async () => {
 			createdAt: true,
 			image: true,
 			contactNumber: true,
-			Address: true,
+			address: true,
 			updatedAt: true,
 			_count: true
 		},

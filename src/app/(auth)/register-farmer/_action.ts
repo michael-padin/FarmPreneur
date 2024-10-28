@@ -31,7 +31,7 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 		data: {
 			role: "FARMER",
 			contactNumber: contactNumber,
-			farmDetails: {
+			farm: {
 				create: {
 					name: name,
 					description: description,

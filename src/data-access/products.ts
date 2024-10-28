@@ -7,11 +7,11 @@ export const createProduct = async (data: createProductType) => {
 			farmerId: data.farmerId,
 			title: data.title,
 			description: data.description,
-			category: data.category,
 			price: data.price,
 			location: data.location,
 			images: data.images,
-			quantity: data.quantity
+			quantity: data.quantity,
+			categoryId: data.category
 		}
 	})
 }
