@@ -268,14 +268,14 @@ export function DataTable({ data }: DataTableProps) {
 								</div>
 								{row.getValue("role") === "FARMER" ? (
 									<div className="flex items-center justify-between text-xs">
-										<div className="col-span-2">Farmer Approval: </div>
+										<div className="col-span-2">Application Status: </div>
 										<FarmerApprovalBadge
 											status={row.getValue("farmerApproval")}
 										/>
 									</div>
 								) : (
 									<div className="flex items-center justify-between text-xs">
-										<div className="col-span-2">Farmer Approval: </div>
+										<div className="col-span-2">Application Status: </div>
 										<Badge variant="secondary">N/A</Badge>
 									</div>
 								)}

@@ -222,17 +222,17 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										</h3>
 										<FormField
 											control={form.control}
-											name="farmerApproval"
+											name="farmerDetails.applicationStatus"
 											render={({ field }) => (
 												<FormItem>
-													<FormLabel>Farmer Approval</FormLabel>
+													<FormLabel>Application Status</FormLabel>
 													<Select
 														onValueChange={field.onChange}
 														defaultValue={field.value}
 													>
 														<FormControl>
 															<SelectTrigger className="w-full">
-																<SelectValue placeholder="Approve farmer registration">
+																<SelectValue placeholder="Select Status">
 																	{field.value && (
 																		<FarmerApprovalBadge status={field.value} />
 																	)}

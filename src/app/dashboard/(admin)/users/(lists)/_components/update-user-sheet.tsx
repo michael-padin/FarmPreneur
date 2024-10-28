@@ -231,14 +231,14 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 									name="farmerApproval"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Farmer Approval</FormLabel>
+											<FormLabel>Application Status</FormLabel>
 											<Select
 												onValueChange={field.onChange}
 												defaultValue={field.value ?? undefined}
 											>
 												<FormControl>
 													<SelectTrigger>
-														<SelectValue placeholder="Approve farmer" />
+														<SelectValue placeholder="Select Status" />
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
