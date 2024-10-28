@@ -271,7 +271,6 @@ model User {
   farmerOrders         Order[]                @relation("FarmerOrders")
   VerificationDocument VerificationDocument[]
   farmDetails          Farm?                  @relation(fields: [farmId], references: [id])
-  addressId            String?                @db.ObjectId
   Notification         Notification[]
   Address              Address?
   farmId               String?                @db.ObjectId
