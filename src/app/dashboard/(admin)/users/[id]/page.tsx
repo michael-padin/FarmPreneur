@@ -46,12 +46,12 @@ const user = {
 	isVerified: true,
 	profilePicture: "/placeholder.svg?height=100&width=100",
 	createdAt: new Date("2022-01-01"),
-	farmDetails: [
+	farmerDetails: [
 		{
 			id: "1",
 			name: "Green Acres Tractor",
 			description:
-				"Organic vegetable farm specializing in heirloom varieties and sustainable farming practices.",
+				"Organic vegetable farmerDetails specializing in heirloom varieties and sustainable farming practices.",
 			location: "Countryside, State",
 			yearsOfExperience: 10,
 			size: 50,
@@ -133,7 +133,7 @@ export default function UserDetailsPage() {
 									<User className="mr-2 h-4 w-4" /> Overview
 								</TabsTrigger>
 								<TabsTrigger
-									value="farm"
+									value="farmerDetails"
 									className="flex items-center justify-center"
 								>
 									<Tractor className="mr-2 h-4 w-4" /> Farm Details
@@ -232,40 +232,45 @@ export default function UserDetailsPage() {
 									</CardContent>
 								</Card>
 							</TabsContent>
-							<TabsContent value="farm">
+							<TabsContent value="farmerDetails">
 								<Card>
 									<CardHeader>
 										<CardTitle>Farm Details</CardTitle>
 										<CardDescription>
-											Information about your farm
+											Information about your farmerDetails
 										</CardDescription>
 									</CardHeader>
 									<CardContent className="space-y-6">
-										{user.farmDetails.map((farm) => (
-											<div key={farm.id} className="space-y-6">
+										{user.farmerDetails.map((farmerDetails) => (
+											<div key={farmerDetails.id} className="space-y-6">
 												<div className="flex flex-col items-start justify-between space-y-2 sm:flex-row sm:items-center sm:space-y-0">
-													<h3 className="text-xl font-semibold">{farm.name}</h3>
-													<Badge variant="secondary">{farm.location}</Badge>
+													<h3 className="text-xl font-semibold">
+														{farmerDetails.name}
+													</h3>
+													<Badge variant="secondary">
+														{farmerDetails.location}
+													</Badge>
 												</div>
 												<p className="text-muted-foreground">
-													{farm.description}
+													{farmerDetails.description}
 												</p>
 												<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 													<div className="flex items-center space-x-2">
 														<Briefcase className="h-4 w-4 text-muted-foreground" />
 														<span>
-															{farm.yearsOfExperience} years of experience
+															{farmerDetails.yearsOfExperience} years of
+															experience
 														</span>
 													</div>
 													<div className="flex items-center space-x-2">
 														<MapPin className="h-4 w-4 text-muted-foreground" />
-														<span>{farm.size} acres</span>
+														<span>{farmerDetails.size} acres</span>
 													</div>
 												</div>
 												<div>
 													<Label className="mb-2 block">Products</Label>
 													<div className="flex flex-wrap gap-2">
-														{farm.products.map((product, index) => (
+														{farmerDetails.products.map((product, index) => (
 															<Badge key={index} variant="outline">
 																{product}
 															</Badge>
@@ -273,7 +278,7 @@ export default function UserDetailsPage() {
 													</div>
 												</div>
 												<div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-													{farm.images.map((image, index) => (
+													{farmerDetails.images.map((image, index) => (
 														<img
 															key={index}
 															src={image}

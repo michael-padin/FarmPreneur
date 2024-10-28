@@ -11,7 +11,7 @@ export const getUserById = async (id: string) => {
 			name: true,
 			email: true,
 			role: true,
-			farmerApproval: true,
+
 			verificationCode: true,
 			verificationExpires: true,
 			isVerified: true,
@@ -23,7 +23,7 @@ export const getUserById = async (id: string) => {
 			products: true,
 			buyerOrders: true,
 			farmerOrders: true,
-			farm: true
+			farmerDetails: true
 		},
 		cacheStrategy: { ttl: 60 }
 	})
@@ -45,7 +45,7 @@ export const getUserFarmerById = async (id: string) => {
 			id: true,
 			name: true,
 			contactNumber: true,
-			farm: true
+			farmerDetails: true
 		}
 	})
 }
@@ -109,7 +109,7 @@ export const getUsers = async () => {
 			name: true,
 			email: true,
 			role: true,
-			farmerApproval: true,
+
 			isVerified: true,
 			createdAt: true,
 			image: true,
@@ -138,7 +138,6 @@ export const updateUser = async (data: UpdateUserTypes & { id: string }) => {
 			isVerified: data.isVerified,
 			contactNumber: data.contactNumber,
 			image: data.image,
-			farmerApproval: data.farmerApproval,
 			role: data.role,
 			...(data.password && { password: data.password })
 		}
@@ -168,9 +167,9 @@ export const getFarmers = async () => {
 			name: true,
 			email: true,
 			role: true,
-			farm: true,
+			farmerDetails: true,
 			farmerOrders: true,
-			farmerApproval: true,
+
 			products: true,
 			isVerified: true,
 			createdAt: true,
@@ -193,16 +192,18 @@ export const getPendingFarmers = async () => {
 	return await db.user.findMany({
 		where: {
 			role: "FARMER",
-			farmerApproval: "PENDING"
+			farmerDetails: {
+				applicationStatus: "PENDING"
+			}
 		},
 		select: {
 			id: true,
 			name: true,
 			email: true,
 			role: true,
-			farm: true,
+			farmerDetails: true,
 			farmerOrders: true,
-			farmerApproval: true,
+
 			products: true,
 			isVerified: true,
 			createdAt: true,

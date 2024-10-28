@@ -31,7 +31,7 @@ import {
 	SheetTitle
 } from "@/components/ui/sheet"
 
-import { FarmerApproval, ROLE } from "@prisma/client"
+import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 
@@ -47,8 +47,6 @@ import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 
 import { RoleBadge } from "./badges"
 import MapboxLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import { resendCode } from "@/app/(auth)/verify/actions"
-
 export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	const [isUpdatePending, startUpdateTransition] = useTransition()
 
@@ -60,7 +58,6 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			contactNumber: (user.contactNumber as string) || "+639",
 			isVerified: user.isVerified,
 			image: user.image,
-			farmerApproval: user.farmerApproval,
 			role: user.role,
 			address: user.address || {
 				fullAddress: "",
@@ -83,7 +80,6 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 			contactNumber: (user.contactNumber as string) || "+639",
 			isVerified: user.isVerified,
 			image: user.image,
-			farmerApproval: user.farmerApproval,
 			role: user.role,
 			password: "",
 			address: user.address || {
@@ -246,11 +242,13 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													{Object.values(FarmerApproval).map((role) => (
-														<SelectItem key={role} value={role}>
-															{role}
-														</SelectItem>
-													))}
+													{Object.values(FarmerApplicationStatus).map(
+														(role) => (
+															<SelectItem key={role} value={role}>
+																{role}
+															</SelectItem>
+														)
+													)}
 												</SelectContent>
 											</Select>
 										</FormItem>

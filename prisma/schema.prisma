@@ -249,12 +249,11 @@ model Authenticator {
 model User {
   id                  String                 @id @default(auto()) @map("_id") @db.ObjectId
   name                String?
-  email               String?                @unique
+  email               String?                
   emailVerified       DateTime?
   image               String?
   accounts            Account[]
   sessions            Session[]
-  farmerApproval      FarmerApproval?
   role                ROLE
   password            String?
   contactNumber       String?
@@ -270,9 +269,11 @@ model User {
   buyerOrders         Order[]                @relation("BuyerOrders")
   farmerOrders        Order[]                @relation("FarmerOrders")
   verficationDocument VerificationDocument[]
-  farm                Farm?
+  farmerDetails                Farm?
   notifications       Notification[]
   address             Address?
+
+  @@unique([email])
 }
 
 // MARK: PRODUCT
@@ -312,6 +313,8 @@ model Order {
   farmer            User     @relation("FarmerOrders", fields: [farmerId], references: [id]) // Order refers to the product
   address           Address? @relation(fields: [addressId], references: [id])
   addressId         String?  @db.ObjectId
+
+  @@unique([buyerId, productId, farmerId])
 }
 
 // MARK: CATEGORY
@@ -334,18 +337,21 @@ model VerificationDocument {
 
 // MARK: FARM
 model Farm {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  name              String // Farm name
-  description       String // Description of the farm
-  location          String // Farm location
-  yearsOfExperience Int // Farmer's experience in years
-  size              Float? // Optional, farm size in acres or hectares
-  products          String[] // Products grown/raised by the farmer
-  images            String[] // Image URLs of the farm
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  farmerId          String   @unique @db.ObjectId
-  farmer            User     @relation(fields: [farmerId], references: [id])
+  id                      String                   @id @default(auto()) @map("_id") @db.ObjectId
+  applicationStatus FarmerApplicationStatus?
+  name                    String // Farm name
+  description             String // Description of the farmerDetails
+  location                String // Farm location
+  yearsOfExperience       Int // Farmer's experience in years
+  size                    Float? // Optional, farmerDetails size in acres or hectares
+  products                String[] // Products grown/raised by the farmer
+  images                  String[] // Image URLs of the farmerDetails
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  farmerId                String                   @db.ObjectId
+  farmer                  User                     @relation(fields: [farmerId], references: [id])
+
+  @@unique([farmerId])
 }
 
 // MARK: NOTIFICATION
@@ -364,7 +370,7 @@ model Notification {
 model Address {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   user         User     @relation(fields: [userId], references: [id])
-  userId       String   @unique @db.ObjectId // Reference to the user receiving the notification
+  userId       String   @db.ObjectId // Reference to the user receiving the notification
   fullAddress  String
   street       String?
   region       String?
@@ -377,6 +383,8 @@ model Address {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   order        Order[]
+
+  @@unique([userId])
 }
 
 // MARK: ENUMS
@@ -386,7 +394,7 @@ enum DocumentType {
   FARM_CERTIFICATION
 }
 
-enum FarmerApproval {
+enum FarmerApplicationStatus {
   PENDING
   APPROVED
   REJECTED

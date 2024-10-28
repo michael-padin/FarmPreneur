@@ -42,7 +42,7 @@ const Features = () => {
 									images={product.images}
 									title={product.title}
 									price={product.price}
-									farmer={product.farm}
+									farmer={product.farmerDetails}
 									unit={product.unit}
 									className="border-none shadow-none"
 								/>

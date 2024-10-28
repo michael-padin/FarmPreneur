@@ -138,7 +138,7 @@ const ProductsPage = () => {
 								images={product.images}
 								title={product.title}
 								price={product.price}
-								farmer={product.farm}
+								farmer={product.farmerDetails}
 								unit={product.unit}
 							/>
 						))}
@@ -149,7 +149,7 @@ const ProductsPage = () => {
 								images={product.images}
 								title={product.title}
 								price={product.price}
-								farmer={product.farm}
+								farmer={product.farmerDetails}
 								unit={product.unit}
 							/>
 						))}
@@ -160,7 +160,7 @@ const ProductsPage = () => {
 								images={product.images}
 								title={product.title}
 								price={product.price}
-								farmer={product.farm}
+								farmer={product.farmerDetails}
 								unit={product.unit}
 							/>
 						))}

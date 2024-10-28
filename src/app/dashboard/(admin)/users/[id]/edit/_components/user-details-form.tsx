@@ -34,7 +34,7 @@ import {
 	FarmerApprovalBadge,
 	RoleBadge
 } from "../../../(lists)/_components/badges"
-import { FarmerApproval, ROLE } from "@prisma/client"
+import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { UpdateUser, updateUserFormSchema } from "../types"
@@ -52,15 +52,15 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 			email: user?.email || "",
 			name: user?.name || "",
 			role: user?.role || "",
-			farmerApproval: user?.farmerApproval || "PENDING",
-			farmDetails: {
-				description: user?.farm?.description || "",
-				images: user?.farm?.images || [],
-				location: user?.farm?.location || "",
-				name: user?.farm?.name || "",
-				products: user?.farm?.products || [],
-				size: user?.farm?.size || 0,
-				yearsOfExperience: user?.farm?.yearsOfExperience || 0
+			farmerDetails: {
+				applicationStatus: user?.farmerDetails?.applicationStatus || "PENDING",
+				description: user?.farmerDetails?.description || "",
+				images: user?.farmerDetails?.images || [],
+				location: user?.farmerDetails?.location || "",
+				name: user?.farmerDetails?.name || "",
+				products: user?.farmerDetails?.products || [],
+				size: user?.farmerDetails?.size || 0,
+				yearsOfExperience: user?.farmerDetails?.yearsOfExperience || 0
 			},
 			address: {
 				fullAddress: user?.address?.fullAddress || "",
@@ -240,13 +240,15 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent>
-															{Object.values(FarmerApproval).map((status) => (
-																<SelectItem key={status} value={status}>
-																	<div className="flex w-full items-center justify-between">
-																		<FarmerApprovalBadge status={status} />
-																	</div>
-																</SelectItem>
-															))}
+															{Object.values(FarmerApplicationStatus).map(
+																(status) => (
+																	<SelectItem key={status} value={status}>
+																		<div className="flex w-full items-center justify-between">
+																			<FarmerApprovalBadge status={status} />
+																		</div>
+																	</SelectItem>
+																)
+															)}
 														</SelectContent>
 													</Select>
 													<FormMessage />
@@ -255,7 +257,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										/>
 										<FormField
 											control={form.control}
-											name="farmDetails.name"
+											name="farmerDetails.name"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Name</FormLabel>
@@ -268,13 +270,13 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										/>
 										<FormField
 											control={form.control}
-											name="farmDetails.description"
+											name="farmerDetails.description"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Description</FormLabel>
 													<FormControl>
 														<Textarea
-															placeholder="Describe your farm..."
+															placeholder="Describe your farmerDetails..."
 															{...field}
 														/>
 													</FormControl>
@@ -285,7 +287,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										{/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 											<FormField
 												control={form.control}
-												name="farmDetails.size"
+												name="farmerDetails.size"
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Farm Size (acres)</FormLabel>
@@ -305,7 +307,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										</div> */}
 										<FormField
 											control={form.control}
-											name="farmDetails.products"
+											name="farmerDetails.products"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Products</FormLabel>

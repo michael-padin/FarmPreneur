@@ -1,7 +1,7 @@
 "use client"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { FarmerApproval, ROLE } from "@prisma/client"
+import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import {
 	CheckCircle,
 	Shield,
@@ -92,7 +92,7 @@ export const VerificationBadge = ({
 }
 
 interface FarmerApprovalBadgeProps {
-	status: FarmerApproval
+	status: FarmerApplicationStatus
 	className?: string
 }
 
@@ -100,7 +100,7 @@ export const FarmerApprovalBadge = ({
 	status,
 	className
 }: FarmerApprovalBadgeProps) => {
-	const getStatusStyles = (status: FarmerApproval) => {
+	const getStatusStyles = (status: FarmerApplicationStatus) => {
 		switch (status) {
 			case "PENDING":
 				return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
