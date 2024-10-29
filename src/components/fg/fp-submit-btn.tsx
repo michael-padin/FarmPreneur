@@ -4,12 +4,18 @@ import { Button } from "../ui/button"
 interface FGSubmitBtnProps {
 	disabled: boolean
 	text: string
+	isLoading?: boolean
+	type?: "submit" | "button"
 }
 
-export const FGSubmitBtn = ({ disabled, text }: FGSubmitBtnProps) => {
+export const FGSubmitBtn = ({
+	disabled,
+	text,
+	isLoading
+}: FGSubmitBtnProps) => {
 	return (
-		<Button type="submit" className="w-full" disabled={disabled}>
-			{disabled ? <Loader2 className="animate-spin" /> : text}
+		<Button className="w-full" disabled={disabled}>
+			{isLoading ? <Loader2 className="animate-spin" /> : text}
 		</Button>
 	)
 }
