@@ -19,7 +19,7 @@ export const protectedRoutes: string[] = [
  * These routes will redirect login in users to the /overview**
  * @type {string[]}
  */
-export const authRoutes: string[] = ["/login", "/signup", "/verify"]
+export const authRoutes: string[] = ["/login", "/signup", "/verify-email"]
 
 /**
  *  The prefix for API authentication routes
@@ -36,9 +36,9 @@ export const apiAuthPrefix: string = "/api/auth"
 export const DEFAULT_LOGIN_REDIRECT = (role: ROLE) => {
 	switch (role) {
 		case ROLE.CUSTOMER:
-			return "/dashboard"
+			return "/"
 		case ROLE.FARMER:
-			return "/dashboard"
+			return "/dashboard/farmer"
 		case ROLE.ADMIN:
 			return "/dashboard"
 		default:

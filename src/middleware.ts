@@ -1,60 +1,67 @@
 import { NextResponse } from "next/server"
-
+import { auth } from "@/auth"
 import {
 	apiAuthPrefix,
 	authRoutes,
 	DEFAULT_LOGIN_REDIRECT,
 	protectedRoutes
-} from "@/routes"
-import { auth } from "./auth"
+} from "./routes"
+import { getUserFarmerById } from "./data-access/users"
+import { getFarmerDetailsByUserIdUseCase } from "./use-cases/farm-details"
 
-export default auth((req): Response | void | Promise<Response | void> => {
+export default auth(async (req) => {
 	const { nextUrl } = req
 	const { pathname } = nextUrl
-
 	const isLoggedIn = !!req.auth
+	const user = req.auth?.user
 
-	// route or path gamiton pag api auth
-	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
-
-	// if api auth route, dili need ih redirect sa login
-	if (isApiAuthRoute) {
+	// 1. API routes should be handled first and returned immediately
+	if (pathname.startsWith(apiAuthPrefix)) {
 		return
 	}
 
+	// 2. Check for auth routes
+	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
+	if (isAuthRoute) {
+		if (isLoggedIn) {
+			// Redirect to default page if already logged in
+			return NextResponse.redirect(
+				new URL(DEFAULT_LOGIN_REDIRECT(user?.role || "CUSTOMER"), nextUrl)
+			)
+		}
+		// Allow access to auth routes if not logged in
+		return
+	}
+
+	// 3. Check for protected routes
 	const isProtectedRoute = protectedRoutes.some((route) =>
 		pathname.startsWith(route)
 	)
+	if (isProtectedRoute) {
+		if (!isLoggedIn) {
+			// Redirect to login if not authenticated
+			return NextResponse.redirect(new URL("/login", nextUrl))
+		}
+		if (user && !user.isVerified) {
+			// Redirect to email verification if not verified
+			return NextResponse.redirect(new URL("/verify-email", nextUrl))
+		}
 
-	// route gamiton pag login or register
-	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
-
-	/**
-	 * if route or ang user ni navigate sa login o	r register and user is already logged in
-	 * ih redirect ni sa overview page
-	 */
-	if (isAuthRoute) {
-		if (isLoggedIn) {
-			if (req.auth) {
+		// New check for farmer role and store information
+		if (user && user.role === "FARMER") {
+			const userStore = await getFarmerDetailsByUserIdUseCase(user.id!)
+			if (!userStore) {
+				// Redirect to store setup page if farmer doesn't have store information
 				return NextResponse.redirect(
-					new URL(DEFAULT_LOGIN_REDIRECT(req.auth?.user.role), nextUrl)
+					new URL("/complete-farmer-information", nextUrl)
 				)
 			}
 		}
-		return
 	}
 
-	/**
-	 * if ang user  wala naka login unya ang user ni adto
-	 * og protected route ih redirect ni sa login page
-	 */
-	if (!isLoggedIn && isProtectedRoute) {
-		return Response.redirect(new URL("/login", nextUrl))
-	}
-
+	// 4. For all other routes, allow access
 	return
 })
-
 // Supports both a single string value or an array of matchers
 // @ref https://clerk.com/docs/references/nextjs/auth-middleware#usage
 export const config = {
