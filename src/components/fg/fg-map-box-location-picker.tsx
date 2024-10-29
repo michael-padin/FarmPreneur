@@ -22,6 +22,7 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
@@ -50,29 +51,36 @@ const DEFAULT_CENTER: LatLng = {
 }
 
 interface AddressLocationPickerProps {
-	onAddressSelect?: (address: Address) => void
+	onAddressSelect?: (address: Address | undefined) => void
 	defaultValue?: string
 	defaultCenter?: LatLng
 	defaultZoom?: number
 	readonly?: boolean
 	mapClassName?: ClassValue
+	showMap?: boolean
+}
+
+const defaultAddress: Address = {
+	fullAddress: "",
+	street: "",
+	region: "",
+	country: "",
+	postalCode: "",
+	latitude: 0,
+	longitude: 0
 }
 
 export default function AddressLocationPicker({
 	onAddressSelect,
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
-	defaultZoom
+	defaultZoom,
+	showMap = false
 }: AddressLocationPickerProps) {
 	const [openDialog, setOpenDialog] = useState(false)
-	const [open, setOpen] = useState(false)
-	const [loading, setLoading] = useState(false)
-	const debounceTimeout = useRef<NodeJS.Timeout>(undefined)
+
 	const [inputValue, setInputValue] = useState(defaultValue)
-	const [suggestions, setSuggestions] = useState<FeatureCollection["features"]>(
-		[]
-	)
-	const [newAddress, setNewAddress] = useState<Address | undefined>(undefined)
+	const [newAddress, setNewAddress] = useState<Address>(defaultAddress)
 	const mapboxApiKey = process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
 
 	const { initializeMap, updateMarkerPosition } = useMapbox({
@@ -84,18 +92,9 @@ export default function AddressLocationPicker({
 	})
 
 	useEffect(() => {
-		return () => {
-			if (!openDialog && newAddress) {
-				onAddressSelect?.(newAddress)
-			}
-		}
+		if (!newAddress) return
+		onAddressSelect?.(newAddress)
 	}, [openDialog, newAddress])
-
-	useEffect(() => {
-		if (suggestions.length > 0) {
-			setOpen(true)
-		}
-	}, [suggestions])
 
 	async function handleMarkerDragEnd(lngLat: mapboxgl.LngLat) {
 		try {
@@ -113,7 +112,7 @@ export default function AddressLocationPicker({
 					lngLat.lng
 				)
 				setNewAddress(newAddress)
-				setInputValue(featureData.features[0].properties.full_address)
+				setInputValue?.(featureData.features[0].properties.full_address)
 			}
 		} catch (error) {
 			console.error("Error reverse geocoding:", error)
@@ -127,17 +126,86 @@ export default function AddressLocationPicker({
 		() =>
 			(feature: Feature, lat: number, lng: number): Address => {
 				return {
-					fullAddress: feature.properties.full_address,
+					fullAddress: feature.properties.full_address || "",
 					street: feature.properties.context.street?.name || "",
 					region: feature.properties.context.region?.name || "",
 					country: feature.properties.context.country?.name || "",
 					postalCode: feature.properties.context.postcode?.name || "",
-					latitude: lat,
-					longitude: lng
+					latitude: lat || 0,
+					longitude: lng || 0
 				}
 			},
 		[]
 	)
+
+	return (
+		<div>
+			<div className="w-full space-y-1">
+				<AddressInput
+					inputValue={inputValue}
+					mapboxApiKey={mapboxApiKey}
+					createAddressFromFeature={createAddressFromFeature}
+					updateMarkerPosition={updateMarkerPosition}
+					setNewAddress={setNewAddress}
+					setInputValue={setInputValue}
+				/>
+				{showMap && (
+					<MapDrawerDialog open={openDialog} onOpenChangeAction={setOpenDialog}>
+						<div className="space-y-2">
+							<div className="w-full lg:w-1/2">
+								<AddressInput
+									inputValue={inputValue}
+									mapboxApiKey={mapboxApiKey}
+									createAddressFromFeature={createAddressFromFeature}
+									updateMarkerPosition={updateMarkerPosition}
+									setNewAddress={setNewAddress}
+									setInputValue={setInputValue}
+								/>
+							</div>
+							<MapBox initializeMap={initializeMap} />
+						</div>
+					</MapDrawerDialog>
+				)}
+			</div>
+		</div>
+	)
+}
+
+interface AddressInputProps {
+	inputValue: string
+	setInputValue?: React.Dispatch<React.SetStateAction<string>>
+	onAddressSelect?: (suggestion: Feature) => void
+	mapboxApiKey: string
+	updateMarkerPosition?: (lng: number, lat: number) => void
+	createAddressFromFeature?: (
+		feature: Feature,
+		lat: number,
+		lng: number
+	) => Address
+	setNewAddress?: React.Dispatch<React.SetStateAction<Address>>
+}
+export const AddressInput = ({
+	inputValue,
+	setNewAddress,
+	setInputValue,
+	createAddressFromFeature,
+	updateMarkerPosition,
+	mapboxApiKey
+}: AddressInputProps) => {
+	const [open, setOpen] = useState(false)
+	const inputRef = useRef<HTMLInputElement>(null)
+	const commandListRef = useRef<HTMLDivElement>(null)
+	const [loading, setLoading] = useState(false)
+	const debounceTimeout = useRef<NodeJS.Timeout>(undefined)
+	const [suggestions, setSuggestions] = useState<FeatureCollection["features"]>(
+		[]
+	)
+	useEffect(() => {
+		if (suggestions.length > 0) {
+			setOpen(true)
+		}
+	}, [suggestions])
+	useClickOutside(commandListRef, () => setOpen(false))
 
 	const searchAddress = useCallback(
 		async (query: string) => {
@@ -166,7 +234,13 @@ export default function AddressLocationPicker({
 
 	const handleInputChange = useCallback(
 		(value: string) => {
-			setInputValue(value)
+			setInputValue?.(value)
+
+			if (value.trim() === "") {
+				// Set the address to undefined if the input is empty (e.g., after a backspace clears it)
+				setNewAddress?.(defaultAddress)
+				return
+			}
 
 			if (debounceTimeout.current) {
 				clearTimeout(debounceTimeout.current)
@@ -180,14 +254,14 @@ export default function AddressLocationPicker({
 	)
 
 	const handleSelect = useCallback((suggestion: Feature) => {
-		setInputValue(suggestion.properties.full_address)
+		setInputValue?.(suggestion.properties.full_address)
 		setOpen(false)
 
 		const [lng, lat] = suggestion.geometry.coordinates
-		updateMarkerPosition(lng, lat)
+		updateMarkerPosition?.(lng, lat)
 
-		const newAddress = createAddressFromFeature(suggestion, lat, lng)
-		setNewAddress(newAddress)
+		const newAddress = createAddressFromFeature?.(suggestion, lat, lng)
+		setNewAddress?.(newAddress || defaultAddress)
 	}, [])
 
 	const getCurrentLocation = useCallback(() => {
@@ -202,7 +276,7 @@ export default function AddressLocationPicker({
 			async (position) => {
 				const { latitude, longitude } = position.coords
 
-				updateMarkerPosition(longitude, latitude)
+				updateMarkerPosition?.(longitude, latitude)
 
 				try {
 					const response = await fetch(
@@ -212,13 +286,13 @@ export default function AddressLocationPicker({
 
 					if (data.features && data.features.length > 0) {
 						const feature = data.features[0]
-						const newAddress = createAddressFromFeature(
+						const newAddress = createAddressFromFeature?.(
 							feature,
 							latitude,
 							longitude
 						)
-						setInputValue(data.features[0].properties.full_address)
-						setNewAddress(newAddress)
+						setInputValue?.(data.features[0].properties.full_address)
+						setNewAddress?.(newAddress || defaultAddress)
 					}
 				} catch (error) {
 					console.error("Error reverse geocoding:", error)
@@ -237,73 +311,13 @@ export default function AddressLocationPicker({
 	}, [createAddressFromFeature, mapboxApiKey, updateMarkerPosition])
 
 	return (
-		<div>
-			<div className="w-full space-y-1">
-				<AddressInput
-					onAddressSelect={handleSelect}
-					onInputChange={handleInputChange}
-					getCurrentLocation={getCurrentLocation}
-					inputValue={inputValue}
-					loading={loading}
-					suggestions={suggestions}
-					openSuggestion={open}
-					setOpenSuggestion={setOpen}
-				/>
-				<MapDrawerDialog open={openDialog} onOpenChangeAction={setOpenDialog}>
-					<div className="space-y-2">
-						<div className="w-full lg:w-1/2">
-							<AddressInput
-								onAddressSelect={handleSelect}
-								onInputChange={handleInputChange}
-								getCurrentLocation={getCurrentLocation}
-								inputValue={inputValue}
-								loading={loading}
-								suggestions={suggestions}
-								openSuggestion={open}
-								setOpenSuggestion={setOpen}
-							/>
-						</div>
-						<MapBox initializeMap={initializeMap} />
-					</div>
-				</MapDrawerDialog>
-			</div>
-		</div>
-	)
-}
-
-interface AddressInputProps {
-	onInputChange?: (value: string) => void
-	onAddressSelect?: (suggestion: Feature) => void
-	inputValue: string
-	getCurrentLocation?: () => void
-	loading: boolean
-	suggestions: FeatureCollection["features"]
-	setOpenSuggestion?: React.Dispatch<React.SetStateAction<boolean>>
-	openSuggestion?: boolean
-}
-export const AddressInput = ({
-	onAddressSelect,
-	onInputChange,
-	getCurrentLocation,
-	inputValue,
-	loading = true,
-	suggestions = [],
-	setOpenSuggestion,
-	openSuggestion
-}: AddressInputProps) => {
-	const inputRef = useRef<HTMLInputElement>(null)
-	const commandListRef = useRef<HTMLDivElement>(null)
-
-	useClickOutside(commandListRef, () => setOpenSuggestion?.(false))
-
-	return (
 		<Command className="relative overflow-visible">
 			<div className="flex space-x-2">
 				<>
 					<Input
 						ref={inputRef}
 						value={inputValue}
-						onChange={(e) => onInputChange?.(e.target.value)}
+						onChange={(e) => handleInputChange(e.target.value)}
 						placeholder="Search address..."
 						className="w-full"
 						aria-label="Search address"
@@ -324,7 +338,7 @@ export const AddressInput = ({
 					</Button>
 				</>
 			</div>
-			{openSuggestion && (
+			{open && (
 				<CommandList
 					className="absolute left-0 right-0 top-[46px] z-20 rounded-lg border bg-background shadow-md"
 					ref={commandListRef}
@@ -341,7 +355,7 @@ export const AddressInput = ({
 							suggestions.map((suggestion) => (
 								<CommandItem
 									key={suggestion.id}
-									onSelect={() => onAddressSelect?.(suggestion)}
+									onSelect={() => handleSelect(suggestion)}
 									className="cursor-pointer"
 								>
 									<div>
@@ -390,6 +404,11 @@ export const MapDrawerDialog = ({
 						</DialogDescription>
 					</DialogHeader>
 					<div className="">{children}</div>
+					<DialogFooter>
+						<DialogClose asChild>
+							<Button onClick={() => onOpenChangeAction(false)}>Confirm</Button>
+						</DialogClose>
+					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 		)
