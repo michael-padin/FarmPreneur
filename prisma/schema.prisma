@@ -275,7 +275,7 @@ model User {
   address             Address?               @relation(fields: [addressId], references: [id])
   addressId           String?                @db.ObjectId
   birthDate           DateTime?
-  EmailOtp            EmailOtp[]
+  emailOtp            EmailOtp[]
 
   @@unique([email])
 }
