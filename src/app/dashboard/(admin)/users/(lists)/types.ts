@@ -26,7 +26,6 @@ export const updateUserSchema = z.object({
 	email: z.string().email("Invalid email address").nullish(),
 	isVerified: z.boolean(),
 	image: z.string().url("Invalid URL").nullish(),
-	farmerApproval: z.nativeEnum(FarmerApplicationStatus).nullish(),
 	role: z.nativeEnum(ROLE),
 	address: addressSchema,
 	password: z.string().nullish(),
