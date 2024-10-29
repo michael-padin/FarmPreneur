@@ -11,14 +11,33 @@ import {
 	CommandItem,
 	CommandList
 } from "@/components/ui/command"
-import { useToast } from "@/components/ui/use-toast"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Feature, FeatureCollection } from "@/types"
 import { useClickOutside } from "@/hooks/use-click-outside-ref"
 import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { useMapbox } from "@/hooks/use-mapbox"
 import { ClassValue } from "clsx"
-import { AspectRatio } from "../ui/aspect-ratio"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from "../ui/dialog"
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger
+} from "../ui/drawer"
+import { DialogClose } from "@radix-ui/react-dialog"
+import { toast } from "sonner"
 
 interface LatLng {
 	lat: number
@@ -30,7 +49,7 @@ const DEFAULT_CENTER: LatLng = {
 	lat: 40.7128 // New York City coordinates
 }
 
-interface AddressInputProps {
+interface AddressLocationPickerProps {
 	onAddressSelect?: (address: Address) => void
 	defaultValue?: string
 	defaultCenter?: LatLng
@@ -39,28 +58,22 @@ interface AddressInputProps {
 	mapClassName?: ClassValue
 }
 
-export default function AddressInput({
+export default function AddressLocationPicker({
 	onAddressSelect,
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
-	defaultZoom,
-	readonly = false,
-	mapClassName
-}: AddressInputProps) {
-	const { toast } = useToast()
-	const commandListRef = useRef<HTMLDivElement>(null)
+	defaultZoom
+}: AddressLocationPickerProps) {
+	const [openDialog, setOpenDialog] = useState(false)
 	const [open, setOpen] = useState(false)
+	const [loading, setLoading] = useState(false)
+	const debounceTimeout = useRef<NodeJS.Timeout>(undefined)
 	const [inputValue, setInputValue] = useState(defaultValue)
 	const [suggestions, setSuggestions] = useState<FeatureCollection["features"]>(
 		[]
 	)
-	const [loading, setLoading] = useState(false)
+	const [newAddress, setNewAddress] = useState<Address | undefined>(undefined)
 	const mapboxApiKey = process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
-
-	const mapContainer = useRef<HTMLDivElement>(null)
-
-	const inputRef = useRef<HTMLInputElement>(null)
-	const debounceTimeout = useRef<NodeJS.Timeout>(undefined)
 
 	const { initializeMap, updateMarkerPosition } = useMapbox({
 		draggable: true,
@@ -71,12 +84,18 @@ export default function AddressInput({
 	})
 
 	useEffect(() => {
-		if (mapContainer.current) {
-			initializeMap(mapContainer.current)
+		return () => {
+			if (!openDialog && newAddress) {
+				onAddressSelect?.(newAddress)
+			}
 		}
-	}, [initializeMap])
+	}, [openDialog, newAddress])
 
-	useClickOutside(commandListRef, () => setOpen(false))
+	useEffect(() => {
+		if (suggestions.length > 0) {
+			setOpen(true)
+		}
+	}, [suggestions])
 
 	async function handleMarkerDragEnd(lngLat: mapboxgl.LngLat) {
 		try {
@@ -93,18 +112,32 @@ export default function AddressInput({
 					lngLat.lat,
 					lngLat.lng
 				)
+				setNewAddress(newAddress)
 				setInputValue(featureData.features[0].properties.full_address)
-				onAddressSelect?.(newAddress)
 			}
 		} catch (error) {
 			console.error("Error reverse geocoding:", error)
-			toast({
-				title: "Error",
-				description: "Failed to get address from location. Please try again.",
-				variant: "destructive"
+			toast("Error", {
+				description: "Failed to get address from location. Please try again."
 			})
 		}
 	}
+
+	const createAddressFromFeature = useMemo(
+		() =>
+			(feature: Feature, lat: number, lng: number): Address => {
+				return {
+					fullAddress: feature.properties.full_address,
+					street: feature.properties.context.street?.name || "",
+					region: feature.properties.context.region?.name || "",
+					country: feature.properties.context.country?.name || "",
+					postalCode: feature.properties.context.postcode?.name || "",
+					latitude: lat,
+					longitude: lng
+				}
+			},
+		[]
+	)
 
 	const searchAddress = useCallback(
 		async (query: string) => {
@@ -122,17 +155,13 @@ export default function AddressInput({
 				setSuggestions(data.features || [])
 			} catch (error) {
 				console.error("Error fetching suggestions:", error)
-				toast({
-					title: "Error",
-					description: "Failed to fetch address suggestions. Please try again.",
-					variant: "destructive"
-				})
+				toast("Failed to fetch address suggestions. Please try again.")
 				setSuggestions([])
 			} finally {
 				setLoading(false)
 			}
 		},
-		[mapboxApiKey, toast]
+		[mapboxApiKey]
 	)
 
 	const handleInputChange = useCallback(
@@ -150,26 +179,21 @@ export default function AddressInput({
 		[searchAddress]
 	)
 
-	const handleSelect = useCallback(
-		(suggestion: Feature) => {
-			setInputValue(suggestion.properties.full_address)
-			setOpen(false)
+	const handleSelect = useCallback((suggestion: Feature) => {
+		setInputValue(suggestion.properties.full_address)
+		setOpen(false)
 
-			const [lng, lat] = suggestion.geometry.coordinates
-			updateMarkerPosition(lng, lat)
+		const [lng, lat] = suggestion.geometry.coordinates
+		updateMarkerPosition(lng, lat)
 
-			const newAddress = createAddressFromFeature(suggestion, lat, lng)
-			onAddressSelect?.(newAddress)
-		},
-		[onAddressSelect, updateMarkerPosition]
-	)
+		const newAddress = createAddressFromFeature(suggestion, lat, lng)
+		setNewAddress(newAddress)
+	}, [])
 
 	const getCurrentLocation = useCallback(() => {
 		if (!navigator.geolocation) {
-			toast({
-				title: "Error",
-				description: "Geolocation is not supported by your browser",
-				variant: "destructive"
+			toast.error("Error", {
+				description: "Geolocation is not supported by your browser"
 			})
 			return
 		}
@@ -194,121 +218,227 @@ export default function AddressInput({
 							longitude
 						)
 						setInputValue(data.features[0].properties.full_address)
-						onAddressSelect?.(newAddress)
+						setNewAddress(newAddress)
 					}
 				} catch (error) {
 					console.error("Error reverse geocoding:", error)
-					toast({
-						title: "Error",
+					toast.error("Error", {
 						description:
-							"Failed to get address from your location. Please try again.",
-						variant: "destructive"
+							"Failed to get address from your location. Please try again."
 					})
 				}
 			},
 			(error) => {
-				toast({
-					title: "Error",
-					description: `Error getting location: ${error.message}`,
-					variant: "destructive"
+				toast.error("Error", {
+					description: `Error getting location: ${error.message}`
 				})
 			}
 		)
-	}, [mapboxApiKey, onAddressSelect, toast, updateMarkerPosition])
-
-	const createAddressFromFeature = useMemo(
-		() =>
-			(feature: Feature, lat: number, lng: number): Address => {
-				return {
-					fullAddress: feature.properties.full_address,
-					street: feature.properties.context.street?.name || "",
-					region: feature.properties.context.region?.name || "",
-					country: feature.properties.context.country?.name || "",
-					postalCode: feature.properties.context.postcode?.name || "",
-					latitude: lat,
-					longitude: lng
-				}
-			},
-		[]
-	)
+	}, [createAddressFromFeature, mapboxApiKey, updateMarkerPosition])
 
 	return (
 		<div>
-			{!readonly ? (
-				<div className="w-full space-y-4">
-					<Command className="relative overflow-visible">
-						<div className="flex space-x-2">
-							<>
-								<Input
-									ref={inputRef}
-									value={inputValue}
-									onChange={(e) => handleInputChange(e.target.value)}
-									onFocus={() => setOpen(true)}
-									onClick={() => setOpen(true)}
-									placeholder="Search address..."
-									className="w-full"
-									aria-label="Search address"
-								/>
-								<Button
-									variant="outline"
-									size="icon"
-									onClick={(e) => {
-										e.preventDefault()
-										e.stopPropagation()
-										getCurrentLocation()
-									}}
-									title="Use current location"
-									type="button"
-									aria-label="Use current location"
-								>
-									<Crosshair className="h-4 w-4" />
-								</Button>
-							</>
-						</div>
-						{open && (
-							<CommandList
-								className="absolute left-0 right-0 top-[46px] z-20 rounded-lg border bg-background shadow-md"
-								ref={commandListRef}
-							>
-								<CommandEmpty>No results found.</CommandEmpty>
-								<CommandGroup
-									heading={loading ? "Searching..." : "Suggestions"}
-								>
-									{loading ? (
-										<div className="flex items-center justify-center py-4">
-											<Loader2 className="h-6 w-6 animate-spin text-primary" />
-										</div>
-									) : (
-										suggestions.map((suggestion) => (
-											<CommandItem
-												key={suggestion.id}
-												onSelect={() => handleSelect(suggestion)}
-												className="cursor-pointer"
-											>
-												<div>
-													<MapPin className="mr-2 h-4 w-4" />
-												</div>
-												{suggestion.properties.full_address}
-											</CommandItem>
-										))
-									)}
-								</CommandGroup>
-							</CommandList>
-						)}
-					</Command>
-					<AspectRatio
-						ref={mapContainer}
-						ratio={3 / 2}
-						className="w-full rounded-lg"
-					/>
-				</div>
-			) : (
-				<AspectRatio
-					ref={mapContainer}
-					ratio={3 / 2}
-					className="w-full rounded-lg"
+			<div className="w-full space-y-1">
+				<AddressInput
+					onAddressSelect={handleSelect}
+					onInputChange={handleInputChange}
+					getCurrentLocation={getCurrentLocation}
+					inputValue={inputValue}
+					loading={loading}
+					suggestions={suggestions}
+					openSuggestion={open}
+					setOpenSuggestion={setOpen}
 				/>
-			)}
+				<MapDrawerDialog open={openDialog} onOpenChangeAction={setOpenDialog}>
+					<div className="space-y-2">
+						<div className="w-full lg:w-1/2">
+							<AddressInput
+								onAddressSelect={handleSelect}
+								onInputChange={handleInputChange}
+								getCurrentLocation={getCurrentLocation}
+								inputValue={inputValue}
+								loading={loading}
+								suggestions={suggestions}
+								openSuggestion={open}
+								setOpenSuggestion={setOpen}
+							/>
+						</div>
+						<MapBox initializeMap={initializeMap} />
+					</div>
+				</MapDrawerDialog>
+			</div>
 		</div>
+	)
+}
+
+interface AddressInputProps {
+	onInputChange?: (value: string) => void
+	onAddressSelect?: (suggestion: Feature) => void
+	inputValue: string
+	getCurrentLocation?: () => void
+	loading: boolean
+	suggestions: FeatureCollection["features"]
+	setOpenSuggestion?: React.Dispatch<React.SetStateAction<boolean>>
+	openSuggestion?: boolean
+}
+export const AddressInput = ({
+	onAddressSelect,
+	onInputChange,
+	getCurrentLocation,
+	inputValue,
+	loading = true,
+	suggestions = [],
+	setOpenSuggestion,
+	openSuggestion
+}: AddressInputProps) => {
+	const inputRef = useRef<HTMLInputElement>(null)
+	const commandListRef = useRef<HTMLDivElement>(null)
+
+	useClickOutside(commandListRef, () => setOpenSuggestion?.(false))
+
+	return (
+		<Command className="relative overflow-visible">
+			<div className="flex space-x-2">
+				<>
+					<Input
+						ref={inputRef}
+						value={inputValue}
+						onChange={(e) => onInputChange?.(e.target.value)}
+						placeholder="Search address..."
+						className="w-full"
+						aria-label="Search address"
+					/>
+					<Button
+						variant="outline"
+						size="icon"
+						onClick={(e) => {
+							e.preventDefault()
+							e.stopPropagation()
+							getCurrentLocation?.()
+						}}
+						title="Use current location"
+						type="button"
+						aria-label="Use current location"
+					>
+						<Crosshair className="h-4 w-4" />
+					</Button>
+				</>
+			</div>
+			{openSuggestion && (
+				<CommandList
+					className="absolute left-0 right-0 top-[46px] z-20 rounded-lg border bg-background shadow-md"
+					ref={commandListRef}
+				>
+					{!loading && suggestions.length === 0 && inputValue && (
+						<CommandEmpty>No results found.</CommandEmpty>
+					)}
+					<CommandGroup heading={loading ? "Searching..." : "Suggestions"}>
+						{loading ? (
+							<div className="flex items-center justify-center py-4">
+								<Loader2 className="h-6 w-6 animate-spin text-primary" />
+							</div>
+						) : (
+							suggestions.map((suggestion) => (
+								<CommandItem
+									key={suggestion.id}
+									onSelect={() => onAddressSelect?.(suggestion)}
+									className="cursor-pointer"
+								>
+									<div>
+										<MapPin className="mr-2 h-4 w-4" />
+									</div>
+									{suggestion.properties.full_address}
+								</CommandItem>
+							))
+						)}
+					</CommandGroup>
+				</CommandList>
+			)}
+		</Command>
+	)
+}
+
+interface MapDrawerDialogProps {
+	open: boolean
+	onOpenChangeAction: React.Dispatch<React.SetStateAction<boolean>>
+	children: React.ReactNode
+}
+export const MapDrawerDialog = ({
+	open,
+	onOpenChangeAction,
+	children
+}: MapDrawerDialogProps) => {
+	const isDesktop = useMediaQuery("(min-width: 768px)")
+
+	if (isDesktop) {
+		return (
+			<Dialog open={open} onOpenChange={onOpenChangeAction}>
+				<div>
+					<DialogTrigger asChild>
+						<span className="ml-2 cursor-pointer text-xs text-primary">
+							Choose on map
+						</span>
+					</DialogTrigger>
+				</div>
+				<DialogContent className="max-w-screen-md">
+					<DialogHeader>
+						<DialogTitle>
+							Choose on <span className="text-primary">Map</span>
+						</DialogTitle>
+						<DialogDescription>
+							Search or drag the marker to the location
+						</DialogDescription>
+					</DialogHeader>
+					<div className="">{children}</div>
+				</DialogContent>
+			</Dialog>
+		)
+	}
+
+	return (
+		<Drawer open={open} onOpenChange={onOpenChangeAction} dismissible={false}>
+			<DrawerTrigger asChild>
+				<span className="ml-2 cursor-pointer text-xs text-primary">
+					Choose on map{" "}
+				</span>
+			</DrawerTrigger>
+			<DrawerContent>
+				<DrawerHeader className="text-left">
+					<DrawerTitle>
+						Choose on <span className="text-primary">Map</span>
+					</DrawerTitle>
+					<DrawerDescription>
+						Search or drag the marker to the location
+					</DrawerDescription>
+				</DrawerHeader>
+				<div className="w-full px-4">{children}</div>
+				<DrawerFooter className="pt-2">
+					<DrawerClose asChild>
+						<Button onClick={() => onOpenChangeAction(false)}>Close</Button>
+					</DrawerClose>
+				</DrawerFooter>
+			</DrawerContent>
+		</Drawer>
+	)
+}
+
+interface MapBoxDrawerDialogProps {
+	initializeMap?: (container: HTMLDivElement) => void
+}
+export const MapBox = ({ initializeMap }: MapBoxDrawerDialogProps) => {
+	const mapContainer = React.useRef<HTMLDivElement>(null)
+
+	React.useEffect(() => {
+		if (mapContainer.current) {
+			initializeMap?.(mapContainer.current)
+		}
+	}, [initializeMap, mapContainer])
+
+	return (
+		<div
+			ref={mapContainer}
+			className={`aspect-square w-full rounded-md lg:aspect-video`}
+			aria-label="Map"
+		/>
 	)
 }
