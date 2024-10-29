@@ -1,7 +1,6 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
 import React, { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -22,7 +21,6 @@ import { RegisterSchema, RegisterType } from "../_types"
 import { register } from "../action"
 
 const RegisterForm = () => {
-	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<RegisterType>({
 		resolver: zodResolver(RegisterSchema),
@@ -40,9 +38,6 @@ const RegisterForm = () => {
 			register(data).then((res) => {
 				if (res.error) {
 					toast.error(res.error)
-				} else {
-					toast.success("Account created, please check your email")
-					router.push(`verify/${res.data?.userId}`)
 				}
 			})
 		})

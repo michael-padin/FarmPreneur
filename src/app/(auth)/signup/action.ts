@@ -1,18 +1,17 @@
 "use server"
+import { RegisterSchema, RegisterType } from "./_types"
 import { hash } from "bcryptjs"
-
 import {
 	generateExpiration,
 	generateOTP
 } from "@/utils/generateVerificationCode"
 import { getUserByEmail } from "@/services/user"
-import { RegisterSchema, RegisterType } from "./_types"
 import {
 	createUserCustomerUseCase,
 	saveVerificationCodeUseCase
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
-import { revalidatePath } from "next/cache"
+import { getErrorMessage } from "@/lib/handle-error"
 
 export const register = async (data: RegisterType) => {
 	const parsedData = RegisterSchema.safeParse(data)
@@ -30,38 +29,33 @@ export const register = async (data: RegisterType) => {
 		if (existingUser) return { error: "User already exists" }
 
 		const newUser = await createUserCustomerUseCase({
+			...data,
 			name: `${data.firstName} ${data.lastName}`,
-			email,
 			password: hashedPassword
 		})
 
 		if (!newUser) return { error: "Error creating user" }
 
-		/**
-		 * @todo Send email to user for verification
-		 */
-		// Generate OTP and expiration (e.g., 5 minutes)
 		const otp = generateOTP()
-		const otpExpiration = generateExpiration()
+		const otpExpiration = generateExpiration(5)
 
 		console.log("Saving verification code...")
-		await saveVerificationCodeUseCase(newUser.id, otp, otpExpiration)
+		await saveVerificationCodeUseCase({
+			code: otp,
+			expirationTime: otpExpiration,
+			userId: newUser.id,
+			email: newUser.email
+		})
 
 		await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
-
-		revalidatePath("/dashboard/users")
-
 		return {
-			success: "Account created, please check your email",
+			error: null,
 			data: {
 				userId: newUser.id
 			}
 		}
 	} catch (error) {
-		if (error instanceof Error) {
-			console.log(error.message)
-			return { error: error.message }
-		}
-		throw error
+		console.log(error)
+		return { error: getErrorMessage(error) }
 	}
 }
