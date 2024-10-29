@@ -51,7 +51,7 @@ const DEFAULT_CENTER: LatLng = {
 }
 
 interface AddressLocationPickerProps {
-	onAddressSelect?: (address: Address | undefined) => void
+	onAddressSelect?: (address: Address) => void
 	defaultValue?: string
 	defaultCenter?: LatLng
 	defaultZoom?: number
@@ -80,7 +80,6 @@ export default function AddressLocationPicker({
 	const [openDialog, setOpenDialog] = useState(false)
 
 	const [inputValue, setInputValue] = useState(defaultValue)
-	const [newAddress, setNewAddress] = useState<Address>(defaultAddress)
 	const mapboxApiKey = process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
 
 	const { initializeMap, updateMarkerPosition } = useMapbox({
@@ -90,11 +89,6 @@ export default function AddressLocationPicker({
 		defaultZoom,
 		onMarkerDragEnd: handleMarkerDragEnd
 	})
-
-	useEffect(() => {
-		if (!newAddress) return
-		onAddressSelect?.(newAddress)
-	}, [openDialog, newAddress])
 
 	async function handleMarkerDragEnd(lngLat: mapboxgl.LngLat) {
 		try {
@@ -111,7 +105,7 @@ export default function AddressLocationPicker({
 					lngLat.lat,
 					lngLat.lng
 				)
-				setNewAddress(newAddress)
+				onAddressSelect?.(newAddress)
 				setInputValue?.(featureData.features[0].properties.full_address)
 			}
 		} catch (error) {
@@ -146,7 +140,7 @@ export default function AddressLocationPicker({
 					mapboxApiKey={mapboxApiKey}
 					createAddressFromFeature={createAddressFromFeature}
 					updateMarkerPosition={updateMarkerPosition}
-					setNewAddress={setNewAddress}
+					onAddressSelect={onAddressSelect}
 					setInputValue={setInputValue}
 				/>
 				{showMap && (
@@ -158,7 +152,7 @@ export default function AddressLocationPicker({
 									mapboxApiKey={mapboxApiKey}
 									createAddressFromFeature={createAddressFromFeature}
 									updateMarkerPosition={updateMarkerPosition}
-									setNewAddress={setNewAddress}
+									onAddressSelect={onAddressSelect}
 									setInputValue={setInputValue}
 								/>
 							</div>
@@ -174,7 +168,7 @@ export default function AddressLocationPicker({
 interface AddressInputProps {
 	inputValue: string
 	setInputValue?: React.Dispatch<React.SetStateAction<string>>
-	onAddressSelect?: (suggestion: Feature) => void
+	onAddressSelect?: (address: Address) => void
 	mapboxApiKey: string
 	updateMarkerPosition?: (lng: number, lat: number) => void
 	createAddressFromFeature?: (
@@ -182,15 +176,14 @@ interface AddressInputProps {
 		lat: number,
 		lng: number
 	) => Address
-	setNewAddress?: React.Dispatch<React.SetStateAction<Address>>
 }
 export const AddressInput = ({
 	inputValue,
-	setNewAddress,
 	setInputValue,
 	createAddressFromFeature,
 	updateMarkerPosition,
-	mapboxApiKey
+	mapboxApiKey,
+	onAddressSelect
 }: AddressInputProps) => {
 	const [open, setOpen] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -238,7 +231,7 @@ export const AddressInput = ({
 
 			if (value.trim() === "") {
 				// Set the address to undefined if the input is empty (e.g., after a backspace clears it)
-				setNewAddress?.(defaultAddress)
+				onAddressSelect?.(defaultAddress)
 				return
 			}
 
@@ -261,7 +254,7 @@ export const AddressInput = ({
 		updateMarkerPosition?.(lng, lat)
 
 		const newAddress = createAddressFromFeature?.(suggestion, lat, lng)
-		setNewAddress?.(newAddress || defaultAddress)
+		onAddressSelect?.(newAddress || defaultAddress)
 	}, [])
 
 	const getCurrentLocation = useCallback(() => {
@@ -292,7 +285,7 @@ export const AddressInput = ({
 							longitude
 						)
 						setInputValue?.(data.features[0].properties.full_address)
-						setNewAddress?.(newAddress || defaultAddress)
+						onAddressSelect?.(newAddress || defaultAddress)
 					}
 				} catch (error) {
 					console.error("Error reverse geocoding:", error)
