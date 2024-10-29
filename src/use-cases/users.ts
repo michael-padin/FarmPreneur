@@ -1,6 +1,9 @@
+import { RegisterFarmerType } from "@/app/(auth)/register-farmer/types"
+import { RegisterType } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import {
 	createUserCustomer,
+	createUserFarmer,
 	deleteUserById,
 	deleteUsersById,
 	getCustomers,
@@ -34,22 +37,23 @@ export const getUserFarmerByIdUseCase = async (id: string) => {
 	return await getUserFarmerById(id)
 }
 
-export const createUserCustomerUseCase = async (data: {
-	email: string
-	password: string
-	name: string
-}) => {
-	const user = await createUserCustomer(data)
-	const { password, ...newUser } = user!
-	return newUser
+export const createUserCustomerUseCase = async (
+	data: RegisterType & { name: string }
+) => {
+	return await createUserCustomer(data)
 }
 
-export const saveVerificationCodeUseCase = async (
-	userId: string,
-	otp: string,
+export const createUserFarmerUseCase = async (data: RegisterFarmerType) => {
+	return await createUserFarmer(data)
+}
+
+export const saveVerificationCodeUseCase = async (data: {
+	userId: string
+	code: string
 	expirationTime: Date
-) => {
-	return await saveVerificationCode(userId, otp, expirationTime)
+	email: string
+}) => {
+	return await saveVerificationCode(data)
 }
 
 export const updateVerifiedUserUseCase = async (userId: string) => {
