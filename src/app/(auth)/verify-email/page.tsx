@@ -1,16 +1,18 @@
-import { getUserByIdUseCase } from "@/use-cases/users"
-import { InputOTPForm } from "../_components/input-otp-form"
 import Image from "next/image"
 import Link from "next/link"
+import { InputOTPForm } from "./_components/input-otp-form"
+import { auth } from "@/auth"
+import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
 import { redirect } from "next/navigation"
 
-export default async function verifyPage(props: {
-	params: Promise<{ id: string }>
-}) {
-	const params = await props.params
-	if (!params.id) return redirect("/login")
-	const user = await getUserByIdUseCase(params.id)
-	if (!user) return redirect("/login")
+export default async function verifyEmailPage() {
+	const session = await auth()
+
+	if (!session) {
+		redirect("/login")!
+	}
+
+	const otp = await getEmailOtpExpirationByUserIdUseCase(session!.user.id!)
 
 	return (
 		<div className="h-screen w-full lg:grid lg:grid-cols-2 lg:overflow-hidden xl:min-h-screen">
@@ -37,7 +39,7 @@ export default async function verifyPage(props: {
 					</div>
 
 					<div className="grid gap-6">
-						<InputOTPForm userId={user.id} />
+						<InputOTPForm user={session!.user} otp={otp} />
 					</div>
 
 					<p className="px-8 text-center text-sm text-muted-foreground">
