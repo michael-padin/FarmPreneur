@@ -20,11 +20,9 @@ import { Input } from "@/components/ui/input"
 import { LoginSchema, LoginType } from "../_types"
 import { siginInWithCredentials } from "../action"
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
-import { useRouter } from "next/navigation"
-import { resendCode } from "../../verify/actions"
+import { resendCode } from "../../verify-email/actions"
 
 const LoginForm = () => {
-	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -50,12 +48,7 @@ const LoginForm = () => {
 								})
 							}
 						})
-						return router.push(`/verify/${res.data?.id}`)
 					}
-					if (res.data?.role === "FARMER" || res.data?.role === "ADMIN") {
-						return router.push("/dashboard")
-					}
-					return router.push("/")
 				}
 			})
 		})
