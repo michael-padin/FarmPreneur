@@ -38,12 +38,17 @@ import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { UpdateUser, updateUserFormSchema } from "../types"
+import { getFarmerDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 
 interface UserDetailsFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
+	farmerDetails: Awaited<ReturnType<typeof getFarmerDetailsByUserIdUseCase>>
 }
 
-export default function UserDetailsForm({ user }: UserDetailsFormProps) {
+export default function UserDetailsForm({
+	user,
+	farmerDetails
+}: UserDetailsFormProps) {
 	const [isUpdatePending, startTransition] = useTransition()
 	const form = useForm<UpdateUser>({
 		resolver: zodResolver(updateUserFormSchema),
@@ -53,14 +58,19 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 			name: user?.name || "",
 			role: user?.role || "",
 			farmerDetails: {
-				applicationStatus: user?.farmerDetails?.applicationStatus || "PENDING",
-				description: user?.farmerDetails?.description || "",
-				images: user?.farmerDetails?.images || [],
-				location: user?.farmerDetails?.location || "",
-				name: user?.farmerDetails?.name || "",
-				products: user?.farmerDetails?.products || [],
-				size: user?.farmerDetails?.size || 0,
-				yearsOfExperience: user?.farmerDetails?.yearsOfExperience || 0
+				applicationStatus: farmerDetails?.applicationStatus || "PENDING",
+				farmDescription: farmerDetails?.farmDescription || "",
+				images: farmerDetails?.images || [],
+				address: {
+					fullAddress: farmerDetails?.address?.fullAddress || "",
+					street: farmerDetails?.address?.street || "",
+					region: farmerDetails?.address?.region || "",
+					country: farmerDetails?.address?.country || "",
+					postalCode: farmerDetails?.address?.postalCode || "",
+					latitude: farmerDetails?.address?.latitude || 0
+				},
+				farmName: farmerDetails?.farmName || "",
+				products: farmerDetails?.products || []
 			},
 			address: {
 				fullAddress: user?.address?.fullAddress || "",
@@ -204,7 +214,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 															shouldValidate: true
 														})
 													}}
-													defaultValue={user?.address?.fullAddress}
+													defaultValue={user?.address?.fullAddress || ""}
 												/>
 											</FormControl>
 											<FormMessage />
@@ -218,7 +228,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 									<Separator className="my-8" />
 									<div className="space-y-6">
 										<h3 className="text-2xl font-semibold leading-none tracking-tight">
-											Farm Details
+											Farmer Details
 										</h3>
 										<FormField
 											control={form.control}
@@ -257,7 +267,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										/>
 										<FormField
 											control={form.control}
-											name="farmerDetails.name"
+											name="farmerDetails.farmName"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Name</FormLabel>
@@ -270,7 +280,7 @@ export default function UserDetailsForm({ user }: UserDetailsFormProps) {
 										/>
 										<FormField
 											control={form.control}
-											name="farmerDetails.description"
+											name="farmerDetails.farmDescription"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Description</FormLabel>
