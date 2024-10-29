@@ -1,3 +1,5 @@
+import { RegisterFarmerType } from "@/app/(auth)/register-farmer/types"
+import { RegisterType } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
 
@@ -11,21 +13,13 @@ export const getUserById = async (id: string) => {
 			name: true,
 			email: true,
 			role: true,
-
-			verificationCode: true,
-			verificationExpires: true,
 			isVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
 			address: true,
-			updatedAt: true,
-			products: true,
-			buyerOrders: true,
-			farmerOrders: true,
-			farmerDetails: true
-		},
-		cacheStrategy: { ttl: 60 }
+			updatedAt: true
+		}
 	})
 }
 
@@ -50,42 +44,92 @@ export const getUserFarmerById = async (id: string) => {
 	})
 }
 
-export const createUserCustomer = async (data: {
-	email: string
-	password: string
-	name: string
-}) => {
+export const createUserCustomer = async (
+	data: RegisterType & { name: string }
+) => {
+	return await db.user.create({
+		data: {
+			email: data.email as string,
+			password: data.password,
+			name: data.name,
+			contactNumber: data.contactNumber,
+			birthDate: data.birthDate,
+			address: {
+				create: {
+					fullAddress: data.address?.fullAddress,
+					street: data.address?.street,
+					region: data.address?.region,
+					country: data.address?.country,
+					postalCode: data.address?.postalCode,
+					latitude: data.address?.latitude,
+					longitude: data.address?.longitude
+				}
+			},
+			role: "CUSTOMER"
+		},
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			role: true,
+			isVerified: true,
+			createdAt: true,
+			image: true,
+			contactNumber: true
+		}
+	})
+}
+export const createUserFarmer = async (data: RegisterFarmerType) => {
 	return await db.user.create({
 		data: {
 			email: data.email,
 			password: data.password,
-			name: data.name,
-			role: "CUSTOMER"
+			name: `${data.firstName} ${data.lastName}`,
+			contactNumber: data.contactNumber,
+			birthDate: data.birthDate,
+			address: {
+				create: {
+					fullAddress: data.address?.fullAddress,
+					street: data.address?.street,
+					region: data.address?.region,
+					country: data.address?.country,
+					postalCode: data.address?.postalCode,
+					latitude: data.address?.latitude,
+					longitude: data.address?.longitude
+				}
+			},
+			role: "FARMER"
 		}
 	})
 }
 
-export const saveVerificationCode = async (
-	userId: string,
-	code: string,
+export const saveVerificationCode = async (data: {
+	userId: string
+	code: string
 	expirationTime: Date
-) => {
-	await db.user.update({
-		where: { id: userId },
+	email: string
+}) => {
+	return await db.emailOtp.create({
 		data: {
-			verificationCode: code,
-			verificationExpires: expirationTime
+			otp: data.code,
+			expiresAt: data.expirationTime,
+			userId: data.userId,
+			email: data.email
+		},
+		select: {
+			expiresAt: true
 		}
 	})
 }
 
 export const updateVerifiedUser = async (userId: string) => {
-	await db.user.update({
+	return await db.user.update({
 		where: { id: userId },
 		data: {
-			isVerified: true,
-			verificationCode: null,
-			verificationExpires: null
+			isVerified: true
+		},
+		select: {
+			role: true
 		}
 	})
 }
@@ -134,7 +178,7 @@ export const updateUser = async (data: UpdateUserTypes & { id: string }) => {
 		},
 		data: {
 			name: data.name,
-			email: data.email,
+			email: data.email as string,
 			isVerified: data.isVerified,
 			contactNumber: data.contactNumber,
 			image: data.image,
