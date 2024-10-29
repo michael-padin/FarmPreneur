@@ -24,10 +24,11 @@ export function useMapbox({
 			mapboxgl.accessToken = mapboxApiKey
 
 			const zoom = mapRef.current?.getZoom() || defaultZoom
+			const center = defaultCenter || mapRef.current?.getCenter()
 			mapRef.current = new mapboxgl.Map({
 				container,
 				style: "mapbox://styles/mokiiiiieeeee/cm2nggekh003c01r4b330fpox",
-				center: [defaultCenter.lng, defaultCenter.lat],
+				center: center,
 				zoom: zoom,
 				projection: "mercator",
 				attributionControl: false,
@@ -65,14 +66,7 @@ export function useMapbox({
 				mapRef.current?.resize()
 			})
 		},
-		[
-			defaultCenter.lat,
-			defaultCenter.lng,
-			defaultZoom,
-			draggable,
-			mapboxApiKey,
-			onMarkerDragEnd
-		]
+		[defaultCenter, defaultZoom, draggable, mapboxApiKey, onMarkerDragEnd]
 	)
 
 	const updateMarkerPosition = useCallback((lng: number, lat: number) => {
@@ -84,14 +78,14 @@ export function useMapbox({
 		}
 	}, [])
 
-	useEffect(() => {
-		return () => {
-			if (mapRef.current) {
-				mapRef.current.remove()
-				mapRef.current = null
-			}
-		}
-	}, [])
+	// useEffect(() => {
+	// 	return () => {
+	// 		if (mapRef.current) {
+	// 			mapRef.current.remove()
+	// 			mapRef.current = null
+	// 		}
+	// 	}
+	// }, [])
 
 	return {
 		map: mapRef,
