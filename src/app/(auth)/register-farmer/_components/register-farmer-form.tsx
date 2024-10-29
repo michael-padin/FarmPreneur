@@ -18,37 +18,52 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterFarmerSchema, RegisterFarmerType } from "../_types"
-import { Textarea } from "@/components/ui/textarea"
-import { useSession } from "next-auth/react"
-import { registerFarmer } from "../_action"
+import { RegisterFarmerSchema, RegisterFarmerType } from "../types"
+import { registerFarmer } from "../action"
+import { Popover } from "@/components/ui/popover"
+import { DateTimeInput } from "@/components/ui/date-time-input"
+import { DateTimePicker } from "@/components/ui/date-time-picker"
+import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
 
 const RegisterFarmerForm = () => {
-	const session = useSession()
-	const user = session?.data?.user
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<RegisterFarmerType>({
 		resolver: zodResolver(RegisterFarmerSchema),
 		defaultValues: {
-			userId: user?.id,
-			email: user?.email || "",
-			name: "",
-			description: "",
+			email: "",
+			birthDate: undefined,
+			firstName: "",
+			lastName: "",
 			contactNumber: "+63",
-			location: "",
-			images: []
+			address: {
+				fullAddress: "",
+				street: "",
+				region: "",
+				country: "",
+				postalCode: "",
+				latitude: -74.006,
+				longitude: 40.7128
+			},
+			password: "",
+			confirmPassword: ""
 		}
 	})
 
 	const onSubmit = async (data: RegisterFarmerType) => {
+		// toast.success("Registering farmer...", {
+		// 	description: (
+		// 		<>
+		// 			<pre>{JSON.stringify(data, null, 2)}</pre>
+		// 		</>
+		// 	)
+		// })
 		startTransition(() => {
 			registerFarmer(data).then((res) => {
-				if (res.success) {
-					toast.success(res.success)
-					router.push("/admin-approval")
-				} else {
+				if (res.error) {
 					toast.error(res.error)
+				} else {
+					router.push(`/verify/${res.data?.userId}`)
 				}
 			})
 		})
@@ -58,19 +73,34 @@ const RegisterFarmerForm = () => {
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<fieldset disabled={isPending} className="space-y-3">
-					<FormField
-						control={form.control}
-						name="userId"
-						render={({ field }) => (
-							<FormItem className="hidden">
-								<FormControl>
-									<Input hidden />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
+					<div className="flex gap-3">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>First Name</FormLabel>
+									<FormControl>
+										<Input {...field} placeholder="John" autoComplete="off" />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Last Name</FormLabel>
+									<FormControl>
+										<Input placeholder="Doe" {...field} autoComplete="off" />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
 					<FormField
 						control={form.control}
 						name="email"
@@ -78,63 +108,11 @@ const RegisterFarmerForm = () => {
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input placeholder="@email.com" {...field} disabled />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="name"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Name</FormLabel>
-								<FormControl>
-									<Input {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="description"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Farm Description</FormLabel>
-								<FormControl>
-									<Textarea {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="products"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Products grown/raised</FormLabel>
-								<FormControl>
 									<Input
+										placeholder="@email.com"
 										{...field}
-										placeholder="Rice, Eggplant, Tomatoes, Bananas"
+										autoComplete="off"
 									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="location"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Farm Location</FormLabel>
-								<FormControl>
-									<Input {...field} placeholder="Conalum, Argao, Cebu" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -145,7 +123,7 @@ const RegisterFarmerForm = () => {
 						name="contactNumber"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Contact number</FormLabel>
+								<FormLabel>Contact Number</FormLabel>
 								<FormControl>
 									<FGSinglePhoneINput {...field} />
 								</FormControl>
@@ -154,7 +132,89 @@ const RegisterFarmerForm = () => {
 						)}
 					/>
 
-					<Button type="submit" className="w-full">
+					<FormField
+						control={form.control}
+						name="birthDate"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Birth Date</FormLabel>
+								<Popover>
+									<FormControl>
+										<DateTimePicker
+											value={field.value}
+											onChange={field.onChange}
+											hideTime
+											renderTrigger={({ open, value, setOpen }) => (
+												<DateTimeInput
+													value={value}
+													onChange={(x) => !open && field.onChange(x)}
+													format="MM/dd/yyyy"
+													disabled={open}
+													onCalendarClick={() => setOpen(!open)}
+												/>
+											)}
+										/>
+									</FormControl>
+								</Popover>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="address"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Address</FormLabel>
+								<FormControl>
+									<AddressLocationPicker
+										onAddressSelect={(address) => {
+											field.onChange(address)
+										}}
+										defaultCenter={{
+											lng: field.value.longitude,
+											lat: field.value.latitude
+										}}
+										defaultValue={field.value.fullAddress}
+										showMap
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="password"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Password</FormLabel>
+								<FormControl>
+									<FGPasswordInput {...field} autoComplete="new-password" />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="confirmPassword"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Confirm Password</FormLabel>
+								<FormControl>
+									<FGPasswordInput {...field} autoComplete="new-password" />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<Button
+						type="submit"
+						className="w-full"
+						disabled={!form.formState.isDirty}
+					>
 						{isPending ? (
 							<Loader2 className="animate-spin" />
 						) : (

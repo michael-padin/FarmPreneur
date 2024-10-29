@@ -2,21 +2,13 @@ import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import RegisterFarmerForm from "./_components/register-farmer-form"
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
-	title: "Register Farmer",
-	description: "Register Farmer"
+	title: "FarmPreneur - Register Farmer",
+	description: ""
 }
 
 const RegisterFarmerPage = async () => {
-	const session = await auth()
-	if (!session?.user) redirect("/login")
-
-	if (session?.user?.role === "FARMER" || session?.user?.role === "ADMIN")
-		redirect("/dashboard")
-
 	return (
 		<div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
 			<div className="mx-auto flex items-center justify-center p-4">
