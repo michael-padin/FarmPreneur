@@ -16,3 +16,7 @@ export function formatDate(
 		...opts
 	}).format(new Date(date))
 }
+
+export const isOtpExpired = (expiresAt: Date) => {
+	return new Date() > new Date(expiresAt)
+}
