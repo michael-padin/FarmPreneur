@@ -5,5 +5,12 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "always"
 	},
-	"cSpell.words": ["Argao", "hookform", "mapbox", "Preneur", "Signup"]
+	"cSpell.words": [
+		"Argao",
+		"hookform",
+		"Lightbox",
+		"mapbox",
+		"Preneur",
+		"Signup"
+	]
 }
