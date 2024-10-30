@@ -185,23 +185,21 @@ generator client {
 
 // MARK: ACCOUNT
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @db.ObjectId
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String?  @db.String
+  access_token      String?  @db.String
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String?  @db.String
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -213,9 +211,10 @@ model Session {
   userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([userId])
 }
 
 // MARK: TOKEN
@@ -226,6 +225,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@index([expires])
 }
 
 // MARK: AUTHENTICATOR
@@ -239,15 +239,15 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
+  @@index([userId])
 }
 
 // MARK: USER
 model User {
-  id                  String                 @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String                @id @default(auto()) @map("_id") @db.ObjectId
   name                String?
   email               String
   emailVerified       DateTime?
@@ -257,66 +257,132 @@ model User {
   role                ROLE
   password            String?
   contactNumber       String?
-  isVerified          Boolean                @default(false)
-  // Optional for WebAuthn support
+  isVerified          Boolean               @default(false)
   Authenticators      Authenticator[]
   profilePicture      String?
-  createdAt           DateTime               @default(now())
-  updatedAt           DateTime               @updatedAt
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
   products            Product[]
-  buyerOrders         Order[]                @relation("BuyerOrders")
-  farmerOrders        Order[]                @relation("FarmerOrders")
-  verficationDocument VerificationDocument[]
+  buyerOrders         Order[]               @relation("BuyerOrders")
+  farmerOrders        Order[]               @relation("FarmerOrders")
   notifications       Notification[]
-  farmerDetails       FarmerDetail?          @relation(fields: [farmerDetailsId], references: [id])
-  farmerDetailsId     String?                @db.ObjectId
-  address             Address?               @relation(fields: [addressId], references: [id])
-  addressId           String?                @db.ObjectId
-  birthDate           DateTime?
+  verficationDocument VerificationDocument?
+  FarmDetailss        FarmDetails?
+  address             Address?
+  birthDate           DateTime
   emailOtp            EmailOtp[]
-
+  reviews             ProductReview[]
+  
   @@unique([email])
+  @@index([role])
 }
 
 // MARK: PRODUCT
 model Product {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  price       Float
-  unit        String?
-  quantity    Int
-  images      String[]
-  location    String
-  farmer      User      @relation(fields: [farmerId], references: [id]) // Farmer creates the product
-  farmerId    String    @db.ObjectId
-  isApproved  Boolean   @default(false) // For marketplace admin approval
-  orders      Order[] // Products can have multiple orders
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  String?   @db.ObjectId
+  id                      String                   @id @default(auto()) @map("_id") @db.ObjectId
+  title                   String
+  description             String
+  price                   Float
+  unit                    String?
+  quantity                Int
+  images                  Image[]
+  location                String
+  farmerApplicationStatus FarmerApplicationStatus?
+  farmer                  User                     @relation(fields: [farmerId], references: [id]) // Farmer creates the product
+  farmerId                String                   @db.ObjectId
+  isApproved              Boolean                  @default(false) // For marketplace admin approval
+  orders                  Order[]
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  category                Category?                @relation(fields: [categoryId], references: [id])
+  categoryId              String?                  @db.ObjectId
+  reviews                 ProductReview[]
+
+  @@index([farmerId])
+  @@index([categoryId])
+  @@index([isApproved])
+  @@index([createdAt])
+}
+
+// MARK: PRODUCT REVIEW
+model ProductReview {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  rating         Float
+  comment        String?
+  images         Image[]
+  status         ReviewStatus @default(PUBLISHED)
+  userId         String       @db.ObjectId
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId      String       @db.ObjectId
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId        String       @unique @db.ObjectId
+  order          Order        @relation(fields: [orderId], references: [id])
+  farmerResponse String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([userId, orderId])
+  @@index([productId, status])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// MARK: IMAGE
+model Image {
+  id                     String                @id @default(auto()) @map("_id") @db.ObjectId
+  url                    String // Cloud storage URL
+  type                   ImageType // Type of image (product, review, etc)
+  filename               String // Original filename
+  size                   Int // File size in bytes
+  mimeType               String // e.g., "image/jpeg", "image/png"
+  width                  Int? // Image width in pixels
+  height                 Int? // Image height in pixels
+  order                  Int                   @default(0) // Display order for multiple images
+  isPrimary              Boolean               @default(false)
+  productId              String?               @db.ObjectId
+  product                Product?              @relation(fields: [productId], references: [id], onDelete: Cascade)
+  reviewId               String?               @db.ObjectId
+  review                 ProductReview?        @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  altText                String? // For accessibility
+  caption                String? // Optional image caption
+  status                 ImageStatus           @default(ACTIVE)
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  farmDetail             FarmDetails?          @relation(fields: [FarmDetailsId], references: [id])
+  FarmDetailsId          String?               @db.ObjectId
+  verificationDocumentId String?               @unique @db.ObjectId
+  VerificationDocument   VerificationDocument?
+
+  @@unique([productId, isPrimary])
+  @@index([productId, order])
+  @@index([reviewId])
+  @@index([status])
 }
 
 // MARK: ORDER
 model Order {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                String         @id @default(auto()) @map("_id") @db.ObjectId
   quantityPurchased Int
   totalPrice        Float
-  status            Status   @default(IN_PROGRESS)
-  buyer             User     @relation("BuyerOrders", fields: [buyerId], references: [id]) // Buyer places the order
-  buyerId           String   @db.ObjectId
-  productId         String   @db.ObjectId
+  status            OrderStatus         @default(IN_PROGRESS)
+  buyer             User           @relation("BuyerOrders", fields: [buyerId], references: [id]) // Buyer places the order
+  buyerId           String         @db.ObjectId
+  productId         String         @db.ObjectId
   shippingAddress   String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  product           Product  @relation(fields: [productId], references: [id]) // Order refers to the product
-  farmerId          String   @db.ObjectId
-  farmer            User     @relation("FarmerOrders", fields: [farmerId], references: [id]) // Order refers to the product
-  address           Address? @relation(fields: [addressId], references: [id])
-  addressId         String?  @db.ObjectId
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  product           Product        @relation(fields: [productId], references: [id]) // Order refers to the product
+  farmerId          String         @db.ObjectId
+  farmer            User           @relation("FarmerOrders", fields: [farmerId], references: [id]) // Order refers to the product
+  address           Address?       @relation(fields: [addressId], references: [id])
+  addressId         String?        @db.ObjectId
+  review            ProductReview?
 
   @@unique([buyerId, productId, farmerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([buyerId])
+  @@index([farmerId])
 }
 
 // MARK: CATEGORY
@@ -325,32 +391,37 @@ model Category {
   name        String // Category name (e.g., Fruits, Vegetables, Dairy)
   description String? // Optional description of the category
   products    Product[] // Products belonging to this category
+
+  @@index([name])
 }
 
+// MARK: VERIFICATION DOC
 model VerificationDocument {
   id        String       @id @default(auto()) @map("_id") @db.ObjectId
   type      DocumentType // Type of document (ID, License, Certification)
-  url       String // URL to the uploaded document
+  image     Image        @relation(fields: [imageId], references: [id])
+  imageId   String       @unique @db.ObjectId
   user      User         @relation(fields: [userId], references: [id])
-  userId    String       @db.ObjectId
+  userId    String       @unique @db.ObjectId
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+
+  @@index([type])
 }
 
 // MARK: FARM
-model FarmerDetail {
-  id                String                   @id @default(auto()) @map("_id") @db.ObjectId
-  applicationStatus FarmerApplicationStatus?
-  farmName          String
-  farmDescription   String
-  products          String[]
-  images            String[]
-  createdAt         DateTime                 @default(now())
-  updatedAt         DateTime                 @updatedAt
-  farmerId          String                   @db.ObjectId
-  farmer            User[]
-  address           Address?                 @relation(fields: [addressId], references: [id])
-  addressId         String?                  @db.ObjectId
+model FarmDetails {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  farmName        String
+  farmDescription String
+  products        String[]
+  images          Image[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  farmerId        String   @unique @db.ObjectId
+  farmer          User     @relation(fields: [farmerId], references: [id])
+  address         Address? @relation(fields: [addressId], references: [id])
+  addressId       String?  @db.ObjectId
 }
 
 // MARK: NOTIFICATION
@@ -361,27 +432,58 @@ model Notification {
   isRead    Boolean          @default(false) // Status indicating if the notification has been read
   createdAt DateTime         @default(now()) // Timestamp for when the notification was created
   type      NotificationType // Type of notification (e.g., ORDER_STATUS, NEW_MESSAGE, etc.)
+  user      User             @relation(fields: [userId], references: [id]) // Relation back to the User
 
-  user User @relation(fields: [userId], references: [id]) // Relation back to the User
+  @@index([userId, isRead])
+  @@index([createdAt])
 }
+
+// MARK: MESSAGE
+// model Message {
+//   id         String    @id @default(auto()) @map("_id") @db.ObjectId
+//   sender     User      @relation("SentMessages", fields: [senderId], references: [id])
+//   senderId   String    @db.ObjectId
+//   receiver   User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+//   receiverId String    @db.ObjectId
+//   content    String
+//   timestamp  DateTime  @default(now())
+//   isRead     Boolean   @default(false)
+//   // chatRoom   ChatRoom? @relation(fields: [chatRoomId], references: [id])
+//   // chatRoomId String?   @db.ObjectId
+// }
+
+// MARK: ChatRoom
+// model ChatRoom {
+//   id              String    @id @default(auto()) @map("_id") @db.ObjectId
+//   participantsIDs String[]  @db.ObjectId
+//   participants    User[]    @relation("ChatRoomParticipants", fields: [participantsIDs], references: [id])
+//   messages        Message[]
+//   createdAt       DateTime  @default(now())
+//   updatedAt       DateTime  @updatedAt
+// }
+
 
 //MARK: ADDRESS
 model Address {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  user          User[]
-  farmerDetails FarmerDetail[]
-  fullAddress   String?
-  street        String?
-  region        String?
-  country       String?
-  postalCode    String?
-  latitude      Float
-  longitude     Float
-  note          String?
-  locationType  String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  order         Order[]
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String        @unique @db.ObjectId
+  FarmDetailss FarmDetails[]
+  fullAddress  String?
+  street       String?
+  region       String?
+  country      String?
+  postalCode   String?
+  latitude     Float
+  longitude    Float
+  note         String?
+  locationType String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  order        Order[]
+
+  @@index([country, region])
+  @@index([latitude, longitude])
 }
 
 // MARK: EMAIL OTP
@@ -395,22 +497,73 @@ model EmailOtp {
   createdAt DateTime @default(now())
 
   @@unique([userId, email])
+  @@index([email])
+  @@index([expiresAt])
 }
 
-// MARK: ENUMS
+// MARK: =====ENUMS=====
+
+
+
+
+
+
+// MARK: DocumentType
 enum DocumentType {
-  GOVERNMENT_ID
-  BUSINESS_LICENSE
-  FARM_CERTIFICATION
+  PHILIPPINE_NATIONAL_ID
+  DRIVER_LICENSE // Driver's License (LTO)
+  BUSINESS_PERMIT // DTI Business Permit (for businesses)
+  PASSPORT // Philippine Passport
+  SSS_ID // Social Security System ID
+  TIN_ID // Tax Identification Number (TIN)
+  UMID // Unified Multi-Purpose ID
+  PRC_ID // Professional Regulation Commission ID (for licensed professionals)
+  POSTAL_ID // Postal ID
+  VOTER_ID // Voter's ID (COMELEC)
+  SENIOR_CITIZEN_ID // Senior Citizen ID (for elderly verification)
+  OFW_ID // Overseas Filipino Worker ID
+  MAYORS_PERMIT // Mayor's Permit (local business requirement)
+  BIR_CERTIFICATE // Bureau of Internal Revenue Certificate (for tax purposes)
+  BARANGAY_CLEARANCE // Barangay Clearance (for address verification)
+  CEDULA // Community Tax Certificate (Cedula, often used as supplementary ID)
 }
 
+// MARK: FarmerApplicationStatus
 enum FarmerApplicationStatus {
   PENDING
   APPROVED
   REJECTED
 }
 
-enum Status {
+// MARK: ImageType
+enum ImageType {
+  VERIFICATION
+  PROFILE
+  PRODUCT
+  REVIEW
+  THUMBNAIL
+  FARM
+}
+
+// MARK: ImageStatus
+enum ImageStatus {
+  ACTIVE
+  PROCESSING
+  FAILED
+  DELETED
+}
+
+
+// MARK: ReviewStatus
+enum ReviewStatus {
+  PENDING // Awaiting moderation
+  PUBLISHED // Visible to public
+  HIDDEN // Hidden by admin
+  DELETED // Soft deleted
+}
+
+// MARK: OrderStatus
+enum OrderStatus {
   PENDING
   IN_PROGRESS
   COMPLETED
@@ -418,7 +571,7 @@ enum Status {
   FAILED
 }
 
-// ENUM for Notification Types
+// MARK: NotificationType
 enum NotificationType {
   ORDER_STATUS // Notification related to order status changes
   NEW_MESSAGE // Notification for new messages
@@ -428,6 +581,7 @@ enum NotificationType {
   VERIFICATION // Notifications related to account verification or status updates
 }
 
+// MARK: ROLE
 enum ROLE {
   FARMER
   CUSTOMER
