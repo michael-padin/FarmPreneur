@@ -38,7 +38,7 @@ const LoginForm = () => {
 				if (res.error) {
 					toast.error(res.error)
 				} else {
-					if (!res.data?.isVerified) {
+					if (!res.data?.isEmailVerified) {
 						resendCode(res.data!.id!).then((res) => {
 							if (res.error) {
 								toast.error(res.error)

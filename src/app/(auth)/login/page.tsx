@@ -5,6 +5,7 @@ import Link from "next/link"
 import GoogleButton from "@/app/_components/google-button"
 import { ResendSignIn } from "@/app/_components/resend-signin"
 import LoginForm from "./_components/login-form"
+import { Separator } from "@/components/ui/separator"
 
 export const metadata: Metadata = {
 	title: "Log in",
@@ -49,11 +50,24 @@ export default async function LoginPage() {
 						<LoginForm />
 					</div>
 					{/* <ResendSignIn /> */}
-					<div className="mt-4 text-center text-sm">
-						Don&apos;t have an account?{" "}
-						<Link href="/signup" className="underline">
-							Sign up
-						</Link>
+					<div className="mt-4 flex items-center justify-center gap-4 text-center text-sm">
+						<p>Don&apos;t have an account? </p>
+						<div className="flex h-5 items-center space-x-2 text-sm">
+							<div>
+								<Link href="/signup" className="underline hover:text-primary">
+									Sign up
+								</Link>
+							</div>
+							<Separator orientation="vertical" />
+							<div>
+								<Link
+									href="/register-farmer"
+									className="underline hover:text-primary"
+								>
+									Sign up farmer
+								</Link>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
