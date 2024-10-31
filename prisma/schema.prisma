@@ -174,9 +174,9 @@
 // MARK: NEW UPDATE 
 
 datasource db {
-  provider  = "mongodb"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_DATABASE_URL")
 }
 
 generator client {
@@ -247,56 +247,56 @@ model Authenticator {
 
 // MARK: USER
 model User {
-  id                  String                @id @default(auto()) @map("_id") @db.ObjectId
-  name                String?
-  email               String
-  emailVerified       DateTime?
-  image               String?
-  accounts            Account[]
-  sessions            Session[]
-  role                ROLE
-  password            String?
-  contactNumber       String?
-  isVerified          Boolean               @default(false)
-  Authenticators      Authenticator[]
-  profilePicture      String?
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  products            Product[]
-  buyerOrders         Order[]               @relation("BuyerOrders")
-  farmerOrders        Order[]               @relation("FarmerOrders")
-  notifications       Notification[]
-  verficationDocument VerificationDocument?
-  FarmDetailss        FarmDetails?
-  address             Address?
-  birthDate           DateTime
-  emailOtp            EmailOtp[]
-  reviews             ProductReview[]
-  
+  id                      String                   @id @default(auto()) @map("_id") @db.ObjectId
+  name                    String?
+  email                   String
+  emailVerified           DateTime?
+  image                   String?
+  accounts                Account[]
+  sessions                Session[]
+  role                    ROLE
+  password                String?
+  contactNumber           String?
+  isEmailVerified         Boolean                  @default(false)
+  Authenticators          Authenticator[]
+  profilePicture          String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  farmerApplicationStatus FarmerApplicationStatus?
+  products                Product[]
+  buyerOrders             Order[]                  @relation("BuyerOrders")
+  farmerOrders            Order[]                  @relation("FarmerOrders")
+  notifications           Notification[]
+  verficationDocument     VerificationDocument?
+  farmDetails             FarmDetails?
+  address                 Address?
+  birthDate               DateTime
+  emailOtp                EmailOtp[]
+  reviews                 ProductReview[]
+
   @@unique([email])
   @@index([role])
 }
 
 // MARK: PRODUCT
 model Product {
-  id                      String                   @id @default(auto()) @map("_id") @db.ObjectId
-  title                   String
-  description             String
-  price                   Float
-  unit                    String?
-  quantity                Int
-  images                  Image[]
-  location                String
-  farmerApplicationStatus FarmerApplicationStatus?
-  farmer                  User                     @relation(fields: [farmerId], references: [id]) // Farmer creates the product
-  farmerId                String                   @db.ObjectId
-  isApproved              Boolean                  @default(false) // For marketplace admin approval
-  orders                  Order[]
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  category                Category?                @relation(fields: [categoryId], references: [id])
-  categoryId              String?                  @db.ObjectId
-  reviews                 ProductReview[]
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  price       Float
+  unit        String?
+  quantity    Int
+  images      Image[]
+  location    String
+  farmer      User            @relation(fields: [farmerId], references: [id]) // Farmer creates the product
+  farmerId    String          @db.ObjectId
+  isApproved  Boolean         @default(false) // For marketplace admin approval
+  orders      Order[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  category    Category?       @relation(fields: [categoryId], references: [id])
+  categoryId  String?         @db.ObjectId
+  reviews     ProductReview[]
 
   @@index([farmerId])
   @@index([categoryId])
@@ -348,8 +348,8 @@ model Image {
   status                 ImageStatus           @default(ACTIVE)
   createdAt              DateTime              @default(now())
   updatedAt              DateTime              @updatedAt
-  farmDetail             FarmDetails?          @relation(fields: [FarmDetailsId], references: [id])
-  FarmDetailsId          String?               @db.ObjectId
+  farmDetails            FarmDetails?          @relation(fields: [farmDetailsId], references: [id])
+  farmDetailsId          String?               @db.ObjectId
   verificationDocumentId String?               @unique @db.ObjectId
   VerificationDocument   VerificationDocument?
 
@@ -364,7 +364,7 @@ model Order {
   id                String         @id @default(auto()) @map("_id") @db.ObjectId
   quantityPurchased Int
   totalPrice        Float
-  status            OrderStatus         @default(IN_PROGRESS)
+  status            OrderStatus    @default(IN_PROGRESS)
   buyer             User           @relation("BuyerOrders", fields: [buyerId], references: [id]) // Buyer places the order
   buyerId           String         @db.ObjectId
   productId         String         @db.ObjectId
@@ -462,13 +462,12 @@ model Notification {
 //   updatedAt       DateTime  @updatedAt
 // }
 
-
 //MARK: ADDRESS
 model Address {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   user         User          @relation(fields: [userId], references: [id])
   userId       String        @unique @db.ObjectId
-  FarmDetailss FarmDetails[]
+  farmDetails  FarmDetails[]
   fullAddress  String?
   street       String?
   region       String?
@@ -502,11 +501,6 @@ model EmailOtp {
 }
 
 // MARK: =====ENUMS=====
-
-
-
-
-
 
 // MARK: DocumentType
 enum DocumentType {
@@ -552,7 +546,6 @@ enum ImageStatus {
   FAILED
   DELETED
 }
-
 
 // MARK: ReviewStatus
 enum ReviewStatus {
