@@ -4,7 +4,7 @@ export const products = [
 		title: "Organic Apples",
 		price: 2.99,
 		unit: "kg",
-		farmerDetails: "Sunny Orchard Farm",
+		farmDetails: "Sunny Orchard Farm",
 		description:
 			"Crisp, delicious organic apples grown without synthetic pesticides or fertilizers. Perfect for snacking, baking, or adding to salads."
 	},
@@ -13,7 +13,7 @@ export const products = [
 		title: "Fresh Tomatoes",
 		price: 3.49,
 		unit: "kg",
-		farmerDetails: "Green Valley Farms",
+		farmDetails: "Green Valley Farms",
 		description:
 			"Juicy, ripe tomatoes picked at peak freshness. Ideal for salads, sandwiches, sauces, and more."
 	},
@@ -22,7 +22,7 @@ export const products = [
 		title: "Organic Carrots",
 		price: 1.99,
 		unit: "kg",
-		farmerDetails: "Harvest Hills Farm",
+		farmDetails: "Harvest Hills Farm",
 		description:
 			"Sweet and crunchy organic carrots grown without synthetic chemicals. Great for snacking, cooking, and juicing."
 	},
@@ -31,7 +31,7 @@ export const products = [
 		title: "Fresh Eggs",
 		price: 4.99,
 		unit: "dozen",
-		farmerDetails: "Cluckingham Palace",
+		farmDetails: "Cluckingham Palace",
 		description:
 			"Farm-fresh eggs from free-range chickens. Rich in flavor and nutrients, perfect for all your egg dishes."
 	}
