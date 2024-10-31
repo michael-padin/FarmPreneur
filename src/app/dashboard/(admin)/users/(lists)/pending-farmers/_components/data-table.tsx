@@ -119,20 +119,20 @@ export function DataTable({ data }: DataTableProps) {
 													id={status}
 													checked={(
 														table
-															.getColumn("isVerified")
+															.getColumn("isEmailVerified")
 															?.getFilterValue() as string[]
 													)?.includes(status)}
 													onCheckedChange={(checked) => {
 														if (checked) {
 															table
-																.getColumn("isVerified")
+																.getColumn("isEmailVerified")
 																?.setFilterValue((old: string[]) => [
 																	...(old || []),
 																	status
 																])
 														} else {
 															table
-																.getColumn("isVerified")
+																.getColumn("isEmailVerified")
 																?.setFilterValue((old: string[]) =>
 																	old?.filter((item) => item !== status)
 																)
@@ -264,7 +264,7 @@ export function DataTable({ data }: DataTableProps) {
 
 								<div className="flex items-center justify-between text-xs">
 									<div className="col-span-2">Email Verification: </div>
-									<VerificationBadge isVerified={row.getValue("isVerified")} />
+									<VerificationBadge isEmailVerified={row.getValue("isEmailVerified")} />
 								</div>
 								{row.getValue("role") === "FARMER" ? (
 									<div className="flex items-center justify-between text-xs">

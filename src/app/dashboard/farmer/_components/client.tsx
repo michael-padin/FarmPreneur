@@ -60,7 +60,7 @@ const FarmerDashboardClient = () => {
 								</CardHeader>
 								<CardContent>
 									<p className="text-lg">
-										{"Here's an overview of your farmerDetails's performance"}.
+										{"Here's an overview of your farmDetails's performance"}.
 									</p>
 								</CardContent>
 							</Card>

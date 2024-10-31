@@ -1,3 +1,4 @@
+import { ImageSchema } from "@/validations/image"
 import { z } from "zod"
 
 export const createProductSchema = z.object({
@@ -17,7 +18,7 @@ export const createProductSchema = z.object({
 	category: z.string().min(1, {
 		message: "Category must be at least 1 character."
 	}),
-	images: z.array(z.string()).optional(),
+	images: z.array(ImageSchema).min(1),
 	location: z.string().min(1, {
 		message: "Location must be at least 1 character."
 	}),

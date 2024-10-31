@@ -93,13 +93,13 @@ export const columns: ColumnDef<
 	},
 
 	{
-		accessorKey: "isVerified",
+		accessorKey: "isEmailVerified",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Verification" />
 		),
 		cell: ({ row }) => {
-			const isVerified = row.getValue("isVerified") as boolean
-			return <VerificationBadge isVerified={isVerified} />
+			const isEmailVerified = row.getValue("isEmailVerified") as boolean
+			return <VerificationBadge isEmailVerified={isEmailVerified} />
 		},
 		filterFn: (row, id, value) => {
 			return value.length === 0

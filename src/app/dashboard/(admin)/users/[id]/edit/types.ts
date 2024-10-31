@@ -1,4 +1,5 @@
-import { FarmerApplicationStatus } from "@prisma/client"
+import { ImageSchema } from "@/validations/image"
+import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { z } from "zod"
 
 const addressSchema = z.object({
@@ -19,15 +20,15 @@ export const updateUserFormSchema = z.object({
 	contactNumber: z
 		.string()
 		.min(10, { message: "Contact number must be at least 10 digits." }),
-	role: z.string(),
-	farmerDetails: z
+	role: z.nativeEnum(ROLE),
+	farmerApplicationStatus: z.nativeEnum(FarmerApplicationStatus).nullable(),
+	farmDetails: z
 		.object({
-			applicationStatus: z.nativeEnum(FarmerApplicationStatus),
 			farmName: z.string(),
 			farmDescription: z.string(),
 			address: addressSchema.nullish(),
 			products: z.array(z.string()),
-			images: z.array(z.string())
+			images: z.array(ImageSchema)
 		})
 		.nullish(),
 	address: addressSchema.nullish()

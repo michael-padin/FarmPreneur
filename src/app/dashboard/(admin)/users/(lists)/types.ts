@@ -24,7 +24,7 @@ export type Address = z.infer<typeof addressSchema>
 export const updateUserSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").nullish(),
 	email: z.string().email("Invalid email address").nullish(),
-	isVerified: z.boolean(),
+	isEmailVerified: z.boolean(),
 	image: z.string().url("Invalid URL").nullish(),
 	role: z.nativeEnum(ROLE),
 	address: addressSchema,

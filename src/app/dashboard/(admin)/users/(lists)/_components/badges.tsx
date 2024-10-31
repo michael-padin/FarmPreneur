@@ -59,10 +59,10 @@ export const RoleBadge = ({
 }
 
 export const VerificationBadge = ({
-	isVerified,
+	isEmailVerified,
 	className
 }: {
-	isVerified: boolean
+	isEmailVerified: boolean
 	className?: string
 }) => {
 	return (
@@ -70,13 +70,13 @@ export const VerificationBadge = ({
 			variant="secondary"
 			className={cn(
 				"flex items-center gap-1 px-2 py-1",
-				isVerified
+				isEmailVerified
 					? "bg-green-100 text-green-800 hover:bg-green-200"
 					: "bg-red-100 text-red-800 hover:bg-red-200",
 				className
 			)}
 		>
-			{isVerified ? (
+			{isEmailVerified ? (
 				<>
 					<CheckCircle className="h-4 w-4" />
 					Verified

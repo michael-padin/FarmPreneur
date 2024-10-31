@@ -43,15 +43,15 @@ const user = {
 	image: "/placeholder.svg?height=100&width=100",
 	role: "TractorER",
 	contactNumber: "+1234567890",
-	isVerified: true,
+	isEmailVerified: true,
 	profilePicture: "/placeholder.svg?height=100&width=100",
 	createdAt: new Date("2022-01-01"),
-	farmerDetails: [
+	farmDetails: [
 		{
 			id: "1",
 			name: "Green Acres Tractor",
 			description:
-				"Organic vegetable farmerDetails specializing in heirloom varieties and sustainable farming practices.",
+				"Organic vegetable farmDetails specializing in heirloom varieties and sustainable farming practices.",
 			location: "Countryside, State",
 			yearsOfExperience: 10,
 			size: 50,
@@ -133,7 +133,7 @@ export default function UserDetailsPage() {
 									<User className="mr-2 h-4 w-4" /> Overview
 								</TabsTrigger>
 								<TabsTrigger
-									value="farmerDetails"
+									value="farmDetails"
 									className="flex items-center justify-center"
 								>
 									<Tractor className="mr-2 h-4 w-4" /> Farm Details
@@ -172,11 +172,11 @@ export default function UserDetailsPage() {
 												<div className="mt-2">
 													<Badge
 														variant={
-															user.isVerified ? "default" : "destructive"
+															user.isEmailVerified ? "default" : "destructive"
 														}
 														className="text-xs"
 													>
-														{user.isVerified ? "Verified" : "Unverified"}
+														{user.isEmailVerified ? "Verified" : "Unverified"}
 													</Badge>
 												</div>
 											</div>
@@ -232,45 +232,45 @@ export default function UserDetailsPage() {
 									</CardContent>
 								</Card>
 							</TabsContent>
-							<TabsContent value="farmerDetails">
+							<TabsContent value="farmDetails">
 								<Card>
 									<CardHeader>
 										<CardTitle>Farm Details</CardTitle>
 										<CardDescription>
-											Information about your farmerDetails
+											Information about your farmDetails
 										</CardDescription>
 									</CardHeader>
 									<CardContent className="space-y-6">
-										{user.farmerDetails.map((farmerDetails) => (
-											<div key={farmerDetails.id} className="space-y-6">
+										{user.farmDetails.map((farmDetails) => (
+											<div key={farmDetails.id} className="space-y-6">
 												<div className="flex flex-col items-start justify-between space-y-2 sm:flex-row sm:items-center sm:space-y-0">
 													<h3 className="text-xl font-semibold">
-														{farmerDetails.name}
+														{farmDetails.name}
 													</h3>
 													<Badge variant="secondary">
-														{farmerDetails.location}
+														{farmDetails.location}
 													</Badge>
 												</div>
 												<p className="text-muted-foreground">
-													{farmerDetails.description}
+													{farmDetails.description}
 												</p>
 												<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 													<div className="flex items-center space-x-2">
 														<Briefcase className="h-4 w-4 text-muted-foreground" />
 														<span>
-															{farmerDetails.yearsOfExperience} years of
+															{farmDetails.yearsOfExperience} years of
 															experience
 														</span>
 													</div>
 													<div className="flex items-center space-x-2">
 														<MapPin className="h-4 w-4 text-muted-foreground" />
-														<span>{farmerDetails.size} acres</span>
+														<span>{farmDetails.size} acres</span>
 													</div>
 												</div>
 												<div>
 													<Label className="mb-2 block">Products</Label>
 													<div className="flex flex-wrap gap-2">
-														{farmerDetails.products.map((product, index) => (
+														{farmDetails.products.map((product, index) => (
 															<Badge key={index} variant="outline">
 																{product}
 															</Badge>
@@ -278,7 +278,7 @@ export default function UserDetailsPage() {
 													</div>
 												</div>
 												<div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-													{farmerDetails.images.map((image, index) => (
+													{farmDetails.images.map((image, index) => (
 														<img
 															key={index}
 															src={image}
@@ -320,7 +320,7 @@ export default function UserDetailsPage() {
 															Uploaded document
 														</p>
 													</div>
-													{user.isVerified ? (
+													{user.isEmailVerified ? (
 														<CheckCircle className="h-5 w-5 text-green-500" />
 													) : (
 														<XCircle className="h-5 w-5 text-red-500" />

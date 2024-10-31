@@ -55,7 +55,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	// 		name: user.name,
 	// 		email: user.email,
 	// 		contactNumber: (user.contactNumber as string) || "+639",
-	// 		isVerified: user.isVerified,
+	// 		isEmailVerified: user.isEmailVerified,
 	// 		image: user.image,
 	// 		role: user.role,
 	// 		address: user.address || {
@@ -76,7 +76,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	// 		name: user.name,
 	// 		email: user.email,
 	// 		contactNumber: (user.contactNumber as string) || "+639",
-	// 		isVerified: user.isVerified,
+	// 		isEmailVerified: user.isEmailVerified,
 	// 		image: user.image,
 	// 		role: user.role,
 	// 		password: "",
@@ -275,7 +275,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	// 						/>
 	// 						<FormField
 	// 							control={form.control}
-	// 							name="isVerified"
+	// 							name="isEmailVerified"
 	// 							render={({ field }) => (
 	// 								<FormItem className="inline-block">
 	// 									<FormLabel>Email Verification</FormLabel>

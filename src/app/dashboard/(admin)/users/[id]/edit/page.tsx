@@ -2,13 +2,13 @@ import { getUserByIdUseCase } from "@/use-cases/users"
 import UserDetailsForm from "./_components/user-details-form"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getFarmerDetailsByUserIdUseCase } from "@/use-cases/farm-details"
+import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 
 const getUser = async (id: string) => {
 	return await getUserByIdUseCase(id)
 }
 const getFarmerDetails = async (id: string) => {
-	return await getFarmerDetailsByUserIdUseCase(id)
+	return await getFarmDetailsByUserIdUseCase(id)
 }
 
 // After
@@ -22,14 +22,14 @@ const EditUserDetailsPage = async (props: { params: Params }) => {
 	}
 
 	const params = await props.params
-	const [user, farmerDetails] = await Promise.all([
+	const [user, farmDetails] = await Promise.all([
 		getUser(params.id),
 		getFarmerDetails(params.id)
 	])
 
 	return (
 		<>
-			<UserDetailsForm user={user} farmerDetails={farmerDetails} />
+			<UserDetailsForm user={user} farmDetails={farmDetails} />
 		</>
 	)
 }

@@ -38,16 +38,16 @@ import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { UpdateUser, updateUserFormSchema } from "../types"
-import { getFarmerDetailsByUserIdUseCase } from "@/use-cases/farm-details"
+import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 
 interface UserDetailsFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
-	farmerDetails: Awaited<ReturnType<typeof getFarmerDetailsByUserIdUseCase>>
+	farmDetails: Awaited<ReturnType<typeof getFarmDetailsByUserIdUseCase>>
 }
 
 export default function UserDetailsForm({
 	user,
-	farmerDetails
+	farmDetails
 }: UserDetailsFormProps) {
 	const [isUpdatePending, startTransition] = useTransition()
 	const form = useForm<UpdateUser>({
@@ -56,21 +56,21 @@ export default function UserDetailsForm({
 			contactNumber: user?.contactNumber || "+639",
 			email: user?.email || "",
 			name: user?.name || "",
-			role: user?.role || "",
-			farmerDetails: {
-				applicationStatus: farmerDetails?.applicationStatus || "PENDING",
-				farmDescription: farmerDetails?.farmDescription || "",
-				images: farmerDetails?.images || [],
+			role: user?.role || "CUSTOMER",
+			farmerApplicationStatus: user?.farmerApplicationStatus || null,
+			farmDetails: {
+				farmDescription: farmDetails?.farmDescription || "",
+				images: farmDetails?.images || [],
 				address: {
-					fullAddress: farmerDetails?.address?.fullAddress || "",
-					street: farmerDetails?.address?.street || "",
-					region: farmerDetails?.address?.region || "",
-					country: farmerDetails?.address?.country || "",
-					postalCode: farmerDetails?.address?.postalCode || "",
-					latitude: farmerDetails?.address?.latitude || 0
+					fullAddress: farmDetails?.address?.fullAddress || "",
+					street: farmDetails?.address?.street || "",
+					region: farmDetails?.address?.region || "",
+					country: farmDetails?.address?.country || "",
+					postalCode: farmDetails?.address?.postalCode || "",
+					latitude: farmDetails?.address?.latitude || 0
 				},
-				farmName: farmerDetails?.farmName || "",
-				products: farmerDetails?.products || []
+				farmName: farmDetails?.farmName || "",
+				products: farmDetails?.products || []
 			},
 			address: {
 				fullAddress: user?.address?.fullAddress || "",
@@ -232,13 +232,13 @@ export default function UserDetailsForm({
 										</h3>
 										<FormField
 											control={form.control}
-											name="farmerDetails.applicationStatus"
+											name="farmerApplicationStatus"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Application Status</FormLabel>
 													<Select
 														onValueChange={field.onChange}
-														defaultValue={field.value}
+														defaultValue={field.value as ROLE}
 													>
 														<FormControl>
 															<SelectTrigger className="w-full">
@@ -267,7 +267,7 @@ export default function UserDetailsForm({
 										/>
 										<FormField
 											control={form.control}
-											name="farmerDetails.farmName"
+											name="farmDetails.farmName"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Name</FormLabel>
@@ -280,13 +280,13 @@ export default function UserDetailsForm({
 										/>
 										<FormField
 											control={form.control}
-											name="farmerDetails.farmDescription"
+											name="farmDetails.farmDescription"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Description</FormLabel>
 													<FormControl>
 														<Textarea
-															placeholder="Describe your farmerDetails..."
+															placeholder="Describe your farmDetails..."
 															{...field}
 														/>
 													</FormControl>
@@ -297,7 +297,7 @@ export default function UserDetailsForm({
 										{/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 											<FormField
 												control={form.control}
-												name="farmerDetails.size"
+												name="farmDetails.size"
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Farm Size (acres)</FormLabel>
@@ -317,7 +317,7 @@ export default function UserDetailsForm({
 										</div> */}
 										<FormField
 											control={form.control}
-											name="farmerDetails.products"
+											name="farmDetails.products"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Farm Products</FormLabel>
