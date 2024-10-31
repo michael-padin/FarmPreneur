@@ -16,7 +16,7 @@ const DailyDiscovery = () => {
 							images={product.images}
 							title={product.title}
 							price={product.price}
-							farmer={product.farmerDetails}
+							farmer={product.farmDetails}
 							unit={product.unit}
 							className="border-none shadow-none"
 						/>
