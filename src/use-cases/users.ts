@@ -13,6 +13,7 @@ import {
 	getUserById,
 	getUserFarmerById,
 	getUsers,
+	getUserWithPasswordByEmail,
 	saveVerificationCode,
 	updateUser,
 	updateUserPasswordByEmail,
@@ -31,6 +32,9 @@ export const getUserByEmailUseCase = async (email: string) => {
 	const user = await getUserByEmail(email)
 	const { password, ...newUser } = user!
 	return newUser
+}
+export const getUserWithPasswordByEmailUseCase = async (email: string) => {
+	return await getUserWithPasswordByEmail(email)
 }
 
 export const getUserFarmerByIdUseCase = async (id: string) => {

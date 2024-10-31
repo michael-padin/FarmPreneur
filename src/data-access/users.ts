@@ -11,9 +11,10 @@ export const getUserById = async (id: string) => {
 		select: {
 			id: true,
 			name: true,
+			farmerApplicationStatus: true,
 			email: true,
 			role: true,
-			isVerified: true,
+			isEmailVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
@@ -39,7 +40,17 @@ export const getUserFarmerById = async (id: string) => {
 			id: true,
 			name: true,
 			contactNumber: true,
-			farmerDetails: true
+			farmDetails: true
+		}
+	})
+}
+export const getUserWithPasswordByEmail = async (email: string) => {
+	return await db.user.findFirst({
+		where: {
+			email: email
+		},
+		include: {
+			farmDetails: true
 		}
 	})
 }
@@ -72,7 +83,7 @@ export const createUserCustomer = async (
 			name: true,
 			email: true,
 			role: true,
-			isVerified: true,
+			isEmailVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true
@@ -126,7 +137,7 @@ export const updateVerifiedUser = async (userId: string) => {
 	return await db.user.update({
 		where: { id: userId },
 		data: {
-			isVerified: true
+			isEmailVerified: true
 		},
 		select: {
 			role: true
@@ -154,7 +165,7 @@ export const getUsers = async () => {
 			email: true,
 			role: true,
 
-			isVerified: true,
+			isEmailVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
@@ -163,10 +174,6 @@ export const getUsers = async () => {
 		},
 		orderBy: {
 			createdAt: "desc"
-		},
-		cacheStrategy: {
-			swr: 60,
-			ttl: 60
 		}
 	})
 }
@@ -179,7 +186,7 @@ export const updateUser = async (data: UpdateUserTypes & { id: string }) => {
 		data: {
 			name: data.name,
 			email: data.email as string,
-			isVerified: data.isVerified,
+			isEmailVerified: data.isEmailVerified,
 			contactNumber: data.contactNumber,
 			image: data.image,
 			role: data.role,
@@ -211,11 +218,11 @@ export const getFarmers = async () => {
 			name: true,
 			email: true,
 			role: true,
-			farmerDetails: true,
+			farmDetails: true,
 			farmerOrders: true,
 
 			products: true,
-			isVerified: true,
+			isEmailVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
@@ -225,10 +232,6 @@ export const getFarmers = async () => {
 		},
 		orderBy: {
 			createdAt: "desc"
-		},
-		cacheStrategy: {
-			swr: 60,
-			ttl: 60
 		}
 	})
 }
@@ -236,20 +239,18 @@ export const getPendingFarmers = async () => {
 	return await db.user.findMany({
 		where: {
 			role: "FARMER",
-			farmerDetails: {
-				applicationStatus: "PENDING"
-			}
+			farmerApplicationStatus: "PENDING"
 		},
 		select: {
 			id: true,
 			name: true,
 			email: true,
 			role: true,
-			farmerDetails: true,
+			farmDetails: true,
 			farmerOrders: true,
 
 			products: true,
-			isVerified: true,
+			isEmailVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
@@ -259,10 +260,6 @@ export const getPendingFarmers = async () => {
 		},
 		orderBy: {
 			createdAt: "desc"
-		},
-		cacheStrategy: {
-			swr: 60,
-			ttl: 60
 		}
 	})
 }
@@ -277,7 +274,7 @@ export const getCustomers = async () => {
 			email: true,
 			role: true,
 			buyerOrders: true,
-			isVerified: true,
+			isEmailVerified: true,
 			createdAt: true,
 			image: true,
 			contactNumber: true,
@@ -287,10 +284,6 @@ export const getCustomers = async () => {
 		},
 		orderBy: {
 			createdAt: "desc"
-		},
-		cacheStrategy: {
-			swr: 60,
-			ttl: 60
 		}
 	})
 }

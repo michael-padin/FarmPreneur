@@ -9,9 +9,19 @@ export const createProduct = async (data: createProductType) => {
 			description: data.description,
 			price: data.price,
 			location: data.location,
-			images: data.images,
 			quantity: data.quantity,
-			categoryId: data.category
+			categoryId: data.category,
+			images: {
+				createMany: {
+					data: data.images.map((image) => ({
+						type: "PRODUCT",
+						url: image.url,
+						filename: image.filename,
+						size: image.size,
+						mimeType: image.mimeType
+					}))
+				}
+			}
 		}
 	})
 }

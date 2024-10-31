@@ -31,7 +31,8 @@ export const createAddress = async (data: Address) => {
 			country: data.country,
 			postalCode: data.postalCode,
 			latitude: data.latitude,
-			longitude: data.longitude
+			longitude: data.longitude,
+			userId: ""
 		}
 	})
 }
