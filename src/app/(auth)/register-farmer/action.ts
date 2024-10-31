@@ -16,12 +16,10 @@ import { getErrorMessage } from "@/lib/handle-error"
 import { signIn } from "@/auth"
 
 export const registerFarmer = async (data: RegisterFarmerType) => {
-	const { password, email } = data
-
 	try {
-		const hashedPassword = await hash(password, 1)
+		const hashedPassword = await hash(data.password, 1)
 
-		const existingUser = await getUserByEmailUseCase(email)
+		const existingUser = await getUserByEmailUseCase(data.email)
 		if (existingUser) return { error: "User already exists", data: null }
 
 		const newFarmer = await createUserFarmerUseCase({
@@ -42,17 +40,17 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 		})
 
 		await signIn("credentials", {
-			email,
-			password,
+			email: data.email,
+			password: data.password,
 			redirect: false
 		})
-		await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
 		return {
-			data: {
-				userId: newFarmer.id
-			}
+			error: null,
+			data: null
 		}
+		// await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
 	} catch (error) {
+		console.log(error)
 		return {
 			error: getErrorMessage(error),
 			data: null

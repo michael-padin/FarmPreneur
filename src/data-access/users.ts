@@ -28,6 +28,9 @@ export const getUserByEmail = async (email: string) => {
 	return await db.user.findUnique({
 		where: {
 			email: email
+		},
+		select: {
+			id: true
 		}
 	})
 }
@@ -48,9 +51,6 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 	return await db.user.findFirst({
 		where: {
 			email: email
-		},
-		include: {
-			farmDetails: true
 		}
 	})
 }

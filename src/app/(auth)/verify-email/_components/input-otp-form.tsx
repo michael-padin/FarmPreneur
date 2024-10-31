@@ -148,7 +148,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 						control={form.control}
 						name="code"
 						render={({ field }) => (
-							<FormItem className="flex flex-col">
+							<FormItem className="mx-auto flex flex-col justify-center">
 								<FormControl>
 									<InputOTP maxLength={6} {...field}>
 										<InputOTPGroup>

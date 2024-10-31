@@ -29,9 +29,7 @@ export const getUserByIdUseCase = async (id: string) => {
 }
 
 export const getUserByEmailUseCase = async (email: string) => {
-	const user = await getUserByEmail(email)
-	const { password, ...newUser } = user!
-	return newUser
+	return await getUserByEmail(email)
 }
 export const getUserWithPasswordByEmailUseCase = async (email: string) => {
 	return await getUserWithPasswordByEmail(email)

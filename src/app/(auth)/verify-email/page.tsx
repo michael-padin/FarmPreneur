@@ -8,8 +8,6 @@ import { redirect } from "next/navigation"
 export default async function verifyEmailPage() {
 	const session = await auth()
 
-	console.log("session at verifyuEmailPage", session)
-
 	if (!session) {
 		redirect("/login")!
 	}

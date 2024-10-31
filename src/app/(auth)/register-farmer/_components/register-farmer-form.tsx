@@ -31,13 +31,13 @@ const RegisterFarmerForm = () => {
 	const form = useForm<RegisterFarmerType>({
 		resolver: zodResolver(RegisterFarmerSchema),
 		defaultValues: {
-			email: "",
-			birthDate: undefined,
-			firstName: "",
-			lastName: "",
-			contactNumber: "+63",
+			email: `padimichael${Math.floor(100 + Math.random() * 9000).toFixed(0)}@gmail.com`,
+			birthDate: new Date(),
+			firstName: "Mokie",
+			lastName: "Mokie",
+			contactNumber: "+639955143588",
 			address: {
-				fullAddress: "",
+				fullAddress: "Napo, Carcar City",
 				street: "",
 				region: "",
 				country: "",
@@ -45,27 +45,19 @@ const RegisterFarmerForm = () => {
 				latitude: -74.006,
 				longitude: 40.7128
 			},
-			password: "",
-			confirmPassword: ""
+			password: "MokieMokie",
+			confirmPassword: "MokieMokie"
 		}
 	})
 
-	const onSubmit = async (data: RegisterFarmerType) => {
-		// toast.success("Registering farmer...", {
-		// 	description: (
-		// 		<>
-		// 			<pre>{JSON.stringify(data, null, 2)}</pre>
-		// 		</>
-		// 	)
-		// })
-		startTransition(() => {
-			registerFarmer(data).then((res) => {
-				if (res.error) {
-					toast.error(res.error)
-				} else {
-					router.push(`/verify-email`)
-				}
-			})
+	const onSubmit = (data: RegisterFarmerType) => {
+		startTransition(async () => {
+			const { error } = await registerFarmer(data)
+			if (error) {
+				toast.error(error)
+				return
+			}
+			router.push("/verify-email")
 		})
 	}
 
