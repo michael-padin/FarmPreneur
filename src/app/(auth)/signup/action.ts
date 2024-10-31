@@ -5,9 +5,9 @@ import {
 	generateExpiration,
 	generateOTP
 } from "@/utils/generateVerificationCode"
-import { getUserByEmail } from "@/services/user"
 import {
 	createUserCustomerUseCase,
+	getUserByEmailUseCase,
 	saveVerificationCodeUseCase
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
@@ -25,7 +25,7 @@ export const register = async (data: RegisterType) => {
 	try {
 		const hashedPassword = await hash(password, 10)
 
-		const existingUser = await getUserByEmail(email)
+		const existingUser = await getUserByEmailUseCase(email)
 		if (existingUser) return { error: "User already exists" }
 
 		const newUser = await createUserCustomerUseCase({

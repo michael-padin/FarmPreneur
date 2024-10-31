@@ -1,8 +1,6 @@
 "use server"
 
-import { getUserByEmail } from "@/services/user"
-
-import { RegisterFarmerSchema, RegisterFarmerType } from "./types"
+import { RegisterFarmerType } from "./types"
 import { hash } from "bcryptjs"
 import {
 	generateExpiration,
@@ -10,6 +8,7 @@ import {
 } from "@/utils/generateVerificationCode"
 import {
 	createUserFarmerUseCase,
+	getUserByEmailUseCase,
 	saveVerificationCodeUseCase
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
@@ -22,7 +21,7 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 	try {
 		const hashedPassword = await hash(password, 1)
 
-		const existingUser = await getUserByEmail(email)
+		const existingUser = await getUserByEmailUseCase(email)
 		if (existingUser) return { error: "User already exists", data: null }
 
 		const newFarmer = await createUserFarmerUseCase({
@@ -32,7 +31,7 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 
 		// Generate OTP and expiration (e.g., 5 minutes)
 		const otp = generateOTP()
-		const otpExpiration = generateExpiration()
+		const otpExpiration = generateExpiration(1)
 
 		console.log("Saving verification code...")
 		await saveVerificationCodeUseCase({
@@ -47,11 +46,7 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 			password,
 			redirect: false
 		})
-
-		/**
-		 * @todo Send email to user for verification
-		 */
-		// await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
+		await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
 		return {
 			data: {
 				userId: newFarmer.id
