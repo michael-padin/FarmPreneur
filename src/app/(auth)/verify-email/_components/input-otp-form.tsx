@@ -99,6 +99,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 	}, [timeLeft])
 
 	function onSubmit(data: VerificationType) {
+		console.info("USER HERE", user)
 		startTransition(() => {
 			verifyCode({
 				...data,

@@ -24,6 +24,10 @@ export const verifyCode = async (
 	if (!parsedData.success) {
 		return { error: "Invalid fields" }
 	}
+	console.log("DATA HERE")
+
+	console.log({ data })
+
 	try {
 		const [otp, user] = await Promise.all([
 			getEmailOtpByEmailUseCase(data.email),
@@ -49,6 +53,8 @@ export const verifyCode = async (
 		}
 		return { error: "Invalid code" }
 	} catch (error) {
+		console.log(error)
+
 		return { error: getErrorMessage(error) }
 	}
 }
