@@ -63,7 +63,7 @@ const RegisterFarmerForm = () => {
 				if (res.error) {
 					toast.error(res.error)
 				} else {
-					router.push(`/verify/${res.data?.userId}`)
+					router.push(`/verify-email`)
 				}
 			})
 		})

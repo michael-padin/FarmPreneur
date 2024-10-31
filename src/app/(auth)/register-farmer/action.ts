@@ -14,12 +14,13 @@ import {
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
 import { getErrorMessage } from "@/lib/handle-error"
+import { signIn } from "@/auth"
 
 export const registerFarmer = async (data: RegisterFarmerType) => {
 	const { password, email } = data
 
 	try {
-		const hashedPassword = await hash(password, 10)
+		const hashedPassword = await hash(password, 1)
 
 		const existingUser = await getUserByEmail(email)
 		if (existingUser) return { error: "User already exists", data: null }
@@ -29,9 +30,6 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 			password: hashedPassword
 		})
 
-		/**
-		 * @todo Send email to user for verification
-		 */
 		// Generate OTP and expiration (e.g., 5 minutes)
 		const otp = generateOTP()
 		const otpExpiration = generateExpiration()
@@ -44,14 +42,22 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 			email: newFarmer.email
 		})
 
-		await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
+		await signIn("credentials", {
+			email,
+			password,
+			redirect: false
+		})
+
+		/**
+		 * @todo Send email to user for verification
+		 */
+		// await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
 		return {
 			data: {
 				userId: newFarmer.id
 			}
 		}
 	} catch (error) {
-		console.log(error)
 		return {
 			error: getErrorMessage(error),
 			data: null
