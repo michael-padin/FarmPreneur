@@ -19,7 +19,7 @@ export const protectedRoutes: string[] = [
  * These routes will redirect login in users to the /overview**
  * @type {string[]}
  */
-export const authRoutes: string[] = ["/login", "/signup", "/verify-email"]
+export const authRoutes: string[] = ["/login", "/signup"]
 
 /**
  *  The prefix for API authentication routes

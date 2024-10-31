@@ -5,10 +5,11 @@ import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
 import { encode as defaultEncode } from "next-auth/jwt"
 
-import { getUserByEmail } from "./services/user"
 import { LoginSchema } from "./types"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { db } from "./lib/db"
+import { getUserWithPasswordByEmailUseCase } from "./use-cases/users"
+import { profile } from "console"
 
 const adapter = PrismaAdapter(db)
 
@@ -17,9 +18,11 @@ const providers: Provider[] = [
 		async authorize(credentials) {
 			const validateFields = LoginSchema.safeParse(credentials)
 
+			if (!validateFields.success) return null
+
 			if (validateFields.success) {
 				const { email, password } = validateFields.data
-				const user = await getUserByEmail(email)
+				const user = await getUserWithPasswordByEmailUseCase(email)
 
 				/**
 				 * if user is not found or if there is user but password is not provided
@@ -30,13 +33,11 @@ const providers: Provider[] = [
 				// compare the actual password and the hash password
 				const passwordMatch = await compare(password, user.password)
 
-				const {
-					password: _,
-					emailVerified,
-					createdAt,
-					updatedAt,
-					...newUser
-				} = user
+				const newUser = {
+					id: user.id,
+					role: user.role,
+					profilePicture: user.profilePicture
+				}
 
 				if (passwordMatch) return newUser
 			}
@@ -55,70 +56,47 @@ export default {
 	pages: {
 		signIn: "/login"
 	},
-	jwt: {
-		encode: async function (params) {
-			if (params.token?.credentials) {
-				const sessionToken = crypto.randomUUID()
+	// jwt: {
+	// 	encode: async function (params) {
+	// 		if (params.token?.credentials) {
+	// 			const sessionToken = crypto.randomUUID()
 
-				if (!params.token.sub) {
-					throw new Error("No user ID found in token")
-				}
+	// 			if (!params.token.sub) {
+	// 				throw new Error("No user ID found in token")
+	// 			}
 
-				const createdSession = await adapter?.createSession?.({
-					sessionToken: sessionToken,
-					userId: params.token.sub,
-					expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-				})
+	// 			const createdSession = await adapter?.createSession?.({
+	// 				sessionToken: sessionToken,
+	// 				userId: params.token.sub,
+	// 				expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+	// 			})
 
-				if (!createdSession) {
-					throw new Error("Failed to create session")
-				}
+	// 			if (!createdSession) {
+	// 				throw new Error("Failed to create session")
+	// 			}
 
-				return sessionToken
-			}
-			return defaultEncode(params)
-		}
-	},
+	// 			return sessionToken
+	// 		}
+	// 		return defaultEncode(params)
+	// 	}
+	// },
 	callbacks: {
-		async jwt({ token, user, account }) {
-			if (account?.provider === "credentials") {
-				token.credentials = true
+		async jwt({ token, account, user }) {
+			if (account && account.type === "credentials") {
+				token.userId = account.providerAccountId
 			}
+
+			token.role = user.role
+			token.profilePicture = user.profilePicture || ""
+
 			return token
 		},
-		async session({ session, user }) {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { password, ...newUser } = session.user
-			// const userResponse = await db.user.findUnique({
-			// 	where: {
-			// 		id: user.id
-			// 	},
-			// 	select: {
-			// 		accounts: {
-			// 			select: {
-			// 				provider: true
-			// 			}
-			// 		}
-			// 	}
-			// })
-
-			// if (userResponse?.accounts[0].provider === "google") {
-			// 	const updatedUser = await adapter?.updateUser?.({
-			// 		id: user.id,
-			// 		isVerified: true
-			// 	})
-			// 	return {
-			// 		...session,
-			// 		user: {
-			// 			...newUser,
-			// 			...updatedUser
-			// 		}
-			// 	}
-			// }
+		async session({ session, token }) {
 			return {
 				...session,
 				user: {
-					...newUser
+					role: token.role,
+					profilePicture: token.profilePicture
 				}
 			}
 		}
