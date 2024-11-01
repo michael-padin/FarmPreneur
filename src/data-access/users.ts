@@ -62,22 +62,9 @@ export const createUserCustomer = async (
 ) => {
 	return await db.user.create({
 		data: {
-			email: data.email as string,
+			email: data.email,
 			password: data.password,
 			name: data.name,
-			contactNumber: data.contactNumber,
-			birthDate: data.birthDate,
-			address: {
-				create: {
-					fullAddress: data.address?.fullAddress,
-					street: data.address?.street,
-					region: data.address?.region,
-					country: data.address?.country,
-					postalCode: data.address?.postalCode,
-					latitude: data.address?.latitude,
-					longitude: data.address?.longitude
-				}
-			},
 			role: "CUSTOMER"
 		},
 		select: {
@@ -142,6 +129,7 @@ export const updateVerifiedUser = async (userId: string) => {
 			isEmailVerified: true
 		},
 		select: {
+			isEmailVerified: true,
 			role: true
 		}
 	})

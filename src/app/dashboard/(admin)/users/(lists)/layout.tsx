@@ -1,10 +1,10 @@
 import { UsersNav } from "./_components/users-nav"
 
-const AdminUsersLayout = async ({
+export default async function Layout({
 	children
 }: {
 	children: React.ReactNode
-}) => {
+}) {
 	return (
 		<div className="px-1 py-5 lg:p-5">
 			<UsersNav />
@@ -12,4 +12,3 @@ const AdminUsersLayout = async ({
 		</div>
 	)
 }
-export default AdminUsersLayout
