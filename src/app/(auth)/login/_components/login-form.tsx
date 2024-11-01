@@ -21,8 +21,11 @@ import { LoginSchema, LoginType } from "../_types"
 import { siginInWithCredentials } from "../action"
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { resendCode } from "../../verify-email/actions"
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
+import { useRouter } from "next/navigation"
 
 const LoginForm = () => {
+	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -37,18 +40,21 @@ const LoginForm = () => {
 			siginInWithCredentials(data).then((res) => {
 				if (res.error) {
 					toast.error(res.error)
+					return
+				}
+				if (!res.data?.isEmailVerified) {
+					resendCode(res.data!.id!).then((res) => {
+						if (res.error) {
+							toast.error(res.error)
+						} else {
+							toast.success("Code Resent ", {
+								description: "A new code has been sent to your email"
+							})
+							router.push("/verify-email")
+						}
+					})
 				} else {
-					if (!res.data?.isEmailVerified) {
-						resendCode(res.data!.id!).then((res) => {
-							if (res.error) {
-								toast.error(res.error)
-							} else {
-								toast.success("Code Resent ", {
-									description: "A new code has been sent to your email"
-								})
-							}
-						})
-					}
+					router.push(DEFAULT_LOGIN_REDIRECT(res.data.role))
 				}
 			})
 		})
