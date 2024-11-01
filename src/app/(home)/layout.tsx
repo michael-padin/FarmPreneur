@@ -1,11 +1,10 @@
-import React from "react"
 import { BottomNav } from "./_components"
 
-interface HomeLayoutProps {
+export default async function Layout({
+	children
+}: {
 	children: React.ReactNode
-}
-
-const HomeLayout = ({ children }: HomeLayoutProps) => {
+}) {
 	return (
 		<div>
 			{children}
@@ -15,5 +14,3 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
 		</div>
 	)
 }
-
-export default HomeLayout
