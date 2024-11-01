@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DashboardSidebar from "../_components/sidebar"
+import { adminNavItems } from "@/constants/navItems"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -30,52 +31,6 @@ export const metadata: Metadata = {
 interface DashboardLayoutProps {
 	children: React.ReactNode
 }
-
-const navItems = [
-	{
-		name: "Dashboard",
-		url: "/dashboard",
-		icon: Home
-	},
-
-	{
-		name: "Users",
-		url: "/dashboard/users",
-		icon: Users,
-		items: [
-			{
-				name: "Customers",
-				url: "/dashboard/users/customers"
-				// icon: UserCheck
-			},
-			{
-				name: "Farmers",
-				url: "/dashboard/users/farmers"
-				// icon: Sprout
-			},
-			{
-				name: "Pending Farmers",
-				url: "/dashboard/users/waiting-for-approval"
-				// icon: Hourglass
-			}
-		]
-	},
-	{
-		name: "Notifications",
-		url: "/dashboard/notifications",
-		icon: BellRing
-	},
-	{
-		name: "Products",
-		url: "/dashboard/products",
-		icon: Package
-	},
-	{
-		url: "/dashboard/analytics",
-		icon: LineChart,
-		name: "Analytics"
-	}
-]
 
 export default async function Layout({ children }: DashboardLayoutProps) {
 	const session = await auth()
@@ -88,7 +43,7 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 			<SidebarProvider>
 				<DashboardSidebar
 					name={session.user.name || "ADMIN"}
-					items={navItems}
+					role={session.user.role!}
 				/>
 				<SidebarInset className="overflow-hidden">
 					<header className="w-full border-b px-4">
