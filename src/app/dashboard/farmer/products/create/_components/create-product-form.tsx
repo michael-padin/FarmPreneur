@@ -22,9 +22,11 @@ import { createProductAction } from "../actions"
 import { toast } from "sonner"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import AddressLocationPicker, {
+	AddressInput
+} from "@/components/fg/fg-map-box-location-picker"
 
 export default function CreateProductForm() {
-	const session = useSession()
 	const [isPending, startTransition] = useTransition()
 	const router = useRouter()
 
@@ -33,12 +35,19 @@ export default function CreateProductForm() {
 	const form = useForm<createProductType>({
 		resolver: zodResolver(createProductSchema),
 		defaultValues: {
-			farmerId: session.data?.user.id,
 			title: "",
 			description: "",
 			category: "",
 			price: 0,
-			location: "",
+			location: {
+				country: "",
+				fullAddress: "",
+				latitude: 0,
+				longitude: 0,
+				postalCode: "",
+				region: "",
+				street: ""
+			},
 			images: [],
 			quantity: 0
 		}
@@ -154,7 +163,17 @@ export default function CreateProductForm() {
 									<FormItem>
 										<FormLabel>Pickup Location</FormLabel>
 										<FormControl>
-											<Input placeholder="Conalum, Argao, Cebu" {...field} />
+											<AddressLocationPicker
+												onAddressSelect={(address) => {
+													field.onChange(address)
+												}}
+												defaultCenter={{
+													lng: field.value.longitude,
+													lat: field.value.latitude
+												}}
+												defaultValue={field.value.fullAddress}
+												showMap
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>

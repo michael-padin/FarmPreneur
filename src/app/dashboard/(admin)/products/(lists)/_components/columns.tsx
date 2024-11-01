@@ -1,0 +1,172 @@
+"use client"
+import { DataTableColumnHeader } from "@/app/dashboard/_components/data-table-column-header"
+import { Button } from "@/components/ui/button"
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuShortcut,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal } from "lucide-react"
+import Link from "next/link"
+import { formatDate } from "@/lib/utils"
+import { useState } from "react"
+import { toast } from "sonner"
+import { AddressDetailsDrawerDialog } from "./address-details"
+import { getAllProductsUseCase } from "@/use-cases/products"
+import { DeleteProductDialog } from "./delete-products-dialog"
+import { FarmerApprovalBadge } from "../../../users/(lists)/_components/badges"
+
+export const columns: ColumnDef<
+	Awaited<ReturnType<typeof getAllProductsUseCase>>[0]
+>[] = [
+	{
+		accessorKey: "title",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="title" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const name = row.original.title
+			return <span className="text-nowrap">{name}</span>
+		}
+	},
+	{
+		accessorKey: "description",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Description" />
+		),
+		enableSorting: true
+	},
+	{
+		accessorKey: "farmer.name",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Farmer" />
+		),
+		enableSorting: true
+	},
+	{
+		accessorKey: "price",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Price" />
+		),
+		enableSorting: true
+	},
+	{
+		accessorKey: "Address",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Pick Up Location" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const product = row.original
+			return (
+				<AddressDetailsDrawerDialog
+					address={product.pickupLocation!}
+					title={product.title}
+				/>
+			)
+		},
+		size: 40
+	},
+	{
+		accessorKey: "listingStatus",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Listing Status" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const product = row.original
+			return <FarmerApprovalBadge status={product.listingStatus} />
+		},
+		size: 40
+	},
+	{
+		accessorKey: "createdAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Created At" />
+		),
+		cell: ({ cell }) => formatDate(cell.getValue() as Date)
+	},
+	{
+		accessorKey: "updatedAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Updated At" />
+		),
+		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
+	},
+	{
+		accessorKey: "orders._count",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Orders" />
+		),
+		enableSorting: true
+	},
+	{
+		accessorKey: "reviews._count",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Reviews" />
+		),
+		enableSorting: true
+	},
+
+	{
+		id: "actions",
+		cell: function Cell({ row }) {
+			const [showProductDialog, setShowProductDialog] = useState(false)
+			const product = row.original
+
+			return (
+				<>
+					{/* <DeleteProductDialog
+						open={showProductDialog}
+						onOpenChange={setShowProductDialog}
+						ids={[product]}
+						showTrigger={false}
+						deleteAction={()}
+						name="product"
+						onSuccess={() => row.toggleSelected(false)}
+					/> */}
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="ghost" className="h-8 w-8 p-0">
+								<span className="sr-only">Open menu</span>
+								<MoreHorizontal className="h-4 w-4" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DropdownMenuItem
+								onSelect={async () => {
+									await navigator.clipboard.writeText(row.original.id)
+									toast.success("user id copied!")
+								}}
+							>
+								Copy ID
+							</DropdownMenuItem>
+							<DropdownMenuItem asChild>
+								<Link href={`/dashboard/products/${product.id}`}>Details</Link>
+							</DropdownMenuItem>
+							<DropdownMenuItem asChild>
+								<Link href={`/dashboard/products/${product.id}/edit`}>
+									Edit
+								</Link>
+							</DropdownMenuItem>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem onSelect={() => setShowProductDialog(true)}>
+								Delete
+								<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</>
+			)
+		},
+		size: 20,
+		enableHiding: false
+	}
+]
