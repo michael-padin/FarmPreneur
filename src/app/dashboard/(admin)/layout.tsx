@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator"
 import { ModeToggle } from "@/components/mode-toggle"
 import {
 	Bell,
+	BellRing,
 	Home,
 	LineChart,
 	MessageCircle,
@@ -58,6 +59,11 @@ const navItems = [
 				// icon: Hourglass
 			}
 		]
+	},
+	{
+		name: "Notifications",
+		url: "/dashboard/notifications",
+		icon: BellRing
 	},
 	{
 		name: "Products",
