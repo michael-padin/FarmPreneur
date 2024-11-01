@@ -12,21 +12,14 @@ import {
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
 import { getErrorMessage } from "@/lib/handle-error"
+import { signIn } from "@/auth"
 
 export const register = async (data: RegisterType) => {
-	const parsedData = RegisterSchema.safeParse(data)
-
-	if (!parsedData.success) {
-		return { error: "Invalid fields" }
-	}
-
-	const { email, password } = parsedData.data
-
 	try {
-		const hashedPassword = await hash(password, 10)
+		const hashedPassword = await hash(data.password, 10)
 
-		const existingUser = await getUserByEmailUseCase(email)
-		if (existingUser) return { error: "User already exists" }
+		const existingUser = await getUserByEmailUseCase(data.email)
+		if (existingUser) return { error: "User already exists", data: null }
 
 		const newUser = await createUserCustomerUseCase({
 			...data,
@@ -34,10 +27,8 @@ export const register = async (data: RegisterType) => {
 			password: hashedPassword
 		})
 
-		if (!newUser) return { error: "Error creating user" }
-
 		const otp = generateOTP()
-		const otpExpiration = generateExpiration(5)
+		const otpExpiration = generateExpiration(1)
 
 		console.log("Saving verification code...")
 		await saveVerificationCodeUseCase({
@@ -47,15 +38,21 @@ export const register = async (data: RegisterType) => {
 			email: newUser.email
 		})
 
-		await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
+		console.log(`Sending otp to ${data.email}`)
+		// await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
+
+		// await signIn("credentials", {
+		// 	email: data.email,
+		// 	password: data.password,
+		// 	redirect: false
+		// })
+
 		return {
 			error: null,
-			data: {
-				userId: newUser.id
-			}
+			data: null
 		}
 	} catch (error) {
 		console.log(error)
-		return { error: getErrorMessage(error) }
+		return { error: getErrorMessage(error), data: null }
 	}
 }

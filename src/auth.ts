@@ -42,7 +42,7 @@ declare module "next-auth/jwt" {
 	}
 }
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
+export const { auth, handlers, signIn, signOut, unstable_update } = NextAuth({
 	adapter: PrismaAdapter(db) as Adapter,
 	session: { strategy: "jwt" },
 	...authConfig

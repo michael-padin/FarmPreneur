@@ -111,10 +111,6 @@ export default auth(async function middleware(req) {
 			// Redirect to login if not authenticated
 			return NextResponse.redirect(new URL("/login", nextUrl))
 		}
-		if (hasUser && !user?.isEmailVerified) {
-			// Redirect to email verification if not verified
-			return NextResponse.redirect(new URL("/verify-email", nextUrl))
-		}
 
 		// New check for farmer role and store information
 		// if (hasUser && user?.role === "FARMER") {

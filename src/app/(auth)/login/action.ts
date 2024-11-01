@@ -21,7 +21,8 @@ export const siginInWithCredentials = async (
 	try {
 		await signIn("credentials", {
 			email,
-			password
+			password,
+			redirect: false
 		})
 
 		const user = await getUserByEmailUseCase(email)

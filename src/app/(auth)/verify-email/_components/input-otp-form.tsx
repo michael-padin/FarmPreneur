@@ -100,20 +100,21 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 
 	function onSubmit(data: VerificationType) {
 		console.info("USER HERE", user)
-		startTransition(() => {
-			verifyCode({
+		startTransition(async () => {
+			const res = await verifyCode({
 				...data,
 				userId: user.id!,
 				email: user.email!
-			}).then((res) => {
-				if (res.error) {
-					toast.error(res.error)
-				} else {
-					if (res.data) {
-						redirectUser(res.data.role)
-					}
-				}
 			})
+			if (res.error) {
+				toast.error(res.error)
+				return
+			} else {
+				if (res.data) {
+					toast.error(res.success)
+					redirectUser(res.data.role)
+				}
+			}
 		})
 	}
 

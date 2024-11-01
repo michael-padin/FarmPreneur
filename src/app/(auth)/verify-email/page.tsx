@@ -4,6 +4,7 @@ import { InputOTPForm } from "./_components/input-otp-form"
 import { auth } from "@/auth"
 import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
 import { redirect } from "next/navigation"
+import { getUserByIdUseCase } from "@/use-cases/users"
 
 export default async function verifyEmailPage() {
 	const session = await auth()
@@ -12,6 +13,8 @@ export default async function verifyEmailPage() {
 		redirect("/login")!
 	}
 
+	const user = await getUserByIdUseCase(session!.user.id!)
+	if (user?.isEmailVerified) redirect("/login")
 	const otp = await getEmailOtpExpirationByUserIdUseCase(session!.user.id!)
 
 	return (

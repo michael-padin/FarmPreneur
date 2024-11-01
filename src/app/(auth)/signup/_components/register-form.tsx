@@ -19,8 +19,10 @@ import { Input } from "@/components/ui/input"
 
 import { RegisterSchema, RegisterType } from "../_types"
 import { register } from "../action"
+import { useRouter } from "next/navigation"
 
 const RegisterForm = () => {
+	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<RegisterType>({
 		resolver: zodResolver(RegisterSchema),
@@ -34,12 +36,16 @@ const RegisterForm = () => {
 	})
 
 	const onSubmit = async (data: RegisterType) => {
-		startTransition(() => {
-			register(data).then((res) => {
-				if (res.error) {
-					toast.error(res.error)
-				}
-			})
+		startTransition(async () => {
+			const { error } = await register(data)
+
+			if (error) {
+				toast.error(error)
+				return
+			}
+
+			toast.success("Customer created successfully!")
+			router.push("/verify-email")
 		})
 	}
 
