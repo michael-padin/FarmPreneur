@@ -15,6 +15,7 @@ declare module "next-auth" {
 		user: {
 			role: ROLE
 			profilePicture: string | null
+			isEmailVerified: boolean
 		} & DefaultSession["user"]
 
 		/** The user's postal address. */
@@ -29,6 +30,7 @@ declare module "next-auth" {
 	interface User {
 		role: ROLE
 		profilePicture: string | null
+		isEmailVerified: boolean
 	}
 }
 declare module "next-auth/jwt" {
@@ -36,6 +38,7 @@ declare module "next-auth/jwt" {
 		role: ROLE
 		profilePicture: string
 		userId: string
+		isEmailVerified: boolean
 	}
 }
 

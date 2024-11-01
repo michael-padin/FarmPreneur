@@ -30,7 +30,9 @@ export const getUserByEmail = async (email: string) => {
 			email: email
 		},
 		select: {
-			id: true
+			id: true,
+			role: true,
+			isEmailVerified: true
 		}
 	})
 }
