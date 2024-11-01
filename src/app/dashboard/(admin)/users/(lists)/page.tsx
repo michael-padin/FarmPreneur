@@ -12,12 +12,15 @@ import {
 } from "@/components/ui/card"
 import { Suspense } from "react"
 import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
+import { Metadata } from "next"
 
 const getUsers = async () => {
 	return await getUsersUseCase()
 }
 
-export async function generateMetadata() {}
+export const metadata: Metadata = {
+	title: "All Users"
+}
 
 const UsersPage = async () => {
 	const session = await auth()

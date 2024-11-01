@@ -12,6 +12,11 @@ import { getFarmersUseCase } from "@/use-cases/users"
 import { Suspense } from "react"
 import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
 import { DataTable } from "./_components/data-table"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+	title: "Farmers"
+}
 
 const getFarmers = async () => {
 	return await getFarmersUseCase()

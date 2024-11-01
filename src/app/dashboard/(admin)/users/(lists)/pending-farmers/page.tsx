@@ -11,6 +11,11 @@ import {
 import { Suspense } from "react"
 import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
 import { DataTable } from "./_components/data-table"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+	title: "Pending Farmers"
+}
 
 const getPendingFarmers = async () => {
 	return await getPendingFarmersUseCase()
