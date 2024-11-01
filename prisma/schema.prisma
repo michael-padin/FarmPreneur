@@ -181,6 +181,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  engineType = "library"
 }
 
 // MARK: ACCOUNT
@@ -270,7 +271,7 @@ model User {
   verficationDocument     VerificationDocument?
   farmDetails             FarmDetails?
   address                 Address?
-  birthDate               DateTime
+  birthDate               DateTime?
   emailOtp                EmailOtp[]
   reviews                 ProductReview[]
 
