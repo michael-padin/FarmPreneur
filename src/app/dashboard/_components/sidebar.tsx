@@ -1,6 +1,6 @@
 "use client"
 
-import { Command, Home, LineChart, Package, Users } from "lucide-react"
+import { LayoutDashboardIcon, LucideProps } from "lucide-react"
 
 import {
 	Sidebar,
@@ -21,63 +21,25 @@ import {
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 
+type NavItems = {
+	url: string
+	name: string
+	icon?: React.ForwardRefExoticComponent<
+		Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+	>
+	items?: NavItems[]
+}
+
 interface DashboardSidebarProps {
-	role: "FARMER" | "ADMIN"
-	farmName: string
+	name: string
+	items: NavItems[]
 }
 
 export default function DashboardSidebar({
-	role,
-	farmName
+	items,
+	name
 }: DashboardSidebarProps) {
 	const pathName = usePathname()
-
-	const data = {
-		versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-		navMain: [
-			{
-				name: "Dashboard",
-				url: "/dashboard",
-				icon: Home
-			},
-			...(role === "ADMIN"
-				? [
-						{
-							name: "Users",
-							url: "/dashboard/users",
-							icon: Users,
-							items: [
-								{
-									name: "Customers",
-									url: "/dashboard/users/customers"
-									// icon: UserCheck
-								},
-								{
-									name: "Farmers",
-									url: "/dashboard/users/farmers"
-									// icon: Sprout
-								},
-								{
-									name: "Pending Farmers",
-									url: "/dashboard/users/waiting-for-approval"
-									// icon: Hourglass
-								}
-							]
-						}
-					]
-				: []),
-			{
-				name: "Products",
-				url: "/dashboard/products",
-				icon: Package
-			},
-			{
-				url: "/dashboard/analytics",
-				icon: LineChart,
-				name: "Analytics"
-			}
-		]
-	}
 
 	return (
 		<Sidebar collapsible="icon">
@@ -91,13 +53,11 @@ export default function DashboardSidebar({
 						>
 							<a href="#">
 								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-									<Command className="size-4" />
+									<LayoutDashboardIcon className="size-4" />
 								</div>
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-semibold">FarmPreneur</span>
-									<span className="truncate text-xs">
-										{farmName || "Admin"}
-									</span>
+									<span className="truncate text-xs">{name}</span>
 								</div>
 							</a>
 						</SidebarMenuButton>
@@ -110,7 +70,7 @@ export default function DashboardSidebar({
 					<SidebarGroupLabel>Main</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{data.navMain.map((item) => (
+							{items.map((item) => (
 								<SidebarMenuItem key={item.name}>
 									<SidebarMenuButton
 										asChild
@@ -118,7 +78,7 @@ export default function DashboardSidebar({
 										isActive={pathName.split("/")[2] === item.url.split("/")[2]}
 									>
 										<Link href={item.url}>
-											<item.icon />
+											{item.icon && <item.icon />}
 											<span>{item.name}</span>
 											<SidebarMenuBadge>24</SidebarMenuBadge>
 										</Link>
