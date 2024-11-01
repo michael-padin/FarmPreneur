@@ -19,9 +19,7 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
-import { products } from "@/data"
-
-import Navbar from "../_components/navbar"
+import { Navbar } from "@/app/_components"
 
 const ProductsPage = () => {
 	return (
