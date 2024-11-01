@@ -280,24 +280,24 @@ model User {
 
 // MARK: PRODUCT
 model Product {
-  id            String               @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  description   String
-  price         Float
-  unit          String?
-  listingStatus ProductListingStatus @default(PENDING)
-  quantity      Int
-  images        Image[]
-  location      Address              @relation(fields: [addressId], references: [id])
-  farmer        User                 @relation(fields: [farmerId], references: [id]) // Farmer creates the product
-  farmerId      String               @db.ObjectId
-  orders        Order[]
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  category      Category?            @relation(fields: [categoryId], references: [id])
-  categoryId    String?              @db.ObjectId
-  reviews       ProductReview[]
-  addressId     String               @db.ObjectId
+  id             String               @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  description    String
+  price          Float
+  unit           String?
+  listingStatus  ProductListingStatus @default(PENDING)
+  quantity       Int
+  images         Image[]
+  pickupLocation Address?             @relation(fields: [addressId], references: [id])
+  farmer         User                 @relation(fields: [farmerId], references: [id]) // Farmer creates the product
+  farmerId       String               @db.ObjectId
+  orders         Order[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  category       Category?            @relation(fields: [categoryId], references: [id])
+  categoryId     String?              @db.ObjectId
+  reviews        ProductReview[]
+  addressId      String               @db.ObjectId
 
   @@index([farmerId])
   @@index([categoryId])
@@ -371,15 +371,15 @@ model Order {
   shippingAddress   String
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-  product           Product        @relation(fields: [productId], references: [id]) // Order refers to the product
+  product           Product        @relation(fields: [productId], references: [id], onDelete: Cascade) // Order refers to the product
   farmerId          String         @db.ObjectId
   farmer            User           @relation("FarmerOrders", fields: [farmerId], references: [id]) // Order refers to the product
   address           Address?       @relation(fields: [addressId], references: [id])
   addressId         String?        @db.ObjectId
   review            ProductReview?
 
-  @@unique([buyerId, productId, farmerId])
-  @@index([status])
+  @@unique([buyerId, farmerId])
+  @@index([status, productId])
   @@index([createdAt])
   @@index([buyerId])
   @@index([farmerId])
