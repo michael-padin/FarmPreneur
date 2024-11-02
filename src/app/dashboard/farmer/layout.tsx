@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Bell, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { getUserFarmerByIdUseCase } from "@/use-cases/users"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -24,22 +25,28 @@ interface DashboardLayoutProps {
 	children: React.ReactNode
 }
 
+const getUserFarmer = async (id: string) => {
+	return await getUserFarmerByIdUseCase(id)
+}
+
 export default async function Layout({ children }: DashboardLayoutProps) {
 	const session = await auth()
 
-	if (!session) redirect("/login")
+	if (!session?.user) redirect("/login")
 
 	if (session.user.role !== "FARMER") {
 		return <p>Sorry, You are not authorized to view this page</p>
 	}
 
+	const farmer = await getUserFarmer(session.user.id!)
+
+	if (farmer?.farmerApplicationStatus === "PENDING") redirect("/admin-approval")
+	if (!farmer?.farmDetails) redirect("/setup-farm-information")
+
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			<SidebarProvider>
-				<DashboardSidebar
-					name={session.user.name || "FARMER"}
-					role={"FARMER"}
-				/>
+				<DashboardSidebar user={session.user} />
 				<SidebarInset className="overflow-hidden">
 					<header className="w-full border-b px-4">
 						<div className="flex w-full items-center">
