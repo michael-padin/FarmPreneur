@@ -9,3 +9,5 @@ export const addressSchema = z.object({
 	latitude: z.number(),
 	longitude: z.number()
 })
+
+export type AddressSchema = z.infer<typeof addressSchema>
