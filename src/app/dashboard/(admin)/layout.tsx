@@ -34,6 +34,7 @@ interface DashboardLayoutProps {
 
 export default async function Layout({ children }: DashboardLayoutProps) {
 	const session = await auth()
+	const user = session?.user
 
 	if (session?.user.role !== "ADMIN") {
 		return <p>Sorry, You are not authorized to view this page</p>
@@ -41,10 +42,7 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			<SidebarProvider>
-				<DashboardSidebar
-					name={session.user.name || "ADMIN"}
-					role={session.user.role!}
-				/>
+				<DashboardSidebar user={user} />
 				<SidebarInset className="overflow-hidden">
 					<header className="w-full border-b px-4">
 						<div className="flex w-full items-center">
