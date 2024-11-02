@@ -38,11 +38,11 @@ export default async function Page() {
 						className="my-4 flex items-center justify-center gap-2 text-3xl font-black text-[#404145] lg:hidden"
 						href="/"
 					>
-						<h1 className="text-primary">FarmPreneur</h1>
+						<h1 className="font-black text-primary lg:hidden">FarmPreneur</h1>
 						<img
 							src="/logo.svg"
 							alt=""
-							className="sr-only h-[100px] w-[100px] lg:not-sr-only"
+							className="sr-only h-[100px] w-[100px]"
 						/>
 					</Link>
 					<ScrollArea className="h-full">
@@ -50,7 +50,7 @@ export default async function Page() {
 							<CardHeader>
 								<CardTitle>Setup Farm Information</CardTitle>
 								<CardDescription>
-									Enter your farm information to complete your farmer account
+									Setup your farm information and start selling now!
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
@@ -75,7 +75,7 @@ export default async function Page() {
 				</div>
 				<div className="relative z-20 flex items-center text-lg font-medium">
 					<h1 className="text-2xl font-black text-primary">
-						<Link href="/">Farm2go</Link>
+						<Link href="/">FarmPreneur</Link>
 					</h1>
 				</div>
 			</div>

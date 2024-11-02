@@ -45,8 +45,8 @@ const RegisterFarmerForm = () => {
 				latitude: -74.006,
 				longitude: 40.7128
 			},
-			password: "MokieMokie",
-			confirmPassword: "MokieMokie"
+			password: "password",
+			confirmPassword: "password"
 		}
 	})
 

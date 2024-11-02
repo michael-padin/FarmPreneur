@@ -39,6 +39,8 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 			email: newFarmer.email
 		})
 
+		// await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
+
 		await signIn("credentials", {
 			email: data.email,
 			password: data.password,
@@ -48,7 +50,6 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 			error: null,
 			data: null
 		}
-		// await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
 	} catch (error) {
 		console.log(error)
 		return {
