@@ -6,6 +6,7 @@ import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import { Providers } from "./providers"
+import LoadTimeTracker from "@/components/LoadTime"
 
 const inter = Poppins({
 	subsets: ["latin"],
@@ -27,6 +28,7 @@ export default async function RootLayout({
 			<body className={inter.className}>
 				<Providers>{children}</Providers>
 				<Toaster />
+				<LoadTimeTracker />
 			</body>
 		</html>
 	)
