@@ -19,7 +19,10 @@ export const getUserById = async (id: string) => {
 			image: true,
 			contactNumber: true,
 			address: true,
-			updatedAt: true
+			updatedAt: true,
+			birthDate: true,
+			profilePicture: true,
+			verificationDocument: true
 		}
 	})
 }

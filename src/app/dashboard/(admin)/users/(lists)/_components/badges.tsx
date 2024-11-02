@@ -1,5 +1,5 @@
 "use client"
-import { Badge } from "@/components/ui/badge"
+import { Badge, BadgeProps } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import {
@@ -12,10 +12,12 @@ import {
 
 export const RoleBadge = ({
 	role,
-	className
+	className,
+	props
 }: {
 	role: ROLE
 	className?: string
+	props?: BadgeProps
 }) => {
 	const getRoleStyles = (role: ROLE) => {
 		switch (role) {
@@ -51,6 +53,7 @@ export const RoleBadge = ({
 				getRoleStyles(role),
 				className
 			)}
+			{...props}
 		>
 			{getRoleIcon(role)}
 			{role}

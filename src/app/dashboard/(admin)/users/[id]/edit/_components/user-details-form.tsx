@@ -37,8 +37,15 @@ import {
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { getUserByIdUseCase } from "@/use-cases/users"
-import { UpdateUser, updateUserFormSchema } from "../types"
+import { UpdateUserSchema, updateUserSchema } from "../types"
 import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
+import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { DateTimePicker } from "@/components/ui/date-time-picker"
+import { DateTimeInput } from "@/components/ui/date-time-input"
+import { FGSelect } from "@/components/fg/fg-select"
+import { documentLabels } from "@/types/verificationDocument"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { toast } from "sonner"
 
 interface UserDetailsFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
@@ -50,14 +57,17 @@ export default function UserDetailsForm({
 	farmDetails
 }: UserDetailsFormProps) {
 	const [isUpdatePending, startTransition] = useTransition()
-	const form = useForm<UpdateUser>({
-		resolver: zodResolver(updateUserFormSchema),
+	const form = useForm<UpdateUserSchema>({
+		resolver: zodResolver(updateUserSchema),
 		defaultValues: {
 			contactNumber: user?.contactNumber || "+639",
 			email: user?.email || "",
 			name: user?.name || "",
 			role: user?.role || "CUSTOMER",
 			farmerApplicationStatus: user?.farmerApplicationStatus || null,
+			birthDate: user?.birthDate || null,
+			profilePicture: user?.profilePicture || null,
+			verificationDocument: user?.verificationDocument || null,
 			farmDetails: {
 				farmDescription: farmDetails?.farmDescription || "",
 				images: farmDetails?.images || [],
@@ -86,7 +96,8 @@ export default function UserDetailsForm({
 
 	const userRole = form.watch("role")
 
-	const onSubmit = (data: UpdateUser) => {
+	const onSubmit = (data: UpdateUserSchema) => {
+		toast.success("Success", { description: <pre>{JSON.stringify(data)}</pre> })
 		startTransition(() => {})
 	}
 
@@ -94,7 +105,7 @@ export default function UserDetailsForm({
 		<div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
 			<Card className="mx-auto w-full max-w-4xl">
 				<CardHeader>
-					<CardTitle className="">User Profile</CardTitle>
+					<CardTitle className="">User Details</CardTitle>
 					<CardDescription>
 						View and update your profile information
 					</CardDescription>
@@ -102,24 +113,97 @@ export default function UserDetailsForm({
 				<CardContent>
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-							{/* <div className="mb-8 flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+							<div className="mb-8 flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
 								<Avatar className="h-24 w-24">
 									<AvatarImage
-										src="/placeholder.svg?height=96&width=96"
+										src={form.watch("profilePicture.url")}
 										alt="User Avatar"
 									/>
-									<AvatarFallback>JD</AvatarFallback>
+									<AvatarFallback>
+										{form.watch("name").charAt(0)}
+									</AvatarFallback>
 								</Avatar>
-								<div className="text-center sm:text-left">
+								<div className="space-y-2 text-center sm:text-left">
 									<h2 className="text-2xl font-bold">{form.watch("name")}</h2>
 									<p className="text-muted-foreground">{form.watch("email")}</p>
-									<Badge variant="secondary" className="mt-2">
-										Verified
-									</Badge>
+									<RoleBadge
+										role={form.watch("role")}
+										className="mx-auto w-max lg:mx-0"
+									/>
 								</div>
-							</div> */}
+							</div>
 
-							{/* <Separator className="my-8" /> */}
+							<FormField
+								control={form.control}
+								name="role"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Role</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger className="w-full">
+													<SelectValue placeholder="Select a role">
+														{field.value && (
+															<RoleBadge role={field.value as ROLE} />
+														)}
+													</SelectValue>
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{Object.values(ROLE).map((role) => (
+													<SelectItem key={role} value={role}>
+														<div className="flex w-full items-center justify-between">
+															<RoleBadge role={role} />
+														</div>
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							{userRole === "FARMER" && (
+								<FormField
+									control={form.control}
+									name="farmerApplicationStatus"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Farmer Application Status</FormLabel>
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value as ROLE}
+											>
+												<FormControl>
+													<SelectTrigger className="w-full">
+														<SelectValue placeholder="Select Status">
+															{field.value && (
+																<FarmerApprovalBadge status={field.value} />
+															)}
+														</SelectValue>
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{Object.values(FarmerApplicationStatus).map(
+														(status) => (
+															<SelectItem key={status} value={status}>
+																<div className="flex w-full items-center justify-between">
+																	<FarmerApprovalBadge status={status} />
+																</div>
+															</SelectItem>
+														)
+													)}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							)}
 
 							<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 								<div className="space-y-6">
@@ -131,6 +215,45 @@ export default function UserDetailsForm({
 												<FormLabel>Name</FormLabel>
 												<FormControl>
 													<Input placeholder="John Doe" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="profilePicture"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Profile Picture</FormLabel>
+												<FormControl>
+													<FileUpload {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="birthDate"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Birth Date</FormLabel>
+												<FormControl>
+													<DateTimePicker
+														value={field.value!}
+														onChange={field.onChange}
+														hideTime
+														renderTrigger={({ open, value, setOpen }) => (
+															<DateTimeInput
+																value={value}
+																onChange={(x) => !open && field.onChange(x)}
+																format="MM/dd/yyyy"
+																disabled={open}
+																onCalendarClick={() => setOpen(!open)}
+															/>
+														)}
+													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -162,60 +285,77 @@ export default function UserDetailsForm({
 											</FormItem>
 										)}
 									/>
-									<FormField
-										control={form.control}
-										name="role"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Role</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className="w-full">
-															<SelectValue placeholder="Select a role">
-																{field.value && (
-																	<RoleBadge role={field.value as ROLE} />
-																)}
-															</SelectValue>
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														{Object.values(ROLE).map((role) => (
-															<SelectItem key={role} value={role}>
-																<div className="flex w-full items-center justify-between">
-																	<RoleBadge role={role} />
-																</div>
-															</SelectItem>
-														))}
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
 								</div>
+								<Card>
+									<CardHeader>
+										<CardTitle>Address</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<FormField
+											control={form.control}
+											name="address"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel></FormLabel>
+													<FormControl>
+														<AddressInput
+															defaultCenter={{
+																lat: field?.value?.latitude || 40.7128,
+																lng: field?.value?.longitude || -74.006
+															}}
+															mapClassName="aspect-square "
+															onAddressSelect={(address) => {
+																form.setValue("address", address, {
+																	shouldValidate: true
+																})
+															}}
+															defaultValue={field?.value?.fullAddress || ""}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</CardContent>
+								</Card>
+							</div>
+							<Separator className="my-8" />
+							<div className="space-y-6">
+								<h3 className="text-2xl font-semibold leading-none tracking-tight">
+									Verification Document
+								</h3>
 								<FormField
 									control={form.control}
-									name="address"
+									name="verificationDocument.type"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>address</FormLabel>
+											<FormLabel>Document Type</FormLabel>
 											<FormControl>
-												<AddressInput
-													defaultCenter={{
-														lat: user?.address?.latitude || 40.7128,
-														lng: user?.address?.longitude || -74.006
-													}}
-													mapClassName="aspect-square "
-													onAddressSelect={(address) => {
-														form.setValue("address", address, {
-															shouldValidate: true
-														})
-													}}
-													defaultValue={user?.address?.fullAddress || ""}
+												<FGSelect
+													{...field}
+													placeholder="Driver's License"
+													listOptions={Object.entries(documentLabels).map(
+														(doc, index) => {
+															return {
+																label: doc[1],
+																value: doc[0]
+															}
+														}
+													)}
 												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="verificationDocument.image"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Verification Document</FormLabel>
+											<FormControl>
+												<FileUpload {...field} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -230,41 +370,7 @@ export default function UserDetailsForm({
 										<h3 className="text-2xl font-semibold leading-none tracking-tight">
 											Farm Details
 										</h3>
-										<FormField
-											control={form.control}
-											name="farmerApplicationStatus"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Application Status</FormLabel>
-													<Select
-														onValueChange={field.onChange}
-														defaultValue={field.value as ROLE}
-													>
-														<FormControl>
-															<SelectTrigger className="w-full">
-																<SelectValue placeholder="Select Status">
-																	{field.value && (
-																		<FarmerApprovalBadge status={field.value} />
-																	)}
-																</SelectValue>
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															{Object.values(FarmerApplicationStatus).map(
-																(status) => (
-																	<SelectItem key={status} value={status}>
-																		<div className="flex w-full items-center justify-between">
-																			<FarmerApprovalBadge status={status} />
-																		</div>
-																	</SelectItem>
-																)
-															)}
-														</SelectContent>
-													</Select>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
+
 										<FormField
 											control={form.control}
 											name="farmDetails.farmName"
@@ -289,6 +395,19 @@ export default function UserDetailsForm({
 															placeholder="Describe your farmDetails..."
 															{...field}
 														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="farmDetails.images"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Farm Images</FormLabel>
+													<FormControl>
+														<FileUpload multiple {...field} maxFiles={10} />
 													</FormControl>
 													<FormMessage />
 												</FormItem>

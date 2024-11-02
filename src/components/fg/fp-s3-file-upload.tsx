@@ -39,7 +39,7 @@ export function FileUpload({
 	onChange,
 	accept,
 	multiple = false,
-	maxFiles,
+	maxFiles = 1,
 	maxSize
 }: FlexibleFileUploadProps) {
 	const { toast } = useToast()

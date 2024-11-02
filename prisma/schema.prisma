@@ -260,7 +260,7 @@ model User {
   contactNumber           String?
   isEmailVerified         Boolean                  @default(false)
   Authenticators          Authenticator[]
-  profilePicture          String?
+  profilePicture          Image?                   @relation("ProfilePicture")
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   farmerApplicationStatus FarmerApplicationStatus?
@@ -268,7 +268,7 @@ model User {
   buyerOrders             Order[]                  @relation("BuyerOrders")
   farmerOrders            Order[]                  @relation("FarmerOrders")
   notifications           Notification[]
-  verficationDocument     VerificationDocument?
+  verificationDocument    VerificationDocument?
   farmDetails             FarmDetails?
   address                 Address?
   birthDate               DateTime?
@@ -349,6 +349,8 @@ model Image {
   status                 ImageStatus           @default(ACTIVE)
   createdAt              DateTime              @default(now())
   updatedAt              DateTime              @updatedAt
+  user                   User?                 @relation("ProfilePicture", fields: [userId], references: [id])
+  userId                 String?               @unique @db.ObjectId
   farmDetails            FarmDetails?          @relation(fields: [farmDetailsId], references: [id])
   farmDetailsId          String?               @db.ObjectId
   verificationDocumentId String?               @unique @db.ObjectId
