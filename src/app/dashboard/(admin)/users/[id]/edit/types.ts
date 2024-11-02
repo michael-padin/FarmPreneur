@@ -1,4 +1,4 @@
-import { ImageSchema } from "@/validations/image"
+import { imageSchema } from "@/validations/image"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { z } from "zod"
 
@@ -28,7 +28,7 @@ export const updateUserFormSchema = z.object({
 			farmDescription: z.string(),
 			address: addressSchema.nullish(),
 			products: z.array(z.string()),
-			images: z.array(ImageSchema)
+			images: z.array(imageSchema)
 		})
 		.nullish(),
 	address: addressSchema.nullish()
