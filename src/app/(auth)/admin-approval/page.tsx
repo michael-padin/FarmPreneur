@@ -8,16 +8,17 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { getUserFarmerByIdUseCase } from "@/use-cases/users"
 import { CheckCircle, Clock, Loader2, Mail } from "lucide-react"
 import { redirect } from "next/navigation"
 
 export default async function AdminApprovalPage() {
 	const session = await auth()
 
-	if (!session) redirect("/login")
-	const { user } = session
+	const farmer = await getUserFarmerByIdUseCase(session!.user.id!)
 
-	if (user.isApproved) redirect("/dashboard")
+	if (farmer?.farmerApplicationStatus === "APPROVED")
+		redirect("/setup-farm-information")
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-primary/20 to-background p-4">
