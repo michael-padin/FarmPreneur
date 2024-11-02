@@ -45,7 +45,9 @@ export const getUserFarmerById = async (id: string) => {
 			id: true,
 			name: true,
 			contactNumber: true,
-			farmDetails: true
+			farmDetails: true,
+			farmerApplicationStatus: true,
+			isEmailVerified: true
 		}
 	})
 }
@@ -98,6 +100,7 @@ export const createUserFarmer = async (data: RegisterFarmerType) => {
 					longitude: data.address?.longitude
 				}
 			},
+			farmerApplicationStatus: "PENDING",
 			role: "FARMER"
 		}
 	})
@@ -193,6 +196,8 @@ export const deleteUserById = async (id: string) => {
 	})
 }
 export const deleteUsersById = async (ids: string[]) => {
+	console.log(ids)
+
 	return await db.$transaction([
 		db.user.deleteMany({ where: { id: { in: ids } } })
 	])

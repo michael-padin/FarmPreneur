@@ -1,3 +1,4 @@
+import { SetupFarmInformationSchema } from "@/app/(auth)/setup-farm-information/types"
 import { SetupFarmInfoType } from "@/app/dashboard/farmer/setup-farm-info/validations"
 import { db } from "@/lib/db"
 import { create } from "domain"
@@ -48,14 +49,18 @@ export const getFarmDetailsByUserId = async (userId: string) => {
 	})
 }
 
-export const createFarmDetailsByUserId = async (
-	data: SetupFarmInfoType & { userId: string }
+export const createFarmDetailsByFarmerId = async (
+	data: SetupFarmInformationSchema & { farmerId: string }
 ) => {
 	return await db.farmDetails.create({
 		data: {
 			farmName: data.farmName,
 			farmDescription: data.farmDescription,
-			farmerId: data.userId
+			products: data.products,
+			farmerId: data.farmerId
+		},
+		select: {
+			id: true
 		}
 	})
 }

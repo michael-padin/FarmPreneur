@@ -1,7 +1,6 @@
-import { setupFarmInfo } from "@/app/dashboard/farmer/setup-farm-info/actions"
-import { SetupFarmInfoType } from "@/app/dashboard/farmer/setup-farm-info/validations"
+import { SetupFarmInformationSchema } from "@/app/(auth)/setup-farm-information/types"
 import {
-	createFarmDetailsByUserId,
+	createFarmDetailsByFarmerId,
 	getFarmDetailsById,
 	getFarmDetailsByUserId
 } from "@/data-access/farm-details"
@@ -13,8 +12,8 @@ export const getFarmDetailsByUserIdUseCase = async (userId: string) => {
 	return await getFarmDetailsByUserId(userId)
 }
 
-export const createFarmDetailsByUserIdUseCase = async (
-	data: SetupFarmInfoType & { userId: string }
+export const createFarmDetailsByFarmerIdUseCase = async (
+	data: SetupFarmInformationSchema & { farmerId: string }
 ) => {
-	return createFarmDetailsByUserId({ ...data })
+	return createFarmDetailsByFarmerId(data)
 }

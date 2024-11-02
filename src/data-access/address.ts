@@ -1,5 +1,6 @@
 import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
+import { AddressSchema } from "@/validations/address"
 
 // create crud for address here please
 export const getAddress = async (id: string) => {
@@ -61,4 +62,10 @@ export const deleteAddress = async (id: string) => {
 			id: id
 		}
 	})
+}
+
+export const createFarmDetailsAddress = async (
+	data: AddressSchema & { farmDetailsId: string }
+) => {
+	return await db.address.create({ data })
 }
