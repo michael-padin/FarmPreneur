@@ -340,8 +340,11 @@ function FileItem({ file, onRemove, onClick }: FileItemProps) {
 	const isImage = file.mimeType.startsWith("image/")
 
 	return (
-		<div className="group relative cursor-pointer overflow-hidden rounded-lg border bg-background">
-			<div className="relative aspect-square w-full" onClick={onClick}>
+		<div className="group relative aspect-square h-28 cursor-pointer overflow-hidden rounded-lg border bg-background">
+			<div
+				className="relative aspect-square w-full"
+				onClick={() => isImage && onClick()}
+			>
 				{isImage ? (
 					<Image
 						src={file.url}
@@ -350,14 +353,8 @@ function FileItem({ file, onRemove, onClick }: FileItemProps) {
 						objectFit="cover"
 					/>
 				) : (
-					<FileIcon className="h-16 w-16 text-muted-foreground" />
+					<FileIcon className="h-full w-full text-muted-foreground" />
 				)}
-			</div>
-			<div className="relative p-2">
-				<p className="truncate text-xs font-medium">{file.filename}</p>
-				<p className="text-xs text-muted-foreground">
-					{(file.size / 1024 / 1024).toFixed(2)} MB
-				</p>
 			</div>
 			<Button
 				variant="destructive"
