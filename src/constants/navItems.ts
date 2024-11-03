@@ -11,16 +11,16 @@ import {
 } from "lucide-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
-export type NavItem = {
+export type SidebarItem = {
 	name: string
 	url: string
 	icon?: ForwardRefExoticComponent<
 		Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
 	>
-	items?: NavItem[]
+	items?: SidebarItem[]
 }
 
-export const farmerNavItems: NavItem[] = [
+export const farmerNavItems: SidebarItem[] = [
 	{
 		name: "Dashboard",
 		url: "/dashboard",
@@ -54,7 +54,7 @@ export const farmerNavItems: NavItem[] = [
 	}
 ]
 
-export const adminNavItems: NavItem[] = [
+export const adminNavItems: SidebarItem[] = [
 	{
 		name: "Dashboard",
 		url: "/dashboard",
@@ -103,5 +103,16 @@ export const adminNavItems: NavItem[] = [
 		url: "/dashboard/analytics",
 		icon: LineChart,
 		name: "Analytics"
+	}
+]
+
+export const testSidebarItems = [
+	{
+		name: "Session",
+		url: "#",
+		items: [
+			{ name: "Client Page", url: "/tests/auth/session/client" },
+			{ name: "Server Page", url: "/tests/auth/session/server" }
+		]
 	}
 ]
