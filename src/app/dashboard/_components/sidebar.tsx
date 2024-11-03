@@ -20,7 +20,13 @@ import {
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { adminNavItems, farmerNavItems } from "@/constants/navItems"
-import { BadgeCheck, Bell, ChevronsUpDown, Command, LogOut } from "lucide-react"
+import {
+	BadgeCheck,
+	Bell,
+	ChevronsUpDown,
+	Command,
+	TestTubeDiagonal
+} from "lucide-react"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -177,6 +183,14 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 											Notifications
 										</Link>
 									</DropdownMenuItem>
+									{user?.role === "ADMIN" && (
+										<DropdownMenuItem asChild>
+											<Link href={`/tests`}>
+												<TestTubeDiagonal />
+												Test Dashboard
+											</Link>
+										</DropdownMenuItem>
+									)}
 								</DropdownMenuGroup>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem asChild>

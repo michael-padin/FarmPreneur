@@ -412,7 +412,7 @@ model VerificationDocument {
   @@index([type])
 }
 
-// MARK: FARM
+// MARK: FARM DETAILS
 model FarmDetails {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   farmName        String?

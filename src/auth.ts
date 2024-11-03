@@ -1,10 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import NextAuth, { DefaultSession } from "next-auth"
+import NextAuth, { DefaultSession, Session } from "next-auth"
 import { Adapter } from "next-auth/adapters"
 
 import authConfig from "./auth.config"
 import { db } from "./lib/db"
-import { FarmDetails, FarmerApplicationStatus, ROLE } from "@prisma/client"
+import { ROLE } from "@prisma/client"
 import { DefaultJWT } from "next-auth/jwt"
 
 declare module "next-auth" {
@@ -13,9 +13,11 @@ declare module "next-auth" {
 	 */
 	interface Session {
 		user: {
+			id: string
 			role: ROLE
 			profilePicture: string | null
 			isEmailVerified: boolean
+			emailVerified: Date | null
 		} & DefaultSession["user"]
 
 		/** The user's postal address. */
@@ -31,14 +33,12 @@ declare module "next-auth" {
 		role: ROLE
 		profilePicture: string | null
 		isEmailVerified: boolean
+		emailVerified: Date | null
 	}
 }
 declare module "next-auth/jwt" {
-	interface JWT {
-		role: ROLE
-		profilePicture: string
-		userId: string
-		isEmailVerified: boolean
+	interface JWT extends DefaultJWT {
+		user: Session["user"]
 	}
 }
 

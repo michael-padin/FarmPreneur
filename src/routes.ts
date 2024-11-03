@@ -7,11 +7,17 @@
 import { ROLE } from "@prisma/client"
 
 export const protectedRoutes: string[] = [
-	"/notifications",
+	"/likes",
 	"/cart",
+	"/me",
+	"/notifications",
+	"/orders",
+	"/messages",
 	"/profile",
+	"/checkout",
 	"/settings",
-	"/dashboard"
+	"/dashboard",
+	"/dashboard/farmer"
 ]
 
 /**

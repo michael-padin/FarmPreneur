@@ -58,6 +58,9 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 	return await db.user.findFirst({
 		where: {
 			email: email
+		},
+		include: {
+			profilePicture: true
 		}
 	})
 }

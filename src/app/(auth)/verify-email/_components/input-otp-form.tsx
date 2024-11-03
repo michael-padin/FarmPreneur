@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/input-otp"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { resendCode, verifyCode } from "../actions"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -27,13 +27,15 @@ import { Session } from "next-auth"
 import { isOtpExpired } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
 import { ROLE } from "@prisma/client"
+import { useSession } from "next-auth/react"
+import { getUserByIdUseCase } from "@/use-cases/users"
 
 interface InputOTPFormProps {
-	user: Session["user"]
+	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
 	otp?: Awaited<ReturnType<typeof getEmailOtpExpirationByUserIdUseCase>>
 }
 export function InputOTPForm({ user, otp }: InputOTPFormProps) {
-	const router = useRouter()
+	const { data: userSession, update } = useSession()
 	const [canResend, setCanResend] = useState(false)
 	const [timeLeft, setTimeLeft] = useState(300) // 5 minutes in seconds
 
@@ -46,28 +48,66 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 		}
 	})
 
-	const redirectUser = (role: ROLE) => {
-		switch (role) {
-			case ROLE.CUSTOMER:
-				router.push("/dashboard")
-				break
-			case ROLE.FARMER:
-				router.push("/dashboard/farmer")
-				break
-			case ROLE.ADMIN:
-				router.push("/dashboard")
-				break
-			default:
-				router.push("/")
-				break
-		}
-	}
-
 	const formatTime = (seconds: number) => {
 		const minutes = Math.floor(seconds / 60)
 		const remainingSeconds = seconds % 60
 		return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
 	}
+
+	const handleResend = useCallback(() => {
+		// Here you would typically call your API to resend the OTP
+		startResending(() => {
+			resendCode(user?.id || "").then((res) => {
+				if (res.error) {
+					toast.error(res.error)
+				} else {
+					toast.success("Code Resent ", {
+						description: "A new code has been sent to your email"
+					})
+					const expirationTime = new Date(res.data!.expiresAt).getTime()
+					const currentTime = new Date().getTime()
+					const remainingTime = Math.max(
+						0,
+						Math.floor((expirationTime - currentTime) / 1000)
+					)
+					setTimeLeft(remainingTime)
+					setCanResend(false)
+				}
+			})
+		})
+	}, [user?.id])
+
+	function onSubmit(data: VerificationType) {
+		startTransition(async () => {
+			const res = await verifyCode({
+				...data,
+				userId: user?.id || "",
+				email: user?.email || ""
+			})
+			if (res.error) {
+				toast.error(res.error)
+				return
+			}
+
+			// update client section
+			update({
+				...userSession?.user,
+				isEmailVerified: res.data?.isEmailVerified || true
+			})
+
+			setTimeLeft(0)
+			toast.success("Email Verified")
+		})
+	}
+
+	console.log("userSession :>> ", userSession)
+	useEffect(() => {
+		console.log("user?.isEmailVerified :>> ", user?.isEmailVerified)
+		console.log("otp :>> ", otp)
+		if (!user?.isEmailVerified && !otp) {
+			handleResend()
+		}
+	}, [])
 
 	useEffect(() => {
 		if (otp) {
@@ -87,7 +127,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 			setCanResend(true)
 			setTimeLeft(0)
 		}
-	}, [otp])
+	}, [])
 
 	useEffect(() => {
 		if (timeLeft > 0) {
@@ -97,49 +137,6 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 			setCanResend(true)
 		}
 	}, [timeLeft])
-
-	function onSubmit(data: VerificationType) {
-		console.info("USER HERE", user)
-		startTransition(async () => {
-			const res = await verifyCode({
-				...data,
-				userId: user.id!,
-				email: user.email!
-			})
-			if (res.error) {
-				toast.error(res.error)
-				return
-			} else {
-				if (res.data) {
-					toast.error(res.success)
-					redirectUser(res.data.role)
-				}
-			}
-		})
-	}
-
-	const handleResend = useCallback(() => {
-		// Here you would typically call your API to resend the OTP
-		startResending(() => {
-			resendCode(user.id!).then((res) => {
-				if (res.error) {
-					toast.error(res.error)
-				} else {
-					toast.success("Code Resent ", {
-						description: "A new code has been sent to your email"
-					})
-					const expirationTime = new Date(res.data!.expiresAt).getTime()
-					const currentTime = new Date().getTime()
-					const remainingTime = Math.max(
-						0,
-						Math.floor((expirationTime - currentTime) / 1000)
-					)
-					setTimeLeft(remainingTime)
-					setCanResend(false)
-				}
-			})
-		})
-	}, [user.id])
 
 	return (
 		<Form {...form}>

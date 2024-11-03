@@ -1,5 +1,5 @@
 import { compare } from "bcryptjs"
-import type { NextAuthConfig, Session } from "next-auth"
+import type { NextAuthConfig, Session, User } from "next-auth"
 import { type Provider } from "next-auth/providers"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
@@ -24,11 +24,12 @@ const providers: Provider[] = [
 					const newUser = {
 						id: user.id,
 						role: user.role,
-						profilePicture: user.profilePicture,
+						profilePicture: user.profilePicture?.url || "",
 						name: user.name,
 						email: user.email,
-						picture: user.profilePicture,
-						isEmailVerified: user.isEmailVerified
+						picture: user.profilePicture?.url,
+						isEmailVerified: user.isEmailVerified,
+						emailVerified: user.emailVerified
 					}
 					console.log("NEW USER FROM authorize", newUser)
 
@@ -52,34 +53,39 @@ export default {
 	},
 
 	callbacks: {
-		async jwt({ token, account, user }) {
-			if (account && account.type === "credentials") {
-				token.userId = account.providerAccountId
+		async jwt({ token, account, user, trigger, session }) {
+			if (user) {
+				token.user = { ...user, id: user.id || "" }
+			}
+			if (trigger === "update" && session) {
+				token = { ...token, user: session }
 			}
 
-			if (user) {
-				token.role = user.role
-				token.profilePicture = user.profilePicture || ""
-				token.isEmailVerified = user.isEmailVerified
-			}
+			// console.log("token :>> ", token)
 
 			return token
 		},
 		async session({ session, token }) {
-			console.log("CURRENT SESSION", session)
-			console.log("CURRENT TOKEN", token)
-			const newSession = {
+			// console.log("session.user :>> ", session.user)
+
+			session = {
 				...session,
 				user: {
 					...session.user,
-					id: token.userId,
-					role: token.role,
-					profilePicture: token.profilePicture,
-					isEmailVerified: token.isEmailVerified
-				} as Session["user"]
+					...token.user,
+					id: token.user.id || "",
+					email: token.user.email || "",
+					emailVerified: token.user.emailVerified,
+					isEmailVerified: token.user.isEmailVerified,
+					profilePicture: token.user.profilePicture,
+					role: token.user.role,
+					image: token.user.image,
+					name: token.user.name
+				}
 			}
-			console.log("NEW SESSION", newSession)
-			return newSession
+
+			// console.log("token.user :>> ", token.user)
+			return session
 		}
 	},
 	secret: process.env.AUTH_SECRET

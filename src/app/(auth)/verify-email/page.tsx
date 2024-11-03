@@ -4,18 +4,33 @@ import { InputOTPForm } from "./_components/input-otp-form"
 import { auth } from "@/auth"
 import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
 import { redirect } from "next/navigation"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
 import { getUserByIdUseCase } from "@/use-cases/users"
 
 export default async function verifyEmailPage() {
 	const session = await auth()
 
-	if (!session) {
+	if (!session) redirect("/login")
+
+	if (!session.user) {
 		redirect("/login")!
 	}
 
-	const user = await getUserByIdUseCase(session!.user.id!)
-	if (user?.isEmailVerified) redirect("/login")
-	const otp = await getEmailOtpExpirationByUserIdUseCase(session!.user.id!)
+	if (session.user.isEmailVerified) {
+		if (session.user.role === "ADMIN") redirect("/dashboard")
+		if (session.user.role === "CUSTOMER") redirect("/")
+		if (session.user.role === "FARMER") redirect("/dashboard/farmer")
+	}
+	const user = await getUserByIdUseCase(session.user.id)
+	const otp = await getEmailOtpExpirationByUserIdUseCase(session.user.id)
+
+	// if (user?.isEmailVerified) redirect("/dashboard/farmer")
 
 	return (
 		<div className="h-screen w-full lg:grid lg:grid-cols-2 lg:overflow-hidden xl:min-h-screen">
@@ -32,17 +47,19 @@ export default async function verifyEmailPage() {
 							className="sr-only h-[100px] w-[100px] lg:not-sr-only"
 						/>
 					</Link>
-					<div className="space-y-2">
-						<h1 className="text-center text-3xl font-bold">
-							Verify Your Email
-						</h1>
-						<p className="text-balance text-center text-muted-foreground">
-							Please enter the 6-digit code sent to your email address.
-						</p>
-					</div>
 
 					<div className="grid gap-6">
-						<InputOTPForm user={session!.user} otp={otp} />
+						<Card>
+							<CardHeader>
+								<CardTitle>Verify Your Email</CardTitle>
+								<CardDescription>
+									Please enter the 6-digit code sent to your email address.
+								</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<InputOTPForm user={user} otp={otp} />
+							</CardContent>
+						</Card>
 					</div>
 
 					<p className="px-8 text-center text-sm text-muted-foreground">
