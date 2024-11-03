@@ -41,11 +41,11 @@ export const register = async (data: RegisterType) => {
 		console.log(`Sending otp to ${data.email}`)
 		// await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
 
-		// await signIn("credentials", {
-		// 	email: data.email,
-		// 	password: data.password,
-		// 	redirect: false
-		// })
+		await signIn("credentials", {
+			email: data.email,
+			password: data.password,
+			redirect: false
+		})
 
 		return {
 			error: null,

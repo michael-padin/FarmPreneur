@@ -16,7 +16,6 @@ import {
 } from "@/use-cases/email-otp"
 import { getErrorMessage } from "@/lib/handle-error"
 import { isOtpExpired } from "@/lib/utils"
-import { revalidatePath, revalidateTag } from "next/cache"
 
 export const verifyCode = async (
 	data: VerificationType & { userId: string; email: string }

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/input-otp"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
-import { redirect, useRouter } from "next/navigation"
+import { redirect } from "next/navigation"
 import { resendCode, verifyCode } from "../actions"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -26,16 +26,13 @@ import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
 import { Session } from "next-auth"
 import { isOtpExpired } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
-import { ROLE } from "@prisma/client"
 import { useSession } from "next-auth/react"
-import { getUserByIdUseCase } from "@/use-cases/users"
-
 interface InputOTPFormProps {
-	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
+	user: Session["user"]
 	otp?: Awaited<ReturnType<typeof getEmailOtpExpirationByUserIdUseCase>>
 }
 export function InputOTPForm({ user, otp }: InputOTPFormProps) {
-	const { data: userSession, update } = useSession()
+	const { update } = useSession()
 	const [canResend, setCanResend] = useState(false)
 	const [timeLeft, setTimeLeft] = useState(300) // 5 minutes in seconds
 
@@ -89,21 +86,25 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 				return
 			}
 
-			// update client section
-			update({
-				...userSession?.user,
+			await update({
+				...user,
 				isEmailVerified: res.data?.isEmailVerified || true
 			})
 
 			setTimeLeft(0)
 			toast.success("Email Verified")
+
+			if (user.role === "ADMIN") {
+				redirect("/dashboard")
+			} else if (user.role === "FARMER") {
+				redirect("/admin-approval")
+			} else {
+				redirect("/")
+			}
 		})
 	}
 
-	console.log("userSession :>> ", userSession)
 	useEffect(() => {
-		console.log("user?.isEmailVerified :>> ", user?.isEmailVerified)
-		console.log("otp :>> ", otp)
 		if (!user?.isEmailVerified && !otp) {
 			handleResend()
 		}

@@ -16,6 +16,8 @@ import { getUserByIdUseCase } from "@/use-cases/users"
 export default async function verifyEmailPage() {
 	const session = await auth()
 
+	console.log("session :>> ", session)
+
 	if (!session) redirect("/login")
 
 	if (!session.user) {
@@ -29,8 +31,6 @@ export default async function verifyEmailPage() {
 	}
 	const user = await getUserByIdUseCase(session.user.id)
 	const otp = await getEmailOtpExpirationByUserIdUseCase(session.user.id)
-
-	// if (user?.isEmailVerified) redirect("/dashboard/farmer")
 
 	return (
 		<div className="h-screen w-full lg:grid lg:grid-cols-2 lg:overflow-hidden xl:min-h-screen">
@@ -57,7 +57,7 @@ export default async function verifyEmailPage() {
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<InputOTPForm user={user} otp={otp} />
+								<InputOTPForm user={session.user} otp={otp} />
 							</CardContent>
 						</Card>
 					</div>
