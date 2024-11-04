@@ -20,11 +20,12 @@ export const registerFarmerSchema = z
 					message: "Invalid date"
 				}
 			),
-		address: addressSchema.refine((data) => data.fullAddress !== "", {
+		address: addressSchema.refine((data) => !data, {
 			message: "Required"
 		}),
 		contactNumber: z
 			.string()
+			.min(5, "Required")
 			.refine(isValidPhoneNumber, { message: "Invalid phone number" }),
 		documentVerification: verificationDocumentSchema,
 		password: z.string().min(8, "Password must be at least 8 characters long"),
