@@ -1,13 +1,9 @@
 import { createProductType } from "@/app/dashboard/farmer/products/create/types"
-import {
-	createProduct,
-	deleteProductsById,
-	getAllProducts
-} from "@/data-access/products"
+import { deleteProductsById, getAllProducts } from "@/data-access/products"
 
 export const createProductUseCase = async (data: createProductType) => {
 	try {
-		await createProduct(data)
+		// await createProduct(data)
 	} catch (error) {
 		throw error
 	}

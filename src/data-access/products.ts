@@ -1,28 +1,29 @@
 import { createProductType } from "@/app/dashboard/farmer/products/create/types"
 import { db } from "@/lib/db"
 
-export const createProduct = async (data: createProductType) => {
-	await db.product.create({
-		data: {
-			title: data.title,
-			description: data.description,
-			price: data.price,
-			quantity: data.quantity,
-			categoryId: data.category,
-			images: {
-				createMany: {
-					data: data.images.map((image) => ({
-						type: "PRODUCT",
-						url: image.url,
-						filename: image.filename,
-						size: image.size,
-						mimeType: image.mimeType
-					}))
-				}
-			}
-		}
-	})
-}
+// export const createProduct = async (data: createProductType) => {
+// 	await db.product.create({
+// 		data: {
+
+// 			title: data.title,
+// 			description: data.description,
+// 			price: data.price,
+// 			quantity: data.quantity,
+// 			categoryId: data.category,
+// 			images: {
+// 				createMany: {
+// 					data: data.images.map((image) => ({
+// 						type: "PRODUCT",
+// 						url: image.url,
+// 						filename: image.filename,
+// 						size: image.size,
+// 						mimeType: image.mimeType
+// 					}))
+// 				}
+// 			}
+// 		}
+// 	})
+// }
 
 export const getAllProducts = async () => {
 	return await db.product.findMany({
