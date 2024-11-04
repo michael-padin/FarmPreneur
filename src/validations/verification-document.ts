@@ -4,5 +4,5 @@ import { imageSchema } from "./image"
 
 export const verificationDocumentSchema = z.object({
 	type: z.nativeEnum(DocumentType),
-	image: imageSchema.nullable()
+	image: imageSchema
 })
