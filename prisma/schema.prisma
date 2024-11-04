@@ -508,22 +508,12 @@ model EmailOtp {
 
 // MARK: DocumentType
 enum DocumentType {
-  PHILIPPINE_NATIONAL_ID
-  DRIVER_LICENSE // Driver's License (LTO)
-  BUSINESS_PERMIT // DTI Business Permit (for businesses)
-  PASSPORT // Philippine Passport
-  SSS_ID // Social Security System ID
-  TIN_ID // Tax Identification Number (TIN)
-  UMID // Unified Multi-Purpose ID
-  PRC_ID // Professional Regulation Commission ID (for licensed professionals)
-  POSTAL_ID // Postal ID
-  VOTER_ID // Voter's ID (COMELEC)
-  SENIOR_CITIZEN_ID // Senior Citizen ID (for elderly verification)
-  OFW_ID // Overseas Filipino Worker ID
-  MAYORS_PERMIT // Mayor's Permit (local business requirement)
-  BIR_CERTIFICATE // Bureau of Internal Revenue Certificate (for tax purposes)
-  BARANGAY_CLEARANCE // Barangay Clearance (for address verification)
-  CEDULA // Community Tax Certificate (Cedula, often used as supplementary ID)
+  TIN_ID
+  NATIONAL_ID
+  DRIVER_LICENSE
+  VOTER_ID
+  POSTAL_ID
+  PASSPORT
 }
 
 // MARK: FarmerApplicationStatus
