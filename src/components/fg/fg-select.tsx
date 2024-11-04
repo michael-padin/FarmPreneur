@@ -7,26 +7,30 @@ import {
 	SelectValue
 } from "@/components/ui/select"
 
-interface FGSelectProps {
+interface FGSelectProps extends React.ComponentPropsWithoutRef<typeof Select> {
 	listOptions: {
 		label: string
 		value: string
 		metadata?: string
 		description?: string
 	}[]
-	onChange: (value: string) => void
 	value?: string
+	onChange: (value: string) => void
 	placeholder: string
-	disabled?: boolean
-	showTooltip?: boolean
 }
 
-export const FGSelect = ({ onChange, value, listOptions }: FGSelectProps) => {
+export const FGSelect = ({
+	onChange,
+	value,
+	listOptions,
+	placeholder,
+	...props
+}: FGSelectProps) => {
 	return (
-		<Select onValueChange={onChange} value={value}>
+		<Select onValueChange={onChange} defaultValue={value} {...props}>
 			<FormControl>
 				<SelectTrigger>
-					<SelectValue placeholder="Select a service to submit" />
+					<SelectValue placeholder={`Select ${placeholder}`} />
 				</SelectTrigger>
 			</FormControl>
 			<SelectContent>
