@@ -340,15 +340,13 @@ function FileItem({ file, onRemove, onClick }: FileItemProps) {
 				className="relative aspect-square w-full"
 				onClick={() => isImage && onClick()}
 			>
-				{isImage ? (
+				{isImage && (
 					<Image
 						src={file.url}
 						alt={file.filename}
 						layout="fill"
 						objectFit="cover"
 					/>
-				) : (
-					<FileIcon className="h-full w-full text-muted-foreground" />
 				)}
 			</div>
 			<Button
