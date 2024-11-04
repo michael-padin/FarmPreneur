@@ -30,7 +30,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { documentLabels, documentOptions } from "@/types/verificationDocument"
+import { documentOptions } from "@/types/verificationDocument"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 
 const RegisterFarmerForm = () => {
@@ -50,11 +50,11 @@ const RegisterFarmerForm = () => {
 				region: "",
 				country: "",
 				postalCode: "",
-				latitude: -74.006,
-				longitude: 40.7128
+				latitude: 0,
+				longitude: 0
 			},
 			documentVerification: {
-				image: {},
+				image: undefined,
 				type: undefined
 			},
 
@@ -162,10 +162,10 @@ const RegisterFarmerForm = () => {
 											field.onChange(address)
 										}}
 										defaultCenter={{
-											lng: field.value.longitude,
-											lat: field.value.latitude
+											lng: field.value?.longitude,
+											lat: field.value?.latitude
 										}}
-										defaultValue={field.value.fullAddress}
+										defaultValue={field.value?.fullAddress || ""}
 										showMap
 									/>
 								</FormControl>
@@ -184,7 +184,7 @@ const RegisterFarmerForm = () => {
 								<FormLabel>Document Type</FormLabel>
 								<Select
 									onValueChange={field.onChange}
-									defaultValue={field.value}
+									defaultValue={field.value || ""}
 								>
 									<FormControl>
 										<SelectTrigger>
