@@ -29,7 +29,8 @@ const providers: Provider[] = [
 						email: user.email,
 						picture: user.profilePicture?.url,
 						isEmailVerified: user.isEmailVerified,
-						emailVerified: user.emailVerified
+						emailVerified: user.emailVerified,
+						createdAt: user.createdAt
 					}
 
 					return newUser
@@ -75,7 +76,8 @@ export default {
 					profilePicture: token.user.profilePicture,
 					role: token.user.role,
 					image: token.user.image,
-					name: token.user.name
+					name: token.user.name,
+					createdAt: token.user.createdAt
 				}
 			}
 

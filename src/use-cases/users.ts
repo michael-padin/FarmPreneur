@@ -1,4 +1,4 @@
-import { RegisterFarmerType } from "@/app/(auth)/register-farmer/types"
+import { RegisterFarmerSchema } from "@/app/(auth)/register-farmer/types"
 import { RegisterType } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import {
@@ -45,7 +45,7 @@ export const createUserCustomerUseCase = async (
 	return await createUserCustomer(data)
 }
 
-export const createUserFarmerUseCase = async (data: RegisterFarmerType) => {
+export const createUserFarmerUseCase = async (data: RegisterFarmerSchema) => {
 	return await createUserFarmer(data)
 }
 

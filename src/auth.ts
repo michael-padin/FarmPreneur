@@ -34,6 +34,7 @@ declare module "next-auth" {
 		profilePicture: string | null
 		isEmailVerified: boolean
 		emailVerified: Date | null
+		createdAt: Date
 	}
 }
 declare module "next-auth/jwt" {

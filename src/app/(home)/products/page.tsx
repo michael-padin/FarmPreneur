@@ -38,7 +38,7 @@ const ProductsPage = () => {
 			</header>
 			<div className="py-28">
 				<div className="flex gap-5">
-					<div className="flex w-[400px] flex-col gap-5">
+					<div className="flex flex-col gap-5">
 						<div className="grid gap-2">
 							<h2 className="text-xl font-semibold">Filters</h2>
 							<Accordion collapsible type="single">

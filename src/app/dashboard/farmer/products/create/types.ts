@@ -1,5 +1,5 @@
 import { addressSchema } from "@/validations/address"
-import { ImageSchema } from "@/validations/image"
+import { imageSchema } from "@/validations/image"
 import { z } from "zod"
 
 export const createProductSchema = z.object({
@@ -16,7 +16,7 @@ export const createProductSchema = z.object({
 	category: z.string().min(1, {
 		message: "Category must be at least 1 character."
 	}),
-	images: z.array(ImageSchema).min(1),
+	images: z.array(imageSchema).min(1, "Required"),
 	location: addressSchema,
 	quantity: z.coerce.number().min(1, {
 		message: "Quantity must be at least 1 character."

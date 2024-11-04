@@ -1,7 +1,5 @@
 import { SetupFarmInformationSchema } from "@/app/(auth)/setup-farm-information/types"
-import { SetupFarmInfoType } from "@/app/dashboard/farmer/setup-farm-info/validations"
 import { db } from "@/lib/db"
-import { create } from "domain"
 
 export const getFarmDetailsById = async (id: string) => {
 	return await db.farmDetails.findUnique({
