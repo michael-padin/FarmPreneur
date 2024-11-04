@@ -43,7 +43,7 @@ import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { DateTimeInput } from "@/components/ui/date-time-input"
 import { FGSelect } from "@/components/fg/fg-select"
-import { documentLabels } from "@/types/verificationDocument"
+import { documentLabels, documentOptions } from "@/types/verificationDocument"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "sonner"
 
@@ -332,16 +332,10 @@ export default function UserDetailsForm({
 											<FormLabel>Document Type</FormLabel>
 											<FormControl>
 												<FGSelect
-													{...field}
-													placeholder="Driver's License"
-													listOptions={Object.entries(documentLabels).map(
-														(doc, index) => {
-															return {
-																label: doc[1],
-																value: doc[0]
-															}
-														}
-													)}
+													onChange={(value) => field.onChange(value)}
+													value={field.value || ""}
+													placeholder="Select Document Type"
+													listOptions={documentOptions}
 												/>
 											</FormControl>
 											<FormMessage />
