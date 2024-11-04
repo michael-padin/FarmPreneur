@@ -248,7 +248,7 @@ function CustomerCard({ customer }: { customer: Customer }) {
 					</Button>
 				</div>
 				{expanded && (
-					<div className="space-y-3 bg-background/30 p-4 text-sm">
+					<div className="space-y-4 bg-background/30 p-4 text-sm">
 						<div className="flex items-center space-x-2">
 							<Phone className="h-4 w-4 text-primary" />
 							<span>{customer.contact}</span>
