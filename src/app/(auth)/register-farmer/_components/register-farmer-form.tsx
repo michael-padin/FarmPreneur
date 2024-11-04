@@ -210,7 +210,7 @@ const RegisterFarmerForm = () => {
 							<FormItem>
 								<FormLabel>Image</FormLabel>
 								<FormControl>
-									<FileUpload {...field} maxFiles={1} multiple={false} />
+									<FileUpload {...field} maxFiles={1} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

@@ -1,12 +1,10 @@
 import { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
 import RegisterFarmerForm from "./_components/register-farmer-form"
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
