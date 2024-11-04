@@ -1,5 +1,5 @@
 import { compare } from "bcryptjs"
-import type { NextAuthConfig, Session, User } from "next-auth"
+import type { NextAuthConfig } from "next-auth"
 import { type Provider } from "next-auth/providers"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
@@ -31,7 +31,6 @@ const providers: Provider[] = [
 						isEmailVerified: user.isEmailVerified,
 						emailVerified: user.emailVerified
 					}
-					console.log("NEW USER FROM authorize", newUser)
 
 					return newUser
 				}
@@ -53,7 +52,7 @@ export default {
 	},
 
 	callbacks: {
-		async jwt({ token, account, user, trigger, session }) {
+		async jwt({ token, user, trigger, session }) {
 			if (user) {
 				token.user = { ...user, id: user.id || "" }
 			}
@@ -61,13 +60,9 @@ export default {
 				token = { ...token, user: session }
 			}
 
-			// console.log("token :>> ", token)
-
 			return token
 		},
 		async session({ session, token }) {
-			// console.log("session.user :>> ", session.user)
-
 			session = {
 				...session,
 				user: {
@@ -84,7 +79,6 @@ export default {
 				}
 			}
 
-			// console.log("token.user :>> ", token.user)
 			return session
 		}
 	},

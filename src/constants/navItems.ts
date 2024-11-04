@@ -78,7 +78,7 @@ export const adminNavItems: SidebarItem[] = [
 			},
 			{
 				name: "Pending Farmers",
-				url: "/dashboard/users/waiting-for-approval"
+				url: "/dashboard/users/pending-farmers"
 				// icon: Hourglass
 			}
 		]
