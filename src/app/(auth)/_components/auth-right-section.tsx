@@ -5,7 +5,14 @@ interface AuthLeftSectionProps {
 export const AuthRightSection = ({ imageProps }: AuthLeftSectionProps) => (
 	<div className="relative my-4 hidden flex-col rounded-lg bg-muted dark:border-r lg:flex lg:flex-1">
 		<div className="absolute inset-0">
-			<Image {...imageProps} alt={imageProps.alt} objectFit="contain" fill />
+			<Image
+				{...imageProps}
+				alt={imageProps.alt}
+				fill
+				quality={75}
+				priority
+				className="object-contain"
+			/>
 		</div>
 
 		{/* <div className="relative z-20 mt-auto">
