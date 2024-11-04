@@ -1,6 +1,6 @@
 "use server"
 
-import { RegisterFarmerType } from "./types"
+import { RegisterFarmerSchema } from "./types"
 import { hash } from "bcryptjs"
 import {
 	generateExpiration,
@@ -15,7 +15,7 @@ import { sendOTPEmail } from "@/lib/nodemailer"
 import { getErrorMessage } from "@/lib/handle-error"
 import { signIn } from "@/auth"
 
-export const registerFarmer = async (data: RegisterFarmerType) => {
+export const registerFarmer = async (data: RegisterFarmerSchema) => {
 	try {
 		const hashedPassword = await hash(data.password, 1)
 
@@ -39,7 +39,7 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 			email: newFarmer.email
 		})
 
-		// await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
+		await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
 
 		await signIn("credentials", {
 			email: data.email,
@@ -58,5 +58,3 @@ export const registerFarmer = async (data: RegisterFarmerType) => {
 		}
 	}
 }
-
-// export const sigInWithGoogle = async () => await signIn("google");

@@ -1,5 +1,3 @@
-import Image from "next/image"
-import Link from "next/link"
 import { InputOTPForm } from "./_components/input-otp-form"
 import { auth } from "@/auth"
 import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
@@ -12,6 +10,8 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 import { getUserByIdUseCase } from "@/use-cases/users"
+import { AuthLeftSection } from "../_components/auth-left-section"
+import { AuthRightSection } from "../_components/auth-right-section"
 
 export default async function verifyEmailPage() {
 	const session = await auth()
@@ -33,69 +33,23 @@ export default async function verifyEmailPage() {
 	const otp = await getEmailOtpExpirationByUserIdUseCase(session.user.id)
 
 	return (
-		<div className="h-screen w-full lg:grid lg:grid-cols-2 lg:overflow-hidden xl:min-h-screen">
-			<div className="mx-auto flex items-center justify-center p-4">
-				<div className="mx-auto grid gap-6 md:w-[400px]">
-					<Link
-						className="flex items-center justify-center gap-2 text-3xl font-black text-[#404145] lg:hidden"
-						href="/"
-					>
-						<h1 className="text-primary">FarmPreneur</h1>
-						<img
-							src="/logo.svg"
-							alt=""
-							className="sr-only h-[100px] w-[100px] lg:not-sr-only"
-						/>
-					</Link>
-
-					<div className="grid gap-6">
-						<Card>
-							<CardHeader>
-								<CardTitle>Verify Your Email</CardTitle>
-								<CardDescription>
-									Please enter the 6-digit code sent to your email address.
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<InputOTPForm user={session.user} otp={otp} />
-							</CardContent>
-						</Card>
-					</div>
-
-					<p className="px-8 text-center text-sm text-muted-foreground">
-						By clicking continue, you agree to our{" "}
-						<Link
-							href="/terms"
-							className="underline underline-offset-4 hover:text-primary"
-						>
-							Terms of Service
-						</Link>{" "}
-						and{" "}
-						<Link
-							href="/privacy"
-							className="underline underline-offset-4 hover:text-primary"
-						>
-							Privacy Policy
-						</Link>
-						.
-					</p>
-				</div>
-			</div>
-			<div className="relative hidden h-full flex-col bg-muted p-10 dark:border-r lg:flex">
-				<div className="absolute inset-0">
-					<Image
-						src="/placeholder.svg"
-						alt="login image"
-						objectFit="cover"
-						fill
-					/>
-				</div>
-				<div className="relative z-20 flex items-center text-lg font-medium">
-					<h1 className="text-2xl font-black text-primary">
-						<Link href="/">Farm2go</Link>
-					</h1>
-				</div>
-			</div>
-		</div>
+		<>
+			<AuthLeftSection>
+				<Card className="lg:border-0 lg:shadow-none">
+					<CardHeader>
+						<CardTitle>Verify Your Email</CardTitle>
+						<CardDescription>
+							Please enter the one-time password sent to your email.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<InputOTPForm user={session.user} otp={otp} />
+					</CardContent>
+				</Card>
+			</AuthLeftSection>
+			<AuthRightSection
+				imageProps={{ src: "/auth2.svg", alt: "Verify Email Image" }}
+			/>
+		</>
 	)
 }

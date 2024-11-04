@@ -18,26 +18,34 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterFarmerSchema, RegisterFarmerType } from "../types"
+import { registerFarmerSchema, RegisterFarmerSchema } from "../types"
 import { registerFarmer } from "../action"
-import { Popover } from "@/components/ui/popover"
-import { DateTimeInput } from "@/components/ui/date-time-input"
-import { DateTimePicker } from "@/components/ui/date-time-picker"
 import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
+import { CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from "@/components/ui/select"
+import { documentLabels, documentOptions } from "@/types/verificationDocument"
+import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 
 const RegisterFarmerForm = () => {
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
-	const form = useForm<RegisterFarmerType>({
-		resolver: zodResolver(RegisterFarmerSchema),
+	const form = useForm<RegisterFarmerSchema>({
+		resolver: zodResolver(registerFarmerSchema),
 		defaultValues: {
-			email: `padimichael${Math.floor(100 + Math.random() * 9000).toFixed(0)}@gmail.com`,
-			birthDate: new Date(),
-			firstName: "Mokie",
-			lastName: "Mokie",
-			contactNumber: "+639955143588",
+			email: "",
+			birthDate: "",
+			firstName: "",
+			lastName: "",
+			contactNumber: "+639",
 			address: {
-				fullAddress: "Napo, Carcar City",
+				fullAddress: "",
 				street: "",
 				region: "",
 				country: "",
@@ -45,12 +53,17 @@ const RegisterFarmerForm = () => {
 				latitude: -74.006,
 				longitude: 40.7128
 			},
-			password: "password",
-			confirmPassword: "password"
+			documentVerification: {
+				image: {},
+				type: undefined
+			},
+
+			password: "",
+			confirmPassword: ""
 		}
 	})
 
-	const onSubmit = (data: RegisterFarmerType) => {
+	const onSubmit = (data: RegisterFarmerSchema) => {
 		startTransition(async () => {
 			const { error } = await registerFarmer(data)
 			if (error) {
@@ -64,7 +77,7 @@ const RegisterFarmerForm = () => {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<fieldset disabled={isPending} className="space-y-3">
+				<fieldset disabled={isPending} className="space-y-4">
 					<div className="flex gap-3">
 						<FormField
 							control={form.control}
@@ -101,7 +114,7 @@ const RegisterFarmerForm = () => {
 								<FormLabel>Email</FormLabel>
 								<FormControl>
 									<Input
-										placeholder="@email.com"
+										placeholder="johndoe@gmail.com"
 										{...field}
 										autoComplete="off"
 									/>
@@ -130,24 +143,9 @@ const RegisterFarmerForm = () => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Birth Date</FormLabel>
-								<Popover>
-									<FormControl>
-										<DateTimePicker
-											value={field.value}
-											onChange={field.onChange}
-											hideTime
-											renderTrigger={({ open, value, setOpen }) => (
-												<DateTimeInput
-													value={value}
-													onChange={(x) => !open && field.onChange(x)}
-													format="MM/dd/yyyy"
-													disabled={open}
-													onCalendarClick={() => setOpen(!open)}
-												/>
-											)}
-										/>
-									</FormControl>
-								</Popover>
+								<FormControl>
+									<Input type="date" {...field} placeholder="MM/DD/YYYY" />
+								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -175,6 +173,52 @@ const RegisterFarmerForm = () => {
 							</FormItem>
 						)}
 					/>
+
+					<Separator className="my-4" />
+					<CardTitle>Document Verification</CardTitle>
+					<FormField
+						control={form.control}
+						name="documentVerification.type"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Document Type</FormLabel>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Select a document type" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{documentOptions.map((doc) => (
+											<SelectItem value={doc.value} key={doc.value}>
+												{doc.label}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="documentVerification.image"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Image</FormLabel>
+								<FormControl>
+									<FileUpload {...field} maxFiles={1} multiple={false} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<Separator className="my-4" />
+
 					<FormField
 						control={form.control}
 						name="password"

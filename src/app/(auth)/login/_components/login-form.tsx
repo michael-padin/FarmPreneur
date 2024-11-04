@@ -63,7 +63,7 @@ const LoginForm = () => {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<fieldset disabled={isPending} className="space-y-3">
+				<fieldset disabled={isPending} className="space-y-4">
 					<FormField
 						control={form.control}
 						name="email"
@@ -86,7 +86,7 @@ const LoginForm = () => {
 									<FormLabel>Password</FormLabel>
 									<Link
 										href="/forgot-password"
-										className="ml-auto inline-block text-sm underline"
+										className="ml-auto inline-block text-xs text-primary underline"
 									>
 										Forgot your password?
 									</Link>
@@ -98,7 +98,11 @@ const LoginForm = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type="submit" className="w-full" disabled={isPending}>
+					<Button
+						type="submit"
+						className="w-full"
+						disabled={isPending || !form.formState.isDirty}
+					>
 						{isPending ? <Loader2 className="animate-spin" /> : "Log in"}
 					</Button>
 				</fieldset>

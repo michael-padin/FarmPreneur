@@ -8,6 +8,7 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
+	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
 import {
@@ -58,9 +59,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 				if (res.error) {
 					toast.error(res.error)
 				} else {
-					toast.success("Code Resent ", {
-						description: "A new code has been sent to your email"
-					})
+					toast.success("Code Resent")
 					const expirationTime = new Date(res.data!.expiresAt).getTime()
 					const currentTime = new Date().getTime()
 					const remainingTime = Math.max(
@@ -142,12 +141,13 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<fieldset className="mx-auto w-2/3 space-y-6">
+				<fieldset className="mx-auto w-full space-y-6">
 					<FormField
 						control={form.control}
 						name="code"
 						render={({ field }) => (
 							<FormItem className="mx-auto flex flex-col justify-center">
+								<FormLabel>One-Time Password</FormLabel>
 								<FormControl>
 									<InputOTP maxLength={6} {...field}>
 										<InputOTPGroup>
@@ -164,23 +164,30 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 							</FormItem>
 						)}
 					/>
-					<p className="mt-4 text-center text-sm text-gray-500">
-						Time remaining: {formatTime(timeLeft)}
-					</p>
 					<div className="space-y-2">
 						<FGSubmitBtn
 							disabled={!form.formState.isDirty}
 							text="Verify"
 							isLoading={isPending}
+							className="w-full"
 						/>
 						<Button
-							variant="outline"
+							variant="secondary"
 							className="w-full"
 							type="button"
 							onClick={handleResend}
 							disabled={!canResend}
 						>
-							{isResending ? <Loader2 className="animate-spin" /> : "Resend"}
+							{isResending ? (
+								<Loader2 className="animate-spin" />
+							) : !canResend ? (
+								<span>
+									Resend code in{" "}
+									<span className="text-primary">{formatTime(timeLeft)}</span>
+								</span>
+							) : (
+								"Resend"
+							)}
 						</Button>
 					</div>
 				</fieldset>

@@ -3,9 +3,19 @@ import Image from "next/image"
 import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
-import { ResendSignIn } from "@/app/_components/resend-signin"
 import LoginForm from "./_components/login-form"
-import { Separator } from "@/components/ui/separator"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+import { AuthLeftSection } from "../_components/auth-left-section"
+import { AuthRightSection } from "../_components/auth-right-section"
 
 export const metadata: Metadata = {
 	title: "Log in",
@@ -15,87 +25,65 @@ export const metadata: Metadata = {
 
 export default async function LoginPage() {
 	return (
-		<div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
-			<div className="mx-auto flex items-center justify-center p-4">
-				<div className="mx-auto grid gap-6 md:w-[400px]">
-					<Link
-						className="flex items-center justify-center gap-2 text-3xl font-black text-[#404145] lg:hidden"
-						href="/"
-					>
-						<h1 className="text-primary">FarmPreneur</h1>
-						<img
-							src="/logo.svg"
-							alt=""
-							className="sr-only h-[100px] w-[100px] lg:not-sr-only"
-						/>
-					</Link>
-					<div className="space-y-2">
-						<h1 className="text-center text-3xl font-bold">Login</h1>
-						<p className="text-balance text-center text-muted-foreground">
-							Enter your credentials below to login to your account
-						</p>
-					</div>
-					<div className="grid gap-6">
-						<GoogleButton />
-						<div className="relative">
-							<div className="absolute inset-0 flex items-center">
-								<span className="w-full border-t" />
+		<>
+			<AuthLeftSection>
+				<div>
+					<Card className="w-full md:min-w-[453.6px] lg:max-w-[453.6px] lg:border-0 lg:shadow-none">
+						<CardHeader>
+							<CardTitle>Log In</CardTitle>
+							<CardDescription>
+								Enter your email and password to log in
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="">
+								<GoogleButton />
+								<div className="relative my-4">
+									<div className="absolute inset-0 flex items-center">
+										<span className="w-full border-t" />
+									</div>
+									<div className="relative flex justify-center text-xs uppercase">
+										<span className="bg-background px-2 text-muted-foreground">
+											Or
+										</span>
+									</div>
+								</div>
 							</div>
-							<div className="relative flex justify-center text-xs uppercase">
-								<span className="bg-background px-2 text-muted-foreground">
-									Or
-								</span>
+							<LoginForm />
+						</CardContent>
+						<CardFooter>
+							<div className="mx-auto w-full text-center">
+								<p className="relative mb-2 text-xs text-primary">
+									Don&apos;t have an account?{" "}
+								</p>
+								<div className="mx-auto w-full space-y-2">
+									<Link
+										href="/signup"
+										className={cn(
+											buttonVariants({ variant: "secondary" }),
+											"w-full"
+										)}
+									>
+										Create new account
+									</Link>
+									<Link
+										href="/register-farmer"
+										className={cn(
+											buttonVariants({ variant: "secondary" }),
+											"w-full"
+										)}
+									>
+										Create new farmer account
+									</Link>
+								</div>
 							</div>
-						</div>
-						<LoginForm />
-					</div>
-					{/* <ResendSignIn /> */}
-					<div className="mt-4 flex items-center justify-center gap-4 text-center text-sm">
-						<p>Don&apos;t have an account? </p>
-						<div className="flex h-5 items-center space-x-2 text-sm">
-							<div>
-								<Link href="/signup" className="underline hover:text-primary">
-									Sign up
-								</Link>
-							</div>
-							<Separator orientation="vertical" />
-							<div>
-								<Link
-									href="/register-farmer"
-									className="underline hover:text-primary"
-								>
-									Sign up farmer
-								</Link>
-							</div>
-						</div>
-					</div>
+						</CardFooter>
+					</Card>
 				</div>
-			</div>
-			<div className="relative hidden h-full flex-col bg-muted p-10 dark:border-r lg:flex">
-				<div className="absolute inset-0">
-					<Image
-						src="/placeholder.svg"
-						alt="login image"
-						objectFit="cover"
-						fill
-					/>
-				</div>
-				<div className="relative z-20 flex items-center text-lg font-medium">
-					<h1 className="text-2xl font-black text-primary">
-						<Link href="/">Farm2go</Link>
-					</h1>
-				</div>
-				{/* <div className="relative z-20 mt-auto">
-            <blockquote className="space-y-2">
-              <p className="text-lg">
-                &ldquo;This library has saved me countless hours of work and
-                helped me deliver stunning designs to my clients faster than
-                ever before.&rdquo;
-              </p>
-              <footer className="text-sm">Sofia Davis</footer>
-            </blockquote>
-          </div> */}
-			</div>
-		</div>
+			</AuthLeftSection>
+			<AuthRightSection
+				imageProps={{ src: "/auth2.svg", alt: "Log in image" }}
+			/>
+		</>
 	)
 }

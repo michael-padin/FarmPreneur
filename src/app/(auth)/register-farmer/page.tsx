@@ -2,53 +2,53 @@ import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import RegisterFarmerForm from "./_components/register-farmer-form"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+import { AuthLeftSection } from "../_components/auth-left-section"
+import { AuthRightSection } from "../_components/auth-right-section"
 
 export const metadata: Metadata = {
-	title: "FarmPreneur - Register Farmer",
-	description: ""
+	title: "Register Farmer - FarmPreneur",
+	description: " "
 }
 
 const RegisterFarmerPage = async () => {
 	return (
-		<div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
-			<div className="mx-auto flex items-center justify-center p-4">
-				<div className="mx-auto grid gap-6 md:w-[400px]">
-					<Link
-						className="flex items-center justify-center gap-2 text-3xl font-black text-[#404145] lg:hidden"
-						href="/"
-					>
-						<img src="/logo.svg" alt="" className="h-[100px] w-[100px]" />
-					</Link>
-					<div className="grid gap-2 text-center">
-						<h1 className="text-3xl font-bold">
-							Create <br />
-							Seller(Farmer) Account
-						</h1>
-						<p className="w-full text-balance text-muted-foreground">
+		<>
+			<AuthLeftSection>
+				<Card className="lg:border-0 lg:shadow-none">
+					<CardHeader>
+						<CardTitle>Create Farmer Account</CardTitle>
+						<CardDescription>
 							Enter your information to create your account
-						</p>
-					</div>
-					<div className="grid gap-6">
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
 						<RegisterFarmerForm />
-					</div>
-				</div>
-			</div>
-			<div className="relative hidden h-full flex-col bg-muted p-10 dark:border-r lg:flex">
-				<div className="absolute inset-0">
-					<Image
-						src="/placeholder.svg"
-						alt="login image"
-						objectFit="cover"
-						fill
-					/>
-				</div>
-				<div className="relative z-20 flex items-center text-lg font-medium">
-					<h1 className="text-2xl font-black text-primary">
-						<Link href="/">Farm2go</Link>
-					</h1>
-				</div>
-			</div>
-		</div>
+						<Link
+							href="/login"
+							className={cn(
+								buttonVariants({ variant: "secondary" }),
+								"mt-2 w-full text-sm"
+							)}
+						>
+							Already have an account?
+						</Link>
+					</CardContent>
+				</Card>
+			</AuthLeftSection>
+			<AuthRightSection
+				imageProps={{ src: "/auth2.svg", alt: "Register farmer image" }}
+			/>
+		</>
 	)
 }
 export default RegisterFarmerPage

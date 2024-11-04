@@ -19,7 +19,9 @@ import { useRouter } from "next/navigation"
 import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
 
 export default function NewPasswordForm({ token }: { token: string }) {
 	const [isPending, startTransition] = useTransition()
@@ -72,19 +74,29 @@ export default function NewPasswordForm({ token }: { token: string }) {
 							<FormItem>
 								<FormLabel>Confirm New Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<Input
+										{...field}
+										autoComplete="new-password"
+										type="password"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					<div>
-						<FGSubmitBtn disabled={isPending} text="Reset password" />
-						<Button variant="link" asChild>
-							<Link href="/login" className="flex w-full items-center">
-								<ArrowLeft className="mr-2 h-4 w-4" /> Back to login
-							</Link>
-						</Button>
+					<div className="space-y-2">
+						<FGSubmitBtn
+							disabled={!form.formState.isDirty}
+							text="Reset password"
+							className="w-full"
+							isLoading={isPending}
+						/>
+						<Link
+							href="/login"
+							className={cn(buttonVariants({ variant: "secondary" }), "w-full")}
+						>
+							<ArrowLeft className="mr-2 h-4 w-4" /> Back to log in
+						</Link>
 					</div>
 				</fieldset>
 			</form>

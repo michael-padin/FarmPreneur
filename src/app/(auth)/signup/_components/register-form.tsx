@@ -52,7 +52,7 @@ const RegisterForm = () => {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
-				<fieldset disabled={isPending} className="space-y-3">
+				<fieldset disabled={isPending} className="space-y-4">
 					<div className="flex gap-3">
 						<FormField
 							control={form.control}

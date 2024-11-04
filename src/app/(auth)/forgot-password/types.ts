@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const ForgotPasswordSchema = z.object({
-	email: z.string().email({
+	email: z.string().min(1, "Required").email({
 		message: "Please enter a valid email address."
 	})
 })
