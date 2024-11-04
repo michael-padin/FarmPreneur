@@ -4,13 +4,13 @@ import React, { useCallback, useState } from "react"
 import { Accept, useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
 import { FileIcon, Trash, UploadCloud } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
 import { getErrorMessage } from "@/lib/handle-error"
 import { Toaster } from "../ui/toaster"
 import { Lightbox } from "./fp-light-box"
 import Image from "next/image"
 import { Input } from "../ui/input"
 import { AnimatePresence, motion } from "framer-motion"
+import { toast } from "sonner"
 
 interface FileInfo {
 	url: string
@@ -42,7 +42,6 @@ export function FileUpload({
 	maxFiles = 1,
 	maxSize
 }: FlexibleFileUploadProps) {
-	const { toast } = useToast()
 	const [isUploading, setIsUploading] = useState(false)
 	const [uploadProgress, setUploadProgress] = useState(0)
 	const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -72,21 +71,18 @@ export function FileUpload({
 				}
 
 				onChange?.(multiple ? uploadedFiles : uploadedFiles[0] || null)
-				toast({
-					title: "Upload successful",
+				toast.success("Upload successful", {
 					description: `${uploadedFiles.length} file(s) uploaded successfully.`
 				})
 			} catch (error) {
-				toast({
-					title: "Upload failed",
-					description: getErrorMessage(error),
-					variant: "destructive"
+				toast.error("Upload failed", {
+					description: getErrorMessage(error)
 				})
 			} finally {
 				setIsUploading(false)
 			}
 		},
-		[multiple, onChange, toast]
+		[multiple, onChange]
 	)
 
 	const uploadFile = async (
@@ -180,18 +176,17 @@ export function FileUpload({
 					onChange?.(null)
 				}
 
-				toast({
-					title: "File removed",
-					description: "File has been removed successfully."
+				toast.success("File removed", {
+					description: "File has been removed successfully.",
+					closeButton: true
 				})
 			} catch (error) {
-				toast({
-					title: "Removal failed",
+				toast.error("Removal failed", {
 					description:
 						error instanceof Error
 							? error.message
 							: "An unknown error occurred",
-					variant: "destructive"
+					closeButton: true
 				})
 			}
 		},
@@ -337,7 +332,7 @@ interface FileItemProps {
 }
 
 function FileItem({ file, onRemove, onClick }: FileItemProps) {
-	const isImage = file.mimeType.startsWith("image/")
+	const isImage = file.mimeType?.startsWith("image/")
 
 	return (
 		<div className="group relative aspect-square h-28 cursor-pointer overflow-hidden rounded-lg border bg-background">
