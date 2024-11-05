@@ -94,7 +94,9 @@ export const createUserFarmer = async (data: RegisterFarmerSchema) => {
 			password: data.password,
 			name: `${data.firstName} ${data.lastName}`,
 			contactNumber: data.contactNumber,
-			birthDate: data.birthDate,
+			birthDate: new Date(data.birthDate),
+			farmerApplicationStatus: "PENDING",
+			role: "FARMER",
 			address: {
 				create: {
 					fullAddress: data.address?.fullAddress,
@@ -105,9 +107,7 @@ export const createUserFarmer = async (data: RegisterFarmerSchema) => {
 					latitude: data.address?.latitude,
 					longitude: data.address?.longitude
 				}
-			},
-			farmerApplicationStatus: "PENDING",
-			role: "FARMER"
+			}
 		}
 	})
 }
