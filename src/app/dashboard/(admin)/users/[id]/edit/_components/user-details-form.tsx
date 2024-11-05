@@ -227,7 +227,7 @@ export default function UserDetailsForm({
 											<FormItem>
 												<FormLabel>Profile Picture</FormLabel>
 												<FormControl>
-													<FileUpload {...field} />
+													<FileUpload {...field} path="profile-pictures" />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -349,7 +349,7 @@ export default function UserDetailsForm({
 										<FormItem>
 											<FormLabel>Verification Document</FormLabel>
 											<FormControl>
-												<FileUpload {...field} />
+												<FileUpload {...field} path="documents" />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -401,7 +401,12 @@ export default function UserDetailsForm({
 												<FormItem>
 													<FormLabel>Farm Images</FormLabel>
 													<FormControl>
-														<FileUpload multiple {...field} maxFiles={10} />
+														<FileUpload
+															multiple
+															{...field}
+															maxFiles={10}
+															path={`farm-images`}
+														/>
 													</FormControl>
 													<FormMessage />
 												</FormItem>

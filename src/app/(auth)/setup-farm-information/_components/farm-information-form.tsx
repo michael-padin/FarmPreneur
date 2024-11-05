@@ -149,7 +149,11 @@ export const CompleteFarmerDetailsForm = ({
 							<FormItem>
 								<FormLabel>Farm Images</FormLabel>
 								<FormControl>
-									<FileUpload {...field} multiple />
+									<FileUpload
+										{...field}
+										multiple
+										path={`farm-images/${farmerId}`}
+									/>
 								</FormControl>
 								<FormDescription>
 									Upload up to 5 images of your farm

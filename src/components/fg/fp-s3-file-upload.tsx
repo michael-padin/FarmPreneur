@@ -291,22 +291,24 @@ export function FileUpload({
 					<div className="space-y-2">
 						{multiple ? (
 							<div className="grid grid-cols-2 gap-2">
-								{(value as FileInfo[]).map((file, index) => (
-									<FileItem
-										key={file.url}
-										file={file}
-										onRemove={removeFile}
-										onClick={() => openLightbox(index)}
-									/>
-								))}
+								{(value as FileInfo[]).map((file, index) =>
+									file.url ? (
+										<FileItem
+											key={file.url}
+											file={file}
+											onRemove={removeFile}
+											onClick={() => openLightbox(index)}
+										/>
+									) : null
+								)}
 							</div>
-						) : (
+						) : (value as FileInfo).url ? (
 							<FileItem
 								file={value as FileInfo}
 								onRemove={removeFile}
 								onClick={() => openLightbox(0)}
 							/>
-						)}
+						) : null}
 					</div>
 				)}
 			</div>
