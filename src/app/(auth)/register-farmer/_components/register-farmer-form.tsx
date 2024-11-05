@@ -33,34 +33,40 @@ import {
 import { documentOptions } from "@/types/verificationDocument"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 
+const defaultValues: RegisterFarmerSchema = {
+	firstName: "",
+	lastName: "",
+	email: "",
+	contactNumber: "+639",
+	birthDate: "",
+	address: {
+		fullAddress: "",
+		street: "",
+		region: "",
+		country: "",
+		postalCode: "",
+		latitude: 0,
+		longitude: 0
+	},
+	documentVerification: {
+		image: {
+			filename: "",
+			mimeType: "",
+			size: 0,
+			url: ""
+		},
+		type: "DRIVER_LICENSE"
+	},
+	password: "",
+	confirmPassword: ""
+}
+
 const RegisterFarmerForm = () => {
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<RegisterFarmerSchema>({
 		resolver: zodResolver(registerFarmerSchema),
-		defaultValues: {
-			email: "",
-			birthDate: "",
-			firstName: "",
-			lastName: "",
-			contactNumber: "+639",
-			address: {
-				fullAddress: "",
-				street: "",
-				region: "",
-				country: "",
-				postalCode: "",
-				latitude: 0,
-				longitude: 0
-			},
-			documentVerification: {
-				image: undefined,
-				type: undefined
-			},
-
-			password: "",
-			confirmPassword: ""
-		}
+		defaultValues
 	})
 
 	const onSubmit = (data: RegisterFarmerSchema) => {
@@ -158,14 +164,12 @@ const RegisterFarmerForm = () => {
 								<FormLabel>Address</FormLabel>
 								<FormControl>
 									<AddressLocationPicker
-										onAddressSelect={(address) => {
-											field.onChange(address)
-										}}
+										onAddressSelect={field.onChange}
 										defaultCenter={{
 											lng: field.value?.longitude,
 											lat: field.value?.latitude
 										}}
-										defaultValue={field.value?.fullAddress || ""}
+										defaultValue={field.value.fullAddress}
 										showMap
 									/>
 								</FormControl>
@@ -210,7 +214,7 @@ const RegisterFarmerForm = () => {
 							<FormItem>
 								<FormLabel>Image</FormLabel>
 								<FormControl>
-									<FileUpload {...field} maxFiles={1} />
+									<FileUpload {...field} maxFiles={1} path="documents" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
