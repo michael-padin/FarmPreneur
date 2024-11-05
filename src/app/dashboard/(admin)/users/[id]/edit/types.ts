@@ -1,6 +1,6 @@
 import { addressSchema } from "@/validations/address"
 import { imageSchema } from "@/validations/image"
-import { verificationDocumentSchema } from "@/validations/verification-document"
+import { documentVerificationSchema } from "@/validations/verification-document"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { z } from "zod"
 
@@ -24,7 +24,7 @@ export const updateUserSchema = z.object({
 		.nullable(),
 	address: addressSchema.nullable(),
 	profilePicture: imageSchema.nullable(),
-	verificationDocument: verificationDocumentSchema.nullable()
+	verificationDocument: documentVerificationSchema.nullable()
 })
 
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>
