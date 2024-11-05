@@ -20,3 +20,5 @@ export function formatDate(
 export const isOtpExpired = (expiresAt: Date) => {
 	return new Date() > new Date(expiresAt)
 }
+
+export const isDevelopment = process.env.NODE_ENV === "development"
