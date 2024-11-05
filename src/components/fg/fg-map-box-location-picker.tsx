@@ -90,6 +90,10 @@ export default function AddressLocationPicker({
 		onMarkerDragEnd: handleMarkerDragEnd
 	})
 
+	useEffect(() => {
+		setInputValue(defaultValue)
+	}, [defaultValue])
+
 	async function handleMarkerDragEnd(lngLat: mapboxgl.LngLat) {
 		try {
 			const response = await fetch(
