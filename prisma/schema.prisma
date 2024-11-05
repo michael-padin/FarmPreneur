@@ -270,7 +270,8 @@ model User {
   notifications           Notification[]
   verificationDocument    VerificationDocument?
   farmDetails             FarmDetails?
-  address                 Address?
+  address                 Address?                  @relation(fields: [addressId], references: [id])
+  addressId               String?                   @unique @db.ObjectId
   birthDate               DateTime?
   emailOtp                EmailOtp[]
   reviews                 ProductReview[]
@@ -332,6 +333,7 @@ model ProductReview {
 model Image {
   id                     String                @id @default(auto()) @map("_id") @db.ObjectId
   createdAt              DateTime              @default(now())
+  path                   String?                
   updatedAt              DateTime              @updatedAt
   url                    String // Cloud storage URL 
   type                   ImageType // Type of image (product, review, etc)
@@ -422,8 +424,8 @@ model FarmDetails {
   images          Image[]
   farmer          User     @relation(fields: [farmerId], references: [id], onDelete: Cascade)
   farmerId        String   @unique @db.ObjectId
-  address         Address?
-  addressId       String?  @db.ObjectId
+  address         Address? @relation(fields: [addressId], references: [id])
+  addressId       String?  @unique @db.ObjectId
 }
 
 // MARK: NOTIFICATION
@@ -466,24 +468,22 @@ model Notification {
 
 //MARK: ADDRESS
 model Address {
-  id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  fullAddress   String?
-  street        String?
-  region        String?
-  country       String?
-  postalCode    String?
-  latitude      Float
-  longitude     Float
-  note          String?
-  locationType  String?
-  order         Order[]
-  product       Product[]
-  user          User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String?      @unique @db.ObjectId
-  farmDetails   FarmDetails? @relation(fields: [farmDetailsId], references: [id], onDelete: Cascade)
-  farmDetailsId String?      @unique @db.ObjectId
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  fullAddress  String?
+  street       String?
+  region       String?
+  country      String?
+  postalCode   String?
+  latitude     Float
+  longitude    Float
+  note         String?
+  locationType String?
+  order        Order[]
+  product      Product[]
+  user         User?
+  farmDetails  FarmDetails?
 
   @@index([country, region])
   @@index([latitude, longitude])
