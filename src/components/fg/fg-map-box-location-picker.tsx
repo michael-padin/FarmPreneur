@@ -243,19 +243,27 @@ export const AddressInput = ({
 				searchAddress(value)
 			}, 300)
 		},
-		[searchAddress]
+		[onAddressSelect, searchAddress, setInputValue]
 	)
 
-	const handleSelect = useCallback((suggestion: Feature) => {
-		setInputValue?.(suggestion.properties.full_address)
-		setOpen(false)
+	const handleSelect = useCallback(
+		(suggestion: Feature) => {
+			setInputValue?.(suggestion.properties.full_address)
+			setOpen(false)
 
-		const [lng, lat] = suggestion.geometry.coordinates
-		updateMarkerPosition?.(lng, lat)
+			const [lng, lat] = suggestion.geometry.coordinates
+			updateMarkerPosition?.(lng, lat)
 
-		const newAddress = createAddressFromFeature?.(suggestion, lat, lng)
-		onAddressSelect?.(newAddress || defaultAddress)
-	}, [])
+			const newAddress = createAddressFromFeature?.(suggestion, lat, lng)
+			onAddressSelect?.(newAddress || defaultAddress)
+		},
+		[
+			createAddressFromFeature,
+			onAddressSelect,
+			setInputValue,
+			updateMarkerPosition
+		]
+	)
 
 	const getCurrentLocation = useCallback(() => {
 		if (!navigator.geolocation) {
@@ -301,7 +309,13 @@ export const AddressInput = ({
 				})
 			}
 		)
-	}, [createAddressFromFeature, mapboxApiKey, updateMarkerPosition])
+	}, [
+		createAddressFromFeature,
+		mapboxApiKey,
+		onAddressSelect,
+		setInputValue,
+		updateMarkerPosition
+	])
 
 	return (
 		<Command className="relative overflow-visible">
