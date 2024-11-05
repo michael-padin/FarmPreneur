@@ -32,6 +32,7 @@ interface FlexibleFileUploadProps {
 	multiple?: boolean
 	maxFiles?: number
 	maxSize?: number
+	path: string
 }
 
 export function FileUpload({
@@ -40,7 +41,8 @@ export function FileUpload({
 	accept,
 	multiple = false,
 	maxFiles = 1,
-	maxSize
+	maxSize,
+	path
 }: FlexibleFileUploadProps) {
 	const [isUploading, setIsUploading] = useState(false)
 	const [uploadProgress, setUploadProgress] = useState(0)
@@ -98,7 +100,7 @@ export function FileUpload({
 				body: JSON.stringify({
 					filename: file.name,
 					contentType: file.type,
-					path: "uploads/farm-images"
+					path: path
 				})
 			})
 
