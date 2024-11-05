@@ -1,5 +1,8 @@
 import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
-import { createFarmDetailsAddress } from "@/data-access/address"
+import {
+	createFarmDetailsAddress,
+	createUserAddress
+} from "@/data-access/address"
 import { AddressSchema } from "@/validations/address"
 
 export const upsertAddressUseCase = async (
@@ -15,5 +18,15 @@ export const createFarmDetailsAddressUseCase = async (
 		await createFarmDetailsAddress(data)
 	} catch (error) {
 		console.error("error in createFarmDetailsAddressUseCase", error)
+	}
+}
+
+export const createUserAddressUseCase = async (
+	data: AddressSchema & { userId: string }
+) => {
+	try {
+		await createUserAddress(data)
+	} catch (error) {
+		console.error("error in createUserAddressUseCase", error)
 	}
 }

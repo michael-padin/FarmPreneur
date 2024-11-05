@@ -22,18 +22,18 @@ export const getAddress = async (id: string) => {
 	})
 }
 
-export const createAddress = async (data: Address) => {
+export const createUserAddress = async (
+	data: AddressSchema & { userId: string }
+) => {
 	return await db.address.create({
 		data: {
-			locationType: data.locationType,
 			fullAddress: data.fullAddress,
 			street: data.street,
 			region: data.region,
 			country: data.country,
 			postalCode: data.postalCode,
 			latitude: data.latitude,
-			longitude: data.longitude,
-			userId: ""
+			longitude: data.longitude
 		}
 	})
 }
