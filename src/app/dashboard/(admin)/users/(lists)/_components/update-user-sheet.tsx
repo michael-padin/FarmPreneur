@@ -104,7 +104,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	// 			id: user.id
 	// 		}).then(({ error }) => {
 	// 			if (error) {
-	// 				toast.error(error)
+	// 				getErrorMessage(error)
 	// 				return
 	// 			}
 	// 			form.reset()

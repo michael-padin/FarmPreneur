@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation"
 import AddressLocationPicker, {
 	AddressInput
 } from "@/components/fg/fg-map-box-location-picker"
+import { showErrorToast } from "@/lib/handle-error"
 
 export default function CreateProductForm() {
 	const [isPending, startTransition] = useTransition()
@@ -60,7 +61,7 @@ export default function CreateProductForm() {
 					toast.success(res?.success)
 					router.push("/dashboard/products")
 				} else {
-					toast.error(res?.error)
+					showErrorToast(res?.error)
 				}
 
 				console.log(res)

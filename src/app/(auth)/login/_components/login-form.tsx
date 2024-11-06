@@ -18,11 +18,12 @@ import {
 import { Input } from "@/components/ui/input"
 
 import { LoginSchema, LoginType } from "../_types"
-import { siginInWithCredentials } from "../action"
+import { signInWithCredentials } from "../action"
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { resendCode } from "../../verify-email/actions"
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 import { useRouter } from "next/navigation"
+import { showErrorToast } from "@/lib/handle-error"
 
 const LoginForm = () => {
 	const router = useRouter()
@@ -37,25 +38,18 @@ const LoginForm = () => {
 
 	const onSubmit = async (data: LoginType) => {
 		startTransition(() => {
-			siginInWithCredentials(data).then((res) => {
+			signInWithCredentials(data).then((res) => {
 				if (res.error) {
-					toast.error(res.error)
+					showErrorToast(res.error)
 					return
 				}
+
 				if (!res.data?.isEmailVerified) {
-					resendCode(res.data!.id!).then((res) => {
-						if (res.error) {
-							toast.error(res.error)
-						} else {
-							toast.success("Code Resent ", {
-								description: "A new code has been sent to your email"
-							})
-							router.push("/verify-email")
-						}
-					})
-				} else {
-					router.push(DEFAULT_LOGIN_REDIRECT(res.data.role))
+					router.push("/verify-email")
+					return
 				}
+
+				router.push(DEFAULT_LOGIN_REDIRECT(res.data.role))
 			})
 		})
 	}

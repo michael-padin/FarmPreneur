@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useTransition } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
@@ -32,6 +31,7 @@ import {
 } from "@/components/ui/select"
 import { documentOptions } from "@/types/verificationDocument"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { showErrorToast } from "@/lib/handle-error"
 
 const defaultValues: RegisterFarmerSchema = {
 	firstName: "",
@@ -73,7 +73,7 @@ const RegisterFarmerForm = () => {
 		startTransition(async () => {
 			const { error } = await registerFarmer(data)
 			if (error) {
-				toast.error(error)
+				showErrorToast(error)
 				return
 			}
 			router.push("/verify-email")

@@ -53,8 +53,6 @@ export const verifyCode = async (
 		}
 		return { error: "Invalid code" }
 	} catch (error) {
-		console.log(error)
-
 		return { error: getErrorMessage(error) }
 	}
 }

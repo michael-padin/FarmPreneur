@@ -39,6 +39,7 @@ import {
 } from "../ui/drawer"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/handle-error"
 
 interface LatLng {
 	lat: number
@@ -271,9 +272,7 @@ export const AddressInput = ({
 
 	const getCurrentLocation = useCallback(() => {
 		if (!navigator.geolocation) {
-			toast.error("Error", {
-				description: "Geolocation is not supported by your browser"
-			})
+			getErrorMessage("Geolocation is not supported by your browser")
 			return
 		}
 
@@ -301,16 +300,13 @@ export const AddressInput = ({
 					}
 				} catch (error) {
 					console.error("Error reverse geocoding:", error)
-					toast.error("Error", {
-						description:
-							"Failed to get address from your location. Please try again."
-					})
+					getErrorMessage(
+						"Failed to get address from your location. Please try again."
+					)
 				}
 			},
 			(error) => {
-				toast.error("Error", {
-					description: `Error getting location: ${error.message}`
-				})
+				getErrorMessage("Error getting location")
 			}
 		)
 	}, [

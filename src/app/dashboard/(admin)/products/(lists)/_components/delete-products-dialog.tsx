@@ -27,6 +27,7 @@ import {
 import { Icons } from "@/components/icons"
 import { useTransition } from "react"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { showErrorToast } from "@/lib/handle-error"
 
 interface DeleteProductDialogProps
 	extends React.ComponentPropsWithoutRef<typeof Dialog> {
@@ -59,7 +60,7 @@ export function DeleteProductDialog({
 			})
 
 			if (error) {
-				toast.error(error)
+				showErrorToast(error)
 				return
 			}
 

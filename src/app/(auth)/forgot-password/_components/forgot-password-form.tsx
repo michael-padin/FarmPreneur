@@ -21,6 +21,7 @@ import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
 import { ForgotPasswordSchema, ForgotPasswordType } from "../types"
 import { sendPasswordResetEmail } from "../actions"
 import { cn } from "@/lib/utils"
+import { showErrorToast } from "@/lib/handle-error"
 
 export default function ForgotPasswordForm() {
 	const [isPending, startTransition] = useTransition()
@@ -36,7 +37,7 @@ export default function ForgotPasswordForm() {
 		startTransition(() => {
 			sendPasswordResetEmail(data).then((res) => {
 				if (res.error) {
-					toast.error(res.error)
+					showErrorToast(res.error)
 				} else {
 					toast.success("Email sent")
 				}

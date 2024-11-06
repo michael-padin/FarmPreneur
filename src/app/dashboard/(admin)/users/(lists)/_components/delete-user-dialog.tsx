@@ -29,6 +29,7 @@ import { useTransition } from "react"
 import { deleteUsers } from "../actions"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { getCustomersUseCase, getUsersUseCase } from "@/use-cases/users"
+import { showErrorToast } from "@/lib/handle-error"
 
 interface DeleteUsersDialogProps
 	extends React.ComponentPropsWithoutRef<typeof Dialog> {
@@ -55,7 +56,7 @@ export function DeleteUsersDialog({
 			})
 
 			if (error) {
-				toast.error(error)
+				showErrorToast(error)
 				return
 			}
 

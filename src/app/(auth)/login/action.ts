@@ -7,7 +7,7 @@ import { signIn } from "@/auth"
 import { LoginSchema } from "./_types"
 import { getUserByEmailUseCase } from "@/use-cases/users"
 
-export const siginInWithCredentials = async (
+export const signInWithCredentials = async (
 	data: z.infer<typeof LoginSchema>
 ) => {
 	const validatedFields = LoginSchema.safeParse(data)

@@ -22,6 +22,7 @@ import { ArrowLeft } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
+import { showErrorToast } from "@/lib/handle-error"
 
 export default function NewPasswordForm({ token }: { token: string }) {
 	const [isPending, startTransition] = useTransition()
@@ -39,7 +40,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
 		startTransition(() => {
 			createNewPassword(data).then((res) => {
 				if (res.error) {
-					toast.error(res.error)
+					showErrorToast(res.error)
 				} else {
 					toast.success("Password reset successfully")
 					form.reset()

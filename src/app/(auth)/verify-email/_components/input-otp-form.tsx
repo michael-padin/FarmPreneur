@@ -28,6 +28,7 @@ import { Session } from "next-auth"
 import { isOtpExpired } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { showErrorToast } from "@/lib/handle-error"
 interface InputOTPFormProps {
 	user: Session["user"]
 	otp?: Awaited<ReturnType<typeof getEmailOtpExpirationByUserIdUseCase>>
@@ -57,7 +58,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 		startResending(() => {
 			resendCode(user?.id || "").then((res) => {
 				if (res.error) {
-					toast.error(res.error)
+					showErrorToast(res.error)
 				} else {
 					toast.success("Code Resent")
 					const expirationTime = new Date(res.data!.expiresAt).getTime()
@@ -81,7 +82,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 				email: user?.email || ""
 			})
 			if (res.error) {
-				toast.error(res.error)
+				showErrorToast(res.error)
 				return
 			}
 

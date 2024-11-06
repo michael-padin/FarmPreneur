@@ -27,6 +27,7 @@ import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { createFarmDetailsAction } from "../actions"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { showErrorToast } from "@/lib/handle-error"
 
 interface CompleteFarmerDetailsFormProps {
 	farmDetails: Awaited<ReturnType<typeof getFarmDetailsByUserIdUseCase>>
@@ -71,7 +72,7 @@ export const CompleteFarmerDetailsForm = ({
 		startTransition(async () => {
 			const { error } = await createFarmDetailsAction(data, farmerId)
 			if (error) {
-				toast.error(error)
+				showErrorToast(error)
 				return
 			}
 

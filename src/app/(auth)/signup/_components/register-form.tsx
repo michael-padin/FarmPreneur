@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { RegisterSchema, RegisterType } from "../_types"
 import { register } from "../action"
 import { useRouter } from "next/navigation"
+import { showErrorToast } from "@/lib/handle-error"
 
 const RegisterForm = () => {
 	const router = useRouter()
@@ -40,7 +41,7 @@ const RegisterForm = () => {
 			const { error } = await register(data)
 
 			if (error) {
-				toast.error(error)
+				showErrorToast(error)
 				return
 			}
 

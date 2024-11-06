@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react"
 import { Accept, useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
-import { FileIcon, Trash, UploadCloud } from "lucide-react"
+import { Trash, UploadCloud } from "lucide-react"
 import { getErrorMessage } from "@/lib/handle-error"
 import { Toaster } from "../ui/toaster"
 import { Lightbox } from "./fp-light-box"
@@ -77,9 +77,7 @@ export function FileUpload({
 					description: `${uploadedFiles.length} file(s) uploaded successfully.`
 				})
 			} catch (error) {
-				toast.error("Upload failed", {
-					description: getErrorMessage(error)
-				})
+				getErrorMessage(error)
 			} finally {
 				setIsUploading(false)
 			}
@@ -183,13 +181,7 @@ export function FileUpload({
 					closeButton: true
 				})
 			} catch (error) {
-				toast.error("Removal failed", {
-					description:
-						error instanceof Error
-							? error.message
-							: "An unknown error occurred",
-					closeButton: true
-				})
+				getErrorMessage(error)
 			}
 		},
 		[multiple, onChange, value, toast]
