@@ -482,8 +482,8 @@ model Address {
   locationType String?
   order        Order[]
   product      Product[]
-  user         User?
-  farmDetails  FarmDetails?
+  user         User[]
+  farmDetails  FarmDetails[]
 
   @@index([country, region])
   @@index([latitude, longitude])
