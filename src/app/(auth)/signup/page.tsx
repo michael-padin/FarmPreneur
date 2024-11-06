@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
@@ -8,7 +7,6 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
@@ -16,7 +14,6 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { AuthLeftSection } from "../_components/auth-left-section"
 import { AuthRightSection } from "../_components/auth-right-section"
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 export const metadata: Metadata = {
 	title: "Sign up",
