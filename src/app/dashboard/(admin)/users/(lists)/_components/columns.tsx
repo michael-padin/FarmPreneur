@@ -73,7 +73,7 @@ export const columns: ColumnDef<
 		enableSorting: true,
 		cell: ({ row }) => {
 			const user = row.original
-			return <AddressDetailsDrawerDialog user={user} />
+			return user.address && <AddressDetailsDrawerDialog user={user} />
 		},
 		size: 40
 	},

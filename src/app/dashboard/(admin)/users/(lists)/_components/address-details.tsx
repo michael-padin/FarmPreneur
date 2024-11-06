@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/drawer"
 import { getCustomersUseCase, getUsersUseCase } from "@/use-cases/users"
 import { useMapbox } from "@/hooks/use-mapbox"
+import "mapbox-gl/dist/mapbox-gl.css"
 
 interface AddressDetailsDrawerDialogProps {
 	user: Awaited<
@@ -34,7 +36,13 @@ export const AddressDetailsDrawerDialog = ({
 }: AddressDetailsDrawerDialogProps) => {
 	const [open, setOpen] = React.useState(false)
 	const isDesktop = useMediaQuery("(min-width: 768px)")
+	const mapboxApiKey = process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!
 
+	const { initializeMap } = useMapbox({
+		draggable: false,
+		mapboxApiKey,
+		defaultCenter: { lng: user.address!.longitude, lat: user.address!.latitude }
+	})
 	if (isDesktop) {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
@@ -46,21 +54,15 @@ export const AddressDetailsDrawerDialog = ({
 						</span>
 					</DialogTrigger>
 				</div>
-				<DialogContent
-					className="max-w-screen-lg"
-					onOpenAutoFocus={(e) => e.preventDefault()}
-				>
+				<DialogContent className="max-w-screen-lg">
 					<DialogHeader>
 						<DialogTitle>
 							<span className="text-primary">{user.name}&apos;s</span> address
 						</DialogTitle>
 						<DialogDescription>{user.address?.fullAddress}</DialogDescription>
 					</DialogHeader>
-					<div className="w-full">
-						<MapBox
-							lng={user.address?.longitude}
-							lat={user.address?.latitude}
-						/>
+					<div>
+						<MapBox initializeMap={initializeMap} />
 					</div>
 				</DialogContent>
 			</Dialog>
@@ -85,7 +87,7 @@ export const AddressDetailsDrawerDialog = ({
 					<DrawerDescription>{user.address?.fullAddress}</DrawerDescription>
 				</DrawerHeader>
 				<div className="w-full px-4">
-					<MapBox lng={user.address?.longitude} lat={user.address?.latitude} />
+					<MapBox initializeMap={initializeMap} />
 				</div>
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>
@@ -97,30 +99,23 @@ export const AddressDetailsDrawerDialog = ({
 	)
 }
 
-export const MapBox = ({
-	lng = 0,
-	lat = 0
-}: {
-	lng?: number
-	lat?: number
-}) => {
+interface MapBoxDrawerDialogProps {
+	initializeMap?: (container: HTMLDivElement) => void
+}
+export const MapBox = ({ initializeMap }: MapBoxDrawerDialogProps) => {
 	const mapContainer = React.useRef<HTMLDivElement>(null)
-	const { initializeMap } = useMapbox({
-		mapboxApiKey: process.env.NEXT_PUBLIC_MAP_BOX_PUBLIC_KEY!,
-		defaultCenter: { lng, lat }
-	})
 
 	React.useEffect(() => {
 		if (mapContainer.current) {
-			initializeMap(mapContainer.current)
+			initializeMap?.(mapContainer.current)
 		}
-	}, [initializeMap])
+	}, [initializeMap, mapContainer])
 
 	return (
 		<div
 			ref={mapContainer}
-			className={`aspect-square rounded-md lg:aspect-video`}
+			className={`relative aspect-square w-full rounded-md lg:aspect-video`}
 			aria-label="Map"
-		/>
+		></div>
 	)
 }

@@ -15,6 +15,10 @@ const nextConfig = {
 				hostname: "pub-c0b0612ac60c481aa03192161bd30b3f.r2.dev"
 			}
 		]
+	},
+	webpack: (config) => {
+		config.resolve.fallback = { fs: false, path: false }
+		return config
 	}
 }
 

@@ -27,10 +27,9 @@ export function useMapbox({
 			const center = defaultCenter || mapRef.current?.getCenter()
 			mapRef.current = new mapboxgl.Map({
 				container,
-				style: "mapbox://styles/mokiiiiieeeee/cm2nggekh003c01r4b330fpox",
+				style: "mapbox://styles/mokiiiiieeeee/cm36b3sr6011801pwamv88gx1",
 				center: center,
 				zoom: zoom,
-				projection: "mercator",
 				attributionControl: false,
 				// pitch: 60,
 				pitchWithRotate: true
@@ -78,14 +77,14 @@ export function useMapbox({
 		}
 	}, [])
 
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (mapRef.current) {
-	// 			mapRef.current.remove()
-	// 			mapRef.current = null
-	// 		}
-	// 	}
-	// }, [])
+	useEffect(() => {
+		return () => {
+			if (mapRef.current) {
+				mapRef.current.remove()
+				mapRef.current = null
+			}
+		}
+	}, [])
 
 	return {
 		map: mapRef,

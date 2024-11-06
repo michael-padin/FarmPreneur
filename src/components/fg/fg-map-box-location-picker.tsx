@@ -463,8 +463,8 @@ export const MapBox = ({ initializeMap }: MapBoxDrawerDialogProps) => {
 	return (
 		<div
 			ref={mapContainer}
-			className={`aspect-square w-full rounded-md lg:aspect-video`}
+			className={`relative aspect-square w-full rounded-md lg:aspect-video`}
 			aria-label="Map"
-		/>
+		></div>
 	)
 }
