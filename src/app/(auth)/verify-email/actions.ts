@@ -20,15 +20,12 @@ import { isOtpExpired } from "@/lib/utils"
 export const verifyCode = async (
 	data: VerificationType & { userId: string; email: string }
 ) => {
-	const parsedData = VerificationFormSchema.safeParse(data)
-	if (!parsedData.success) {
-		return { error: "Invalid fields" }
-	}
-	console.log("DATA HERE")
-
-	console.log({ data })
-
 	try {
+		const validations = VerificationFormSchema.safeParse(data)
+
+		if (!validations.success) {
+			throw new Error("Invalid fields")
+		}
 		const [otp, user] = await Promise.all([
 			getEmailOtpByEmailUseCase(data.email),
 			getUserByIdUseCase(data.userId)
@@ -37,7 +34,7 @@ export const verifyCode = async (
 		if (otp) {
 			if (!isOtpExpired(otp?.expiresAt)) {
 				if (otp.otp !== data.code) {
-					return { error: "Invalid code" }
+					throw new Error("Invalid code")
 				}
 				const [verifiedUser, _] = await Promise.all([
 					updateVerifiedUserUseCase(user!.id),
@@ -46,13 +43,12 @@ export const verifyCode = async (
 				return { success: "Email verified", data: verifiedUser }
 			} else {
 				await deleteEmailOtpByEmailUseCase(data.email)
-				return {
-					error: "Invalid code, OTP has expired"
-				}
+				throw new Error("Invalid code, OTP has expired")
 			}
 		}
-		return { error: "Invalid code" }
+		throw new Error("Invalid code")
 	} catch (error) {
+		console.error(error)
 		return { error: getErrorMessage(error) }
 	}
 }
@@ -60,7 +56,7 @@ export const verifyCode = async (
 export const resendCode = async (userId: string) => {
 	try {
 		const user = await getUserByIdUseCase(userId)
-		if (!user) return { error: "User not found" }
+		if (!user) throw new Error("User not found")
 
 		await deleteEmailOtpByEmailUseCase(user.email)
 
@@ -74,12 +70,11 @@ export const resendCode = async (userId: string) => {
 			expirationTime: otpExpiration
 		})
 
-		// Send verification email
-		// await sendOTPEmail(user.email!, otp, "FarmPreneur", user.name!)
+		await sendOTPEmail(user.email!, otp, "FarmPreneur", user.name!)
 
 		return { success: "Verification email sent", data: response }
 	} catch (error) {
-		if (error instanceof Error) return { error: error.message }
-		return { error: "Error sending verification email" }
+		console.error(error)
+		return { error: getErrorMessage(error) }
 	}
 }

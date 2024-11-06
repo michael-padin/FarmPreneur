@@ -108,7 +108,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 		if (!user?.isEmailVerified && !otp) {
 			handleResend()
 		}
-	}, [])
+	}, [handleResend, otp, user?.isEmailVerified])
 
 	useEffect(() => {
 		if (otp) {
