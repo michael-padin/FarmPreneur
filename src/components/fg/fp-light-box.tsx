@@ -2,7 +2,12 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { X, ChevronLeft, ChevronRight, Trash, Info } from "lucide-react"
 import { DialogTitle } from "@radix-ui/react-dialog"
@@ -31,13 +36,15 @@ export function Lightbox({
 		<Dialog open={true} onOpenChange={onClose}>
 			<DialogHeader>
 				<DialogTitle></DialogTitle>
+				<DialogDescription></DialogDescription>
 			</DialogHeader>
 			<DialogContent className="h-full max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg p-0">
 				<div className="relative flex h-full w-full items-center justify-center">
 					<Image
 						src={currentImage.url}
 						alt={currentImage.filename}
-						layout="fill"
+						fill
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 						objectFit="contain"
 					/>
 					<div className="absolute right-4 top-4 flex space-x-2">
@@ -48,13 +55,15 @@ export function Lightbox({
 						>
 							<Info className="h-4 w-4" />
 						</Button>
-						<Button
-							variant="outline"
-							size="icon"
-							onClick={() => onDelete?.(currentIndex)}
-						>
-							<Trash className="h-4 w-4" />
-						</Button>
+						{onDelete && (
+							<Button
+								variant="outline"
+								size="icon"
+								onClick={() => onDelete(currentIndex)}
+							>
+								<Trash className="h-4 w-4" />
+							</Button>
+						)}
 						<Button
 							variant="outline"
 							size="icon"

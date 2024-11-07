@@ -23,6 +23,8 @@ import {
 	FarmerApprovalBadge,
 	VerificationBadge
 } from "../../_components/badges"
+import { VerificationDocumentCell } from "./verificationDocument"
+import { ImageSchema } from "@/validations/image"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getPendingFarmersUseCase>>[0]
@@ -64,17 +66,38 @@ export const columns: ColumnDef<
 		},
 		size: 40
 	},
+
 	{
-		accessorKey: "createdAt",
+		accessorKey: "birthDate",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Created At" />
+			<DataTableColumnHeader column={column} title="Birth Date" />
 		),
 		cell: ({ cell }) => formatDate(cell.getValue() as Date)
 	},
 	{
+		accessorKey: "verificationDocument",
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title="Verification Document"
+				className="min-w-max"
+			/>
+		),
+		cell: ({ row }) => {
+			const image = row.original.verificationDocument?.image as ImageSchema
+
+			return <VerificationDocumentCell image={image} />
+		},
+		enableSorting: false
+	},
+	{
 		accessorKey: "farmerApplicationStatus",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Application Status" />
+			<DataTableColumnHeader
+				column={column}
+				title="Application Status"
+				className="min-w-max"
+			/>
 		),
 		cell: ({ row }) => {
 			const farmerApplicationStatus = row.original.farmerApplicationStatus
@@ -101,6 +124,15 @@ export const columns: ColumnDef<
 				: value.includes(row.getValue(id) ? "Verified" : "Unverified")
 		},
 		enableSorting: false
+	},
+	{
+		accessorKey: "createdAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Created At" />
+		),
+		cell: ({ cell }) => (
+			<p className="w-max">{formatDate(cell.getValue() as Date)}</p>
+		)
 	},
 	{
 		id: "actions",

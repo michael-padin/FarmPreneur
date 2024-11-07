@@ -2,6 +2,7 @@ import { RegisterFarmerSchema } from "@/app/(auth)/register-farmer/types"
 import { RegisterType } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
+import { Turret_Road } from "next/font/google"
 
 export const getUserById = async (id: string) => {
 	return await db.user.findUnique({
@@ -282,6 +283,12 @@ export const getPendingFarmers = async () => {
 			contactNumber: true,
 			address: true,
 			updatedAt: true,
+			birthDate: true,
+			verificationDocument: {
+				select: {
+					image: true
+				}
+			},
 			_count: true
 		},
 		orderBy: {
