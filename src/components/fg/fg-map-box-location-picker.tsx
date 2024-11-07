@@ -59,6 +59,7 @@ interface AddressLocationPickerProps {
 	readonly?: boolean
 	mapClassName?: ClassValue
 	showMap?: boolean
+	dialogTriggerText?: string
 }
 
 const defaultAddress: Address = {
@@ -76,7 +77,8 @@ export default function AddressLocationPicker({
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
 	defaultZoom,
-	showMap = false
+	showMap = false,
+	dialogTriggerText = "Choose on map"
 }: AddressLocationPickerProps) {
 	const [openDialog, setOpenDialog] = useState(false)
 
@@ -149,7 +151,11 @@ export default function AddressLocationPicker({
 					setInputValue={setInputValue}
 				/>
 				{showMap && (
-					<MapDrawerDialog open={openDialog} onOpenChangeAction={setOpenDialog}>
+					<MapDrawerDialog
+						open={openDialog}
+						onOpenChangeAction={setOpenDialog}
+						dialogTriggerText={dialogTriggerText}
+					>
 						<div className="space-y-2">
 							<div className="w-full lg:w-1/2">
 								<AddressInput
@@ -181,6 +187,7 @@ interface AddressInputProps {
 		lat: number,
 		lng: number
 	) => Address
+	dialogTriggerText?: string
 }
 export const AddressInput = ({
 	inputValue,
@@ -188,7 +195,8 @@ export const AddressInput = ({
 	createAddressFromFeature,
 	updateMarkerPosition,
 	mapboxApiKey,
-	onAddressSelect
+	onAddressSelect,
+	dialogTriggerText
 }: AddressInputProps) => {
 	const [open, setOpen] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -383,11 +391,13 @@ interface MapDrawerDialogProps {
 	open: boolean
 	onOpenChangeAction: React.Dispatch<React.SetStateAction<boolean>>
 	children: React.ReactNode
+	dialogTriggerText?: string
 }
 export const MapDrawerDialog = ({
 	open,
 	onOpenChangeAction,
-	children
+	children,
+	dialogTriggerText = "Choose on map"
 }: MapDrawerDialogProps) => {
 	const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -397,7 +407,7 @@ export const MapDrawerDialog = ({
 				<div>
 					<DialogTrigger asChild>
 						<span className="ml-2 cursor-pointer text-xs text-primary">
-							Choose on map
+							{dialogTriggerText}
 						</span>
 					</DialogTrigger>
 				</div>
@@ -425,7 +435,7 @@ export const MapDrawerDialog = ({
 		<Drawer open={open} onOpenChange={onOpenChangeAction} dismissible={false}>
 			<DrawerTrigger asChild>
 				<span className="ml-2 cursor-pointer text-xs text-primary">
-					Choose on map{" "}
+					{dialogTriggerText}
 				</span>
 			</DrawerTrigger>
 			<DrawerContent>
