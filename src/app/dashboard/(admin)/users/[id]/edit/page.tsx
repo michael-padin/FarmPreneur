@@ -1,7 +1,7 @@
 import { getUserByIdUseCase } from "@/use-cases/users"
 import UserDetailsForm from "./_components/user-details-form"
 import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 
 const getUser = async (id: string) => {
@@ -22,15 +22,16 @@ const EditUserDetailsPage = async (props: { params: Params }) => {
 	}
 
 	const params = await props.params
+
 	const [user, farmDetails] = await Promise.all([
 		getUser(params.id),
 		getFarmerDetails(params.id)
 	])
 
-	return (
-		<>
-			<UserDetailsForm user={user} farmDetails={farmDetails} />
-		</>
-	)
+	if (!user) {
+		notFound()
+	}
+
+	return <UserDetailsForm user={user} farmDetails={farmDetails} />
 }
 export default EditUserDetailsPage

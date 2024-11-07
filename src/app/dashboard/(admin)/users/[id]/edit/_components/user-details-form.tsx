@@ -22,7 +22,6 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import AddressInput from "@/components/fg/fg-map-box-location-picker"
 import {
 	Select,
 	SelectContent,
@@ -42,10 +41,11 @@ import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { DateTimeInput } from "@/components/ui/date-time-input"
-import { FGSelect } from "@/components/fg/fg-select"
-import { documentLabels, documentOptions } from "@/types/verificationDocument"
+import { documentOptions } from "@/types/verificationDocument"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "sonner"
+import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
+import { BackButton } from "@/components/fg/back-button"
 
 interface UserDetailsFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
@@ -67,21 +67,10 @@ export default function UserDetailsForm({
 			farmerApplicationStatus: user?.farmerApplicationStatus || null,
 			birthDate: user?.birthDate || null,
 			profilePicture: user?.profilePicture || null,
-			verificationDocument: user?.verificationDocument || null,
-			farmDetails: {
-				farmDescription: farmDetails?.farmDescription || "",
-				images: farmDetails?.images || [],
-				address: {
-					fullAddress: farmDetails?.address?.fullAddress || "",
-					street: farmDetails?.address?.street || "",
-					region: farmDetails?.address?.region || "",
-					country: farmDetails?.address?.country || "",
-					postalCode: farmDetails?.address?.postalCode || "",
-					latitude: farmDetails?.address?.latitude || 0
-				},
-				farmName: farmDetails?.farmName || "",
-				products: farmDetails?.products || []
-			},
+			documentVerification:
+				(user?.verificationDocument as UpdateUserSchema["documentVerification"]) ||
+				null,
+			farmDetails: (farmDetails as UpdateUserSchema["farmDetails"]) || null,
 			address: {
 				fullAddress: user?.address?.fullAddress || "",
 				street: user?.address?.street || "",
@@ -94,16 +83,23 @@ export default function UserDetailsForm({
 		}
 	})
 
+	console.log("user :>> ", user)
+	console.log("farmDetails :>> ", farmDetails)
+
+	console.log("form.defaultValues :>> ", form.formState.defaultValues)
+
 	const userRole = form.watch("role")
 
 	const onSubmit = (data: UpdateUserSchema) => {
+		console.log("data shit :>> ", data)
 		toast.success("Success", { description: <pre>{JSON.stringify(data)}</pre> })
 		startTransition(() => {})
 	}
 
 	return (
-		<div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
-			<Card className="mx-auto w-full max-w-4xl">
+		<div className="container mx-auto space-y-2 px-4 py-5 sm:px-6 lg:px-8">
+			<BackButton />
+			<Card>
 				<CardHeader>
 					<CardTitle className="">User Details</CardTitle>
 					<CardDescription>
@@ -205,137 +201,31 @@ export default function UserDetailsForm({
 								/>
 							)}
 
-							<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-								<div className="space-y-6">
-									<FormField
-										control={form.control}
-										name="name"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Name</FormLabel>
-												<FormControl>
-													<Input placeholder="John Doe" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="profilePicture"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Profile Picture</FormLabel>
-												<FormControl>
-													<FileUpload {...field} path="profile-pictures" />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="birthDate"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Birth Date</FormLabel>
-												<FormControl>
-													<DateTimePicker
-														value={field.value!}
-														onChange={field.onChange}
-														hideTime
-														renderTrigger={({ open, value, setOpen }) => (
-															<DateTimeInput
-																value={value}
-																onChange={(x) => !open && field.onChange(x)}
-																format="MM/dd/yyyy"
-																disabled={open}
-																onCalendarClick={() => setOpen(!open)}
-															/>
-														)}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="email"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Email</FormLabel>
-												<FormControl>
-													<Input placeholder="john@example.com" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="contactNumber"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Contact Number</FormLabel>
-												<FormControl>
-													<FGSinglePhoneINput {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<Card>
-									<CardHeader>
-										<CardTitle>Address</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<FormField
-											control={form.control}
-											name="address"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel></FormLabel>
-													<FormControl>
-														<AddressInput
-															defaultCenter={{
-																lat: field?.value?.latitude || 40.7128,
-																lng: field?.value?.longitude || -74.006
-															}}
-															mapClassName="aspect-square "
-															onAddressSelect={(address) => {
-																form.setValue("address", address, {
-																	shouldValidate: true
-																})
-															}}
-															defaultValue={field?.value?.fullAddress || ""}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-									</CardContent>
-								</Card>
-							</div>
-							<Separator className="my-8" />
 							<div className="space-y-6">
-								<h3 className="text-2xl font-semibold leading-none tracking-tight">
-									Verification Document
-								</h3>
 								<FormField
 									control={form.control}
-									name="verificationDocument.type"
+									name="name"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Document Type</FormLabel>
+											<FormLabel>Name</FormLabel>
 											<FormControl>
-												<FGSelect
+												<Input placeholder="John Doe" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="profilePicture"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Profile Picture</FormLabel>
+											<FormControl>
+												<FileUpload
+													path="profile-pictures"
+													value={field.value!}
 													onChange={(value) => field.onChange(value)}
-													value={field.value || ""}
-													placeholder="Select Document Type"
-													listOptions={documentOptions}
 												/>
 											</FormControl>
 											<FormMessage />
@@ -344,18 +234,131 @@ export default function UserDetailsForm({
 								/>
 								<FormField
 									control={form.control}
-									name="verificationDocument.image"
+									name="birthDate"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Verification Document</FormLabel>
+											<FormLabel>Birth Date</FormLabel>
 											<FormControl>
-												<FileUpload {...field} path="documents" />
+												<DateTimePicker
+													value={field.value!}
+													onChange={field.onChange}
+													hideTime
+													renderTrigger={({ open, value, setOpen }) => (
+														<DateTimeInput
+															value={value}
+															onChange={(x) => !open && field.onChange(x)}
+															format="MM/dd/yyyy"
+															disabled={open}
+															onCalendarClick={() => setOpen(!open)}
+														/>
+													)}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input placeholder="john@example.com" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="contactNumber"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Contact Number</FormLabel>
+											<FormControl>
+												<FGSinglePhoneINput
+													{...field}
+													value={field.value || ""}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="address"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel></FormLabel>
+											<FormControl>
+												<AddressLocationPicker
+													defaultCenter={{
+														lat: field?.value?.latitude || 40.7128,
+														lng: field?.value?.longitude || -74.006
+													}}
+													onAddressSelect={field.onChange}
+													defaultValue={field?.value?.fullAddress}
+													showMap
+												/>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
 							</div>
+							{user?.verificationDocument && (
+								<>
+									<Separator className="my-8" />
+									<div className="space-y-6">
+										<h3 className="text-2xl font-semibold leading-none tracking-tight">
+											Verification Document
+										</h3>
+										<FormField
+											control={form.control}
+											name="documentVerification.type"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Document Type</FormLabel>
+													<Select
+														onValueChange={field.onChange}
+														defaultValue={field.value}
+													>
+														<FormControl>
+															<SelectTrigger>
+																<SelectValue>{field.value}</SelectValue>
+															</SelectTrigger>
+														</FormControl>
+														<SelectContent>
+															{documentOptions.map((doc) => (
+																<SelectItem value={doc.value} key={doc.value}>
+																	{doc.label}
+																</SelectItem>
+															))}
+														</SelectContent>
+													</Select>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="documentVerification.image"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Image</FormLabel>
+													<FormControl>
+														<FileUpload {...field} path="documents" />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
+								</>
+							)}
 
 							{userRole === "FARMER" && (
 								<>
@@ -412,27 +415,7 @@ export default function UserDetailsForm({
 												</FormItem>
 											)}
 										/>
-										{/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-											<FormField
-												control={form.control}
-												name="farmDetails.size"
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>Farm Size (acres)</FormLabel>
-														<FormControl>
-															<Input
-																type="number"
-																{...field}
-																onChange={(e) =>
-																	field.onChange(parseInt(e.target.value))
-																}
-															/>
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-										</div> */}
+
 										<FormField
 											control={form.control}
 											name="farmDetails.products"

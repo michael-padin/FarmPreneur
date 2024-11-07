@@ -22,7 +22,18 @@ export const getUserById = async (id: string) => {
 			updatedAt: true,
 			birthDate: true,
 			profilePicture: true,
-			verificationDocument: true
+			verificationDocument: {
+				select: {
+					id: true,
+					type: true,
+					image: true,
+					userId: true,
+					user: true,
+					createdAt: true,
+					updatedAt: true
+				}
+			},
+			farmDetails: true
 		}
 	})
 }
@@ -106,6 +117,20 @@ export const createUserFarmer = async (data: RegisterFarmerSchema) => {
 					postalCode: data.address?.postalCode,
 					latitude: data.address?.latitude,
 					longitude: data.address?.longitude
+				}
+			},
+			verificationDocument: {
+				create: {
+					type: data.documentVerification?.type,
+					image: {
+						create: {
+							url: data.documentVerification?.image?.url,
+							filename: data.documentVerification?.image?.filename,
+							size: data.documentVerification?.image?.size,
+							mimeType: data.documentVerification?.image?.mimeType,
+							type: "VERIFICATION"
+						}
+					}
 				}
 			}
 		}
