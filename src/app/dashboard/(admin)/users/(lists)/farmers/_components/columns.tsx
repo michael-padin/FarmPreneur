@@ -17,7 +17,10 @@ import { formatDate } from "@/lib/utils"
 import { useState } from "react"
 import { getFarmersUseCase } from "@/use-cases/users"
 import { toast } from "sonner"
-import { VerificationBadge } from "../../_components/badges"
+import {
+	FarmerApprovalBadge,
+	VerificationBadge
+} from "../../_components/badges"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
 import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 
@@ -88,6 +91,21 @@ export const columns: ColumnDef<
 			<DataTableColumnHeader column={column} title="Updated At" />
 		),
 		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
+	},
+	{
+		accessorKey: "farmerApplicationStatus",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Application Status" />
+		),
+		cell: ({ row }) => {
+			const farmerApplicationStatus = row.original.farmerApplicationStatus
+			return (
+				farmerApplicationStatus && (
+					<FarmerApprovalBadge status={farmerApplicationStatus} />
+				)
+			)
+		},
+		enableSorting: false
 	},
 
 	{

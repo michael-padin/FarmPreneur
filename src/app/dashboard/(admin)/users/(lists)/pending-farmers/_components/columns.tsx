@@ -19,7 +19,10 @@ import { getPendingFarmersUseCase } from "@/use-cases/users"
 import { toast } from "sonner"
 import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
-import { VerificationBadge } from "../../_components/badges"
+import {
+	FarmerApprovalBadge,
+	VerificationBadge
+} from "../../_components/badges"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getPendingFarmersUseCase>>[0]
@@ -67,6 +70,21 @@ export const columns: ColumnDef<
 			<DataTableColumnHeader column={column} title="Created At" />
 		),
 		cell: ({ cell }) => formatDate(cell.getValue() as Date)
+	},
+	{
+		accessorKey: "farmerApplicationStatus",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Application Status" />
+		),
+		cell: ({ row }) => {
+			const farmerApplicationStatus = row.original.farmerApplicationStatus
+			return (
+				farmerApplicationStatus && (
+					<FarmerApprovalBadge status={farmerApplicationStatus} />
+				)
+			)
+		},
+		enableSorting: false
 	},
 	{
 		accessorKey: "isEmailVerified",

@@ -188,7 +188,7 @@ export const getUsers = async () => {
 			name: true,
 			email: true,
 			role: true,
-
+			farmerApplicationStatus: true,
 			isEmailVerified: true,
 			createdAt: true,
 			image: true,
@@ -246,7 +246,7 @@ export const getFarmers = async () => {
 			role: true,
 			farmDetails: true,
 			farmerOrders: true,
-
+			farmerApplicationStatus: true,
 			products: true,
 			isEmailVerified: true,
 			createdAt: true,
@@ -274,7 +274,7 @@ export const getPendingFarmers = async () => {
 			role: true,
 			farmDetails: true,
 			farmerOrders: true,
-
+			farmerApplicationStatus: true,
 			products: true,
 			isEmailVerified: true,
 			createdAt: true,

@@ -14,9 +14,8 @@ import { ROLE } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { RoleBadge, VerificationBadge } from "./badges"
+import { FarmerApprovalBadge, RoleBadge, VerificationBadge } from "./badges"
 import { formatDate } from "@/lib/utils"
-import { UpdateUserSheet } from "./update-user-sheet"
 import { useState } from "react"
 import { getUsersUseCase } from "@/use-cases/users"
 import { DeleteUsersDialog } from "./delete-user-dialog"
@@ -92,6 +91,21 @@ export const columns: ColumnDef<
 		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
 	},
 
+	{
+		accessorKey: "farmerApplicationStatus",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Application Status" />
+		),
+		cell: ({ row }) => {
+			const farmerApplicationStatus = row.original.farmerApplicationStatus
+			return (
+				farmerApplicationStatus && (
+					<FarmerApprovalBadge status={farmerApplicationStatus} />
+				)
+			)
+		},
+		enableSorting: false
+	},
 	{
 		accessorKey: "isEmailVerified",
 		header: ({ column }) => (
