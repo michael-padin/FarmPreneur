@@ -18,12 +18,6 @@ export const getEmailOtpByIdUseCase = async (id: string) => {
 	return await getEmailOtpById(id)
 }
 
-export const createEmailOtpUseCase = async (
-	data: EmailOtp & { userId: string }
-) => {
-	return await createEmailOtp(data)
-}
-
 export const updateEmailOtpUseCase = async (
 	data: EmailOtp & { id: string }
 ) => {
@@ -72,4 +66,15 @@ export const updateEmailOtpExpirationUseCase = async (
 
 export const countActiveOtpsByUserIdUseCase = async (userId: string) => {
 	return await getEmailOtpByUserId(userId)
+}
+
+export const createEmailOtpUseCase = async (
+	data: {
+		userId: string
+		code: string
+		expirationTime: Date
+		email: string
+	} & { userId: string }
+) => {
+	return await createEmailOtp(data)
 }

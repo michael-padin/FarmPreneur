@@ -12,15 +12,22 @@ export async function getEmailOtpById(id: string) {
 	}
 }
 
-export async function createEmailOtp(data: EmailOtp & { userId: string }) {
+export async function createEmailOtp(data: {
+	userId: string
+	code: string
+	expirationTime: Date
+	email: string
+}) {
 	try {
 		return await db.emailOtp.create({
 			data: {
 				userId: data.userId,
 				email: data.email,
-				otp: data.otp,
-				expiresAt: data.expiresAt,
-				createdAt: data.createdAt || new Date()
+				otp: data.code,
+				expiresAt: data.expirationTime
+			},
+			select: {
+				expiresAt: true
 			}
 		})
 	} catch (error) {

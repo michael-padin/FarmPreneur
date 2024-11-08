@@ -2,7 +2,6 @@ import { RegisterFarmerSchema } from "@/app/(auth)/register-farmer/types"
 import { RegisterType } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
-import { Turret_Road } from "next/font/google"
 
 export const getUserById = async (id: string) => {
 	return await db.user.findUnique({
@@ -12,29 +11,13 @@ export const getUserById = async (id: string) => {
 		select: {
 			id: true,
 			name: true,
-			farmerApplicationStatus: true,
 			email: true,
 			role: true,
 			isEmailVerified: true,
 			createdAt: true,
 			image: true,
-			contactNumber: true,
-			address: true,
 			updatedAt: true,
-			birthDate: true,
-			profilePicture: true,
-			verificationDocument: {
-				select: {
-					id: true,
-					type: true,
-					image: true,
-					userId: true,
-					user: true,
-					createdAt: true,
-					updatedAt: true
-				}
-			},
-			farmDetails: true
+			profilePicture: true
 		}
 	})
 }
@@ -52,20 +35,24 @@ export const getUserByEmail = async (email: string) => {
 	})
 }
 
-export const getUserFarmerById = async (id: string) => {
-	return await db.user.findFirst({
-		where: { id: id },
+export const getUsers = async () => {
+	return await db.user.findMany({
 		select: {
-			image: true,
 			id: true,
 			name: true,
-			contactNumber: true,
-			farmDetails: true,
-			farmerApplicationStatus: true,
-			isEmailVerified: true
+			email: true,
+			role: true,
+			isEmailVerified: true,
+			createdAt: true,
+			image: true,
+			updatedAt: true
+		},
+		orderBy: {
+			createdAt: "desc"
 		}
 	})
 }
+
 export const getUserWithPasswordByEmail = async (email: string) => {
 	return await db.user.findFirst({
 		where: {
@@ -77,6 +64,7 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 	})
 }
 
+// MARK: MUTATIONS
 export const createUserCustomer = async (
 	data: RegisterType & { name: string }
 ) => {
@@ -94,8 +82,7 @@ export const createUserCustomer = async (
 			role: true,
 			isEmailVerified: true,
 			createdAt: true,
-			image: true,
-			contactNumber: true
+			image: true
 		}
 	})
 }
@@ -105,54 +92,16 @@ export const createUserFarmer = async (data: RegisterFarmerSchema) => {
 			email: data.email,
 			password: data.password,
 			name: `${data.firstName} ${data.lastName}`,
-			contactNumber: data.contactNumber,
-			birthDate: new Date(data.birthDate),
-			farmerApplicationStatus: "PENDING",
-			role: "FARMER",
-			address: {
-				create: {
-					fullAddress: data.address?.fullAddress,
-					street: data.address?.street,
-					region: data.address?.region,
-					country: data.address?.country,
-					postalCode: data.address?.postalCode,
-					latitude: data.address?.latitude,
-					longitude: data.address?.longitude
-				}
-			},
-			verificationDocument: {
-				create: {
-					type: data.documentVerification?.type,
-					image: {
-						create: {
-							url: data.documentVerification?.image?.url,
-							filename: data.documentVerification?.image?.filename,
-							size: data.documentVerification?.image?.size,
-							mimeType: data.documentVerification?.image?.mimeType,
-							type: "VERIFICATION"
-						}
-					}
-				}
-			}
-		}
-	})
-}
-
-export const saveVerificationCode = async (data: {
-	userId: string
-	code: string
-	expirationTime: Date
-	email: string
-}) => {
-	return await db.emailOtp.create({
-		data: {
-			otp: data.code,
-			expiresAt: data.expirationTime,
-			userId: data.userId,
-			email: data.email
+			role: "FARMER"
 		},
 		select: {
-			expiresAt: true
+			id: true,
+			name: true,
+			email: true,
+			role: true,
+			isEmailVerified: true,
+			createdAt: true,
+			image: true
 		}
 	})
 }
@@ -182,27 +131,6 @@ export const updateUserPasswordByEmail = async (data: {
 	})
 }
 
-export const getUsers = async () => {
-	return await db.user.findMany({
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			role: true,
-			farmerApplicationStatus: true,
-			isEmailVerified: true,
-			createdAt: true,
-			image: true,
-			contactNumber: true,
-			address: true,
-			updatedAt: true
-		},
-		orderBy: {
-			createdAt: "desc"
-		}
-	})
-}
-
 export const updateUser = async (data: UpdateUserTypes & { id: string }) => {
 	await db.user.update({
 		where: {
@@ -212,7 +140,6 @@ export const updateUser = async (data: UpdateUserTypes & { id: string }) => {
 			name: data.name,
 			email: data.email as string,
 			isEmailVerified: data.isEmailVerified,
-			contactNumber: data.contactNumber,
 			image: data.image,
 			role: data.role,
 			...(data.password && { password: data.password })
@@ -228,95 +155,7 @@ export const deleteUserById = async (id: string) => {
 	})
 }
 export const deleteUsersById = async (ids: string[]) => {
-	console.log(ids)
-
 	return await db.$transaction([
 		db.user.deleteMany({ where: { id: { in: ids } } })
 	])
-}
-
-export const getFarmers = async () => {
-	return await db.user.findMany({
-		where: {
-			role: "FARMER"
-		},
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			role: true,
-			farmDetails: true,
-			farmerOrders: true,
-			farmerApplicationStatus: true,
-			products: true,
-			isEmailVerified: true,
-			createdAt: true,
-			image: true,
-			contactNumber: true,
-			address: true,
-			updatedAt: true,
-			_count: true
-		},
-		orderBy: {
-			createdAt: "desc"
-		}
-	})
-}
-export const getPendingFarmers = async () => {
-	return await db.user.findMany({
-		where: {
-			role: "FARMER",
-			farmerApplicationStatus: "PENDING"
-		},
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			role: true,
-			farmDetails: true,
-			farmerOrders: true,
-			farmerApplicationStatus: true,
-			products: true,
-			isEmailVerified: true,
-			createdAt: true,
-			image: true,
-			contactNumber: true,
-			address: true,
-			updatedAt: true,
-			birthDate: true,
-			verificationDocument: {
-				select: {
-					image: true
-				}
-			},
-			_count: true
-		},
-		orderBy: {
-			createdAt: "desc"
-		}
-	})
-}
-export const getCustomers = async () => {
-	return await db.user.findMany({
-		where: {
-			role: "CUSTOMER"
-		},
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			role: true,
-			buyerOrders: true,
-			isEmailVerified: true,
-			createdAt: true,
-			image: true,
-			contactNumber: true,
-			address: true,
-			updatedAt: true,
-			_count: true
-		},
-		orderBy: {
-			createdAt: "desc"
-		}
-	})
 }

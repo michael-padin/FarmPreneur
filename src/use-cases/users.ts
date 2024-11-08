@@ -6,23 +6,14 @@ import {
 	createUserFarmer,
 	deleteUserById,
 	deleteUsersById,
-	getCustomers,
-	getFarmers,
-	getPendingFarmers,
 	getUserByEmail,
 	getUserById,
-	getUserFarmerById,
 	getUsers,
 	getUserWithPasswordByEmail,
-	saveVerificationCode,
 	updateUser,
 	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
-import {
-	transformCustomerRecord,
-	transformFarmerRecord
-} from "@/utils/transform"
 
 export const getUserByIdUseCase = async (id: string) => {
 	return await getUserById(id)
@@ -35,11 +26,7 @@ export const getUserWithPasswordByEmailUseCase = async (email: string) => {
 	return await getUserWithPasswordByEmail(email)
 }
 
-export const getUserFarmerByIdUseCase = async (id: string) => {
-	return await getUserFarmerById(id)
-}
-
-export const createUserCustomerUseCase = async (
+export const createUserCustomerRole = async (
 	data: RegisterType & { name: string }
 ) => {
 	return await createUserCustomer(data)
@@ -47,15 +34,6 @@ export const createUserCustomerUseCase = async (
 
 export const createUserFarmerUseCase = async (data: RegisterFarmerSchema) => {
 	return await createUserFarmer(data)
-}
-
-export const saveVerificationCodeUseCase = async (data: {
-	userId: string
-	code: string
-	expirationTime: Date
-	email: string
-}) => {
-	return await saveVerificationCode(data)
 }
 
 export const updateVerifiedUserUseCase = async (userId: string) => {
@@ -71,17 +49,6 @@ export const UpdateUserPasswordByEmailUseCase = async (data: {
 
 export const getUsersUseCase = async () => {
 	return await getUsers()
-}
-export const getFarmersUseCase = async () => {
-	const farmers = await getFarmers()
-	return farmers.map(transformFarmerRecord)
-}
-export const getPendingFarmersUseCase = async () => {
-	return await getPendingFarmers()
-}
-export const getCustomersUseCase = async () => {
-	const customers = await getCustomers()
-	return customers.map(transformCustomerRecord)
 }
 
 export const updateUserUseCase = async (
