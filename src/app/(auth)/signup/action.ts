@@ -21,7 +21,7 @@ export const register = async (data: RegisterSchema) => {
 		if (existingUser) return { error: "User already exists", data: null }
 
 		const otp = generateOTP()
-		const otpExpiration = generateExpiration(1)
+		const otpExpiration = generateExpiration(5)
 
 		const newUser = await createUserWithOTPUseCase({
 			...data,
