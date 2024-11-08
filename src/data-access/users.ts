@@ -1,7 +1,7 @@
-import { RegisterFarmerSchema } from "@/app/(auth)/register-farmer/types"
-import { RegisterType } from "@/app/(auth)/signup/_types"
+import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
+import { ROLE } from "@prisma/client"
 
 export const getUserById = async (id: string) => {
 	return await db.user.findUnique({
@@ -65,34 +65,29 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 }
 
 // MARK: MUTATIONS
-export const createUserCustomer = async (
-	data: RegisterType & { name: string }
+export const createUserWithOTP = async (
+	data: RegisterSchema & {
+		role: ROLE
+		name: string
+		emailOtp: {
+			otp: string
+			expiresAt: Date
+		}
+	}
 ) => {
 	return await db.user.create({
 		data: {
 			email: data.email,
 			password: data.password,
 			name: data.name,
-			role: "CUSTOMER"
-		},
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			role: true,
-			isEmailVerified: true,
-			createdAt: true,
-			image: true
-		}
-	})
-}
-export const createUserFarmer = async (data: RegisterFarmerSchema) => {
-	return await db.user.create({
-		data: {
-			email: data.email,
-			password: data.password,
-			name: `${data.firstName} ${data.lastName}`,
-			role: "FARMER"
+			role: data.role,
+			emailOtp: {
+				create: {
+					email: data.email,
+					expiresAt: data.emailOtp.expiresAt,
+					otp: data.emailOtp.otp
+				}
+			}
 		},
 		select: {
 			id: true,

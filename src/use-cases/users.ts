@@ -1,9 +1,7 @@
-import { RegisterFarmerSchema } from "@/app/(auth)/register-farmer/types"
-import { RegisterType } from "@/app/(auth)/signup/_types"
+import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import {
-	createUserCustomer,
-	createUserFarmer,
+	createUserWithOTP,
 	deleteUserById,
 	deleteUsersById,
 	getUserByEmail,
@@ -14,6 +12,7 @@ import {
 	updateUserPasswordByEmail,
 	updateVerifiedUser
 } from "@/data-access/users"
+import { ROLE } from "@prisma/client"
 
 export const getUserByIdUseCase = async (id: string) => {
 	return await getUserById(id)
@@ -26,14 +25,17 @@ export const getUserWithPasswordByEmailUseCase = async (email: string) => {
 	return await getUserWithPasswordByEmail(email)
 }
 
-export const createUserCustomerRole = async (
-	data: RegisterType & { name: string }
+export const createUserWithOTPUseCase = async (
+	data: RegisterSchema & {
+		name: string
+		role: ROLE
+		emailOtp: {
+			otp: string
+			expiresAt: Date
+		}
+	}
 ) => {
-	return await createUserCustomer(data)
-}
-
-export const createUserFarmerUseCase = async (data: RegisterFarmerSchema) => {
-	return await createUserFarmer(data)
+	return await createUserWithOTP(data)
 }
 
 export const updateVerifiedUserUseCase = async (userId: string) => {

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { RegisterSchema, RegisterType } from "../_types"
+import { registerSchema, RegisterSchema } from "../_types"
 import { register } from "../action"
 import { useRouter } from "next/navigation"
 import { showErrorToast } from "@/lib/handle-error"
@@ -25,8 +25,8 @@ import { showErrorToast } from "@/lib/handle-error"
 const RegisterForm = () => {
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
-	const form = useForm<RegisterType>({
-		resolver: zodResolver(RegisterSchema),
+	const form = useForm<RegisterSchema>({
+		resolver: zodResolver(registerSchema),
 		defaultValues: {
 			firstName: "",
 			lastName: "",
@@ -36,7 +36,7 @@ const RegisterForm = () => {
 		}
 	})
 
-	const onSubmit = async (data: RegisterType) => {
+	const onSubmit = async (data: RegisterSchema) => {
 		startTransition(async () => {
 			const { error } = await register(data)
 

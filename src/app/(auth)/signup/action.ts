@@ -1,41 +1,37 @@
 "use server"
-import { RegisterSchema, RegisterType } from "./_types"
+import { RegisterSchema } from "./_types"
 import { hash } from "bcryptjs"
 import {
 	generateExpiration,
 	generateOTP
 } from "@/utils/generateVerificationCode"
 import {
-	createUserCustomerUseCase,
-	getUserByEmailUseCase,
-	saveVerificationCodeUseCase
+	createUserWithOTPUseCase,
+	getUserByEmailUseCase
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
 import { getErrorMessage } from "@/lib/handle-error"
 import { signIn } from "@/auth"
 
-export const register = async (data: RegisterType) => {
+export const register = async (data: RegisterSchema) => {
 	try {
 		const hashedPassword = await hash(data.password, 10)
 
 		const existingUser = await getUserByEmailUseCase(data.email)
 		if (existingUser) return { error: "User already exists", data: null }
 
-		const newUser = await createUserCustomerUseCase({
-			...data,
-			name: `${data.firstName} ${data.lastName}`,
-			password: hashedPassword
-		})
-
 		const otp = generateOTP()
 		const otpExpiration = generateExpiration(1)
 
-		console.log("Saving verification code...")
-		await saveVerificationCodeUseCase({
-			code: otp,
-			expirationTime: otpExpiration,
-			userId: newUser.id,
-			email: newUser.email
+		const newUser = await createUserWithOTPUseCase({
+			...data,
+			name: `${data.firstName} ${data.lastName}`,
+			role: "CUSTOMER",
+			password: hashedPassword,
+			emailOtp: {
+				otp,
+				expiresAt: otpExpiration
+			}
 		})
 
 		console.log(`Sending otp to ${data.email}`)
