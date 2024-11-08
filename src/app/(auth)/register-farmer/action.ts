@@ -1,45 +1,40 @@
 "use server"
 
-import { RegisterFarmerSchema } from "./types"
 import { hash } from "bcryptjs"
 import {
 	generateExpiration,
 	generateOTP
 } from "@/utils/generateVerificationCode"
 import {
-	createUserFarmerUseCase,
-	getUserByEmailUseCase,
-	saveVerificationCodeUseCase
+	createUserWithOTPUseCase,
+	getUserByEmailUseCase
 } from "@/use-cases/users"
 import { sendOTPEmail } from "@/lib/nodemailer"
 import { getErrorMessage } from "@/lib/handle-error"
 import { signIn } from "@/auth"
+import { RegisterSchema } from "@/validations/user"
 
-export const registerFarmer = async (data: RegisterFarmerSchema) => {
+export const registerFarmer = async (data: RegisterSchema) => {
 	try {
-		const hashedPassword = await hash(data.password, 1)
+		const hashedPassword = await hash(data.password, 10)
 
 		const existingUser = await getUserByEmailUseCase(data.email)
 		if (existingUser) return { error: "User already exists", data: null }
 
-		const newFarmer = await createUserFarmerUseCase({
-			...data,
-			password: hashedPassword
-		})
-
-		// Generate OTP and expiration (e.g., 5 minutes)
 		const otp = generateOTP()
 		const otpExpiration = generateExpiration(1)
 
-		console.log("Saving verification code...")
-		await saveVerificationCodeUseCase({
-			code: otp,
-			expirationTime: otpExpiration,
-			userId: newFarmer.id,
-			email: newFarmer.email
+		const newUser = await createUserWithOTPUseCase({
+			...data,
+			name: `${data.firstName} ${data.lastName}`,
+			role: "FARMER",
+			password: hashedPassword,
+			emailOtp: {
+				otp,
+				expiresAt: otpExpiration
+			}
 		})
-
-		await sendOTPEmail(newFarmer.email!, otp, "FarmPreneur", newFarmer.name!)
+		await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
 
 		await signIn("credentials", {
 			email: data.email,

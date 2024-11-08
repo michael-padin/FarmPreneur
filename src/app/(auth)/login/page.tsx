@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
@@ -27,59 +26,57 @@ export default async function LoginPage() {
 	return (
 		<>
 			<AuthLeftSection>
-				<div>
-					<Card className="w-full md:min-w-[453.6px] lg:max-w-[453.6px] lg:border-0 lg:shadow-none">
-						<CardHeader>
-							<CardTitle>Log In</CardTitle>
-							<CardDescription>
-								Enter your email and password to log in
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<div className="">
-								<GoogleButton />
-								<div className="relative my-4">
-									<div className="absolute inset-0 flex items-center">
-										<span className="w-full border-t" />
-									</div>
-									<div className="relative flex justify-center text-xs uppercase">
-										<span className="bg-background px-2 text-muted-foreground">
-											Or
-										</span>
-									</div>
+				<Card className="lg:border-0 lg:shadow-none">
+					<CardHeader>
+						<CardTitle>Log In</CardTitle>
+						<CardDescription>
+							Enter your email and password to log in
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<div className="">
+							<GoogleButton />
+							<div className="relative my-4">
+								<div className="absolute inset-0 flex items-center">
+									<span className="w-full border-t" />
+								</div>
+								<div className="relative flex justify-center text-xs uppercase">
+									<span className="bg-background px-2 text-muted-foreground">
+										Or
+									</span>
 								</div>
 							</div>
-							<LoginForm />
-						</CardContent>
-						<CardFooter>
-							<div className="mx-auto w-full text-center">
-								<p className="relative mb-2 text-xs text-primary">
-									Don&apos;t have an account?{" "}
-								</p>
-								<div className="mx-auto w-full space-y-2">
-									<Link
-										href="/signup"
-										className={cn(
-											buttonVariants({ variant: "secondary" }),
-											"w-full"
-										)}
-									>
-										Create new account
-									</Link>
-									<Link
-										href="/register-farmer"
-										className={cn(
-											buttonVariants({ variant: "secondary" }),
-											"w-full"
-										)}
-									>
-										Create new farmer account
-									</Link>
-								</div>
+						</div>
+						<LoginForm />
+					</CardContent>
+					<CardFooter>
+						<div className="mx-auto w-full text-center">
+							<p className="relative mb-2 text-xs text-primary">
+								Don&apos;t have an account?{" "}
+							</p>
+							<div className="mx-auto w-full space-y-2">
+								<Link
+									href="/signup"
+									className={cn(
+										buttonVariants({ variant: "secondary" }),
+										"w-full"
+									)}
+								>
+									Create new account
+								</Link>
+								<Link
+									href="/register-farmer"
+									className={cn(
+										buttonVariants({ variant: "secondary" }),
+										"w-full"
+									)}
+								>
+									Create new farmer account
+								</Link>
 							</div>
-						</CardFooter>
-					</Card>
-				</div>
+						</div>
+					</CardFooter>
+				</Card>
 			</AuthLeftSection>
 			<AuthRightSection
 				imageProps={{ src: "/auth2.svg", alt: "Log in image" }}

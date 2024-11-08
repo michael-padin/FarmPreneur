@@ -6,7 +6,6 @@ import React, { useTransition } from "react"
 import { useForm } from "react-hook-form"
 
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -17,46 +16,15 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { registerFarmerSchema, RegisterFarmerSchema } from "../types"
 import { registerFarmer } from "../action"
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import { CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from "@/components/ui/select"
-import { documentOptions } from "@/types/verificationDocument"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
-import { showErrorToast } from "@/lib/handle-error"
 
-const defaultValues: RegisterFarmerSchema = {
+import { showErrorToast } from "@/lib/handle-error"
+import { registerSchema, RegisterSchema } from "@/validations/user"
+
+const defaultValues: RegisterSchema = {
 	firstName: "",
 	lastName: "",
 	email: "",
-	contactNumber: "+639",
-	birthDate: "",
-	address: {
-		fullAddress: "",
-		street: "",
-		region: "",
-		country: "",
-		postalCode: "",
-		latitude: 0,
-		longitude: 0
-	},
-	documentVerification: {
-		image: {
-			filename: "",
-			mimeType: "",
-			size: 0,
-			url: ""
-		},
-		type: "DRIVER_LICENSE"
-	},
 	password: "",
 	confirmPassword: ""
 }
@@ -64,12 +32,12 @@ const defaultValues: RegisterFarmerSchema = {
 const RegisterFarmerForm = () => {
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
-	const form = useForm<RegisterFarmerSchema>({
-		resolver: zodResolver(registerFarmerSchema),
+	const form = useForm<RegisterSchema>({
+		resolver: zodResolver(registerSchema),
 		defaultValues
 	})
 
-	const onSubmit = (data: RegisterFarmerSchema) => {
+	const onSubmit = (data: RegisterSchema) => {
 		startTransition(async () => {
 			const { error } = await registerFarmer(data)
 			if (error) {
@@ -129,99 +97,6 @@ const RegisterFarmerForm = () => {
 							</FormItem>
 						)}
 					/>
-					<FormField
-						control={form.control}
-						name="contactNumber"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Contact Number</FormLabel>
-								<FormControl>
-									<FGSinglePhoneINput {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="birthDate"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Birth Date</FormLabel>
-								<FormControl>
-									<Input type="date" {...field} placeholder="MM/DD/YYYY" />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="address"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Address</FormLabel>
-								<FormControl>
-									<AddressLocationPicker
-										onAddressSelect={field.onChange}
-										defaultCenter={{
-											lng: field.value?.longitude,
-											lat: field.value?.latitude
-										}}
-										defaultValue={field.value.fullAddress}
-										showMap
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<Separator className="my-4" />
-					<CardTitle>Document Verification</CardTitle>
-					<FormField
-						control={form.control}
-						name="documentVerification.type"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Document Type</FormLabel>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value || ""}
-								>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder="Select a document type" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{documentOptions.map((doc) => (
-											<SelectItem value={doc.value} key={doc.value}>
-												{doc.label}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="documentVerification.image"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Image</FormLabel>
-								<FormControl>
-									<FileUpload {...field} maxFiles={1} path="documents" />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<Separator className="my-4" />
 
 					<FormField
 						control={form.control}
