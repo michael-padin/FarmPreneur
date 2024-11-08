@@ -68,13 +68,11 @@ export const countActiveOtpsByUserIdUseCase = async (userId: string) => {
 	return await getEmailOtpByUserId(userId)
 }
 
-export const createEmailOtpUseCase = async (
-	data: {
-		userId: string
-		code: string
-		expirationTime: Date
-		email: string
-	} & { userId: string }
-) => {
+export const createEmailOtpUseCase = async (data: {
+	userId: string
+	otp: string
+	expiresAt: Date
+	email: string
+}) => {
 	return await createEmailOtp(data)
 }

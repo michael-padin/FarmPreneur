@@ -1,7 +1,6 @@
 "use server"
 import {
 	getUserByIdUseCase,
-	saveVerificationCodeUseCase,
 	updateVerifiedUserUseCase
 } from "@/use-cases/users"
 import {
@@ -11,6 +10,7 @@ import {
 import { sendOTPEmail } from "@/lib/nodemailer"
 import { VerificationFormSchema, VerificationType } from "./types"
 import {
+	createEmailOtpUseCase,
 	deleteEmailOtpByEmailUseCase,
 	getEmailOtpByEmailUseCase
 } from "@/use-cases/email-otp"
@@ -61,13 +61,13 @@ export const resendCode = async (userId: string) => {
 		await deleteEmailOtpByEmailUseCase(user.email)
 
 		const otp = generateOTP()
-		const otpExpiration = generateExpiration(5)
+		const expiresAt = generateExpiration(5)
 
-		const response = await saveVerificationCodeUseCase({
+		const response = await createEmailOtpUseCase({
 			userId,
-			code: otp,
-			email: user.email,
-			expirationTime: otpExpiration
+			expiresAt,
+			otp: otp,
+			email: user.email
 		})
 
 		await sendOTPEmail(user.email!, otp, "FarmPreneur", user.name!)

@@ -14,8 +14,8 @@ export async function getEmailOtpById(id: string) {
 
 export async function createEmailOtp(data: {
 	userId: string
-	code: string
-	expirationTime: Date
+	otp: string
+	expiresAt: Date
 	email: string
 }) {
 	try {
@@ -23,8 +23,8 @@ export async function createEmailOtp(data: {
 			data: {
 				userId: data.userId,
 				email: data.email,
-				otp: data.code,
-				expiresAt: data.expirationTime
+				otp: data.otp,
+				expiresAt: data.expiresAt
 			},
 			select: {
 				expiresAt: true

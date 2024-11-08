@@ -9,7 +9,6 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { getUserByIdUseCase } from "@/use-cases/users"
 import { AuthLeftSection } from "../_components/auth-left-section"
 import { AuthRightSection } from "../_components/auth-right-section"
 import { BackButtonLogout } from "@/components/fg/back-button"
@@ -28,7 +27,6 @@ export default async function verifyEmailPage() {
 		if (session.user.role === "CUSTOMER") redirect("/")
 		if (session.user.role === "FARMER") redirect("/dashboard/farmer")
 	}
-	const user = await getUserByIdUseCase(session.user.id)
 	const otp = await getEmailOtpExpirationByUserIdUseCase(session.user.id)
 
 	return (
