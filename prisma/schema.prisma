@@ -1,112 +1,112 @@
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_DATABASE_URL")
 }
 
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "library"
+  provider = "prisma-client-js"
 }
 
 // MARK: ACCOUNT
-model Account {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?  @db.String
-  access_token      String?  @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?  @db.String
-  session_state     String?
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String   @db.ObjectId
+// model Account {
+//   id                String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt         DateTime @default(now())
+//   updatedAt         DateTime @updatedAt
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refresh_token     String?  @db.String
+//   access_token      String?  @db.String
+//   expires_at        Int?
+//   token_type        String?
+//   scope             String?
+//   id_token          String?  @db.String
+//   session_state     String?
+//   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId            String   @db.ObjectId
 
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
-}
+//   @@unique([provider, providerAccountId])
+//   @@map("accounts")
+// }
 
-// MARK: SESSION 
-model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  sessionToken String   @unique
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String   @db.ObjectId
+// // MARK: SESSION 
+// model Session {
+//   id           String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt    DateTime @default(now())
+//   updatedAt    DateTime @updatedAt
+//   sessionToken String   @unique
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId       String   @db.ObjectId
 
-  @@index([userId])
-  @@map("sessions")
-}
+//   @@index([userId])
+//   @@map("sessions")
+// }
 
-// MARK: TOKEN
-model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  identifier String
-  token      String
-  expires    DateTime
+// // MARK: TOKEN
+// model VerificationToken {
+//   id         String   @id @default(auto()) @map("_id") @db.ObjectId
+//   identifier String
+//   token      String
+//   expires    DateTime
 
-  @@unique([identifier, token])
-  @@index([expires])
-  @@map("verification_tokens")
-}
+//   @@unique([identifier, token])
+//   @@index([expires])
+//   @@map("verification_tokens")
+// }
 
-// MARK: AUTHENTICATOR
-// Optional for WebAuthn support
-model Authenticator {
-  credentialID         String  @id @map("_id")
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
-  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId               String  @db.ObjectId
+// // MARK: AUTHENTICATOR
+// // Optional for WebAuthn support
+// model Authenticator {
+//   credentialID         String  @id @map("_id")
+//   providerAccountId    String
+//   credentialPublicKey  String
+//   counter              Int
+//   credentialDeviceType String
+//   credentialBackedUp   Boolean
+//   transports           String?
+//   user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId               String  @db.ObjectId
 
-  @@unique([userId, credentialID])
-  @@index([userId])
-  @@map("authenticators")
-}
+//   @@unique([userId, credentialID])
+//   @@index([userId])
+//   @@map("authenticators")
+// }
 
 // MARK: USER
 model User {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
   email           String
   emailVerified   DateTime?
   image           String?
-  accounts        Account[]
-  sessions        Session[]
   role            ROLE
   password        String?
-  contactNumber   String?
-  isEmailVerified Boolean         @default(false)
-  Authenticators  Authenticator[]
-  profilePicture  Image?          @relation("ProfilePicture")
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  isEmailVerified Boolean        @default(false)
+  profilePicture  Image?         @relation("ProfilePicture")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   notifications   Notification[]
   emailOtp        EmailOtp[]
   farmer          Farmer?
   customer        Customer?
+
+  // accounts        Account[]
+  // sessions        Session[]
+  // Authenticators  Authenticator[]
 
   @@unique([email])
   @@index([role])
   @@map("users")
 }
 
+// MARK: FARMER
 model Farmer {
   id                     String                   @id @default(auto()) @map("_id") @db.ObjectId
   farmName               String?
   farmDescription        String?
   applicationStatus      FarmerApplicationStatus?
+  contactNumber          String
   verificationDocument   VerificationDocument?    @relation(fields: [verificationDocumentId], references: [id])
   verificationDocumentId String?                  @db.ObjectId
   userId                 String                   @unique @db.ObjectId
@@ -119,45 +119,54 @@ model Farmer {
   products               Product[]
   reviews                ProductReview[]
 
+  @@index([applicationStatus])
   @@map("farmers")
 }
 
+// MARK: CUSTOMER
 model Customer {
-  id        String          @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String          @unique @db.ObjectId
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  address   Address?
-  orders    Order[]
-  cart      CartItem[]
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  wishlist  WishlistItem[]
-  reviews   ProductReview[]
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  contactNumber String?
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String          @unique @db.ObjectId
+  address       Address?
+  orders        Order[]
+  cart          CartItem[]
+  wishlist      WishlistItem[]
+  reviews       ProductReview[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 
   @@map("customers")
 }
 
+// MARK: CART ITEM
 model CartItem {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   quantity   Int
-  customerId String   @unique @db.ObjectId
-  productId  String   @unique @db.ObjectId
-  addedAt    DateTime @default(now()) // Time the item was added to the cart
-  updatedAt  DateTime @updatedAt // Time the cart item was last updated
-  customer   Customer @relation(fields: [customerId], references: [id])
   product    Product  @relation(fields: [productId], references: [id])
+  productId  String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId String   @db.ObjectId
+  updatedAt  DateTime @updatedAt // Time the cart item was last updated
+  addedAt    DateTime @default(now()) // Time the item was added to the cart
 
+  @@unique([customerId, productId])
+  @@index([customerId])
   @@map("cart_items")
 }
 
+// MARK: WISHLIST ITEM
 model WishlistItem {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  customerId String   @unique @db.ObjectId
-  productId  String   @unique @db.ObjectId
-  addedAt    DateTime @default(now()) // Time the item was added to the wishlist
   customer   Customer @relation(fields: [customerId], references: [id])
+  customerId String   @db.ObjectId
   product    Product  @relation(fields: [productId], references: [id])
+  productId  String   @db.ObjectId
+  addedAt    DateTime @default(now()) // Time the item was added to the wishlist
 
+  @@unique([customerId, productId])
+  @@index([customerId])
   @@map("wishlist_items")
 }
 
@@ -170,11 +179,8 @@ model Product {
   description      String
   price            Float
   unit             String?
-  listingStatus    ProductListingStatus @default(PENDING)
   quantity         Int
-  images           Image[]
-  reviews          ProductReview[]
-  orders           Order[]
+  listingStatus    ProductListingStatus @default(PENDING)
   pickupLocation   Address?             @relation(fields: [pickupLocationId], references: [id])
   pickupLocationId String               @db.ObjectId
   category         Category?            @relation(fields: [categoryId], references: [id])
@@ -182,9 +188,14 @@ model Product {
   farmer           Farmer?              @relation(fields: [farmerId], references: [id])
   farmerId         String?              @db.ObjectId
   cartItems        CartItem[]
+  images           Image[]
+  reviews          ProductReview[]
+  orders           Order[]
   wishlistItems    WishlistItem[]
 
   @@index([categoryId])
+  @@index([farmerId])
+  @@index([listingStatus])
   @@index([createdAt])
   @@map("products")
 }
@@ -197,17 +208,16 @@ model ProductReview {
   rating         Float
   comment        String?
   status         ReviewStatus @default(PUBLISHED)
-  images         Image[]
   farmerResponse String?
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId      String       @db.ObjectId
-  orderId        String       @unique @db.ObjectId
-  farmerId       String?      @db.ObjectId
+  customer       Customer?    @relation(fields: [customerId], references: [id])
   customerId     String?      @db.ObjectId
-
-  order    Order     @relation(fields: [orderId], references: [id])
-  product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  farmer   Farmer?   @relation(fields: [farmerId], references: [id])
-  customer Customer? @relation(fields: [customerId], references: [id])
+  order          Order        @relation(fields: [orderId], references: [id])
+  orderId        String       @unique @db.ObjectId
+  farmer         Farmer?      @relation(fields: [farmerId], references: [id])
+  farmerId       String?      @db.ObjectId
+  images         Image[]
 
   @@index([productId, status])
   @@index([createdAt])
@@ -258,23 +268,20 @@ model Order {
   quantityPurchased Int
   totalPrice        Float
   status            OrderStatus    @default(IN_PROGRESS)
-  shippingAddress   String
-  review            ProductReview?
   product           Product        @relation(fields: [productId], references: [id], onDelete: Cascade) // Order refers to the product
   productId         String         @db.ObjectId
-  buyerId           String         @db.ObjectId
-  farmerId          String         @db.ObjectId
   address           Address?       @relation(fields: [addressId], references: [id])
   addressId         String?        @db.ObjectId
   farmer            Farmer         @relation(fields: [farmerId], references: [id])
-  Customer          Customer?      @relation(fields: [customerId], references: [id])
+  farmerId          String         @db.ObjectId
+  customer          Customer?      @relation(fields: [customerId], references: [id])
   customerId        String?        @db.ObjectId
+  review            ProductReview?
 
-  @@unique([buyerId, farmerId])
-  @@index([status, productId])
-  @@index([createdAt])
-  @@index([buyerId])
+  @@index([status])
+  @@index([customerId])
   @@index([farmerId])
+  @@index([createdAt])
   @@map("orders")
 }
 
