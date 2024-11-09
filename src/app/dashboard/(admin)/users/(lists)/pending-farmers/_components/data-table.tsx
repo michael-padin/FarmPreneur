@@ -43,7 +43,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { getCommonPinningStyles } from "@/lib/data-table"
 import { columns } from "./columns"
-import { getPendingFarmersUseCase } from "@/use-cases/users"
+import { getPendingFarmersUseCase } from "@/use-cases/farmers"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getPendingFarmersUseCase>>>

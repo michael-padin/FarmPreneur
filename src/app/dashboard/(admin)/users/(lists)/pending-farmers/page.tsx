@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getPendingFarmersUseCase } from "@/use-cases/users"
+import { getPendingFarmersUseCase } from "@/use-cases/farmers"
 import {
 	Card,
 	CardContent,
@@ -23,11 +23,13 @@ const getPendingFarmers = async () => {
 
 const UsersPage = async () => {
 	const session = await auth()
-	if (!session || session.user.role !== "ADMIN") {
+	if (!session || !session.user || session.user.role !== "ADMIN") {
 		redirect("/login")
 	}
 
-	const usersPromise = getPendingFarmers()
+	const pendingFarmersPromise = getPendingFarmers()
+
+	console.log("await pendingFarmersPromise() :>> ", await pendingFarmersPromise)
 
 	return (
 		<Card className="">
@@ -37,7 +39,7 @@ const UsersPage = async () => {
 			</CardHeader>
 			<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
 				<Suspense fallback={<DataTableSkeleton />}>
-					<DataTable data={usersPromise} />
+					<DataTable data={pendingFarmersPromise} />
 				</Suspense>
 			</CardContent>
 		</Card>

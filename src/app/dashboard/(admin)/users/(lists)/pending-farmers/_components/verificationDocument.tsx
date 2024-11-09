@@ -2,12 +2,12 @@
 
 import { Lightbox } from "@/components/fg/fp-light-box"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { ImageSchema } from "@/validations/image"
+import { Image as PrismaImage } from "@prisma/client"
 import Image from "next/image"
 import { useState } from "react"
 
 interface VerificationDocumentCellProps {
-	image: ImageSchema
+	image: PrismaImage
 }
 
 export const VerificationDocumentCell = ({

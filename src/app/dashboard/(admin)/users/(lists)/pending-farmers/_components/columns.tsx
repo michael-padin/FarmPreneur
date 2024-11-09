@@ -15,7 +15,7 @@ import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import { useState } from "react"
-import { getPendingFarmersUseCase } from "@/use-cases/users"
+import { getPendingFarmersUseCase } from "@/use-cases/farmers"
 import { toast } from "sonner"
 import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
@@ -24,24 +24,19 @@ import {
 	VerificationBadge
 } from "../../_components/badges"
 import { VerificationDocumentCell } from "./verificationDocument"
-import { ImageSchema } from "@/validations/image"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getPendingFarmersUseCase>>[0]
 >[] = [
 	{
-		accessorKey: "name",
+		accessorKey: "user.name",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Name" />
 		),
-		enableSorting: true,
-		cell: ({ row }) => {
-			const name = row.original.name
-			return <span className="text-nowrap">{name}</span>
-		}
+		enableSorting: true
 	},
 	{
-		accessorKey: "email",
+		accessorKey: "user.email",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Email" />
 		),
@@ -55,14 +50,19 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		accessorKey: "Address",
+		accessorKey: "address",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Address" />
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			const user = row.original
-			return <AddressDetailsDrawerDialog user={user} />
+			const address = row.original.address
+			const name = row.original.user.name
+			return address && name ? (
+				<AddressDetailsDrawerDialog name={name} address={address} />
+			) : (
+				"N/A"
+			)
 		},
 		size: 40
 	},
@@ -84,9 +84,9 @@ export const columns: ColumnDef<
 			/>
 		),
 		cell: ({ row }) => {
-			const image = row.original.verificationDocument?.image as ImageSchema
+			const image = row.original.verificationDocument?.image
 
-			return <VerificationDocumentCell image={image} />
+			return image && <VerificationDocumentCell image={image} />
 		},
 		enableSorting: false
 	},
@@ -100,7 +100,7 @@ export const columns: ColumnDef<
 			/>
 		),
 		cell: ({ row }) => {
-			const farmerApplicationStatus = row.original.farmerApplicationStatus
+			const farmerApplicationStatus = row.original.applicationStatus
 			return (
 				farmerApplicationStatus && (
 					<FarmerApprovalBadge status={farmerApplicationStatus} />
@@ -110,12 +110,12 @@ export const columns: ColumnDef<
 		enableSorting: false
 	},
 	{
-		accessorKey: "isEmailVerified",
+		accessorKey: "user.isEmailVerified",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Verification" />
+			<DataTableColumnHeader column={column} title="Email Verification" />
 		),
 		cell: ({ row }) => {
-			const isEmailVerified = row.getValue("isEmailVerified") as boolean
+			const isEmailVerified = row.original.user.isEmailVerified
 			return <VerificationBadge isEmailVerified={isEmailVerified} />
 		},
 		filterFn: (row, id, value) => {
@@ -138,14 +138,14 @@ export const columns: ColumnDef<
 		id: "actions",
 		cell: function Cell({ row }) {
 			const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false)
-			const user = row.original
+			const id = row.original.id
 
 			return (
 				<>
 					<DeleteUsersDialog
 						open={showDeleteUserDialog}
 						onOpenChange={setShowDeleteUserDialog}
-						users={[row.original]}
+						ids={[id]}
 						showTrigger={false}
 						onSuccess={() => row.toggleSelected(false)}
 					/>
@@ -167,10 +167,10 @@ export const columns: ColumnDef<
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/${user.id}`}>Details</Link>
+								<Link href={`/dashboard/users/${id}`}>Details</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/${user.id}/edit`}>Edit</Link>
+								<Link href={`/dashboard/users/${id}/edit`}>Edit</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowDeleteUserDialog(true)}>
