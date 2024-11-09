@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getFarmersUseCase } from "@/use-cases/users"
+import { getFarmersUseCase } from "@/use-cases/farmers"
 
 import { Suspense } from "react"
 import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
@@ -24,7 +24,7 @@ const getFarmers = async () => {
 
 const UsersPage = async () => {
 	const session = await auth()
-	if (!session || session.user.role !== "ADMIN") {
+	if (!session || !session.user || session.user.role !== "ADMIN") {
 		redirect("/login")
 	}
 	const farmerListPromise = getFarmers()

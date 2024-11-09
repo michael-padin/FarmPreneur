@@ -29,6 +29,7 @@ export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getPendingFarmersUseCase>>[0]
 >[] = [
 	{
+		id: "user.name",
 		accessorKey: "user.name",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Name" />
@@ -36,6 +37,7 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
+		id: "user.email",
 		accessorKey: "user.email",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Email" />
@@ -110,6 +112,7 @@ export const columns: ColumnDef<
 		enableSorting: false
 	},
 	{
+		id: "user.isEmailVerified",
 		accessorKey: "user.isEmailVerified",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Email Verification" />

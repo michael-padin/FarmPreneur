@@ -85,9 +85,11 @@ export function DataTable({ data }: DataTableProps) {
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
 				<Input
 					placeholder="Filter emails..."
-					value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+					value={
+						(table.getColumn("user.email")?.getFilterValue() as string) ?? ""
+					}
 					onChange={(event) =>
-						table.getColumn("email")?.setFilterValue(event.target.value)
+						table.getColumn("user.email")?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
 				/>
@@ -119,20 +121,20 @@ export function DataTable({ data }: DataTableProps) {
 													id={status}
 													checked={(
 														table
-															.getColumn("isEmailVerified")
+															.getColumn("user.isEmailVerified")
 															?.getFilterValue() as string[]
 													)?.includes(status)}
 													onCheckedChange={(checked) => {
 														if (checked) {
 															table
-																.getColumn("isEmailVerified")
+																.getColumn("user.isEmailVerified")
 																?.setFilterValue((old: string[]) => [
 																	...(old || []),
 																	status
 																])
 														} else {
 															table
-																.getColumn("isEmailVerified")
+																.getColumn("user.isEmailVerified")
 																?.setFilterValue((old: string[]) =>
 																	old?.filter((item) => item !== status)
 																)
@@ -264,7 +266,7 @@ export function DataTable({ data }: DataTableProps) {
 
 								<div className="flex items-center justify-between text-xs">
 									<div className="col-span-2">Email Verification: </div>
-									<VerificationBadge isEmailVerified={row.getValue("isEmailVerified")} />
+									<VerificationBadge user.isEmailVerified={row.getValue("isEmailVerified")} />
 								</div>
 								{row.getValue("role") === "FARMER" ? (
 									<div className="flex items-center justify-between text-xs">
