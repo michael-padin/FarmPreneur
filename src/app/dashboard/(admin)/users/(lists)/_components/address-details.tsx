@@ -21,18 +21,18 @@ import {
 	DrawerTitle,
 	DrawerTrigger
 } from "@/components/ui/drawer"
-import { getCustomersUseCase, getUsersUseCase } from "@/use-cases/users"
 import { useMapbox } from "@/hooks/use-mapbox"
 import "mapbox-gl/dist/mapbox-gl.css"
+import { Address } from "@prisma/client"
 
 interface AddressDetailsDrawerDialogProps {
-	user: Awaited<
-		ReturnType<typeof getUsersUseCase | typeof getCustomersUseCase>
-	>[0]
+	address: Address
+	name?: string
 }
 
 export const AddressDetailsDrawerDialog = ({
-	user
+	address,
+	name
 }: AddressDetailsDrawerDialogProps) => {
 	const [open, setOpen] = React.useState(false)
 	const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -41,13 +41,16 @@ export const AddressDetailsDrawerDialog = ({
 	const { initializeMap } = useMapbox({
 		draggable: false,
 		mapboxApiKey,
-		defaultCenter: { lng: user.address!.longitude, lat: user.address!.latitude }
+		defaultCenter: {
+			lng: address!.longitude,
+			lat: address!.latitude
+		}
 	})
 	if (isDesktop) {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<div>
-					<p className="w-[180px] truncate">{user.address?.fullAddress}</p>
+					<p className="w-[180px] truncate">{address?.fullAddress}</p>
 					<DialogTrigger asChild>
 						<span className="cursor-pointer text-xs text-primary">
 							View in map
@@ -57,9 +60,9 @@ export const AddressDetailsDrawerDialog = ({
 				<DialogContent className="max-w-screen-lg">
 					<DialogHeader>
 						<DialogTitle>
-							<span className="text-primary">{user.name}&apos;s</span> address
+							<span className="text-primary">{name}&apos;s</span> address
 						</DialogTitle>
-						<DialogDescription>{user.address?.fullAddress}</DialogDescription>
+						<DialogDescription>{address?.fullAddress}</DialogDescription>
 					</DialogHeader>
 					<div>
 						<MapBox initializeMap={initializeMap} />
@@ -72,7 +75,7 @@ export const AddressDetailsDrawerDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen} dismissible={false}>
 			<div>
-				<p className="w-[180px] truncate">{user.address?.fullAddress}</p>
+				<p className="w-[180px] truncate">{address?.fullAddress}</p>
 				<DrawerTrigger asChild>
 					<span className="cursor-pointer text-xs text-primary">
 						View in map
@@ -82,9 +85,9 @@ export const AddressDetailsDrawerDialog = ({
 			<DrawerContent onOpenAutoFocus={(e) => e.preventDefault()}>
 				<DrawerHeader className="text-left">
 					<DrawerTitle>
-						<span className="text-primary">{user.name}&apos;s</span> address
+						<span className="text-primary">{name}&apos;s</span> address
 					</DrawerTitle>
-					<DrawerDescription>{user.address?.fullAddress}</DrawerDescription>
+					<DrawerDescription>{address?.fullAddress}</DrawerDescription>
 				</DrawerHeader>
 				<div className="w-full px-4">
 					<MapBox initializeMap={initializeMap} />
