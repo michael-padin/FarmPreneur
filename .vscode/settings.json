@@ -11,6 +11,7 @@
 		"Lightbox",
 		"mapbox",
 		"Preneur",
-		"Signup"
+		"Signup",
+		"upsert"
 	]
 }
