@@ -29,8 +29,6 @@ const UsersPage = async () => {
 
 	const pendingFarmersPromise = getPendingFarmers()
 
-	console.log("await pendingFarmersPromise() :>> ", await pendingFarmersPromise)
-
 	return (
 		<Card className="">
 			<CardHeader className="p-4 lg:p-6">

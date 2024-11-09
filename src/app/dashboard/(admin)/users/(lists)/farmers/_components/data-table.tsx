@@ -42,7 +42,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { getFarmersUseCase } from "@/use-cases/users"
+import { getFarmersUseCase } from "@/use-cases/farmers"
 import { columns } from "./columns"
 
 interface DataTableProps {

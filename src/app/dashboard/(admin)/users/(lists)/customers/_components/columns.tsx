@@ -43,6 +43,7 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
+		id: "Contact",
 		accessorKey: "contactNumber",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Contact" />
@@ -51,6 +52,7 @@ export const columns: ColumnDef<
 	},
 
 	{
+		id: "address",
 		accessorKey: "customer.address",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Address" />
@@ -66,23 +68,34 @@ export const columns: ColumnDef<
 		}
 	},
 	{
-		accessorKey: "customer.orders.count",
+		id: "orders",
+		accessorKey: "customer._count.orders",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Orders" />
 		),
 		enableSorting: true
 	},
 	{
-		accessorKey: "customer.orders.reviews.count",
+		id: "reviews",
+		accessorKey: "customer._count.reviews",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Reviews" />
 		),
 		enableSorting: true
 	},
 	{
-		accessorKey: "customer.orders.cart.count",
+		id: "cart",
+		accessorKey: "customer._count.cart",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Cart" />
+		),
+		enableSorting: true
+	},
+	{
+		id: "wishlist",
+		accessorKey: "customer._count.wishlist",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Wishlist" />
 		),
 		enableSorting: true
 	},
@@ -91,14 +104,18 @@ export const columns: ColumnDef<
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Created At" />
 		),
-		cell: ({ cell }) => formatDate(cell.getValue() as Date)
+		cell: ({ cell }) => (
+			<div className="w-max">{formatDate(cell.getValue() as Date)}</div>
+		)
 	},
 	{
 		accessorKey: "updatedAt",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Updated At" />
 		),
-		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
+		cell: ({ cell }) => (
+			<div className="w-max">{formatDate(cell.getValue() as Date)}</div>
+		)
 	},
 	{
 		accessorKey: "isEmailVerified",

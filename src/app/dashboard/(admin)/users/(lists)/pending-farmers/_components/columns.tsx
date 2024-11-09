@@ -29,7 +29,7 @@ export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getPendingFarmersUseCase>>[0]
 >[] = [
 	{
-		id: "user.name",
+		id: "name",
 		accessorKey: "user.name",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Name" />
@@ -37,7 +37,7 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		id: "user.email",
+		id: "email",
 		accessorKey: "user.email",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Email" />
@@ -45,6 +45,17 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
+		id: "birth date",
+		accessorKey: "birthDate",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Birth Date" />
+		),
+		cell: ({ cell }) => (
+			<div className="w-max">{formatDate(cell.getValue() as Date)}</div>
+		)
+	},
+	{
+		id: "contact",
 		accessorKey: "contactNumber",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Contact" />
@@ -70,13 +81,7 @@ export const columns: ColumnDef<
 	},
 
 	{
-		accessorKey: "birthDate",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Birth Date" />
-		),
-		cell: ({ cell }) => formatDate(cell.getValue() as Date)
-	},
-	{
+		id: "document",
 		accessorKey: "verificationDocument",
 		header: ({ column }) => (
 			<DataTableColumnHeader
@@ -93,6 +98,7 @@ export const columns: ColumnDef<
 		enableSorting: false
 	},
 	{
+		id: "application status",
 		accessorKey: "farmerApplicationStatus",
 		header: ({ column }) => (
 			<DataTableColumnHeader
@@ -112,10 +118,14 @@ export const columns: ColumnDef<
 		enableSorting: false
 	},
 	{
-		id: "user.isEmailVerified",
+		id: "email verification",
 		accessorKey: "user.isEmailVerified",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Email Verification" />
+			<DataTableColumnHeader
+				column={column}
+				title="Email Verification"
+				className="w-max"
+			/>
 		),
 		cell: ({ row }) => {
 			const isEmailVerified = row.original.user.isEmailVerified

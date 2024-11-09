@@ -15,7 +15,7 @@ import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import { useState } from "react"
-import { getFarmersUseCase } from "@/use-cases/users"
+import { getFarmersUseCase } from "@/use-cases/farmers"
 import { toast } from "sonner"
 import {
 	FarmerApprovalBadge,
@@ -46,23 +46,10 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		accessorKey: "contactNumber",
+		id: "contactNumber",
+		accessorKey: "farmer.contactNumber",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Contact" />
-		),
-		enableSorting: true
-	},
-	{
-		accessorKey: "productCount",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Products" />
-		),
-		enableSorting: true
-	},
-	{
-		accessorKey: "totalSales",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Total Sales" />
 		),
 		enableSorting: true
 	},
@@ -73,32 +60,51 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			const user = row.original
-			return <AddressDetailsDrawerDialog user={user} />
-		},
-		size: 40
+			const { farmer, name } = row.original
+			const address = farmer?.address
+			return (
+				address &&
+				name && <AddressDetailsDrawerDialog name={name} address={address} />
+			)
+		}
 	},
 	{
-		accessorKey: "createdAt",
+		id: "orders",
+		accessorKey: "farmer._count.orders",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Created At" />
+			<DataTableColumnHeader column={column} title="Orders" />
 		),
-		cell: ({ cell }) => formatDate(cell.getValue() as Date)
+		enableSorting: true
 	},
 	{
-		accessorKey: "updatedAt",
+		id: "products",
+		accessorKey: "farmer._count.products",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Updated At" />
+			<DataTableColumnHeader column={column} title="Products" />
 		),
-		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
+		enableSorting: true
 	},
 	{
-		accessorKey: "farmerApplicationStatus",
+		id: "reviews",
+		accessorKey: "farmer._count.reviews",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Application Status" />
+			<DataTableColumnHeader column={column} title="Reviews" />
+		),
+		enableSorting: true
+	},
+
+	{
+		id: "applicationStatus",
+		accessorKey: "farmer.applicationStatus",
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title="Application Status"
+				className="w-max"
+			/>
 		),
 		cell: ({ row }) => {
-			const farmerApplicationStatus = row.original.farmerApplicationStatus
+			const farmerApplicationStatus = row.original.farmer?.applicationStatus
 			return (
 				farmerApplicationStatus && (
 					<FarmerApprovalBadge status={farmerApplicationStatus} />
@@ -125,23 +131,35 @@ export const columns: ColumnDef<
 		enableSorting: false
 	},
 	{
+		accessorKey: "createdAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Created At" />
+		),
+		cell: ({ cell }) => (
+			<div className="w-max">{formatDate(cell.getValue() as Date)}</div>
+		)
+	},
+	{
+		accessorKey: "updatedAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Updated At" />
+		),
+		cell: ({ cell }) => (
+			<div className="w-max">{formatDate(cell.getValue() as Date)}</div>
+		)
+	},
+	{
 		id: "actions",
 		cell: function Cell({ row }) {
 			const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false)
-			const [showUpdateUserSheet, setShowUpdateUserSheet] = useState(false)
 			const user = row.original
 
 			return (
 				<>
-					{/* <UpdateUserSheet
-						user={user}
-						open={showUpdateUserSheet}
-						onOpenChange={setShowUpdateUserSheet}
-					/> */}
 					<DeleteUsersDialog
 						open={showDeleteUserDialog}
 						onOpenChange={setShowDeleteUserDialog}
-						users={[row.original]}
+						ids={[row.original.id]}
 						showTrigger={false}
 						onSuccess={() => row.toggleSelected(false)}
 					/>

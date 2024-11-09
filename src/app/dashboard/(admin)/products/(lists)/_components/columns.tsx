@@ -63,12 +63,11 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			const product = row.original
+			const { title, pickupLocation } = row.original
 			return (
-				<AddressDetailsDrawerDialog
-					address={product.pickupLocation!}
-					title={product.title}
-				/>
+				pickupLocation && (
+					<AddressDetailsDrawerDialog address={pickupLocation} title={title} />
+				)
 			)
 		},
 		size: 40

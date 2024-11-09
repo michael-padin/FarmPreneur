@@ -133,7 +133,8 @@ export const getUsers = async () => {
 			isEmailVerified: true,
 			createdAt: true,
 			image: true,
-			updatedAt: true
+			updatedAt: true,
+			profilePicture: true
 		},
 		orderBy: {
 			createdAt: "desc"
@@ -181,48 +182,6 @@ export const getCustomers = async () => {
 					}
 				}
 			}
-		}
-	})
-}
-
-export const getPendingFarmers = async () => {
-	return await db.user.findMany({
-		where: {
-			role: "FARMER"
-		},
-		select: {
-			id: true,
-			birthDate: true,
-			applicationStatus: true,
-			contactNumber: true,
-			farmName: true,
-			farmDescription: true,
-			userId: true,
-			createdAt: true,
-			updatedAt: true,
-			_count: true,
-			address: true,
-			orders: true,
-			reviews: true,
-			verificationDocument: true,
-			products: true,
-			user: {
-				select: {
-					emailVerified: true,
-					id: true,
-					name: true,
-					email: true,
-					role: true,
-					isEmailVerified: true,
-					createdAt: true,
-					image: true,
-					updatedAt: true,
-					_count: true
-				}
-			}
-		},
-		orderBy: {
-			createdAt: "desc"
 		}
 	})
 }

@@ -14,17 +14,24 @@ import { ROLE } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { FarmerApprovalBadge, RoleBadge, VerificationBadge } from "./badges"
+import { RoleBadge, VerificationBadge } from "./badges"
 import { formatDate } from "@/lib/utils"
 import { useState } from "react"
 import { getUsersUseCase } from "@/use-cases/users"
 import { DeleteUsersDialog } from "./delete-user-dialog"
 import { toast } from "sonner"
-import { AddressDetailsDrawerDialog } from "./address-details"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getUsersUseCase>>[0]
 >[] = [
+	{
+		accessorKey: "id",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="ID" className="w-min" />
+		),
+		enableSorting: false,
+		cell: ({ row }) => <span className="max-w-min">{row.original.id}</span>
+	},
 	{
 		accessorKey: "name",
 		header: ({ column }) => (
@@ -43,13 +50,7 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true
 	},
-	{
-		accessorKey: "contactNumber",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Contact" />
-		),
-		enableSorting: true
-	},
+
 	{
 		accessorKey: "role",
 		header: ({ column }) => (
@@ -64,18 +65,7 @@ export const columns: ColumnDef<
 			return value.length === 0 ? true : value.includes(row.getValue(id))
 		}
 	},
-	{
-		accessorKey: "Address",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Address" />
-		),
-		enableSorting: true,
-		cell: ({ row }) => {
-			const user = row.original
-			return user.address && <AddressDetailsDrawerDialog user={user} />
-		},
-		size: 40
-	},
+
 	{
 		accessorKey: "createdAt",
 		header: ({ column }) => (
@@ -92,24 +82,9 @@ export const columns: ColumnDef<
 	},
 
 	{
-		accessorKey: "farmerApplicationStatus",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Application Status" />
-		),
-		cell: ({ row }) => {
-			const farmerApplicationStatus = row.original.farmerApplicationStatus
-			return (
-				farmerApplicationStatus && (
-					<FarmerApprovalBadge status={farmerApplicationStatus} />
-				)
-			)
-		},
-		enableSorting: false
-	},
-	{
 		accessorKey: "isEmailVerified",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Verification" />
+			<DataTableColumnHeader column={column} title="Email Verification" />
 		),
 		cell: ({ row }) => {
 			const isEmailVerified = row.getValue("isEmailVerified") as boolean
@@ -133,7 +108,7 @@ export const columns: ColumnDef<
 					<DeleteUsersDialog
 						open={showDeleteUserDialog}
 						onOpenChange={setShowDeleteUserDialog}
-						users={[row.original]}
+						ids={[row.original.id]}
 						showTrigger={false}
 						onSuccess={() => row.toggleSelected(false)}
 					/>

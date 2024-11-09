@@ -63,35 +63,36 @@ export const getFarmerByUserId = async (userId: string) => {
 export const getFarmerById = async () => {}
 
 export const getFarmers = async () => {
-	return await db.farmer.findMany({
+	return await db.user.findMany({
+		where: {
+			role: "FARMER"
+		},
 		select: {
 			id: true,
-			birthDate: true,
-			applicationStatus: true,
-			contactNumber: true,
-			farmName: true,
-			farmDescription: true,
-			userId: true,
 			createdAt: true,
 			updatedAt: true,
-			_count: true,
-			address: true,
-			orders: true,
-			reviews: true,
-			verificationDocument: true,
-			products: true,
-			user: {
-				select: {
-					emailVerified: true,
-					id: true,
-					name: true,
-					email: true,
-					role: true,
-					isEmailVerified: true,
-					createdAt: true,
-					image: true,
-					updatedAt: true,
-					_count: true
+			name: true,
+			email: true,
+			role: true,
+			profilePicture: true,
+			isEmailVerified: true,
+			emailVerified: true,
+			farmer: {
+				include: {
+					_count: {
+						select: {
+							orders: true,
+							farmImages: true,
+							products: true,
+							reviews: true
+						}
+					},
+					address: true,
+					verificationDocument: {
+						include: {
+							image: true
+						}
+					}
 				}
 			}
 		},

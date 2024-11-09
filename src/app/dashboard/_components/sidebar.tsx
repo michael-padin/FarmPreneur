@@ -87,7 +87,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 										<Link href={item.url}>
 											{item.icon && <item.icon />}
 											<span>{item.name}</span>
-											<SidebarMenuBadge>24</SidebarMenuBadge>
+											{/* <SidebarMenuBadge>24</SidebarMenuBadge> */}
 										</Link>
 									</SidebarMenuButton>
 									{item.items && (

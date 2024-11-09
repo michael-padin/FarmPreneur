@@ -28,14 +28,6 @@ export const updateUser = async (
 			hashedPassword = await hash(user.password, 10)
 		}
 
-		await Promise.all([
-			await updateUserUseCase({ ...user, password: hashedPassword }),
-			await upsertAddressUseCase({
-				...user.address,
-				userId: user.id,
-				id: user.address.id
-			})
-		])
 		revalidatePath("/dashboard/users")
 		return {
 			data: null,

@@ -27,28 +27,27 @@ import { db } from "@/lib/db"
 
 export const getAllProducts = async () => {
 	return await db.product.findMany({
-		select: {
-			id: true,
-			title: true,
-			description: true,
-			price: true,
-			unit: true,
-			quantity: true,
-			images: true,
-			pickupLocation: true,
-			farmer: {
+		include: {
+			_count: {
 				select: {
-					name: true
+					cartItems: true,
+					orders: true,
+					reviews: true,
+					images: true,
+					wishlistItems: true
 				}
 			},
-			orders: true,
-			reviews: true,
-			farmerId: true,
-			listingStatus: true,
-			createdAt: true,
-			updatedAt: true,
-			category: true,
-			categoryId: true
+			farmer: {
+				select: {
+					user: {
+						select: {
+							name: true,
+							email: true
+						}
+					}
+				}
+			},
+			pickupLocation: true
 		}
 	})
 }
