@@ -104,36 +104,28 @@ export const getFarmers = async () => {
 export const getPendingFarmers = async () => {
 	return await db.farmer.findMany({
 		where: {
-			applicationStatus: "PENDING"
+			AND: [{ user: { role: "FARMER" } }, { applicationStatus: "PENDING" }]
 		},
-		select: {
-			id: true,
-			birthDate: true,
-			applicationStatus: true,
-			contactNumber: true,
-			farmName: true,
-			farmDescription: true,
-			userId: true,
-			createdAt: true,
-			updatedAt: true,
-			_count: true,
-			address: true,
-			orders: true,
-			reviews: true,
-			verificationDocument: true,
-			products: true,
+		include: {
 			user: {
 				select: {
-					emailVerified: true,
 					id: true,
+					createdAt: true,
+					updatedAt: true,
 					name: true,
 					email: true,
 					role: true,
+					profilePicture: true,
 					isEmailVerified: true,
-					createdAt: true,
-					image: true,
-					updatedAt: true,
-					_count: true
+					emailVerified: true
+				}
+			},
+			address: true,
+			orders: true,
+			reviews: true,
+			verificationDocument: {
+				include: {
+					image: true
 				}
 			}
 		},
