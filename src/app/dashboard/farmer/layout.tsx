@@ -37,11 +37,12 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 	if (session.user.role !== "FARMER") {
 		return <p>Sorry, You are not authorized to view this page</p>
 	}
+	const user = await getUserFarmer(session.user.id!)
 
-	const farmer = await getUserFarmer(session.user.id!)
+	if (!user) redirect("/login")
 
-	if (farmer?.farmerApplicationStatus === "PENDING") redirect("/admin-approval")
-	if (!farmer?.farmDetails) redirect("/setup-farm-information")
+	if (user.farmer?.applicationStatus === "PENDING") redirect("/admin-approval")
+	if (!user?.farmer) redirect("/farmer-registration")
 
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
