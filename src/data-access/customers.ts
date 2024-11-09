@@ -10,17 +10,20 @@ export const getCustomerById = async () => {}
 
 export const getCustomers = async () => {
 	return await db.customer.findMany({
-		select: {
-			id: true,
-			contactNumber: true,
-			userId: true,
-			createdAt: true,
-			updatedAt: true,
-			address: true,
-			orders: true,
-			cart: true,
-			wishlist: true,
-			reviews: true
+		include: {
+			user: {
+				select: {
+					name: true,
+					email: true,
+					role: true,
+					isEmailVerified: true,
+					createdAt: true,
+					image: true,
+					updatedAt: true,
+					profilePicture: true,
+					notifications: true
+				}
+			}
 		},
 		orderBy: {
 			createdAt: "desc"

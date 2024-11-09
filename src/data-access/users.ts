@@ -152,6 +152,39 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 	})
 }
 
+export const getCustomers = async () => {
+	return await db.user.findMany({
+		where: {
+			role: "CUSTOMER"
+		},
+		select: {
+			id: true,
+			createdAt: true,
+			updatedAt: true,
+			name: true,
+			email: true,
+			role: true,
+			profilePicture: true,
+			_count: true,
+			isEmailVerified: true,
+			emailVerified: true,
+			customer: {
+				include: {
+					address: true,
+					_count: {
+						select: {
+							cart: true,
+							orders: true,
+							reviews: true,
+							wishlist: true
+						}
+					}
+				}
+			}
+		}
+	})
+}
+
 // MARK: MUTATIONS
 export const createUserWithOTP = async (
 	data: RegisterSchema & {

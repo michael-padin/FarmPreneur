@@ -6,6 +6,7 @@ import {
 	createUserWithOTP,
 	deleteUserById,
 	deleteUsersById,
+	getCustomers,
 	getUserByEmail,
 	getUserById,
 	getUserFarmerById,
@@ -29,16 +30,20 @@ export const getUserFarmerByIdUseCase = async (id: string) => {
 	return await getUserFarmerById(id)
 }
 
+export const getUserWithPasswordByEmailUseCase = async (email: string) => {
+	return await getUserWithPasswordByEmail(email)
+}
+
+export const getCustomersUseCase = async () => {
+	return await getCustomers()
+}
+
+// MARK: MUTATIONS
 export const createUserFarmerByIdUseCase = async (
 	data: FarmRegistrationSchema & { userId: string }
 ) => {
 	return await createUserFarmerById(data)
 }
-
-export const getUserWithPasswordByEmailUseCase = async (email: string) => {
-	return await getUserWithPasswordByEmail(email)
-}
-
 export const createUserWithOTPUseCase = async (
 	data: RegisterSchema & {
 		name: string
@@ -51,7 +56,6 @@ export const createUserWithOTPUseCase = async (
 ) => {
 	return await createUserWithOTP(data)
 }
-
 export const updateVerifiedUserUseCase = async (userId: string) => {
 	return await updateVerifiedUser(userId)
 }
