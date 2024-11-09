@@ -127,7 +127,7 @@ export const columns: ColumnDef<
 					<DeleteUsersDialog
 						open={showDeleteUserDialog}
 						onOpenChange={setShowDeleteUserDialog}
-						users={[row.original]}
+						ids={[row.original.id]}
 						showTrigger={false}
 						onSuccess={() => row.toggleSelected(false)}
 					/>
