@@ -1,5 +1,4 @@
 "use server"
-
 import { hash } from "bcryptjs"
 import {
 	generateExpiration,

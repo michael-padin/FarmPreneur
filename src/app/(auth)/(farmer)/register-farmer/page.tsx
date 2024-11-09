@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { AuthLeftSection } from "../_components/auth-left-section"
-import { AuthRightSection } from "../_components/auth-right-section"
+import { AuthLeftSection } from "../../_components/auth-left-section"
+import { AuthRightSection } from "../../_components/auth-right-section"
 
 export const metadata: Metadata = {
 	title: "Register Farmer - FarmPreneur",

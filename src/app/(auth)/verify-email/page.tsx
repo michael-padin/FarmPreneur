@@ -16,11 +16,7 @@ import { BackButtonLogout } from "@/components/fg/back-button"
 export default async function verifyEmailPage() {
 	const session = await auth()
 
-	if (!session) redirect("/login")
-
-	if (!session.user) {
-		redirect("/login")!
-	}
+	if (!session || !session.user) redirect("/login")
 
 	if (session.user.isEmailVerified) {
 		if (session.user.role === "ADMIN") redirect("/dashboard")

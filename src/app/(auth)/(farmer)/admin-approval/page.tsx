@@ -7,21 +7,23 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { getUserFarmerByIdUseCase } from "@/use-cases/users"
 import { CheckCircle, Clock, Loader2 } from "lucide-react"
 import { redirect } from "next/navigation"
-import { AuthLeftSection } from "../_components/auth-left-section"
-import { AuthRightSection } from "../_components/auth-right-section"
 import { BackButtonLogout } from "@/components/fg/back-button"
+import { getFarmerApprovalStatusByUserIdUseCase } from "@/use-cases/farmers"
+import { AuthLeftSection } from "../../_components/auth-left-section"
+import { AuthRightSection } from "../../_components/auth-right-section"
 
 export default async function AdminApprovalPage() {
 	const session = await auth()
 
-	if (!session) redirect("/login")
+	if (!session || !session.user) redirect("/login")
 
-	const farmer = await getUserFarmerByIdUseCase(session!.user.id!)
+	const farmer = await getFarmerApprovalStatusByUserIdUseCase(session.user.id)
 
-	if (farmer?.farmerApplicationStatus === "APPROVED")
+	if (!farmer) redirect("/login")
+
+	if (farmer?.applicationStatus === "APPROVED")
 		redirect("/setup-farm-information")
 
 	return (

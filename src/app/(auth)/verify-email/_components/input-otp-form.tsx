@@ -97,7 +97,7 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 			if (user.role === "ADMIN") {
 				redirect("/dashboard")
 			} else if (user.role === "FARMER") {
-				redirect("/admin-approval")
+				redirect("/farmer-registration")
 			} else {
 				redirect("/")
 			}
