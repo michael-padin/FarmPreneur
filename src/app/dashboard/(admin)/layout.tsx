@@ -11,18 +11,9 @@ import {
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { ModeToggle } from "@/components/mode-toggle"
-import {
-	Bell,
-	BellRing,
-	Home,
-	LineChart,
-	MessageCircle,
-	Package,
-	Users
-} from "lucide-react"
+import { Bell, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DashboardSidebar from "../_components/sidebar"
-import { adminNavItems } from "@/constants/navItems"
 
 export const metadata: Metadata = {
 	title: "Dashboard",

@@ -4,7 +4,6 @@ import { deleteUsersByIdUseCase, updateUserUseCase } from "@/use-cases/users"
 import { UpdateUserTypes, updateUserSchema } from "./types"
 import { getErrorMessage } from "@/lib/handle-error"
 import { hash } from "bcryptjs"
-import { upsertAddressUseCase } from "@/use-cases/address"
 
 export const updateUser = async (
 	user: UpdateUserTypes & {

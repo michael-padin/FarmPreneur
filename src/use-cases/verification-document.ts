@@ -1,14 +1,5 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
-import {
-	createVerificationDocument,
-	getVerificationDocumentByUserId
-} from "@/data-access/verification-document"
-
-export const getVerificationDocumentByUserIdUseCase = async (
-	userId: string
-) => {
-	return await getVerificationDocumentByUserId(userId)
-}
+import { createVerificationDocument } from "@/data-access/verification-document"
 
 export const getVerificationDocumentByIdUseCase = () => {
 	return null

@@ -37,7 +37,6 @@ import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { UpdateUserSchema, updateUserSchema } from "../types"
-import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { DateTimeInput } from "@/components/ui/date-time-input"
@@ -49,7 +48,7 @@ import { BackButton } from "@/components/fg/back-button"
 
 interface UserDetailsFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
-	farmDetails: Awaited<ReturnType<typeof getFarmDetailsByUserIdUseCase>>
+	farmDetails: Awaited<ReturnType<typeof Object>>
 }
 
 export default function UserDetailsForm({
@@ -60,33 +59,18 @@ export default function UserDetailsForm({
 	const form = useForm<UpdateUserSchema>({
 		resolver: zodResolver(updateUserSchema),
 		defaultValues: {
-			contactNumber: user?.contactNumber || "+639",
+			contactNumber: "+639",
 			email: user?.email || "",
 			name: user?.name || "",
 			role: user?.role || "CUSTOMER",
-			farmerApplicationStatus: user?.farmerApplicationStatus || null,
-			birthDate: user?.birthDate || null,
+			farmerApplicationStatus: null,
+			birthDate: null,
 			profilePicture: user?.profilePicture || null,
-			documentVerification:
-				(user?.verificationDocument as UpdateUserSchema["documentVerification"]) ||
-				null,
+			documentVerification: {},
 			farmDetails: (farmDetails as UpdateUserSchema["farmDetails"]) || null,
-			address: {
-				fullAddress: user?.address?.fullAddress || "",
-				street: user?.address?.street || "",
-				region: user?.address?.region || "",
-				country: user?.address?.country || "",
-				postalCode: user?.address?.postalCode || "",
-				latitude: user?.address?.latitude || 0,
-				longitude: user?.address?.longitude || 0
-			}
+			address: {}
 		}
 	})
-
-	console.log("user :>> ", user)
-	console.log("farmDetails :>> ", farmDetails)
-
-	console.log("form.defaultValues :>> ", form.formState.defaultValues)
 
 	const userRole = form.watch("role")
 
@@ -97,7 +81,8 @@ export default function UserDetailsForm({
 	}
 
 	return (
-		<div className="container mx-auto space-y-2 px-4 py-5 sm:px-6 lg:px-8">
+		<>
+			{/* <div className="container mx-auto space-y-2 px-4 py-5 sm:px-6 lg:px-8">
 			<BackButton />
 			<Card>
 				<CardHeader>
@@ -449,6 +434,7 @@ export default function UserDetailsForm({
 					</Form>
 				</CardContent>
 			</Card>
-		</div>
+		</div> */}
+		</>
 	)
 }

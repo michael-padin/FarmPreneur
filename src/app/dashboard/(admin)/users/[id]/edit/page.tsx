@@ -2,14 +2,11 @@ import { getUserByIdUseCase } from "@/use-cases/users"
 import UserDetailsForm from "./_components/user-details-form"
 import { auth } from "@/auth"
 import { notFound, redirect } from "next/navigation"
-import { getFarmDetailsByUserIdUseCase } from "@/use-cases/farm-details"
 
 const getUser = async (id: string) => {
 	return await getUserByIdUseCase(id)
 }
-const getFarmerDetails = async (id: string) => {
-	return await getFarmDetailsByUserIdUseCase(id)
-}
+const getFarmerDetails = async (id: string) => {}
 
 // After
 type Params = Promise<{ id: string }>
