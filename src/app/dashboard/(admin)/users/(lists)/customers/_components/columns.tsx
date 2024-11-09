@@ -103,7 +103,7 @@ export const columns: ColumnDef<
 	{
 		accessorKey: "isEmailVerified",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Verification" />
+			<DataTableColumnHeader column={column} title="Email Verification" />
 		),
 		cell: ({ row }) => {
 			const isEmailVerified = row.getValue("isEmailVerified") as boolean
