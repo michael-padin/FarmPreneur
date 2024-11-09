@@ -169,6 +169,15 @@ export const createUserWithOTP = async (
 			password: data.password,
 			name: data.name,
 			role: data.role,
+			profilePicture: {
+				create: {
+					url: "",
+					filename: "",
+					size: 0,
+					mimeType: "",
+					type: "PROFILE"
+				}
+			},
 			emailOtp: {
 				create: {
 					email: data.email,
