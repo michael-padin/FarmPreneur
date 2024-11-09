@@ -1,6 +1,5 @@
 "use client"
 import { TrashIcon } from "@radix-ui/react-icons"
-import { type Row } from "@tanstack/react-table"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -28,20 +27,17 @@ import { Icons } from "@/components/icons"
 import { useTransition } from "react"
 import { deleteUsers } from "../actions"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { getCustomersUseCase, getUsersUseCase } from "@/use-cases/users"
 import { showErrorToast } from "@/lib/handle-error"
 
 interface DeleteUsersDialogProps
 	extends React.ComponentPropsWithoutRef<typeof Dialog> {
-	users: Row<
-		Awaited<ReturnType<typeof getUsersUseCase | typeof getCustomersUseCase>>[0]
-	>["original"][]
+	ids: string[]
 	showTrigger?: boolean
 	onSuccess?: () => void
 }
 
 export function DeleteUsersDialog({
-	users,
+	ids,
 	showTrigger = true,
 	onSuccess,
 	...props
@@ -52,7 +48,7 @@ export function DeleteUsersDialog({
 	function onDelete() {
 		startDeleteTransition(async () => {
 			const { error } = await deleteUsers({
-				ids: users.map((task) => task.id)
+				ids: ids
 			})
 
 			if (error) {
@@ -61,7 +57,7 @@ export function DeleteUsersDialog({
 			}
 
 			props.onOpenChange?.(false)
-			toast.success("users deleted")
+			toast.success("ids deleted")
 			onSuccess?.()
 		})
 	}
@@ -73,7 +69,7 @@ export function DeleteUsersDialog({
 					<DialogTrigger asChild>
 						<Button variant="outline" size="sm">
 							<TrashIcon className="mr-2 size-4" aria-hidden="true" />
-							Delete ({users.length})
+							Delete ({ids.length})
 						</Button>
 					</DialogTrigger>
 				) : null}
@@ -82,8 +78,8 @@ export function DeleteUsersDialog({
 						<DialogTitle>Are you absolutely sure?</DialogTitle>
 						<DialogDescription>
 							This action cannot be undone. This will permanently delete{" "}
-							<span className="font-medium">{users.length}</span>
-							{users.length === 1 ? " user" : " users"} to our servers.
+							<span className="font-medium">{ids.length}</span>
+							{ids.length === 1 ? " user" : " ids"} to our servers.
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter className="gap-2 sm:space-x-0">
@@ -116,7 +112,7 @@ export function DeleteUsersDialog({
 				<DrawerTrigger asChild>
 					<Button variant="outline" size="sm">
 						<TrashIcon className="mr-2 size-4" aria-hidden="true" />
-						Delete ({users.length})
+						Delete ({ids.length})
 					</Button>
 				</DrawerTrigger>
 			) : null}
@@ -125,8 +121,8 @@ export function DeleteUsersDialog({
 					<DrawerTitle>Are you absolutely sure?</DrawerTitle>
 					<DrawerDescription>
 						This action cannot be undone. This will permanently delete{" "}
-						<span className="font-medium">{users.length}</span>
-						{users.length === 1 ? " user" : " users"} to our servers.
+						<span className="font-medium">{ids.length}</span>
+						{ids.length === 1 ? " user" : " users"} to our servers.
 					</DrawerDescription>
 				</DrawerHeader>
 				<DrawerFooter className="gap-2 sm:space-x-0">
