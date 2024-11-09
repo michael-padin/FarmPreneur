@@ -1,12 +1,14 @@
+import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import {
 	createFarmDetailsAddress,
+	createFarmerAddress,
 	createUserAddress
 } from "@/data-access/address"
 import { AddressSchema } from "@/validations/address"
 
 export const upsertAddressUseCase = async (
-	data: Address & { userId: string; id: string }
+	data: Address & { id: string; id: string }
 ) => {
 	// return await upsertAddress(data)
 }
@@ -29,4 +31,10 @@ export const createUserAddressUseCase = async (
 	} catch (error) {
 		console.error("error in createUserAddressUseCase", error)
 	}
+}
+
+export const createFarmerAddressUseCase = async (
+	data: FarmRegistrationSchema & { farmerId: string }
+) => {
+	return await createFarmerAddress(data)
 }

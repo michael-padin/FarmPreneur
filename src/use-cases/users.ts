@@ -1,11 +1,14 @@
+import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import {
+	createUserFarmerById,
 	createUserWithOTP,
 	deleteUserById,
 	deleteUsersById,
 	getUserByEmail,
 	getUserById,
+	getUserFarmerById,
 	getUsers,
 	getUserWithPasswordByEmail,
 	updateUser,
@@ -21,6 +24,17 @@ export const getUserByIdUseCase = async (id: string) => {
 export const getUserByEmailUseCase = async (email: string) => {
 	return await getUserByEmail(email)
 }
+
+export const getUserFarmerByIdUseCase = async (id: string) => {
+	return await getUserFarmerById(id)
+}
+
+export const createUserFarmerByIdUseCase = async (
+	data: FarmRegistrationSchema & { userId: string }
+) => {
+	return await createUserFarmerById(data)
+}
+
 export const getUserWithPasswordByEmailUseCase = async (email: string) => {
 	return await getUserWithPasswordByEmail(email)
 }

@@ -1,4 +1,4 @@
-import { SetupFarmInformationSchema } from "@/app/(auth)/setup-farm-information/types"
+import { SetupFarmInformationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { db } from "@/lib/db"
 
 export const getFarmDetailsById = async (id: string) => {

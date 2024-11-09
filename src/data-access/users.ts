@@ -1,3 +1,4 @@
+import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
@@ -31,6 +32,93 @@ export const getUserByEmail = async (email: string) => {
 			id: true,
 			role: true,
 			isEmailVerified: true
+		}
+	})
+}
+export const createUserFarmerById = async (
+	data: FarmRegistrationSchema & { userId: string }
+) => {
+	return await db.$transaction(async (tx) => {
+		await tx.user.update({
+			where: {
+				id: data.userId
+			},
+			data: {
+				name: data.user.name
+			}
+		})
+
+		const farmer = await tx.farmer.create({
+			data: {
+				userId: data.userId,
+				applicationStatus: "PENDING",
+				contactNumber: data.contactNumber,
+				birthDate: new Date(data.birthDate),
+				farmName: data.farmName,
+				farmDescription: data.farmDescription,
+				address: {
+					create: {
+						fullAddress: data.address.fullAddress,
+						street: data.address.street,
+						region: data.address.region,
+						country: data.address.country,
+						postalCode: data.address.postalCode,
+						latitude: data.address.latitude,
+						longitude: data.address.longitude
+					}
+				},
+				verificationDocument: {
+					create: {
+						type: data.documentVerification.type,
+						image: {
+							create: {
+								url: data.documentVerification.image.url,
+								filename: data.documentVerification.image.filename,
+								size: data.documentVerification.image.size,
+								mimeType: data.documentVerification.image.mimeType,
+								type: "VERIFICATION"
+							}
+						}
+					}
+				}
+			},
+			select: { id: true }
+		})
+
+		await tx.image.createMany({
+			data: data.farmImages.map((image) => ({
+				url: image.url,
+				filename: image.filename,
+				size: image.size,
+				mimeType: image.mimeType,
+				type: "FARM",
+				farmerId: farmer.id
+			}))
+		})
+	})
+}
+
+export const getUserFarmerById = async (id: string) => {
+	return await db.user.findUnique({
+		where: {
+			id: id
+		},
+		select: {
+			id: true,
+			role: true,
+			isEmailVerified: true,
+			email: true,
+			name: true,
+			farmer: {
+				include: {
+					verificationDocument: {
+						include: {
+							image: true
+						}
+					},
+					address: true
+				}
+			}
 		}
 	})
 }

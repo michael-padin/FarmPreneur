@@ -1,52 +1,19 @@
+import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { db } from "@/lib/db"
 
 export const createFarmer = async () => {}
 
-export const createFarmerByUserId = async () => {
+export const createFarmerByUserId = async (
+	data: FarmRegistrationSchema & { userId: string }
+) => {
 	return await db.farmer.create({
 		data: {
-			contactNumber: "123456789",
-			userId: "123456789",
 			applicationStatus: "PENDING",
-			birthDate: new Date(),
-			farmName: "Farm Name",
-			farmDescription: "Farm Description",
-			address: {
-				create: {
-					fullAddress: "1234 Main Street",
-					street: "Main Street",
-					region: "Region",
-					country: "Country",
-					postalCode: "12345",
-					latitude: 12.34,
-					longitude: 12.34
-				}
-			}
-		},
-		select: {
-			id: true,
-			birthDate: true,
-			applicationStatus: true,
-			contactNumber: true,
-			farmName: true,
-			farmDescription: true,
-			userId: true,
-			createdAt: true,
-			updatedAt: true,
-			address: true,
-			user: {
-				select: {
-					emailVerified: true,
-					id: true,
-					name: true,
-					email: true,
-					role: true,
-					isEmailVerified: true,
-					createdAt: true,
-					image: true,
-					updatedAt: true
-				}
-			}
+			userId: data.userId,
+			contactNumber: data.contactNumber,
+			birthDate: new Date(data.birthDate),
+			farmName: data.farmName,
+			farmDescription: data.farmDescription
 		}
 	})
 }
@@ -69,8 +36,12 @@ export const getFarmerByUserId = async (userId: string) => {
 			address: true,
 			orders: true,
 			reviews: true,
-			verificationDocument: true,
-			verificationDocumentId: true,
+			verificationDocument: {
+				select: {
+					image: true,
+					type: true
+				}
+			},
 			products: true,
 			user: {
 				select: {
@@ -108,7 +79,6 @@ export const getFarmers = async () => {
 			orders: true,
 			reviews: true,
 			verificationDocument: true,
-			verificationDocumentId: true,
 			products: true,
 			user: {
 				select: {
@@ -151,7 +121,6 @@ export const getPendingFarmers = async () => {
 			orders: true,
 			reviews: true,
 			verificationDocument: true,
-			verificationDocumentId: true,
 			products: true,
 			user: {
 				select: {
@@ -170,6 +139,17 @@ export const getPendingFarmers = async () => {
 		},
 		orderBy: {
 			createdAt: "desc"
+		}
+	})
+}
+
+export const getFarmerApprovalStatusByUserId = async (id: string) => {
+	return db.farmer.findUnique({
+		where: {
+			userId: id
+		},
+		select: {
+			applicationStatus: true
 		}
 	})
 }

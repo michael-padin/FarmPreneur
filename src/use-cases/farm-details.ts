@@ -1,4 +1,4 @@
-import { SetupFarmInformationSchema } from "@/app/(auth)/setup-farm-information/types"
+import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import {
 	createFarmDetailsByFarmerId,
 	getFarmDetailsById,
@@ -13,7 +13,7 @@ export const getFarmDetailsByUserIdUseCase = async (userId: string) => {
 }
 
 export const createFarmDetailsByFarmerIdUseCase = async (
-	data: SetupFarmInformationSchema & { farmerId: string }
+	data: FarmRegistrationSchema & { farmerId: string }
 ) => {
 	return createFarmDetailsByFarmerId(data)
 }

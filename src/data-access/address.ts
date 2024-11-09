@@ -1,3 +1,4 @@
+import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { db } from "@/lib/db"
 import { AddressSchema } from "@/validations/address"
@@ -68,4 +69,25 @@ export const createFarmDetailsAddress = async (
 	data: AddressSchema & { farmDetailsId: string }
 ) => {
 	return await db.address.create({ data })
+}
+
+export const createFarmerAddress = async (
+	data: FarmRegistrationSchema & { farmerId: string }
+) => {
+	return await db.address.create({
+		data: {
+			fullAddress: data.address.fullAddress,
+			street: data.address.street,
+			region: data.address.region,
+			country: data.address.country,
+			postalCode: data.address.postalCode,
+			latitude: data.address.latitude,
+			longitude: data.address.longitude,
+			farmer: {
+				connect: {
+					id: data.farmerId
+				}
+			}
+		}
+	})
 }
