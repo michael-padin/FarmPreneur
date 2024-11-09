@@ -49,38 +49,42 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true
 	},
+
 	{
-		accessorKey: "orderCount",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Orders" />
-		)
-	},
-	{
-		accessorKey: "totalSpend",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Total Spend" />
-		),
-		cell: ({ row }) => {
-			const totalSpend = row.original.totalSpend
-			return (
-				<p>
-					<span className="text-xs">₱</span>
-					{totalSpend}
-				</p>
-			)
-		}
-	},
-	{
-		accessorKey: "Address",
+		accessorKey: "customer.address",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Address" />
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			const user = row.original
-			return <AddressDetailsDrawerDialog user={user} />
-		},
-		size: 40
+			const name = row.original.name
+			const address = row.original.customer?.address
+			return (
+				address &&
+				name && <AddressDetailsDrawerDialog name={name} address={address} />
+			)
+		}
+	},
+	{
+		accessorKey: "customer.orders.count",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Orders" />
+		),
+		enableSorting: true
+	},
+	{
+		accessorKey: "customer.orders.reviews.count",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Reviews" />
+		),
+		enableSorting: true
+	},
+	{
+		accessorKey: "customer.orders.cart.count",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Cart" />
+		),
+		enableSorting: true
 	},
 	{
 		accessorKey: "createdAt",
@@ -96,23 +100,6 @@ export const columns: ColumnDef<
 		),
 		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
 	},
-	{
-		accessorKey: "lastOrderDate",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Last Order Date" />
-		),
-		cell: ({ row }) => {
-			const lastOrderDate = row.original.lastOrderDate
-			return <span>{lastOrderDate ? formatDate(lastOrderDate) : "N/A"}</span>
-		}
-	},
-	{
-		accessorKey: "status",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Status" />
-		)
-	},
-
 	{
 		accessorKey: "isEmailVerified",
 		header: ({ column }) => (

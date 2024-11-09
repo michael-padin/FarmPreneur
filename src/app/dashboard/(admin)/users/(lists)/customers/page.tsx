@@ -1,6 +1,5 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getCustomersUseCase } from "@/use-cases/users"
 import {
 	Card,
 	CardContent,
@@ -12,13 +11,10 @@ import { DataTable } from "./_components/data-table"
 import { Suspense } from "react"
 import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
 import { Metadata } from "next"
+import { getCustomersUseCase } from "@/use-cases/users"
 
 export const metadata: Metadata = {
 	title: "Customers"
-}
-
-const getCustomers = async () => {
-	return await getCustomersUseCase()
 }
 
 const CustomersPage = async () => {
@@ -27,7 +23,7 @@ const CustomersPage = async () => {
 		redirect("/login")
 	}
 
-	const customersPromise = getCustomers()
+	const customersPromise = getCustomersUseCase()
 
 	return (
 		<>
