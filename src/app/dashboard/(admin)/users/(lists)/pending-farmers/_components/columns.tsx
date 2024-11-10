@@ -151,7 +151,7 @@ export const columns: ColumnDef<
 		id: "actions",
 		cell: function Cell({ row }) {
 			const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false)
-			const id = row.original.id
+			const id = row.original.user.id
 
 			return (
 				<>
