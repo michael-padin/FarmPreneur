@@ -147,7 +147,7 @@ export function FileUpload({
 		onDrop,
 		accept: accept ? { accept: [] } : ACCEPTED_IMAGE_TYPES,
 		multiple,
-		maxFiles: maxFiles || MAX_FILES,
+		maxFiles: multiple ? maxFiles || 5 : 1,
 		maxSize: maxSize || MAX_FILE_SIZE
 	})
 
@@ -282,7 +282,7 @@ export function FileUpload({
 				{value && (
 					<div className="space-y-2">
 						{multiple ? (
-							<div className="grid grid-cols-2 gap-2">
+							<div className="grid grid-cols-3 gap-2 lg:grid-cols-5">
 								{(value as FileInfo[]).map((file, index) =>
 									file.url ? (
 										<FileItem
@@ -295,11 +295,13 @@ export function FileUpload({
 								)}
 							</div>
 						) : (value as FileInfo).url ? (
-							<FileItem
-								file={value as FileInfo}
-								onRemove={removeFile}
-								onClick={() => openLightbox(0)}
-							/>
+							<div className="grid grid-cols-3 gap-2 lg:grid-cols-5">
+								<FileItem
+									file={value as FileInfo}
+									onRemove={removeFile}
+									onClick={() => openLightbox(0)}
+								/>
+							</div>
 						) : null}
 					</div>
 				)}
@@ -331,7 +333,7 @@ function FileItem({ file, onRemove, onClick }: FileItemProps) {
 	const isImage = file.mimeType?.startsWith("image/")
 
 	return (
-		<div className="group relative aspect-square h-28 cursor-pointer overflow-hidden rounded-lg border bg-background">
+		<div className="group relative w-full cursor-pointer overflow-hidden rounded-lg bg-background">
 			<div
 				className="relative aspect-square w-full"
 				onClick={() => isImage && onClick()}
@@ -341,7 +343,6 @@ function FileItem({ file, onRemove, onClick }: FileItemProps) {
 						src={file.url}
 						alt={file.filename}
 						fill
-						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 						className="object-cover"
 					/>
 				)}
