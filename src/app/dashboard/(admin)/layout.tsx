@@ -34,26 +34,7 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			<SidebarProvider>
 				<DashboardSidebar user={user} />
-				<SidebarInset className="overflow-hidden">
-					<header className="w-full border-b px-4">
-						<div className="flex w-full items-center">
-							<div className="flex h-16 shrink-0 items-center gap-2">
-								<SidebarTrigger className="-ml-1" />
-								<Separator orientation="vertical" className="mr-2 h-4" />
-							</div>
-							<div className="flex w-full items-center justify-end gap-2">
-								<ModeToggle />
-								<Button variant="ghost" size="icon" className="size-8">
-									<Bell className="size-4" />
-								</Button>
-								<Button variant="ghost" size="icon" className="size-8">
-									<MessageCircle className="size-4" />
-								</Button>
-							</div>
-						</div>
-					</header>
-					{children}
-				</SidebarInset>
+				<SidebarInset className="overflow-hidden">{children}</SidebarInset>
 			</SidebarProvider>
 		</ThemeProvider>
 	)
