@@ -64,6 +64,7 @@ type CountrySelectProps = {
 const CountrySelect = ({ disabled }: CountrySelectProps) => (
 	<Button
 		type="button"
+		size={"icon"}
 		variant={"outline"}
 		className={cn("flex gap-1 rounded-e-none rounded-s-lg border-r-0 px-3")}
 		disabled={disabled}
