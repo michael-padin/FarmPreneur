@@ -19,7 +19,6 @@ export const upsertFarmerAction = async (
 
 		return { error: null }
 	} catch (error) {
-		console.log("error :>> ", error)
 		return { error: getErrorMessage(error) }
 	}
 }

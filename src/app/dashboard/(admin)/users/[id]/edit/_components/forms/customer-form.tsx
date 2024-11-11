@@ -69,7 +69,6 @@ export default function CustomerForm({ user }: CustomerFormProps) {
 	})
 
 	const onSubmit = async (data: EditUserSchema) => {
-		console.log("data :>> ", data)
 		startTransition(async () => {
 			const { error } = await updateCustomer({
 				...data,

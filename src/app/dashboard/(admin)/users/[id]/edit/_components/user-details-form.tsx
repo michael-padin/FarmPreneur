@@ -75,7 +75,6 @@ export default function UserDetailsForm({
 	const userRole = form.watch("role")
 
 	const onSubmit = (data: UpdateUserSchema) => {
-		console.log("data shit :>> ", data)
 		toast.success("Success", { description: <pre>{JSON.stringify(data)}</pre> })
 		startTransition(() => {})
 	}
