@@ -1,6 +1,6 @@
 import { addressSchema } from "@/validations/address"
 import { imageSchema } from "@/validations/image"
-import { documentVerificationSchema } from "@/validations/verification-document"
+import { verificationDocumentSchema } from "@/validations/verification-document"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 import { z } from "zod"
 
@@ -10,14 +10,14 @@ export const editCustomerSchema = z.object({
 })
 
 export const editFarmerSchema = z.object({
-	birthDate: z.string().date(),
+	birthDate: z.date(),
 	contactNumber: z.string().min(10),
 	farmName: z.string().min(2),
 	farmDescription: z.string().min(2),
 	applicationStatus: z.nativeEnum(FarmerApplicationStatus),
 	address: addressSchema,
-	verificationDocument: documentVerificationSchema,
-	farmImages: imageSchema
+	verificationDocument: verificationDocumentSchema,
+	farmImages: imageSchema.array()
 })
 
 export const editUserSchema = z.object({

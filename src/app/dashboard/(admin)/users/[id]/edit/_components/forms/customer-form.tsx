@@ -11,7 +11,6 @@ import {
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -23,16 +22,6 @@ import { useForm } from "react-hook-form"
 import { editUserSchema, EditUserSchema } from "../validations"
 import { BackButton } from "@/components/fg/back-button"
 import { Button } from "@/components/ui/button"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from "@/components/ui/select"
-import { RoleBadge } from "../../../../(lists)/_components/badges"
-import { ROLE } from "@prisma/client"
-import { Input } from "@/components/ui/input"
 import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { useTransition } from "react"
@@ -45,8 +34,8 @@ import {
 	AccordionItem,
 	AccordionTrigger
 } from "@/components/ui/accordion"
-import { Switch } from "@/components/ui/switch"
 import { useRouter } from "next/navigation"
+import UserFormItems from "./user-form-items"
 
 interface CustomerFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
@@ -104,87 +93,8 @@ export default function CustomerForm({ user }: CustomerFormProps) {
 									</div>
 								</div>
 							</CardHeader>
-
 							<CardContent className="space-y-6">
-								<FormField
-									control={form.control}
-									name="role"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Role</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
-											>
-												<FormControl>
-													<SelectTrigger className="w-full">
-														<SelectValue placeholder="Select a role">
-															{field.value && (
-																<RoleBadge role={field.value as ROLE} />
-															)}
-														</SelectValue>
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{Object.values(ROLE).map((role) => (
-														<SelectItem key={role} value={role}>
-															<div className="flex w-full items-center justify-between">
-																<RoleBadge role={role} />
-															</div>
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="name"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Name</FormLabel>
-											<FormControl>
-												<Input placeholder="John Doe" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="email"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Email</FormLabel>
-											<FormControl>
-												<Input placeholder="john@example.com" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="isEmailVerified"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-											<div className="space-y-0.5">
-												<FormLabel>Email Verified</FormLabel>
-												<FormDescription>
-													Indicate if this email has been verified.
-												</FormDescription>
-											</div>
-											<FormControl>
-												<Switch
-													checked={field.value}
-													onCheckedChange={field.onChange}
-												/>
-											</FormControl>
-										</FormItem>
-									)}
-								/>
+								<UserFormItems form={form} />
 								<FormField
 									control={form.control}
 									name="customer.contactNumber"
