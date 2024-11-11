@@ -1,6 +1,7 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
 import {
 	createUserFarmerById,
 	createUserWithOTP,
@@ -12,6 +13,7 @@ import {
 	getUserFarmerById,
 	getUsers,
 	getUserWithPasswordByEmail,
+	updateAdminUser,
 	updateUser,
 	updateUserPasswordByEmail,
 	updateVerifiedUser
@@ -82,4 +84,11 @@ export const deleteUserByIdUseCase = async (id: string) => {
 }
 export const deleteUsersByIdUseCase = async (ids: string[]) => {
 	return await deleteUsersById(ids)
+}
+export const updateAdminUserUseCase = async (
+	data: EditUserSchema & {
+		userId: string
+	}
+) => {
+	return await updateAdminUser(data)
 }

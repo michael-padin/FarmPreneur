@@ -58,3 +58,17 @@ export const updateFarmer = async (
 		}
 	}
 }
+
+export const updateAdmin = async (
+	data: EditUserSchema & {
+		userId: string
+	}
+) => {
+	const validatedFields = editUserSchema.safeParse(data)
+
+	if (!validatedFields.success) {
+		return {
+			error: "Invalid fields"
+		}
+	}
+}

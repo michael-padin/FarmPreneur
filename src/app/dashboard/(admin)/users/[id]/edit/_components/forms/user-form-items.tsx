@@ -19,6 +19,7 @@ import { ROLE } from "@prisma/client"
 import { RoleBadge } from "../../../../(lists)/_components/badges"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
+import { FGPasswordInput } from "@/components/fg/fg-password-input"
 
 interface UserFormItemsProps {
 	form: UseFormReturn<EditUserSchema>
@@ -95,6 +96,22 @@ export default function UserFormItems({ form }: UserFormItemsProps) {
 						<FormControl>
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
+					</FormItem>
+				)}
+			/>
+			<FormField
+				control={form.control}
+				name="password"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>Password</FormLabel>
+						<FormControl>
+							<FGPasswordInput {...field} value={field.value || ""} />
+						</FormControl>
+						<FormDescription>
+							Leave blank to keep the current password
+						</FormDescription>
+						<FormMessage />
 					</FormItem>
 				)}
 			/>

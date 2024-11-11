@@ -1,6 +1,7 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
 import { db } from "@/lib/db"
 import { ROLE } from "@prisma/client"
 
@@ -314,4 +315,23 @@ export const deleteUsersById = async (ids: string[]) => {
 	return await db.$transaction([
 		db.user.deleteMany({ where: { id: { in: ids } } })
 	])
+}
+
+export const updateAdminUser = async (
+	data: EditUserSchema & {
+		userId: string
+	}
+) => {
+	return await db.user.update({
+		where: {
+			id: data.userId
+		},
+		data: {
+			name: data.name,
+			email: data.email as string,
+			isEmailVerified: data.isEmailVerified,
+			role: data.role,
+			...(data.password && { password: data.password })
+		}
+	})
 }
