@@ -4,21 +4,32 @@ import { ArrowLeft } from "lucide-react"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { signOut } from "@/auth"
 import { signOutAction } from "@/actions/auth"
 
-export const BackButton = (props: React.ComponentProps<typeof Button>) => {
+type BackButtonProps = React.ComponentProps<typeof Button> & {
+	fallbackRoute?: string
+}
+
+export const BackButton = ({ fallbackRoute, ...props }: BackButtonProps) => {
 	const router = useRouter()
+
+	const handleClick = () => {
+		if (fallbackRoute) {
+			router.push(fallbackRoute)
+		} else {
+			router.back()
+		}
+	}
 
 	return (
 		<Button
-			onClick={() => router.back()}
+			onClick={handleClick}
 			variant="ghost"
 			size="icon"
 			className={cn("", props.className)}
 			{...props}
 		>
-			<ArrowLeft />
+			<ArrowLeft className="h-4 w-4" />
 		</Button>
 	)
 }
