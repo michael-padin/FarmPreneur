@@ -1,22 +1,8 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
 import { db } from "@/lib/db"
-
-export const createFarmer = async () => {}
-
-export const createFarmerByUserId = async (
-	data: FarmRegistrationSchema & { userId: string }
-) => {
-	return await db.farmer.create({
-		data: {
-			applicationStatus: "PENDING",
-			userId: data.userId,
-			contactNumber: data.contactNumber,
-			birthDate: new Date(data.birthDate),
-			farmName: data.farmName,
-			farmDescription: data.farmDescription
-		}
-	})
-}
+import { ImageType } from "@prisma/client"
+import { create } from "domain"
 
 export const getFarmerByUserId = async (userId: string) => {
 	return await db.farmer.findUnique({
@@ -143,6 +129,106 @@ export const getFarmerApprovalStatusByUserId = async (id: string) => {
 		},
 		select: {
 			applicationStatus: true
+		}
+	})
+}
+
+// MARK: MUTATIONS
+
+export const createFarmer = async () => {}
+
+export const createFarmerByUserId = async (
+	data: FarmRegistrationSchema & { userId: string }
+) => {
+	return await db.farmer.create({
+		data: {
+			applicationStatus: "PENDING",
+			userId: data.userId,
+			contactNumber: data.contactNumber,
+			birthDate: new Date(data.birthDate),
+			farmName: data.farmName,
+			farmDescription: data.farmDescription
+		}
+	})
+}
+
+export const updateFarmerByUserId = async (
+	data: EditUserSchema & {
+		userId: string
+	}
+) => {
+	return await db.$transaction(async (tx) => {
+		const updatedUser = await tx.user.update({
+			where: {
+				id: data.userId
+			},
+			data: {
+				name: data.name,
+				email: data.email as string,
+				isEmailVerified: data.isEmailVerified,
+				role: data.role,
+				...(data.password && { password: data.password })
+			}
+		})
+
+		console.log("Updating farmer...")
+		const updatedFarmer =
+			data.farmer &&
+			(await tx.farmer.upsert({
+				where: {
+					userId: data.userId
+				},
+				create: {
+					userId: data.userId,
+					applicationStatus: "PENDING",
+					contactNumber: data.farmer.contactNumber,
+					birthDate: data.farmer!.birthDate,
+					farmName: data?.farmer?.farmName,
+					farmDescription: data?.farmer?.farmDescription
+				},
+				update: {
+					contactNumber: data.farmer.contactNumber,
+					birthDate: data.farmer!.birthDate,
+					farmName: data?.farmer?.farmName,
+					farmDescription: data?.farmer?.farmDescription,
+					applicationStatus: data?.farmer?.applicationStatus
+				}
+			}))
+
+		console.log("Updating farmer verification document...")
+		const updatedVerificationDocument =
+			data.farmer?.verificationDocument &&
+			data.farmer?.verificationDocument.image &&
+			(await tx.verificationDocument.upsert({
+				where: {
+					farmerId: updatedFarmer!.id
+				},
+				create: {
+					type: data.farmer.verificationDocument.type,
+					image: {
+						create: {
+							url: data.farmer.verificationDocument.image.url,
+							filename: data.farmer.verificationDocument.image.filename,
+							size: data.farmer.verificationDocument.image.size,
+							mimeType: data.farmer.verificationDocument.image.mimeType,
+							type: "VERIFICATION"
+						}
+					}
+				},
+				update: {
+					image: {
+						update: {
+							url: data.farmer.verificationDocument.image.url,
+							filename: data.farmer.verificationDocument.image.filename,
+							size: data.farmer.verificationDocument.image.size,
+							mimeType: data.farmer.verificationDocument.image.mimeType
+						}
+					}
+				}
+			}))
+
+		return {
+			applicationStatus: updatedFarmer?.applicationStatus
 		}
 	})
 }

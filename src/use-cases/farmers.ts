@@ -1,10 +1,12 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
 import {
 	createFarmerByUserId,
 	getFarmerApprovalStatusByUserId,
 	getFarmerByUserId,
 	getFarmers,
-	getPendingFarmers
+	getPendingFarmers,
+	updateFarmerByUserId
 } from "@/data-access/farmers"
 
 export const getFarmersUseCase = async () => {
@@ -30,4 +32,13 @@ export const createFarmerByUserIdUseCase = async (
 	data: FarmRegistrationSchema & { userId: string }
 ) => {
 	return await createFarmerByUserId(data)
+}
+
+// MARK: MUTATIONS
+export const updateFarmerByUserIdUseCase = async (
+	data: EditUserSchema & {
+		userId: string
+	}
+) => {
+	return await updateFarmerByUserId(data)
 }

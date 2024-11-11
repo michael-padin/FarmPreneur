@@ -42,7 +42,11 @@ export const getUserById = async (id: string) => {
 					products: true,
 					orders: true,
 					reviews: true,
-					verificationDocument: true
+					verificationDocument: {
+						include: {
+							image: true
+						}
+					}
 				}
 			}
 		}
