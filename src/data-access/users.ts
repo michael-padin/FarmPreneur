@@ -18,7 +18,33 @@ export const getUserById = async (id: string) => {
 			createdAt: true,
 			image: true,
 			updatedAt: true,
-			profilePicture: true
+			customer: {
+				include: {
+					address: true,
+					cart: true,
+					orders: true,
+					reviews: true,
+					wishlist: true
+				}
+			},
+			farmer: {
+				include: {
+					_count: {
+						select: {
+							farmImages: true,
+							products: true,
+							orders: true,
+							reviews: true
+						}
+					},
+					address: true,
+					farmImages: true,
+					products: true,
+					orders: true,
+					reviews: true,
+					verificationDocument: true
+				}
+			}
 		}
 	})
 }

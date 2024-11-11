@@ -1,34 +1,37 @@
 import { getUserByIdUseCase } from "@/use-cases/users"
-import UserDetailsForm from "./_components/user-details-form"
 import { auth } from "@/auth"
 import { notFound, redirect } from "next/navigation"
+import CustomerForm from "./_components/forms/customer-form"
+import FarmerForm from "./_components/forms/farmer-form"
+import AdminForm from "./_components/forms/admin-form"
+import { Suspense } from "react"
 
 const getUser = async (id: string) => {
 	return await getUserByIdUseCase(id)
 }
-const getFarmerDetails = async (id: string) => {}
 
 // After
 type Params = Promise<{ id: string }>
 
-const EditUserDetailsPage = async (props: { params: Params }) => {
+export default async function EditUserPage(props: { params: Params }) {
 	const session = await auth()
 
-	if (!session || session.user.role !== "ADMIN") {
-		redirect("/login")
-	}
+	if (!session || session.user.role !== "ADMIN") redirect("/login")
 
 	const params = await props.params
+	const user = await getUser(params.id)
 
-	const [user, farmDetails] = await Promise.all([
-		getUser(params.id),
-		getFarmerDetails(params.id)
-	])
+	if (!user) return notFound()
 
-	if (!user) {
-		notFound()
-	}
+	const FormComponent = {
+		CUSTOMER: CustomerForm,
+		FARMER: FarmerForm,
+		ADMIN: AdminForm
+	}[user.role]
 
-	return <UserDetailsForm user={user} farmDetails={farmDetails} />
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<FormComponent user={user} />
+		</Suspense>
+	)
 }
-export default EditUserDetailsPage
