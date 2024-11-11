@@ -58,7 +58,7 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 			farmDescription: user?.farmer?.farmDescription || "",
 			farmImages: [],
 			documentVerification: {
-				type: user?.farmer?.verificationDocument?.type,
+				type: user?.farmer?.verificationDocument?.type || "VOTER_ID",
 				image: {
 					url: user?.farmer?.verificationDocument?.image?.url,
 					filename: user?.farmer?.verificationDocument?.image?.filename,
