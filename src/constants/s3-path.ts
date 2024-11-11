@@ -1,0 +1,4 @@
+export const S3PATH = {
+	DOCUMENTS: "document-verification",
+	FARMIMAGES: "farm-images"
+}
