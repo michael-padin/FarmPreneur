@@ -29,7 +29,6 @@ export const signInWithCredentials = async (
 
 		return { success: "Logged in", data: user }
 	} catch (error) {
-		// @TODO: handle error
 		if (error instanceof AuthError) {
 			switch (error.type) {
 				case "CredentialsSignin":
