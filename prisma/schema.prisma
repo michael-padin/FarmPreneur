@@ -298,14 +298,14 @@ model Category {
 
 // MARK: VERIFICATION DOC
 model VerificationDocument {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  type      DocumentType // Type of document (ID, License, Certification)
-  image     Image?       @relation(fields: [imageId], references: [id])
-  imageId   String?      @unique @db.ObjectId // Reference to the image
-  farmer    Farmer       @relation(fields: [farmerId], references: [id])
-  farmerId  String       @unique @db.ObjectId // Reference to the farmer
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  type      DocumentType? // Type of document (ID, License, Certification)
+  image     Image?        @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  imageId   String?       @unique @db.ObjectId // Reference to the image
+  farmer    Farmer?       @relation(fields: [farmerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  farmerId  String?       @unique @db.ObjectId // Reference to the farmer
 
   @@index([type])
   @@map("verification_documents")
