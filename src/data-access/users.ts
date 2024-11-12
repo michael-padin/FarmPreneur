@@ -79,25 +79,27 @@ export const createUserFarmerById = async (
 			}
 		})
 
+		const createdAddress = await tx.address.create({
+			data: {
+				fullAddress: data.address.fullAddress || "",
+				street: data.address.street || "",
+				region: data.address.region || "",
+				country: data.address.country || "",
+				postalCode: data.address.postalCode || "",
+				latitude: data.address.latitude || 0,
+				longitude: data.address.longitude || 0
+			}
+		})
+
 		const farmer = await tx.farmer.create({
 			data: {
 				userId: data.userId,
 				applicationStatus: "PENDING",
 				contactNumber: data.contactNumber,
 				birthDate: new Date(data.birthDate),
+				addressId: createdAddress.id,
 				farmName: data.farmName,
 				farmDescription: data.farmDescription,
-				address: {
-					create: {
-						fullAddress: data.address.fullAddress,
-						street: data.address.street,
-						region: data.address.region,
-						country: data.address.country,
-						postalCode: data.address.postalCode,
-						latitude: data.address.latitude,
-						longitude: data.address.longitude
-					}
-				},
 				verificationDocument: {
 					create: {
 						type: data.documentVerification.type,
@@ -112,8 +114,7 @@ export const createUserFarmerById = async (
 						}
 					}
 				}
-			},
-			select: { id: true }
+			}
 		})
 
 		await tx.image.createMany({
@@ -126,6 +127,9 @@ export const createUserFarmerById = async (
 				farmerId: farmer.id
 			}))
 		})
+		return {
+			...farmer
+		}
 	})
 }
 
