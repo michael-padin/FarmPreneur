@@ -114,7 +114,8 @@ model Farmer {
   createdAt            DateTime                 @default(now())
   updatedAt            DateTime                 @updatedAt
   birthDate            DateTime?
-  address              Address?
+  address              Address?                 @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  addressId            String?                  @unique @db.ObjectId
   orders               Order[]
   products             Product[]
   reviews              ProductReview[]
@@ -130,7 +131,8 @@ model Customer {
   contactNumber String?
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String          @unique @db.ObjectId
-  address       Address?
+  address       Address?        @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  addressId     String?         @unique @db.ObjectId
   orders        Order[]
   cart          CartItem[]
   wishlist      WishlistItem[]
@@ -252,6 +254,7 @@ model Image {
   category             Category?
   farmer               Farmer?               @relation(fields: [farmerId], references: [id])
   farmerId             String?               @db.ObjectId // Reference to the farmer
+
   @@index([productId, order])
   @@index([reviewId])
   @@index([status])
@@ -366,10 +369,8 @@ model Address {
   locationType String?
   order        Order[]
   product      Product[]
-  farmer       Farmer?   @relation(fields: [farmerId], references: [id])
-  farmerId     String?   @unique @db.ObjectId
-  customer     Customer? @relation(fields: [customerId], references: [id])
-  customerId   String?   @unique @db.ObjectId
+  farmer       Farmer?
+  customer     Customer?
 
   @@index([country, region])
   @@index([latitude, longitude])
