@@ -31,7 +31,9 @@ export const getUserFarmerByIdUseCase = async (id: string) => {
 }
 
 export const getFarmerByUserIdUseCase = async (id: string) => {
-	return await getFarmerByUserId(id)
+	const farmer = await getFarmerByUserId(id)
+	if (!farmer) throw new Error("Farmer not found!")
+	return farmer
 }
 
 export const createFarmerByUserIdUseCase = async (
