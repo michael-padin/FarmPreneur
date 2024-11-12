@@ -13,7 +13,7 @@ export const farmRegistrationSchema = z.object({
 		message: "Required",
 		path: ["address"]
 	}),
-	birthDate: z.string().date(),
+	birthDate: z.date(),
 	farmName: z.string().optional(),
 	farmDescription: z.string(),
 	farmImages: z.array(imageSchema).min(1, "Required"),

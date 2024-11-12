@@ -29,6 +29,7 @@ import { Separator } from "@/components/ui/separator"
 
 import { CardTitle } from "@/components/ui/card"
 import { FPDocumentSelect } from "@/components/fg/fp-document-select"
+import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
 
 interface FarmRegistrationFormProps {
 	user: Awaited<ReturnType<typeof getUserFarmerByIdUseCase>>
@@ -65,7 +66,7 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 					size: user?.farmer?.verificationDocument?.image?.size
 				}
 			},
-			birthDate: user?.farmer?.birthDate?.toISOString().split("T")[0] || ""
+			birthDate: user?.farmer?.birthDate || undefined
 		}
 	})
 
@@ -129,7 +130,10 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 							<FormItem>
 								<FormLabel>Birth Date</FormLabel>
 								<FormControl>
-									<Input {...field} type="date" />
+									<FPDatePickerWithDropdown
+										{...field}
+										value={field.value && field.value}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
