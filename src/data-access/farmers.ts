@@ -133,6 +133,14 @@ export const getFarmerApprovalStatusByUserId = async (id: string) => {
 	})
 }
 
+export const getPendingFarmerCount = async () => {
+	return await db.farmer.count({
+		where: {
+			applicationStatus: "PENDING"
+		}
+	})
+}
+
 // MARK: MUTATIONS
 
 export const createFarmer = async () => {}
@@ -191,7 +199,18 @@ export const updateFarmerByUserId = async (
 					birthDate: data.farmer!.birthDate,
 					farmName: data?.farmer?.farmName,
 					farmDescription: data?.farmer?.farmDescription,
-					applicationStatus: data?.farmer?.applicationStatus
+					applicationStatus: data?.farmer?.applicationStatus,
+					address: {
+						update: {
+							latitude: data.farmer.address.latitude,
+							longitude: data.farmer.address.longitude,
+							fullAddress: data.farmer.address.fullAddress,
+							street: data.farmer.address.street,
+							region: data.farmer.address.region,
+							country: data.farmer.address.country,
+							postalCode: data.farmer.address.postalCode
+						}
+					}
 				}
 			}))
 
@@ -226,7 +245,6 @@ export const updateFarmerByUserId = async (
 					}
 				}
 			}))
-
 		return {
 			applicationStatus: updatedFarmer?.applicationStatus
 		}

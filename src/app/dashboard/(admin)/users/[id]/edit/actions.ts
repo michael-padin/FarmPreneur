@@ -2,7 +2,11 @@
 import { getErrorMessage } from "@/lib/handle-error"
 import { editUserSchema, EditUserSchema } from "./_components/validations"
 import { updateCustomerByUserIdUseCase } from "@/use-cases/customers"
-import { updateFarmerByUserIdUseCase } from "@/use-cases/farmers"
+import {
+	getPendingFarmerCountUseCase,
+	updateFarmerByUserIdUseCase
+} from "@/use-cases/farmers"
+import { pusherServer } from "@/lib/pusher"
 
 export const updateCustomer = async (
 	data: EditUserSchema & {
@@ -43,7 +47,16 @@ export const updateFarmer = async (
 		 * @
 		 * @todo - if verification document is updated - remove the current one in s3 storage
 		 */
-		await updateFarmerByUserIdUseCase(data)
+		const updateFarmer = await updateFarmerByUserIdUseCase(data)
+
+		/**
+		 * @todo - update the pending farmer count
+		 */
+		if (updateFarmer.applicationStatus === "PENDING") {
+			await pusherServer.trigger("pending-farmers-count", "update", {
+				count: await getPendingFarmerCountUseCase()
+			})
+		}
 
 		/**
 		 * @todo - if application status is rejected email the farmer with a rejection message

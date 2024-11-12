@@ -9,9 +9,9 @@ export default async function Layout({
 	return (
 		<>
 			<Header />
-			<div className="px-1 py-5 lg:p-5">
+			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
 				<UsersNav />
-				<div className="px-2 lg:px-0">{children}</div>
+				<div>{children}</div>
 			</div>
 		</>
 	)

@@ -2,7 +2,6 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import React from "react"
 
-import DashboardSidebar from "../_components/sidebar"
 import { Metadata } from "next"
 import ThemeProvider from "@/components/theme-provider"
 
@@ -16,6 +15,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { Bell, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getUserFarmerByIdUseCase } from "@/use-cases/users"
+import { DashboardSidebar } from "../_components/sidebar"
 
 export const metadata: Metadata = {
 	title: "Dashboard",

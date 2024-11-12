@@ -19,13 +19,19 @@ import {
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { adminNavItems, farmerNavItems } from "@/constants/navItems"
+import { farmerNavItems, SidebarItem } from "@/constants/navItems"
 import {
 	BadgeCheck,
 	Bell,
+	BellRing,
 	ChevronsUpDown,
 	Command,
-	TestTubeDiagonal
+	Home,
+	LineChart,
+	Package,
+	ShoppingCart,
+	TestTubeDiagonal,
+	Users
 } from "lucide-react"
 import {
 	DropdownMenu,
@@ -39,13 +45,70 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Session } from "next-auth"
 import { FPSignOutButton } from "@/components/fg/fp-signout-button"
+import { usePendingFarmerCount } from "@/contexts/pending-farmer-count-context"
 
 interface DashboardSidebarProps {
 	user: Session["user"] | undefined
 }
 
-export default function DashboardSidebar({ user }: DashboardSidebarProps) {
+export function DashboardSidebar({ user }: DashboardSidebarProps) {
+	const { pendingFarmerCount } = usePendingFarmerCount()
 	const pathName = usePathname()
+
+	console.log("pendingFarmerCount :>> ", pendingFarmerCount)
+
+	const adminNavItems: SidebarItem[] = [
+		{
+			name: "Dashboard",
+			url: "/dashboard",
+			icon: Home
+		},
+
+		{
+			name: "Users",
+			url: "/dashboard/users",
+			icon: Users,
+			items: [
+				{
+					name: "Customers",
+					url: "/dashboard/users/customers"
+					// icon: UserCheck
+				},
+				{
+					name: "Farmers",
+					url: "/dashboard/users/farmers"
+					// icon: Sprout
+				},
+				{
+					name: "Pending Farmers",
+					url: "/dashboard/users/pending-farmers",
+					badge: pendingFarmerCount
+					// icon: Hourglass
+				}
+			]
+		},
+		{
+			name: "Orders",
+			url: "/dashboard/orders",
+			icon: ShoppingCart
+		},
+		{
+			name: "Products",
+			url: "/dashboard/products",
+			icon: Package
+		},
+		{
+			name: "Notifications",
+			url: "/dashboard/notifications",
+			icon: BellRing
+		},
+
+		{
+			url: "/dashboard/analytics",
+			icon: LineChart,
+			name: "Analytics"
+		}
+	]
 	const items = user?.role === "ADMIN" ? adminNavItems : farmerNavItems
 
 	return (
@@ -87,7 +150,9 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 										<Link href={item.url}>
 											{item.icon && <item.icon />}
 											<span>{item.name}</span>
-											{/* <SidebarMenuBadge>24</SidebarMenuBadge> */}
+											{item.badge && (
+												<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+											)}
 										</Link>
 									</SidebarMenuButton>
 									{item.items && (
@@ -106,7 +171,11 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 															{/* {subItem.icon && <subItem.icon />} */}
 															<span>{subItem.name}</span>
 															{/* TODO: Add Badge number for pending farmers */}
-															{/* <SidebarMenuBadge>24</SidebarMenuBadge> */}
+															{subItem.badge !== 0 && subItem.badge && (
+																<SidebarMenuBadge className="bg-primary text-primary-foreground">
+																	{subItem.badge}
+																</SidebarMenuBadge>
+															)}
 														</Link>
 													</SidebarMenuSubButton>
 												</SidebarMenuSubItem>

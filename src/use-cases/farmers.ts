@@ -1,3 +1,4 @@
+"use server"
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
 import {
@@ -6,8 +7,13 @@ import {
 	getFarmerByUserId,
 	getFarmers,
 	getPendingFarmers,
+	getPendingFarmerCount,
 	updateFarmerByUserId
 } from "@/data-access/farmers"
+
+export const getPendingFarmerCountUseCase = async () => {
+	return await getPendingFarmerCount()
+}
 
 export const getFarmersUseCase = async () => {
 	return await getFarmers()
