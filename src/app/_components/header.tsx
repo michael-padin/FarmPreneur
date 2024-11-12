@@ -6,7 +6,7 @@ import { Bell, MessageCircle } from "lucide-react"
 
 export function Header() {
 	return (
-		<header className="w-full border-b px-4">
+		<header className="w-full border-b bg-card px-4">
 			<div className="flex w-full items-center">
 				<div className="flex h-16 shrink-0 items-center gap-2">
 					<SidebarTrigger className="-ml-1" />
