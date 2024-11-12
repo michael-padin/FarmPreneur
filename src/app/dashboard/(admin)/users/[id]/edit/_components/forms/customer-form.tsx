@@ -78,91 +78,84 @@ export default function CustomerForm({ user }: CustomerFormProps) {
 		<>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
-					<div className="mt-5 space-y-2 lg:container lg:mt-10">
-						<Card>
-							<CardHeader>
-								<div className="flex items-center gap-2">
-									<BackButton
-										type="button"
-										variant="secondary"
-										className="rounded-full"
-									/>
-									<div>
-										<CardTitle>Edit Customer</CardTitle>
-										<CardDescription>Edit customer details</CardDescription>
-									</div>
+					<Card>
+						<CardHeader>
+							<div className="flex items-center gap-2">
+								<div>
+									<CardTitle>Edit Customer</CardTitle>
+									<CardDescription>Edit customer details</CardDescription>
 								</div>
-							</CardHeader>
-							<CardContent className="space-y-6">
-								<UserFormItems form={form} />
-								<FormField
-									control={form.control}
-									name="customer.contactNumber"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Contact Number</FormLabel>
-											<FormControl>
-												<FGSinglePhoneINput
-													placeholder="1234567890"
-													{...field}
-													value={field.value ? field.value : ""}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="customer.address"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Address</FormLabel>
-											<FormControl>
-												<AddressLocationPicker
-													defaultCenter={{
-														lat: field?.value?.latitude || 40.7128,
-														lng: field?.value?.longitude || -74.006
-													}}
-													onAddressSelect={field.onChange}
-													defaultValue={field?.value?.fullAddress}
-													showMap
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								{process.env.NODE_ENV === "development" && (
-									<Accordion type="single" collapsible>
-										<AccordionItem value="item-1">
-											<AccordionTrigger>User Info</AccordionTrigger>
-											<AccordionContent>
-												<pre>{JSON.stringify(user, null, 2)}</pre>
-											</AccordionContent>
-										</AccordionItem>
-									</Accordion>
+							</div>
+						</CardHeader>
+						<CardContent className="space-y-6">
+							<UserFormItems form={form} />
+							<FormField
+								control={form.control}
+								name="customer.contactNumber"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Contact Number</FormLabel>
+										<FormControl>
+											<FGSinglePhoneINput
+												placeholder="1234567890"
+												{...field}
+												value={field.value ? field.value : ""}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
 								)}
-							</CardContent>
-							<CardFooter className="flex justify-between">
-								<Button
-									type="button"
-									variant={"secondary"}
-									size={"lg"}
-									onClick={() => router.back()}
-								>
-									Cancel
-								</Button>
-								<Button
-									type="submit"
-									disabled={!form.formState.isDirty}
-									size={"lg"}
-								>
-									{isPending ? "Saving..." : "Save"}
-								</Button>
-							</CardFooter>
-						</Card>
-					</div>
+							/>
+							<FormField
+								control={form.control}
+								name="customer.address"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Address</FormLabel>
+										<FormControl>
+											<AddressLocationPicker
+												defaultCenter={{
+													lat: field?.value?.latitude || 40.7128,
+													lng: field?.value?.longitude || -74.006
+												}}
+												onAddressSelect={field.onChange}
+												defaultValue={field?.value?.fullAddress}
+												showMap
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							{process.env.NODE_ENV === "development" && (
+								<Accordion type="single" collapsible>
+									<AccordionItem value="item-1">
+										<AccordionTrigger>User Info</AccordionTrigger>
+										<AccordionContent>
+											<pre>{JSON.stringify(user, null, 2)}</pre>
+										</AccordionContent>
+									</AccordionItem>
+								</Accordion>
+							)}
+						</CardContent>
+						<CardFooter className="flex justify-between">
+							<Button
+								type="button"
+								variant={"secondary"}
+								size={"lg"}
+								onClick={() => router.back()}
+							>
+								Cancel
+							</Button>
+							<Button
+								type="submit"
+								disabled={!form.formState.isDirty}
+								size={"lg"}
+							>
+								{isPending ? "Saving..." : "Save"}
+							</Button>
+						</CardFooter>
+					</Card>
 				</form>
 			</Form>
 		</>

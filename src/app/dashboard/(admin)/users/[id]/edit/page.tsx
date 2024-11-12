@@ -5,6 +5,8 @@ import CustomerForm from "./_components/forms/customer-form"
 import FarmerForm from "./_components/forms/farmer-form"
 import AdminForm from "./_components/forms/admin-form"
 import { Suspense } from "react"
+import { BackButton } from "@/components/fg/back-button"
+import { EditUserSkeleton } from "./_components/edit-user-skeleton"
 
 const getUser = async (id: string) => {
 	return await getUserByIdUseCase(id)
@@ -30,8 +32,11 @@ export default async function EditUserPage(props: { params: Params }) {
 	}[user.role]
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
-			<FormComponent user={user} />
-		</Suspense>
+		<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
+			<BackButton type="button" variant="secondary" className="rounded-full" />
+			<Suspense fallback={<EditUserSkeleton />}>
+				<FormComponent user={user} />
+			</Suspense>
+		</div>
 	)
 }

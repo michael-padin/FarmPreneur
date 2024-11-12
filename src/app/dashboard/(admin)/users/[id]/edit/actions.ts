@@ -8,6 +8,7 @@ import {
 	updateFarmerByUserIdUseCase
 } from "@/use-cases/farmers"
 import { pusherServer } from "@/lib/pusher"
+import { updateAdminUserUseCase } from "@/use-cases/users"
 
 export const updateCustomer = async (
 	data: EditUserSchema & {
@@ -82,5 +83,11 @@ export const updateAdmin = async (
 		return {
 			error: "Invalid fields"
 		}
+	}
+	try {
+		await updateAdminUserUseCase(data)
+		return { error: null }
+	} catch (error) {
+		return { error: getErrorMessage(error) }
 	}
 }
