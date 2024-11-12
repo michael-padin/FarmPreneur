@@ -51,49 +51,39 @@ export const updateCustomerByUserId = async (
 				...(data.password && { password: data.password })
 			}
 		})
-		let customerId
-		if (data.customer) {
-			const customer = await tx.customer.upsert({
-				where: {
-					userId: data.userId
-				},
-				create: {
-					userId: data.userId
-				},
-				update: {
-					contactNumber: data.customer.contactNumber
-				},
-				select: {
-					id: true
-				}
-			})
-			customerId = customer.id
-		}
 
-		if (data.customer && data.customer.address) {
-			await tx.address.upsert({
-				where: {
-					customerId: customerId
-				},
-				create: {
-					customerId: customerId,
-					fullAddress: data.customer.address.fullAddress,
-					street: data.customer.address.street,
-					region: data.customer.address.region,
-					country: data.customer.address.country,
-					postalCode: data.customer.address.postalCode,
-					latitude: data.customer.address.latitude,
-					longitude: data.customer.address.longitude
-				},
-				update: {
-					street: data.customer.address.street,
-					region: data.customer.address.region,
-					country: data.customer.address.country,
-					postalCode: data.customer.address.postalCode,
-					latitude: data.customer.address.latitude,
-					longitude: data.customer.address.longitude
+		const customer = await tx.customer.upsert({
+			where: {
+				userId: data.userId
+			},
+			create: {
+				userId: data.userId
+			},
+			update: {
+				contactNumber: data.customer?.contactNumber,
+				address: {
+					upsert: {
+						create: {
+							latitude: data?.customer?.address?.latitude || 0,
+							longitude: data?.customer?.address?.longitude || 0,
+							fullAddress: data?.customer?.address?.fullAddress,
+							region: data?.customer?.address?.region,
+							postalCode: data?.customer?.address?.postalCode,
+							street: data?.customer?.address?.street,
+							country: data?.customer?.address?.country
+						},
+						update: {
+							latitude: data?.customer?.address?.latitude || 0,
+							longitude: data?.customer?.address?.longitude || 0,
+							fullAddress: data?.customer?.address?.fullAddress,
+							region: data?.customer?.address?.region,
+							postalCode: data?.customer?.address?.postalCode,
+							street: data?.customer?.address?.street,
+							country: data?.customer?.address?.country
+						}
+					}
 				}
-			})
-		}
+			}
+		})
 	})
 }
