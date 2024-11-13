@@ -1,4 +1,4 @@
-import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
 
 export const createCustomer = async () => {}

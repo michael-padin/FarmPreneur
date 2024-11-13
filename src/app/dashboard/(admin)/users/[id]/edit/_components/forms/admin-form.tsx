@@ -2,7 +2,7 @@
 
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { useRouter } from "next/navigation"
-import { editUserSchema, EditUserSchema } from "../validations"
+import { editUserSchema, EditUserSchema } from "../../validations"
 import { useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"

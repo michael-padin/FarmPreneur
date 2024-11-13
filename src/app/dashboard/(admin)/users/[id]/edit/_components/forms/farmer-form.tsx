@@ -29,7 +29,7 @@ import {
 	AccordionTrigger
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import { editUserSchema, EditUserSchema } from "../validations"
+import { editUserSchema, EditUserSchema } from "../../validations"
 import { showErrorToast } from "@/lib/handle-error"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"

@@ -1,12 +1,10 @@
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { auth } from "@/auth"
-import { notFound, redirect } from "next/navigation"
-import CustomerForm from "./_components/forms/customer-form"
-import FarmerForm from "./_components/forms/farmer-form"
-import AdminForm from "./_components/forms/admin-form"
+import { redirect } from "next/navigation"
 import { Suspense } from "react"
 import { BackButton } from "@/components/fg/back-button"
 import { EditUserSkeleton } from "./_components/edit-user-skeleton"
+import { FormComponentWrapper } from "./_components/form-component-wrapper"
 
 const getUser = async (id: string) => {
 	return await getUserByIdUseCase(id)
@@ -21,21 +19,13 @@ export default async function EditUserPage(props: { params: Params }) {
 	if (!session || session.user.role !== "ADMIN") redirect("/login")
 
 	const params = await props.params
-	const user = await getUser(params.id)
-
-	if (!user) return notFound()
-
-	const FormComponent = {
-		CUSTOMER: CustomerForm,
-		FARMER: FarmerForm,
-		ADMIN: AdminForm
-	}[user.role]
+	const promiseUser = getUser(params.id)
 
 	return (
 		<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
 			<BackButton type="button" variant="secondary" className="rounded-full" />
 			<Suspense fallback={<EditUserSkeleton />}>
-				<FormComponent user={user} />
+				<FormComponentWrapper promiseUser={promiseUser} />
 			</Suspense>
 		</div>
 	)

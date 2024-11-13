@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form"
-import { EditUserSchema } from "../validations"
+import { EditUserSchema } from "../../validations"
 import {
 	FormControl,
 	FormDescription,

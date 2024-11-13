@@ -1,24 +1,13 @@
 "use client"
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export function EditUserSkeleton() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>
-					<Skeleton className="h-10 w-[200px]" />
-				</CardTitle>
-				<CardDescription>
-					<Skeleton className="h-4 w-[300px]" />
-				</CardDescription>
+				<Skeleton className="h-10 w-[200px]" />
+				<Skeleton className="h-4 w-[300px]" />
 			</CardHeader>
 			<CardContent className="space-y-6">
 				{Array.from({ length: 6 }).map((_, index) => (

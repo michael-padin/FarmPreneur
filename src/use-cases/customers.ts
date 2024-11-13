@@ -1,4 +1,4 @@
-import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { getCustomers, updateCustomerByUserId } from "@/data-access/customers"
 
 export const getCustomersUseCase = async () => {

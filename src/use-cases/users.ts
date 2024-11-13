@@ -1,7 +1,7 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { RegisterSchema } from "@/app/(auth)/signup/_types"
 import { UpdateUserTypes } from "@/app/dashboard/(admin)/users/(lists)/types"
-import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import {
 	createUserFarmerById,
 	createUserWithOTP,
@@ -21,7 +21,9 @@ import {
 import { ROLE } from "@prisma/client"
 
 export const getUserByIdUseCase = async (id: string) => {
-	return await getUserById(id)
+	const user = await getUserById(id)
+	if (!user) throw new Error("User not found!")
+	return user
 }
 
 export const getUserByEmailUseCase = async (email: string) => {

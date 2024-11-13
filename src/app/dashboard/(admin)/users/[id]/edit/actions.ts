@@ -1,6 +1,6 @@
 "use server"
 import { getErrorMessage } from "@/lib/handle-error"
-import { editUserSchema, EditUserSchema } from "./_components/validations"
+import { editUserSchema, EditUserSchema } from "./validations"
 import { updateCustomerByUserIdUseCase } from "@/use-cases/customers"
 import {
 	getFarmerByUserIdUseCase,

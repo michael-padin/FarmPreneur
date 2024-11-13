@@ -1,5 +1,5 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
-import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/_components/validations"
+import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
 import { ImageType } from "@prisma/client"
 import { create } from "domain"

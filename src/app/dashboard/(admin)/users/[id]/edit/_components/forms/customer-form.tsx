@@ -19,7 +19,7 @@ import {
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { editUserSchema, EditUserSchema } from "../validations"
+import { editUserSchema, EditUserSchema } from "../../validations"
 import { BackButton } from "@/components/fg/back-button"
 import { Button } from "@/components/ui/button"
 import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"

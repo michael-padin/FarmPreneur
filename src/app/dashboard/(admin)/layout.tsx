@@ -24,13 +24,15 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 		return <p>Sorry, You are not authorized to view this page</p>
 	}
 	return (
-		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-			<PendingFarmerCountProvider>
-				<SidebarProvider>
-					<DashboardSidebar user={user} />
-					<SidebarInset className="overflow-hidden">{children}</SidebarInset>
-				</SidebarProvider>
-			</PendingFarmerCountProvider>
-		</ThemeProvider>
+		<>
+			<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+				<PendingFarmerCountProvider>
+					<SidebarProvider>
+						<DashboardSidebar user={user} />
+						<SidebarInset className="overflow-hidden">{children}</SidebarInset>
+					</SidebarProvider>
+				</PendingFarmerCountProvider>
+			</ThemeProvider>
+		</>
 	)
 }
