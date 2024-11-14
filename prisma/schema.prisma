@@ -424,6 +424,7 @@ enum ImageType {
   REVIEW
   THUMBNAIL
   FARM
+  CATEGORY
 }
 
 // MARK: ImageStatus
