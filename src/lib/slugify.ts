@@ -1,7 +1,7 @@
 import slugify from "slugify"
-import { customAlphabet } from "nanoid"
 
-const nanoid = customAlphabet("1234567890abcdef", 10)
+export const NANOID_LENGTH = 6
+export const INITIAL_MAX_ITERATIONS = 1000
 
 export function generateSlug(text: string): string {
 	const baseSlug = slugify(text, {
@@ -13,5 +13,5 @@ export function generateSlug(text: string): string {
 		trim: true
 	})
 
-	return `${baseSlug}-${nanoid()}`
+	return baseSlug
 }
