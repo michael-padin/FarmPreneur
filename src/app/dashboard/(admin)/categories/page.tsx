@@ -12,8 +12,8 @@ import { AddCategoryDialog } from "./_components/add-category-dialog"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { DataTable } from "./_components/data-table"
 
-export function getCategories() {
-	return getCategoriesUseCase()
+async function getCategories() {
+	return await getCategoriesUseCase()
 }
 
 export default async function CategoriesPage() {
