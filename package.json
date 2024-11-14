@@ -72,6 +72,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"lucide-react": "^0.441.0",
 		"mapbox-gl": "^3.7.0",
+		"nanoid": "^5.0.8",
 		"next": "15.0.1",
 		"next-auth": "^5.0.0-beta.21",
 		"next-themes": "^0.3.0",
