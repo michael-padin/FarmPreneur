@@ -63,7 +63,7 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		accessorKey: "products._count",
+		accessorKey: "_count.products",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Products" />
 		),
