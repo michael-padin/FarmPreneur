@@ -26,6 +26,7 @@ import {
 	BellRing,
 	ChevronsUpDown,
 	Command,
+	Grid2X2,
 	Home,
 	LineChart,
 	Package,
@@ -88,15 +89,21 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 			]
 		},
 		{
-			name: "Orders",
-			url: "/dashboard/orders",
-			icon: ShoppingCart
-		},
-		{
 			name: "Products",
 			url: "/dashboard/products",
 			icon: Package
 		},
+		{
+			name: "Categories",
+			url: "/dashboard/categories",
+			icon: Grid2X2
+		},
+		{
+			name: "Orders",
+			url: "/dashboard/orders",
+			icon: ShoppingCart
+		},
+
 		{
 			name: "Notifications",
 			url: "/dashboard/notifications",
