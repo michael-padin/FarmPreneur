@@ -181,6 +181,7 @@ model Product {
   title            String
   description      String
   price            Float
+  slug             String?
   unit             String?
   quantity         Int
   listingStatus    ProductListingStatus @default(PENDING)
@@ -291,6 +292,7 @@ model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String // Category name (e.g., Fruits, Vegetables, Dairy)
   description String? // Optional description of the category
+  slug        String?
   image       Image?    @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   products    Product[] // Products belonging to this category
   imageId     String?   @unique @db.ObjectId
