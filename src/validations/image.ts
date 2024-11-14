@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const imageSchema = z.object({
-	url: z.string(),
+	url: z.string().min(1, "Required"),
 	filename: z.string(),
 	size: z.number(),
 	mimeType: z.string()
