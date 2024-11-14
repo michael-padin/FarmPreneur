@@ -8,11 +8,16 @@ import {
 	getFarmers,
 	getPendingFarmers,
 	getPendingFarmerCount,
-	updateFarmerByUserId
+	updateFarmerByUserId,
+	getApprovedFarmers
 } from "@/data-access/farmers"
 
 export const getPendingFarmerCountUseCase = async () => {
 	return await getPendingFarmerCount()
+}
+
+export const getApprovedFarmersUseCase = async () => {
+	return await getApprovedFarmers()
 }
 
 export const getFarmersUseCase = async () => {

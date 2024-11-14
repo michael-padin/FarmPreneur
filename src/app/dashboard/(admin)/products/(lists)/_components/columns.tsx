@@ -20,14 +20,26 @@ import { AddressDetailsDrawerDialog } from "./address-details"
 import { getAllProductsUseCase } from "@/use-cases/products"
 import { DeleteProductDialog } from "./delete-products-dialog"
 import { FarmerApprovalBadge } from "../../../users/(lists)/_components/badges"
+import { ProductImageCell } from "./product-image-cell"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getAllProductsUseCase>>[0]
 >[] = [
 	{
+		accessorKey: "images",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Images" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const images = row.original.images
+			return images && <ProductImageCell images={images} />
+		}
+	},
+	{
 		accessorKey: "title",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="title" />
+			<DataTableColumnHeader column={column} title="Title" />
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
@@ -43,7 +55,8 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		accessorKey: "farmer.name",
+		id: "Farmer",
+		accessorKey: "farmer.user.name",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Farmer" />
 		),
@@ -57,7 +70,7 @@ export const columns: ColumnDef<
 		enableSorting: true
 	},
 	{
-		accessorKey: "Address",
+		accessorKey: "pickupLocation",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Pick Up Location" />
 		),
@@ -73,6 +86,7 @@ export const columns: ColumnDef<
 		size: 40
 	},
 	{
+		id: "Status",
 		accessorKey: "listingStatus",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Listing Status" />
@@ -81,8 +95,23 @@ export const columns: ColumnDef<
 		cell: ({ row }) => {
 			const product = row.original
 			return <FarmerApprovalBadge status={product.listingStatus} />
-		},
-		size: 40
+		}
+	},
+	{
+		id: "orders",
+		accessorKey: "_count.orders",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Orders" />
+		),
+		enableSorting: true
+	},
+	{
+		id: "reviews",
+		accessorKey: "_count.reviews",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Reviews" />
+		),
+		enableSorting: true
 	},
 	{
 		accessorKey: "createdAt",
@@ -97,20 +126,6 @@ export const columns: ColumnDef<
 			<DataTableColumnHeader column={column} title="Updated At" />
 		),
 		cell: ({ row }) => formatDate(row.original.updatedAt as Date)
-	},
-	{
-		accessorKey: "orders._count",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Orders" />
-		),
-		enableSorting: true
-	},
-	{
-		accessorKey: "reviews._count",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Reviews" />
-		),
-		enableSorting: true
 	},
 
 	{

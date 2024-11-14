@@ -1,7 +1,11 @@
 "use client"
 import { Badge, BadgeProps } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { FarmerApplicationStatus, ROLE } from "@prisma/client"
+import {
+	FarmerApplicationStatus,
+	ProductListingStatus,
+	ROLE
+} from "@prisma/client"
 import {
 	CheckCircle,
 	Shield,
@@ -122,6 +126,39 @@ export const FarmerApprovalBadge = ({
 			className={cn(getStatusStyles(status), className)}
 		>
 			{status.charAt(0).toUpperCase() + status.slice(1)}
+		</Badge>
+	)
+}
+interface ProductListingStatusBadgeProps {
+	status: ProductListingStatus
+	className?: string
+	showText?: boolean
+}
+
+export const ProductListingStatusBadge = ({
+	status,
+	className,
+	showText = false
+}: ProductListingStatusBadgeProps) => {
+	const getStatusStyles = (status: ProductListingStatus) => {
+		switch (status) {
+			case "PENDING":
+				return `text-yellow-800  ${showText ? "bg-yellow-100" : "bg-yellow-200"} hover:bg-yellow-200`
+			case "APPROVED":
+				return `text-green-800 ${showText ? "bg-green-100" : "bg-green-200"} hover:bg-green-200`
+			case "REJECTED":
+				return `text-red-800 ${showText ? "bg-red-100" : "bg-red-200"} hover:bg-red-200`
+			default:
+				return "bg-gray-100 text-gray-800 hover:bg-gray-200"
+		}
+	}
+
+	return (
+		<Badge
+			variant="secondary"
+			className={cn(getStatusStyles(status), className)}
+		>
+			{showText && status.charAt(0).toUpperCase() + status.slice(1)}
 		</Badge>
 	)
 }

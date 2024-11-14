@@ -1,5 +1,10 @@
+import { AddProductSchema } from "@/app/dashboard/(admin)/products/(lists)/validations"
 import { createProductType } from "@/app/dashboard/farmer/products/create/types"
-import { deleteProductsById, getAllProducts } from "@/data-access/products"
+import {
+	createProductFromAdmin,
+	deleteProductsById,
+	getAllProducts
+} from "@/data-access/products"
 
 export const createProductUseCase = async (data: createProductType) => {
 	try {
@@ -15,4 +20,10 @@ export const getAllProductsUseCase = async () => {
 
 export const deleteProductsByIdUseCase = async (ids: string[]) => {
 	return deleteProductsById(ids)
+}
+
+export const createProductFromAdminUseCase = async (
+	data: AddProductSchema & { slug: string }
+) => {
+	return await createProductFromAdmin(data)
 }

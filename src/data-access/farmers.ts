@@ -141,6 +141,29 @@ export const getPendingFarmerCount = async () => {
 	})
 }
 
+export const getApprovedFarmers = async () => {
+	return await db.farmer.findMany({
+		where: {
+			applicationStatus: "APPROVED"
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					createdAt: true,
+					updatedAt: true,
+					name: true,
+					email: true,
+					role: true,
+					profilePicture: true,
+					isEmailVerified: true,
+					emailVerified: true
+				}
+			}
+		}
+	})
+}
+
 // MARK: MUTATIONS
 
 export const createFarmer = async () => {}
