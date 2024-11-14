@@ -26,10 +26,10 @@ import {
 	BellRing,
 	ChevronsUpDown,
 	Command,
-	Grid2X2,
 	Home,
+	LayoutGrid,
+	LeafyGreen,
 	LineChart,
-	Package,
 	ShoppingCart,
 	TestTubeDiagonal,
 	Users
@@ -91,12 +91,12 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 		{
 			name: "Products",
 			url: "/dashboard/products",
-			icon: Package
+			icon: LeafyGreen
 		},
 		{
 			name: "Categories",
 			url: "/dashboard/categories",
-			icon: Grid2X2
+			icon: LayoutGrid
 		},
 		{
 			name: "Orders",
