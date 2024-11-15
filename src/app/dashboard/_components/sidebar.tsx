@@ -47,6 +47,9 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 	const pathName = usePathname()
+	const splitIndex = user?.role === "ADMIN" ? 2 : 3
+	const splitIndexForSub = user?.role === "ADMIN" ? 3 : 4
+
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader>
@@ -81,7 +84,10 @@ export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 									<SidebarMenuButton
 										asChild
 										tooltip={item.name}
-										isActive={pathName.split("/")[2] === item.url.split("/")[2]}
+										isActive={
+											pathName.split("/")[splitIndex] ===
+											item.url.split("/")[splitIndex]
+										}
 									>
 										<Link href={item.url}>
 											{item.icon && <item.icon />}
@@ -98,8 +104,8 @@ export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 													<SidebarMenuSubButton
 														asChild
 														isActive={
-															pathName.split("/")[3] ===
-															subItem.url.split("/")[3]
+															pathName.split("/")[splitIndexForSub] ===
+															subItem.url.split("/")[splitIndexForSub]
 														}
 														// size="sm"
 													>

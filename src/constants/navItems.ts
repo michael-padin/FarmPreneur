@@ -24,13 +24,13 @@ export type SidebarItem = {
 export const farmerNavItems: SidebarItem[] = [
 	{
 		name: "Dashboard",
-		url: "/dashboard",
+		url: "/dashboard/farmer",
 		icon: Home
 	},
 
 	{
 		name: "Customers",
-		url: "/dashboard/farmers/users/customers",
+		url: "/dashboard/farmers/customers",
 		icon: UserCheck
 	},
 	{
