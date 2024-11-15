@@ -2,7 +2,7 @@ import OrdersComponent from "./_components/orders"
 
 const FarmerOrdersPage = () => {
 	return (
-		<div>
+		<div className="">
 			<OrdersComponent />
 		</div>
 	)
