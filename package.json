@@ -16,7 +16,7 @@
 		"push": "pnpm prisma db push",
 		"seed": "pnpm prisma db seed",
 		"studio": "pnpm prisma studio",
-		"generate": "prisma generate",
+		"generate": "pnpm prisma generate",
 		"prettier": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}",
 		"prepare": "husky"
 	},
