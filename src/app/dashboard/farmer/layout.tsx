@@ -15,7 +15,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { Bell, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getUserFarmerByIdUseCase } from "@/use-cases/users"
-import { DashboardSidebar } from "../_components/sidebar"
+import { FarmerSidebar } from "./_components/sidebar"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -47,7 +47,7 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			<SidebarProvider>
-				<DashboardSidebar user={session.user} />
+				<FarmerSidebar user={session.user} />
 				<SidebarInset className="overflow-hidden">
 					<header className="w-full border-b px-4">
 						<div className="flex w-full items-center">

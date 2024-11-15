@@ -19,20 +19,12 @@ import {
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { farmerNavItems, SidebarItem } from "@/constants/navItems"
 import {
 	BadgeCheck,
 	Bell,
-	BellRing,
 	ChevronsUpDown,
 	Command,
-	Home,
-	LayoutGrid,
-	LeafyGreen,
-	LineChart,
-	ShoppingCart,
-	TestTubeDiagonal,
-	Users
+	TestTubeDiagonal
 } from "lucide-react"
 import {
 	DropdownMenu,
@@ -46,78 +38,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Session } from "next-auth"
 import { FPSignOutButton } from "@/components/fg/fp-signout-button"
-import { usePendingFarmerCount } from "@/contexts/pending-farmer-count-context"
+import { SidebarItem } from "@/constants/navItems"
 
 interface DashboardSidebarProps {
 	user: Session["user"] | undefined
+	items: SidebarItem[]
 }
 
-export function DashboardSidebar({ user }: DashboardSidebarProps) {
-	const { pendingFarmerCount } = usePendingFarmerCount()
+export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 	const pathName = usePathname()
-
-	console.log("pendingFarmerCount :>> ", pendingFarmerCount)
-
-	const adminNavItems: SidebarItem[] = [
-		{
-			name: "Dashboard",
-			url: "/dashboard",
-			icon: Home
-		},
-
-		{
-			name: "Users",
-			url: "/dashboard/users",
-			icon: Users,
-			items: [
-				{
-					name: "Customers",
-					url: "/dashboard/users/customers"
-					// icon: UserCheck
-				},
-				{
-					name: "Farmers",
-					url: "/dashboard/users/farmers"
-					// icon: Sprout
-				},
-				{
-					name: "Pending Farmers",
-					url: "/dashboard/users/pending-farmers",
-					badge: pendingFarmerCount
-					// icon: Hourglass
-				}
-			]
-		},
-		{
-			name: "Products",
-			url: "/dashboard/products",
-			icon: LeafyGreen
-		},
-		{
-			name: "Categories",
-			url: "/dashboard/categories",
-			icon: LayoutGrid
-		},
-		{
-			name: "Orders",
-			url: "/dashboard/orders",
-			icon: ShoppingCart
-		},
-
-		{
-			name: "Notifications",
-			url: "/dashboard/notifications",
-			icon: BellRing
-		},
-
-		{
-			url: "/dashboard/analytics",
-			icon: LineChart,
-			name: "Analytics"
-		}
-	]
-	const items = user?.role === "ADMIN" ? adminNavItems : farmerNavItems
-
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader>

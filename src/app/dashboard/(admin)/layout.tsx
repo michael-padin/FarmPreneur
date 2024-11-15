@@ -6,7 +6,8 @@ import ThemeProvider from "@/components/theme-provider"
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { PendingFarmerCountProvider } from "@/contexts/pending-farmer-count-context"
-import { DashboardSidebar } from "../_components/sidebar"
+
+import { AdminSidebar } from "../_components/admin-sidebar"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -23,12 +24,13 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 	if (session?.user.role !== "ADMIN") {
 		return <p>Sorry, You are not authorized to view this page</p>
 	}
+
 	return (
 		<>
 			<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 				<PendingFarmerCountProvider>
 					<SidebarProvider>
-						<DashboardSidebar user={user} />
+						<AdminSidebar user={user} />
 						<SidebarInset className="overflow-hidden">{children}</SidebarInset>
 					</SidebarProvider>
 				</PendingFarmerCountProvider>
