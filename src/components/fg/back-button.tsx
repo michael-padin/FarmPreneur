@@ -88,9 +88,13 @@ export interface BreadcrumbResponsiveProps {
 		href?: string
 		label: string
 	}[]
+	itemsToDisplay?: number
 }
 
-export function BreadcrumbResponsive({ items }: BreadcrumbResponsiveProps) {
+export function BreadcrumbResponsive({
+	items,
+	itemsToDisplay = ITEMS_TO_DISPLAY
+}: BreadcrumbResponsiveProps) {
 	const [open, setOpen] = React.useState(false)
 	const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -101,7 +105,7 @@ export function BreadcrumbResponsive({ items }: BreadcrumbResponsiveProps) {
 					<BreadcrumbLink href={items[0].href}>{items[0].label}</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
-				{items.length > ITEMS_TO_DISPLAY && (
+				{items.length > itemsToDisplay && (
 					<>
 						<BreadcrumbItem>
 							{isDesktop ? (
@@ -157,7 +161,7 @@ export function BreadcrumbResponsive({ items }: BreadcrumbResponsiveProps) {
 						<BreadcrumbSeparator />
 					</>
 				)}
-				{items.slice(-ITEMS_TO_DISPLAY + 1).map((item, index) => (
+				{items.slice(-itemsToDisplay + 1).map((item, index) => (
 					<React.Fragment key={index}>
 						{item.href ? (
 							<>

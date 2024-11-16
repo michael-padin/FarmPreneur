@@ -14,6 +14,7 @@ import { Header } from "@/app/_components/header"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { BreadcrumbResponsive } from "@/components/fg/back-button"
 
 const getAllProducts = async () => {
 	return await getAllProductsUseCase()
@@ -24,10 +25,15 @@ export const metadata: Metadata = {
 }
 export default async function Page() {
 	const products = getAllProducts()
+	const breadcrumbItems = [
+		{ href: "/dashboard", label: "Dashboard" },
+		{ label: "Products" }
+	]
 	return (
 		<>
 			<Header />
 			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
+				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
 						<div className="flex items-center justify-between">
