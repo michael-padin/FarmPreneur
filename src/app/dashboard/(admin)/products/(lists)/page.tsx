@@ -15,6 +15,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { BreadcrumbResponsive } from "@/components/fg/back-button"
+import { Plus } from "lucide-react"
 
 const getAllProducts = async () => {
 	return await getAllProductsUseCase()
@@ -44,9 +45,20 @@ export default async function Page() {
 							<div>
 								<Link
 									href={"/dashboard/products/create"}
-									className={cn(buttonVariants({ variant: "default" }))}
+									className={cn(
+										buttonVariants({ variant: "default" }),
+										"hidden lg:block"
+									)}
 								>
 									Add New Product
+								</Link>
+								<Link
+									href={"/dashboard/products/create"}
+									className={cn(
+										buttonVariants({ variant: "default", size: "icon" })
+									)}
+								>
+									<Plus />
 								</Link>
 							</div>
 						</div>
