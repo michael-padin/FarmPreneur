@@ -13,14 +13,15 @@ import {
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { formatDate } from "@/lib/utils"
+import { formatDate, formatPHP } from "@/lib/utils"
 import { useState } from "react"
 import { toast } from "sonner"
 import { AddressDetailsDrawerDialog } from "./address-details"
 import { getAllProductsUseCase } from "@/use-cases/products"
-import { DeleteProductDialog } from "./delete-products-dialog"
 import { FarmerApprovalBadge } from "../../../users/(lists)/_components/badges"
 import { ProductImageCell } from "./product-image-cell"
+import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { DeleteProductsDialog } from "./delete-products-dialog"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getAllProductsUseCase>>[0]
@@ -48,6 +49,18 @@ export const columns: ColumnDef<
 		}
 	},
 	{
+		id: "Status",
+		accessorKey: "listingStatus",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Listing Status" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const product = row.original
+			return <FarmerApprovalBadge status={product.listingStatus} />
+		}
+	},
+	{
 		accessorKey: "description",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Description" />
@@ -67,7 +80,37 @@ export const columns: ColumnDef<
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Price" />
 		),
-		enableSorting: true
+		enableSorting: true,
+		cell: ({ row }) => {
+			return (
+				<p>
+					{formatPHP(row.original.price)}/
+					{UNITS_MAP[row.original.unit as UnitKey].abbreviation}
+				</p>
+			)
+		}
+	},
+	{
+		accessorKey: "unit",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Unit" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			return (
+				row.original.unit && (
+					<p>{UNITS_MAP[row.original.unit as UnitKey].name}</p>
+				)
+			)
+		}
+	},
+	{
+		accessorKey: "quantity",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Quantity" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => <p className="text-center">{row.original.quantity}</p>
 	},
 	{
 		accessorKey: "pickupLocation",
@@ -85,18 +128,7 @@ export const columns: ColumnDef<
 		},
 		size: 40
 	},
-	{
-		id: "Status",
-		accessorKey: "listingStatus",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Listing Status" />
-		),
-		enableSorting: true,
-		cell: ({ row }) => {
-			const product = row.original
-			return <FarmerApprovalBadge status={product.listingStatus} />
-		}
-	},
+
 	{
 		id: "orders",
 		accessorKey: "_count.orders",
@@ -136,15 +168,13 @@ export const columns: ColumnDef<
 
 			return (
 				<>
-					{/* <DeleteProductDialog
+					<DeleteProductsDialog
 						open={showProductDialog}
 						onOpenChange={setShowProductDialog}
-						ids={[product]}
+						ids={[product.id]}
 						showTrigger={false}
-						deleteAction={()}
-						name="product"
 						onSuccess={() => row.toggleSelected(false)}
-					/> */}
+					/>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="ghost" className="h-8 w-8 p-0">

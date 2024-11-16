@@ -118,7 +118,7 @@ export const createProductFromAdmin = async (
 
 export const deleteProductsById = async (ids: string[]) => {
 	return await db.$transaction([
-		db.user.deleteMany({ where: { id: { in: ids } } })
+		db.product.deleteMany({ where: { id: { in: ids } } })
 	])
 }
 

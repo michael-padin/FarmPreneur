@@ -1,6 +1,5 @@
 "use client"
 import { TrashIcon } from "@radix-ui/react-icons"
-import { type Row } from "@tanstack/react-table"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -28,36 +27,27 @@ import { Icons } from "@/components/icons"
 import { useTransition } from "react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { showErrorToast } from "@/lib/handle-error"
+import { deleteProducts } from "../actions"
 
-interface DeleteProductDialogProps
+interface DeleteProductsDialogProps
 	extends React.ComponentPropsWithoutRef<typeof Dialog> {
-	ids: [{ id: string }]
-	name: string
+	ids: string[]
 	showTrigger?: boolean
 	onSuccess?: () => void
-	deleteAction: ({
-		ids
-	}: {
-		ids: string[]
-	}) => Promise<{ error: string | null }>
 }
 
-export function DeleteProductDialog({
-	name,
+export function DeleteProductsDialog({
 	ids,
-	deleteAction,
 	showTrigger = true,
 	onSuccess,
 	...props
-}: DeleteProductDialogProps) {
+}: DeleteProductsDialogProps) {
 	const [isDeletePending, startDeleteTransition] = useTransition()
 	const isDesktop = useMediaQuery("(min-width: 640px)")
 
 	function onDelete() {
 		startDeleteTransition(async () => {
-			const { error } = await deleteAction({
-				ids: ids.map((i) => i.id)
-			})
+			const { error } = await deleteProducts(ids)
 
 			if (error) {
 				showErrorToast(error)
@@ -65,7 +55,7 @@ export function DeleteProductDialog({
 			}
 
 			props.onOpenChange?.(false)
-			toast.success(`${ids.length === 1 ? ` ${name}` : ` ${name}'s`} deleted`)
+			toast.success("product deleted")
 			onSuccess?.()
 		})
 	}
@@ -87,7 +77,7 @@ export function DeleteProductDialog({
 						<DialogDescription>
 							This action cannot be undone. This will permanently delete{" "}
 							<span className="font-medium">{ids.length}</span>
-							{ids.length === 1 ? ` ${name}` : ` ${name}'s`} to our servers.
+							{ids.length === 1 ? " product" : " products"} to our servers.
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter className="gap-2 sm:space-x-0">
@@ -130,7 +120,7 @@ export function DeleteProductDialog({
 					<DrawerDescription>
 						This action cannot be undone. This will permanently delete{" "}
 						<span className="font-medium">{ids.length}</span>
-						{ids.length === 1 ? " user" : " users"} to our servers.
+						{ids.length === 1 ? " product" : " users"} to our servers.
 					</DrawerDescription>
 				</DrawerHeader>
 				<DrawerFooter className="gap-2 sm:space-x-0">
