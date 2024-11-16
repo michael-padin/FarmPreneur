@@ -55,7 +55,8 @@ export default async function Page() {
 								<Link
 									href={"/dashboard/products/create"}
 									className={cn(
-										buttonVariants({ variant: "default", size: "icon" })
+										buttonVariants({ variant: "default", size: "icon" }),
+										"lg:hidden"
 									)}
 								>
 									<Plus />

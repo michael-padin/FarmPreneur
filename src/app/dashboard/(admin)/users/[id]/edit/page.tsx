@@ -23,7 +23,6 @@ export default async function EditUserPage(props: { params: Params }) {
 
 	return (
 		<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
-			<BackButton type="button" variant="secondary" className="rounded-full" />
 			<Suspense fallback={<EditUserSkeleton />}>
 				<FormComponentWrapper promiseUser={promiseUser} />
 			</Suspense>

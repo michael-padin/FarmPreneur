@@ -28,7 +28,7 @@ export default async function CategoriesPage() {
 		<div>
 			<Header />
 			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
-				<BreadcrumbResponsive items={breadcrumbItems} />
+				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
 						<div className="flex items-center justify-between">
