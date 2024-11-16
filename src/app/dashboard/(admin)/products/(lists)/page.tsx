@@ -14,16 +14,12 @@ import { Header } from "@/app/_components/header"
 import { AddProductSheet } from "./_components/add-product-sheet"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 
 const getAllProducts = async () => {
 	return await getAllProductsUseCase()
-}
-
-const getCategories = async () => {
-	return await getCategoriesUseCase()
-}
-const getApprovedFarmers = async () => {
-	return await getApprovedFarmersUseCase()
 }
 
 export const metadata: Metadata = {
@@ -31,8 +27,6 @@ export const metadata: Metadata = {
 }
 export default async function Page() {
 	const products = getAllProducts()
-	const categoriesPromise = getCategories()
-	const approvedFarmersPromise = getApprovedFarmers()
 	return (
 		<>
 			<Header />
@@ -45,10 +39,12 @@ export default async function Page() {
 								<CardDescription>Manage products from farmers</CardDescription>
 							</div>
 							<div>
-								<AddProductSheet
-									categoriesPromise={categoriesPromise}
-									approvedFarmersPromise={approvedFarmersPromise}
-								/>
+								<Link
+									href={"/dashboard/products/create"}
+									className={cn(buttonVariants({ variant: "default" }))}
+								>
+									Add New Product
+								</Link>
 							</div>
 						</div>
 					</CardHeader>

@@ -3,7 +3,7 @@ import { imageSchema } from "@/validations/image"
 import { ProductListingStatus } from "@prisma/client"
 import { z } from "zod"
 
-export const addProductSchema = z.object({
+export const createProductSchema = z.object({
 	farmerId: z.string().min(1, "Required"),
 	categoryId: z.string().min(1, "Required"),
 	title: z.string().min(4, "Required"),
@@ -16,4 +16,4 @@ export const addProductSchema = z.object({
 	listingStatus: z.nativeEnum(ProductListingStatus)
 })
 
-export type AddProductSchema = z.infer<typeof addProductSchema>
+export type CreateProductSchema = z.infer<typeof createProductSchema>

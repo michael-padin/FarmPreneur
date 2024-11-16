@@ -1,4 +1,4 @@
-import { AddProductSchema } from "@/app/dashboard/(admin)/products/(lists)/validations"
+import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { createProductType } from "@/app/dashboard/farmer/products/create/types"
 import {
 	createProductFromAdmin,
@@ -23,7 +23,7 @@ export const deleteProductsByIdUseCase = async (ids: string[]) => {
 }
 
 export const createProductFromAdminUseCase = async (
-	data: AddProductSchema & { slug: string }
+	data: CreateProductSchema & { slug: string }
 ) => {
 	return await createProductFromAdmin(data)
 }

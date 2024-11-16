@@ -1,4 +1,4 @@
-import { AddProductSchema } from "@/app/dashboard/(admin)/products/(lists)/validations"
+import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { db } from "@/lib/db"
 
 // export const createProduct = async (data: createProductType) => {
@@ -56,7 +56,7 @@ export const getAllProducts = async () => {
 // MARK: MUTATIONS
 
 export const createProductFromAdmin = async (
-	data: AddProductSchema & { slug: string }
+	data: CreateProductSchema & { slug: string }
 ) => {
 	await db.product.create({
 		data: {
