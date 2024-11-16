@@ -13,7 +13,7 @@ import { getAllProductsUseCase } from "@/use-cases/products"
 import { Header } from "@/app/_components/header"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { BreadcrumbResponsive } from "@/components/fg/back-button"
 import { Plus } from "lucide-react"
 
@@ -43,24 +43,19 @@ export default async function Page() {
 								<CardDescription>Manage products from farmers</CardDescription>
 							</div>
 							<div>
-								<Link
-									href={"/dashboard/products/create"}
-									className={cn(
-										buttonVariants({ variant: "default" }),
-										"hidden lg:block"
-									)}
-								>
-									Add New Product
-								</Link>
-								<Link
-									href={"/dashboard/products/create"}
-									className={cn(
-										buttonVariants({ variant: "default", size: "icon" }),
-										"lg:hidden"
-									)}
-								>
-									<Plus />
-								</Link>
+								<Button asChild className="hidden lg:block">
+									<Link href={"/dashboard/products/create"}>
+										Add New Product
+									</Link>
+								</Button>
+								<Button asChild>
+									<Link
+										href={"/dashboard/products/create"}
+										className="lg:hidden"
+									>
+										<Plus />
+									</Link>
+								</Button>
 							</div>
 						</div>
 					</CardHeader>
