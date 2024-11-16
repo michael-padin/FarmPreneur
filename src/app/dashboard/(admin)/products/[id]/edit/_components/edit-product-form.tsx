@@ -15,7 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { use, useTransition } from "react"
 import { showErrorToast } from "@/lib/handle-error"
 import { toast } from "sonner"
-import { createProductFromAdmin } from "../actions"
 import {
 	Select,
 	SelectContent,
@@ -25,7 +24,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { PRODUCT_STATUS } from "@/constants/product-status"
-import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
+import { ProductListingStatusBadge } from "../../../../users/(lists)/_components/badges"
 import { ProductListingStatus } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { FPUnitSelect } from "@/components/fg/fp-select-unit"
@@ -33,51 +32,58 @@ import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
 import { Textarea } from "@/components/ui/textarea"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { S3PATH } from "@/constants/s3-path"
-import { createProductSchema, CreateProductSchema } from "../validations"
 import { useRouter } from "next/navigation"
+import { getProductByIdUseCase } from "@/use-cases/products"
+import { UpdateProductSchema, updateProductSchema } from "../validations"
+import { adminUpdateProduct } from "../actions"
 
-const defaultValues: CreateProductSchema = {
-	title: "",
-	description: "",
-	price: 0,
-	unit: "",
-	quantity: 0,
-	categoryId: "",
-	farmerId: "",
-	listingStatus: "PENDING",
-	images: [],
-	pickupLocation: {
-		fullAddress: "",
-		street: "",
-		region: "",
-		country: "",
-		postalCode: "",
-		latitude: 0,
-		longitude: 0
-	}
-}
-interface CreateProductFormProps {
+interface AdminEditProductFormProps {
 	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
 	approvedFarmersPromise: Promise<
 		Awaited<ReturnType<typeof getApprovedFarmersUseCase>>
 	>
+	productPromise: Promise<Awaited<ReturnType<typeof getProductByIdUseCase>>>
 }
-export function CreateProductForm({
+export function AdminEditProductForm({
 	approvedFarmersPromise,
-	categoriesPromise
-}: CreateProductFormProps) {
+	categoriesPromise,
+	productPromise
+}: AdminEditProductFormProps) {
 	const router = useRouter()
 	const farmers = use(approvedFarmersPromise)
 	const categories = use(categoriesPromise)
+	const product = use(productPromise)
 	const [isUpdatePending, startUpdateTransition] = useTransition()
-	const form = useForm<CreateProductSchema>({
-		resolver: zodResolver(createProductSchema),
-		defaultValues
+	const form = useForm<UpdateProductSchema>({
+		resolver: zodResolver(updateProductSchema),
+		defaultValues: {
+			categoryId: product?.categoryId || "",
+			farmerId: product?.farmerId || "",
+			title: product?.title,
+			description: product?.description || "",
+			price: product?.price,
+			unit: product?.unit || "",
+			quantity: product?.quantity,
+			listingStatus: product?.listingStatus,
+			images: product?.images,
+			pickupLocation: {
+				fullAddress: product?.pickupLocation?.fullAddress || "",
+				street: product?.pickupLocation?.street || "",
+				region: product?.pickupLocation?.region || "",
+				country: product?.pickupLocation?.country || "",
+				postalCode: product?.pickupLocation?.postalCode || "",
+				latitude: product?.pickupLocation?.latitude || 0,
+				longitude: product?.pickupLocation?.longitude || 0
+			}
+		}
 	})
 
-	const onSubmit = async (data: CreateProductSchema) => {
+	const onSubmit = async (data: UpdateProductSchema) => {
 		startUpdateTransition(async () => {
-			const { error } = await createProductFromAdmin(data)
+			const { error } = await adminUpdateProduct({
+				...data,
+				productId: product?.id || ""
+			})
 			if (error) {
 				showErrorToast(error)
 				return
@@ -328,8 +334,12 @@ export function CreateProductForm({
 						)}
 					/>
 					<div className="space-y-2">
-						<Button type="submit" className="w-full">
-							Add Product
+						<Button
+							type="submit"
+							className="w-full"
+							disabled={!form.formState.isDirty}
+						>
+							Save Changes
 						</Button>
 						<Button
 							type="button"
