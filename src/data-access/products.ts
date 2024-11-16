@@ -152,7 +152,7 @@ export const updateProduct = async (
 				description: data.description,
 				price: data.price,
 				quantity: data.quantity,
-				listingStatus: "PENDING",
+				listingStatus: data.listingStatus,
 				farmer: {
 					connect: {
 						id: data.farmerId
