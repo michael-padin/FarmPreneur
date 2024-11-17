@@ -22,6 +22,15 @@ import {
 	DrawerTrigger
 } from "@/components/ui/drawer"
 import { Plus } from "lucide-react"
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger
+} from "@/components/ui/sheet"
 
 export function AddCategoryDialog() {
 	const [open, setOpen] = useState(false)
@@ -48,24 +57,26 @@ export function AddCategoryDialog() {
 	}
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
-			<DrawerTrigger asChild>
+		<Sheet open={open} onOpenChange={setOpen}>
+			<SheetTrigger asChild>
 				<Button size="icon">
 					<Plus className="h-4 w-4" />
 				</Button>
-			</DrawerTrigger>
-			<DrawerContent>
-				<DrawerHeader className="text-left">
-					<DrawerTitle>Create Category</DrawerTitle>
+			</SheetTrigger>
+			<SheetContent className="min-w-full">
+				<SheetHeader className="text-left">
+					<SheetTitle>Create Category</SheetTitle>
 					<DrawerDescription>create a new category</DrawerDescription>
-				</DrawerHeader>
-				<CreateCategoryForm setOpen={setOpen} />
-				<DrawerFooter className="pt-2">
-					<DrawerClose asChild>
+				</SheetHeader>
+				<div className="pb-0 pt-4">
+					<CreateCategoryForm setOpen={setOpen} />
+				</div>
+				<SheetFooter className="pt-2">
+					<SheetClose asChild>
 						<Button variant="secondary">Cancel</Button>
-					</DrawerClose>
-				</DrawerFooter>
-			</DrawerContent>
-		</Drawer>
+					</SheetClose>
+				</SheetFooter>
+			</SheetContent>
+		</Sheet>
 	)
 }

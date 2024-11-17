@@ -57,7 +57,7 @@ export function CreateCategoryForm({ setOpen }: CreateCategoryFormProps) {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<fieldset className="grid gap-4 max-sm:px-4">
+				<fieldset className="space-y-4" disabled={isPending}>
 					<FormField
 						control={form.control}
 						name="name"
@@ -101,7 +101,11 @@ export function CreateCategoryForm({ setOpen }: CreateCategoryFormProps) {
 							</FormItem>
 						)}
 					/>
-					<Button type="submit" disabled={isPending || !form.formState.isDirty}>
+					<Button
+						type="submit"
+						disabled={isPending || !form.formState.isDirty}
+						className="w-full"
+					>
 						{isPending ? <Loader2 className="animate-spin" /> : "Create"}
 					</Button>{" "}
 				</fieldset>
