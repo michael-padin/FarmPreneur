@@ -264,21 +264,21 @@ model Image {
 
 // MARK: ORDER
 model Order {
-  id                String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  quantityPurchased Int
-  totalPrice        Float
-  status            OrderStatus    @default(IN_PROGRESS)
-  product           Product        @relation(fields: [productId], references: [id], onDelete: Cascade) // Order refers to the product
-  productId         String         @db.ObjectId
-  address           Address?       @relation(fields: [addressId], references: [id])
-  addressId         String?        @db.ObjectId
-  farmer            Farmer         @relation(fields: [farmerId], references: [id])
-  farmerId          String         @db.ObjectId
-  customer          Customer?      @relation(fields: [customerId], references: [id])
-  customerId        String?        @db.ObjectId
-  review            ProductReview?
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  quantity   Int
+  totalPrice Float
+  status     OrderStatus    @default(IN_PROGRESS)
+  product    Product        @relation(fields: [productId], references: [id], onDelete: Cascade) // Order refers to the product
+  productId  String         @db.ObjectId
+  address    Address?       @relation(fields: [addressId], references: [id])
+  addressId  String?        @db.ObjectId
+  farmer     Farmer         @relation(fields: [farmerId], references: [id])
+  farmerId   String         @db.ObjectId
+  customer   Customer?      @relation(fields: [customerId], references: [id])
+  customerId String?        @db.ObjectId
+  review     ProductReview?
 
   @@index([status])
   @@index([customerId])
