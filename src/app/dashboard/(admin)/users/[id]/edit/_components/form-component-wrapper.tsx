@@ -31,14 +31,12 @@ export function FormComponentWrapper({
 			case "ADMIN":
 				return [
 					{ href: "/dashboard/users", label: "Users" },
+					{ href: "/dashboard/users", label: "All" },
 					{ label: "Edit Admin" }
 				]
 		}
 	}
-	const breadcrumbItems = [
-		{ href: "/dashboard", label: "Dashboard" },
-		...getBreadcrumbItems(user.role)
-	]
+	const breadcrumbItems = [...getBreadcrumbItems(user.role)]
 
 	const FormComponent = {
 		CUSTOMER: CustomerForm,
@@ -48,7 +46,7 @@ export function FormComponentWrapper({
 
 	return (
 		<>
-			<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={4} />
+			<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={3} />
 			<div className="mx-auto max-w-screen-md">
 				<FormComponent user={user} />
 			</div>

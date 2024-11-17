@@ -33,8 +33,8 @@ export default async function Page() {
 	return (
 		<>
 			<DashboardHeader />
-			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
-				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
+			<div className="space-y-4 px-4 py-5 lg:px-5">
+				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={3} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
 						<div className="flex items-center justify-between">
@@ -43,12 +43,12 @@ export default async function Page() {
 								<CardDescription>Manage products from farmers</CardDescription>
 							</div>
 							<div>
-								<Button asChild className="hidden lg:block">
+								<Button asChild className="hidden lg:block" size={"icon"}>
 									<Link href={"/dashboard/products/create"}>
 										Add New Product
 									</Link>
 								</Button>
-								<Button asChild>
+								<Button asChild size={"icon"}>
 									<Link
 										href={"/dashboard/products/create"}
 										className="lg:hidden"

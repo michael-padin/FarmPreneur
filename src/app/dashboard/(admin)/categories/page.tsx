@@ -27,7 +27,7 @@ export default async function CategoriesPage() {
 	return (
 		<div>
 			<DashboardHeader />
-			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
+			<div className="space-y-4 px-4 py-5 lg:px-5">
 				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
