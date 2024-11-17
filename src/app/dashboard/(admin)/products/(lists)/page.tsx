@@ -43,7 +43,7 @@ export default async function Page() {
 								<CardDescription>Manage products from farmers</CardDescription>
 							</div>
 							<div>
-								<Button asChild className="hidden lg:block" size={"icon"}>
+								<Button asChild className="hidden lg:block">
 									<Link href={"/dashboard/products/create"}>
 										Add New Product
 									</Link>
