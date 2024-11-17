@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/header"
+import { DashboardHeader } from "@/app/_components/header"
 
 export default function AnalyticsLayout({
 	children
@@ -7,7 +7,7 @@ export default function AnalyticsLayout({
 }) {
 	return (
 		<section>
-			<Header />
+			<DashboardHeader />
 			{children}
 		</section>
 	)

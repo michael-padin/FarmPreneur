@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/header"
+import { DashboardHeader } from "@/app/_components/header"
 import {
 	Card,
 	CardContent,
@@ -40,7 +40,7 @@ export default async function AdminEditProductPage(props: { params: Params }) {
 	]
 	return (
 		<>
-			<Header />
+			<DashboardHeader />
 			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
 				<BreadcrumbResponsive items={breadcrumbItems} />
 				<Card className="mx-auto max-w-screen-md">

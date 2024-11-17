@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/header"
+import { DashboardHeader } from "@/app/_components/header"
 
 export default async function UserLayout({
 	children
@@ -7,7 +7,7 @@ export default async function UserLayout({
 }) {
 	return (
 		<>
-			<Header />
+			<DashboardHeader />
 			{children}
 		</>
 	)

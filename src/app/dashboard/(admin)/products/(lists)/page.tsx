@@ -10,7 +10,7 @@ import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skelet
 import { Metadata } from "next"
 import { DataTable } from "./_components/data-table"
 import { getAllProductsUseCase } from "@/use-cases/products"
-import { Header } from "@/app/_components/header"
+import { DashboardHeader } from "@/app/_components/header"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -32,7 +32,7 @@ export default async function Page() {
 	]
 	return (
 		<>
-			<Header />
+			<DashboardHeader />
 			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
 				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">

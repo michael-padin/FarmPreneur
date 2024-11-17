@@ -8,7 +8,7 @@ import {
 import { Suspense } from "react"
 import { DataTableSkeleton } from "../../_components/data-table-skeleton"
 import { Metadata } from "next"
-import { Header } from "@/app/_components/header"
+import { DashboardHeader } from "@/app/_components/header"
 
 const getNotificationsByEmail = () => {
 	return null
@@ -22,7 +22,7 @@ export default async function Page() {
 	const notifications = getNotificationsByEmail()
 	return (
 		<>
-			<Header />
+			<DashboardHeader />
 			<div className="space-y-2 p-2 lg:space-y-4 lg:p-5">
 				<Card>
 					<CardHeader className="">

@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/header"
+import { DashboardHeader } from "@/app/_components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 import {
@@ -13,7 +13,7 @@ import {
 export default function AdminDashboard() {
 	return (
 		<>
-			<Header />
+			<DashboardHeader />
 			<div className="flex h-screen overflow-hidden">
 				{/* Main Content */}
 				<div className="flex flex-1 flex-col overflow-hidden">
