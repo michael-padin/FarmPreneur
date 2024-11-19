@@ -1,0 +1,241 @@
+"use client"
+import { DataTableColumnHeader } from "@/app/dashboard/_components/data-table-column-header"
+import { Button } from "@/components/ui/button"
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuShortcut,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { ColumnDef } from "@tanstack/react-table"
+import { MapPin, MoreHorizontal, Package, Phone, User } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
+import { getOrdersUseCase } from "@/use-cases/orders"
+import { Order, OrderStatus } from "@prisma/client"
+import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
+import { AddressDetailsDrawerDialog } from "../../../products/(lists)/_components/address-details"
+import Image from "next/image"
+import { formatPHP } from "@/lib/utils"
+
+export const columns: ColumnDef<
+	Awaited<ReturnType<typeof getOrdersUseCase>>[0]
+>[] = [
+	{
+		accessorKey: "id",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Order ID" />
+		),
+		cell: ({ cell }) => {
+			const id = cell.getValue() as string
+			return <p>{id.slice(-5)}</p>
+		}
+	},
+	{
+		accessorKey: "product",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Product" />
+		),
+		cell: ({ row }) => {
+			const product = row.original.product
+			const quantity = row.original.quantity
+			return (
+				<div className="flex items-center gap-3">
+					{product.images?.[0] && (
+						<div className="relative h-12 w-12 overflow-hidden rounded-md">
+							<Image
+								src={product.images[0].url || "/placeholder.svg"}
+								alt={product.title}
+								fill
+								className="h-full w-full object-cover"
+							/>
+						</div>
+					)}
+					<div className="flex flex-col">
+						<span className="font-medium">{product.title}</span>
+						<div className="flex items-center gap-1 text-sm text-gray-500">
+							<Package className="h-3 w-3" />
+							<span>
+								{quantity} {product.unit}
+							</span>
+						</div>
+					</div>
+				</div>
+			)
+		},
+		enableSorting: true
+	},
+	{
+		accessorKey: "status",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Status" />
+		),
+		enableSorting: true,
+		cell: ({ cell }) => {
+			const status = cell.getValue() as OrderStatus
+
+			return <OrderStatusBadge status={status} />
+		}
+	},
+	{
+		accessorKey: "customer",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Customer" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const customer = row.original.customer
+			return customer ? (
+				<div className="flex flex-col">
+					<div className="flex items-center gap-1">
+						<User className="h-4 w-4" />
+						<span>{customer.user.name}</span>
+					</div>
+					<div className="flex items-center gap-1 text-sm text-gray-500">
+						<Phone className="h-3 w-3" />
+						<span>{customer.contactNumber}</span>
+					</div>
+				</div>
+			) : null
+		}
+	},
+	{
+		accessorKey: "farmer",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Farmer" />
+		),
+		enableSorting: true,
+		cell: ({ row }) => {
+			const farmer = row.original.farmer
+			return farmer ? (
+				<div className="flex flex-col">
+					<div className="flex items-center gap-1">
+						<User className="h-4 w-4" />
+						<span>{farmer.user.name}</span>
+					</div>
+					<div className="flex items-center gap-1 text-sm text-gray-500">
+						<Phone className="h-3 w-3" />
+						<span>{farmer.contactNumber}</span>
+					</div>
+				</div>
+			) : null
+		}
+	},
+	{
+		accessorKey: "address",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Pickup Location" />
+		),
+		cell: ({ row }) => {
+			const pickupLocation = row.original.address
+			return pickupLocation ? (
+				<div className="flex flex-col gap-1">
+					<div className="flex items-center gap-1">
+						<MapPin className="h-4 w-4" />
+						<AddressDetailsDrawerDialog
+							address={pickupLocation}
+							title="Pickup"
+						/>
+						{/* <span className="text-sm">{order.pickupLocation.region}</span> */}
+					</div>
+					{/* <span className="text-xs text-gray-500">
+						Window: {order.pickupWindow}
+					</span> */}
+				</div>
+			) : null
+		}
+	},
+
+	{
+		accessorKey: "totalPrice",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Total Price" />
+		),
+		cell: ({ cell }) => {
+			const totalPrice = cell.getValue() as Order["totalPrice"]
+			return (
+				<>
+					<p>{formatPHP(totalPrice)}/</p>
+				</>
+			)
+		}
+	},
+	{
+		accessorKey: "createdAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Date" />
+		),
+		cell: ({ row }) => {
+			const createdAt = row.original.createdAt
+			return (
+				<div className="flex flex-col text-sm">
+					<span>{new Date(createdAt).toLocaleDateString()}</span>
+					<span className="text-gray-500">
+						{new Date(createdAt).toLocaleTimeString()}
+					</span>
+				</div>
+			)
+		}
+	},
+
+	{
+		id: "actions",
+		cell: function Cell({ row }) {
+			const [showProductDialog, setShowProductDialog] = useState(false)
+			const [showUpdateDialog, setShowUpdateDialog] = useState(false)
+			const category = row.original
+
+			return (
+				<>
+					{/* <DeleteCategoriesDialog
+						open={showProductDialog}
+						onOpenChange={setShowProductDialog}
+						ids={[category.id]}
+						showTrigger={false}
+						onSuccess={() => row.toggleSelected(false)}
+					/>
+					<UpdateCategoryDialog
+						category={row.original}
+						showUpdateDialog={showUpdateDialog}
+						setShowUpdateDialog={setShowUpdateDialog}
+					/> */}
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="ghost" className="h-8 w-8 p-0">
+								<span className="sr-only">Open menu</span>
+								<MoreHorizontal className="h-4 w-4" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DropdownMenuItem
+								onSelect={async () => {
+									await navigator.clipboard.writeText(row.original.id)
+									toast.success("user id copied!")
+								}}
+							>
+								Copy ID
+							</DropdownMenuItem>
+							<DropdownMenuItem onSelect={() => setShowUpdateDialog(true)}>
+								View Details
+							</DropdownMenuItem>
+							<DropdownMenuItem onSelect={() => setShowUpdateDialog(true)}>
+								Update Status
+							</DropdownMenuItem>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem onSelect={() => setShowProductDialog(true)}>
+								Delete
+								<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</>
+			)
+		},
+		size: 20,
+		enableHiding: false
+	}
+]
