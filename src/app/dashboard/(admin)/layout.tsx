@@ -31,7 +31,9 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 				<PendingFarmerCountProvider>
 					<SidebarProvider>
 						<AdminSidebar user={user} />
-						<SidebarInset className="overflow-hidden">{children}</SidebarInset>
+						<SidebarInset className="overflow-hidden bg-zinc-50 dark:bg-background">
+							{children}
+						</SidebarInset>
 					</SidebarProvider>
 				</PendingFarmerCountProvider>
 			</ThemeProvider>
