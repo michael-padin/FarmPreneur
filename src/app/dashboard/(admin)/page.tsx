@@ -1,8 +1,6 @@
 import { DashboardHeader } from "@/app/_components/header"
-import { DashUI } from "../_components/dash-ui"
-import DashUI2 from "../_components/dash-ui-2"
-import DashUI3 from "../_components/dash-ui-3"
 import { Button } from "@react-email/components"
+import { DashUI3 } from "../_components/dash-ui-3"
 
 export default function AdminDashboardPage() {
 	return (
@@ -15,7 +13,7 @@ export default function AdminDashboardPage() {
 						<Button>Download Report</Button>
 					</div>
 				</div>
-				{/* <DashUI3 /> */}
+				<DashUI3 />
 			</div>
 		</div>
 	)

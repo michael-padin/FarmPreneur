@@ -185,7 +185,7 @@ const recentOrders = [
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
-export default function DashUI3() {
+export function DashUI3() {
 	const [activeTab, setActiveTab] = useState("overview")
 
 	return (
@@ -210,7 +210,9 @@ export default function DashUI3() {
 							<DollarSign className="h-4 w-4 text-muted-foreground" />
 						</CardHeader>
 						<CardContent>
-							<div className="text-2xl font-bold">$45,231.89</div>
+							<div className="text-2xl">
+								₱<span className="font-bold">45,231.89</span>
+							</div>
 							<p className="text-xs text-muted-foreground">
 								+20.1% from last month
 							</p>
