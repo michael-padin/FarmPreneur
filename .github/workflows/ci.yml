@@ -1,3 +1,20 @@
+# Continuous Integration Workflow
+# --------------------------------
+# This workflow automatically runs tests and checks when:
+# - Code is pushed to the "master" or "dev" branches.
+# - A pull request is created for the "master" or "dev" branches.
+#
+# What this workflow does:
+# 1. Gets the latest code from the repository.
+# 2. Sets up Node.js (version 22.x) and the pnpm package manager.
+# 3. Installs all the project dependencies.
+# 4. Checks the code for formatting and style issues (linting).
+# 5. Runs tests to ensure the code works correctly.
+#
+# Notes:
+# - The `DATABASE_URL` is a secret used for connecting to the database during tests.
+
+
 name: Continuous Integration
 
 on:
