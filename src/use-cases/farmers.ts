@@ -17,7 +17,11 @@ export const getPendingFarmerCountUseCase = async () => {
 }
 
 export const getApprovedFarmersUseCase = async () => {
-	return await getApprovedFarmers()
+	try {
+		return await getApprovedFarmers()
+	} catch (error) {
+		console.log(error)
+	}
 }
 
 export const getFarmersUseCase = async () => {
