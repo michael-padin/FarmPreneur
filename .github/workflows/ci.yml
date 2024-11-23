@@ -14,7 +14,6 @@
 # Notes:
 # - The `DATABASE_URL` is a secret used for connecting to the database during tests.
 
-
 name: Continuous Integration
 
 on:
@@ -54,3 +53,14 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+
+
+        
+
+# Here are the tools we use in this pipeline:
+  
+# Vitest: Tests our code and checks if everything works.
+# React Testing Library (RTL): Tests our React components to ensure they behave correctly.
+# Jest-DOM: Makes testing the user interface easier.
+# ESLint: Checks our code for mistakes and makes sure it looks clean.
+# Vercel: Deploys our app online for everyone to access."
