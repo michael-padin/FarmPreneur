@@ -1,11 +1,8 @@
 import { DashboardHeader } from "@/app/_components/header"
-import { DashUI3 } from "../_components/dash-ui-3"
-import { Button } from "@/components/ui/button"
 import { Suspense } from "react"
 import { TotalUsers } from "../_components/total-users"
 import { TotalProducts } from "../_components/total-products"
 import { TotalOrders } from "../_components/total-orders"
-import DashUI2 from "../_components/dash-ui-2"
 import { AverageRating } from "../_components/average-rating"
 
 export default function AdminDashboardPage() {
