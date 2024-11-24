@@ -26,6 +26,35 @@ import { db } from "@/lib/db"
 // 	})
 // }
 
+export const getTopProducts = async (limit = 5) => {
+	return await db.product.findMany({
+		take: limit,
+		orderBy: {
+			orders: {
+				_count: "desc"
+			}
+		},
+		include: {
+			_count: {
+				select: { orders: true }
+			}
+		}
+	})
+}
+
+export const getTotalProducts = async () => {
+	return await db.product.count()
+}
+
+export const getTotalProductsByDate = async (date: Date) => {
+	return await db.product.count({
+		where: {
+			createdAt: {
+				gte: date
+			}
+		}
+	})
+}
 export const getAllProducts = async () => {
 	return await db.product.findMany({
 		include: {
@@ -62,6 +91,17 @@ export const getProductById = async (id: string) => {
 			images: true,
 			pickupLocation: true,
 			category: true
+		}
+	})
+}
+
+export const getProductReviewStats = async () => {
+	return await db.productReview.aggregate({
+		_avg: {
+			rating: true
+		},
+		_count: {
+			_all: true
 		}
 	})
 }

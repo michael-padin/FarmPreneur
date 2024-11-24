@@ -221,6 +221,19 @@ export const getCustomers = async () => {
 	})
 }
 
+export const getTotalUsers = async () => {
+	return await db.user.count()
+}
+export const getTotalUsersByDate = async (date: Date) => {
+	return await db.user.count({
+		where: {
+			createdAt: {
+				gte: date
+			}
+		}
+	})
+}
+
 // MARK: MUTATIONS
 export const createUserWithOTP = async (
 	data: RegisterSchema & {
@@ -246,6 +259,9 @@ export const createUserWithOTP = async (
 					mimeType: "",
 					type: "PROFILE"
 				}
+			},
+			customer: {
+				create: {}
 			},
 			emailOtp: {
 				create: {

@@ -9,7 +9,8 @@ import {
 	getPendingFarmers,
 	getPendingFarmerCount,
 	updateFarmerByUserId,
-	getApprovedFarmers
+	getApprovedFarmers,
+	getTopPerformingFarmers
 } from "@/data-access/farmers"
 
 export const getPendingFarmerCountUseCase = async () => {
@@ -49,6 +50,14 @@ export const createFarmerByUserIdUseCase = async (
 	data: FarmRegistrationSchema & { userId: string }
 ) => {
 	return await createFarmerByUserId(data)
+}
+
+export const getTopPerformingFarmersUseCase = async () => {
+	try {
+		return await getTopPerformingFarmers()
+	} catch (error) {
+		throw error
+	}
 }
 
 // MARK: MUTATIONS

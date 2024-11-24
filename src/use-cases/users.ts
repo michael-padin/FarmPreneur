@@ -8,6 +8,8 @@ import {
 	deleteUserById,
 	deleteUsersById,
 	getCustomers,
+	getTotalUsers,
+	getTotalUsersByDate,
 	getUserByEmail,
 	getUserById,
 	getUserFarmerById,
@@ -42,6 +44,22 @@ export const getCustomersUseCase = async () => {
 	return await getCustomers()
 }
 
+export const getTotalUsersUseCase = async () => {
+	const currentDate = new Date()
+	const lastMonthDate = new Date(
+		currentDate.getFullYear(),
+		currentDate.getMonth() - 1,
+		1
+	)
+	try {
+		const totalUsers = await getTotalUsers()
+		const increaseChange =
+			totalUsers - (await getTotalUsersByDate(lastMonthDate))
+		return { totalUsers, increaseChange }
+	} catch (error) {
+		throw error
+	}
+}
 // MARK: MUTATIONS
 export const createUserFarmerByIdUseCase = async (
 	data: FarmRegistrationSchema & { userId: string }

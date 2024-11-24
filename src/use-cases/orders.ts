@@ -1,6 +1,9 @@
 import { auth } from "@/auth"
-import { getOrders } from "@/data-access/orders"
-import { getSession } from "next-auth/react"
+import {
+	getOrders,
+	getTotalOrders,
+	getTotalOrdersByDate
+} from "@/data-access/orders"
 
 export const getOrdersUseCase = async () => {
 	const session = await auth()
@@ -10,4 +13,21 @@ export const getOrdersUseCase = async () => {
 	}
 
 	return await getOrders()
+}
+
+export const getTotalOrdersUseCase = async () => {
+	const currentDate = new Date()
+	const lastMonthDate = new Date(
+		currentDate.getFullYear(),
+		currentDate.getMonth() - 1,
+		1
+	)
+	try {
+		const totalOrders = await getTotalOrders()
+		const increaseChange =
+			totalOrders - (await getTotalOrdersByDate(lastMonthDate))
+		return { totalOrders, increaseChange }
+	} catch (error) {
+		throw error
+	}
 }

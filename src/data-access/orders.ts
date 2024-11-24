@@ -33,3 +33,16 @@ export const getOrders = async () => {
 		}
 	})
 }
+
+export const getTotalOrders = async () => {
+	return await db.order.count()
+}
+export const getTotalOrdersByDate = async (date: Date) => {
+	return await db.order.count({
+		where: {
+			createdAt: {
+				gte: date
+			}
+		}
+	})
+}

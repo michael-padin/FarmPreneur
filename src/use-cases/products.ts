@@ -6,6 +6,10 @@ import {
 	deleteProductsById,
 	getAllProducts,
 	getProductById,
+	getProductReviewStats,
+	getTopProducts,
+	getTotalProducts,
+	getTotalProductsByDate,
 	updateProduct
 } from "@/data-access/products"
 
@@ -29,6 +33,40 @@ export const deleteProductsByIdUseCase = async (ids: string[]) => {
 	return deleteProductsById(ids)
 }
 
+export const getTopProductsUseCase = async (limit = 5) => {
+	try {
+		return await getTopProducts(limit)
+	} catch (error) {
+		throw error
+	}
+}
+
+export const getTotalProductsUseCase = async () => {
+	const currentDate = new Date()
+	const lastMonthDate = new Date(
+		currentDate.getFullYear(),
+		currentDate.getMonth() - 1,
+		1
+	)
+	try {
+		const totalProducts = await getTotalProducts()
+		const increaseChange =
+			totalProducts - (await getTotalProductsByDate(lastMonthDate))
+		return { totalProducts, increaseChange }
+	} catch (error) {
+		throw error
+	}
+}
+
+export const getProductReviewStatsUseCase = async () => {
+	try {
+		return await getProductReviewStats()
+	} catch (error) {
+		throw error
+	}
+}
+
+// MARK: MUTATIONS
 export const createProductFromAdminUseCase = async (
 	data: CreateProductSchema & { slug: string }
 ) => {

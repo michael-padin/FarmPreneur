@@ -1,8 +1,6 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
-import { ImageType } from "@prisma/client"
-import { create } from "domain"
 
 export const getFarmerByUserId = async (userId: string) => {
 	return await db.farmer.findUnique({
@@ -159,6 +157,24 @@ export const getApprovedFarmers = async () => {
 					isEmailVerified: true,
 					emailVerified: true
 				}
+			}
+		}
+	})
+}
+export const getTopPerformingFarmers = async (limit = 5) => {
+	return await db.farmer.findMany({
+		take: limit,
+		orderBy: {
+			orders: {
+				_count: "desc"
+			}
+		},
+		include: {
+			_count: {
+				select: { orders: true }
+			},
+			user: {
+				select: { name: true }
 			}
 		}
 	})

@@ -1,19 +1,43 @@
 import { DashboardHeader } from "@/app/_components/header"
-import { Button } from "@react-email/components"
 import { DashUI3 } from "../_components/dash-ui-3"
+import { Button } from "@/components/ui/button"
+import { Suspense } from "react"
+import { TotalUsers } from "../_components/total-users"
+import { TotalProducts } from "../_components/total-products"
+import { TotalOrders } from "../_components/total-orders"
+import DashUI2 from "../_components/dash-ui-2"
+import { AverageRating } from "../_components/average-rating"
 
 export default function AdminDashboardPage() {
+	// const totalOrders = getTotalOrdersUseCase()
+	// const totalProducts = getTotalProductsUseCase()
+	// const topProducts = getTopProductsUseCase()
+	// const topPerformingFarmers = getTopPerformingFarmersUseCase()
+
 	return (
 		<div>
 			<DashboardHeader />
-			<div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-				<div className="flex items-center justify-between space-y-2">
-					<h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-					<div className="flex items-center space-x-2">
-						<Button>Download Report</Button>
-					</div>
+			<div className="space-y-4 px-4 py-5 lg:px-5">
+				<div className="flex items-center justify-between">
+					<h2 className="text-2xl font-semibold leading-none tracking-tight">
+						Dashboard
+					</h2>
 				</div>
-				<DashUI3 />
+				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+					<Suspense fallback={<p>Loading...</p>}>
+						<TotalUsers />
+					</Suspense>
+					<Suspense fallback={<p>Loading...</p>}>
+						<TotalProducts />
+					</Suspense>
+					<Suspense fallback={<p>Loading...</p>}>
+						<TotalOrders />
+					</Suspense>
+					<Suspense fallback={<p>Loading...</p>}>
+						<AverageRating />
+					</Suspense>
+				</div>
+				{/* <DashUI2 /> */}
 			</div>
 		</div>
 	)
