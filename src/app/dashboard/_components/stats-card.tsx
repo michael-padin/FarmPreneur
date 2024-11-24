@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import {
 	Card,
 	CardContent,
@@ -26,7 +27,9 @@ export const StatsCard = ({
 	<Card>
 		<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 			<CardTitle className="text-sm font-medium">{title}</CardTitle>
-			<Icon className={cn("h-4 w-4 text-muted-foreground", iconClassName)} />
+			<Button size={"icon"} className="cursor-default hover:bg-primary">
+				<Icon className={cn(iconClassName)} />
+			</Button>
 		</CardHeader>
 		<CardContent>
 			<div className="text-2xl font-bold">{total}</div>
