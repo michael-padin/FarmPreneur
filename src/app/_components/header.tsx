@@ -39,17 +39,15 @@ export async function DashboardHeader() {
 					<ModeToggle />
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button variant={"ghost"} size="icon">
-								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage
-										src={user?.image || ""}
-										alt={user?.name || "user avatar"}
-									/>
-									<AvatarFallback className="rounded-lg">
-										{user?.name?.charAt(0)}
-									</AvatarFallback>
-								</Avatar>
-							</Button>
+							<Avatar className="cursor-pointer rounded-lg">
+								<AvatarImage
+									src={user?.image || ""}
+									alt={user?.name || "user avatar"}
+								/>
+								<AvatarFallback className="rounded-lg">
+									{user?.name?.charAt(0)}
+								</AvatarFallback>
+							</Avatar>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent
 							className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
