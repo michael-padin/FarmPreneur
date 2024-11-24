@@ -29,3 +29,11 @@ export const formatPHP = (amount: number) => {
 }
 
 export const isDevelopment = process.env.NODE_ENV === "development"
+
+export const getFirstWord = (str: string) => {
+	// Split the string by spaces
+	const words = str.trim().split(/\s+/)
+
+	// Return the first word
+	return words[0] || "" // Return an empty string if there are no words
+}
