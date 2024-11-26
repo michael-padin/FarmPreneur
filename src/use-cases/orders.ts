@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import {
 	getOrders,
+	getRecentOrders,
 	getTotalOrders,
 	getTotalOrdersByDate
 } from "@/data-access/orders"
@@ -27,6 +28,14 @@ export const getTotalOrdersUseCase = async () => {
 		const increaseChange =
 			totalOrders - (await getTotalOrdersByDate(lastMonthDate))
 		return { totalOrders, increaseChange }
+	} catch (error) {
+		throw error
+	}
+}
+
+export const getRecentOrdersUseCase = async () => {
+	try {
+		return await getRecentOrders()
 	} catch (error) {
 		throw error
 	}

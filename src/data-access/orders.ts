@@ -46,3 +46,38 @@ export const getTotalOrdersByDate = async (date: Date) => {
 		}
 	})
 }
+
+export const getRecentOrders = async () => {
+	return await db.order.findMany({
+		orderBy: {
+			createdAt: "desc"
+		},
+		include: {
+			product: {
+				include: {
+					images: true
+				}
+			},
+			farmer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			customer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			address: true
+		},
+		take: 10
+	})
+}

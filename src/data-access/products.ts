@@ -105,6 +105,43 @@ export const getProductReviewStats = async () => {
 		}
 	})
 }
+export const getTopSellingProducts = async (limit = 10) => {
+	return await db.product.findMany({
+		take: limit,
+		orderBy: {
+			orders: {
+				_count: "desc"
+			}
+		},
+		include: {
+			_count: {
+				select: { orders: true }
+			}
+		}
+	})
+}
+
+export const getPendingProducts = async () => {
+	return await db.product.findMany({
+		where: {
+			listingStatus: "PENDING"
+		},
+		include: {
+			farmer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			images: true,
+			pickupLocation: true,
+			category: true
+		}
+	})
+}
 
 // MARK: MUTATIONS
 

@@ -14,12 +14,11 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MapPin, MoreHorizontal, Package, Phone, User } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
-import { getOrdersUseCase } from "@/use-cases/orders"
 import { Order, OrderStatus } from "@prisma/client"
-import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
-import { AddressDetailsDrawerDialog } from "../../../products/(lists)/_components/address-details"
 import Image from "next/image"
 import { formatPHP } from "@/lib/utils"
+import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
+import { getOrdersUseCase } from "@/use-cases/orders"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getOrdersUseCase>>[0]
@@ -27,13 +26,37 @@ export const columns: ColumnDef<
 	{
 		accessorKey: "id",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Order ID" />
+			<DataTableColumnHeader
+				column={column}
+				title="Order ID"
+				className="min-w-max"
+			/>
 		),
 		cell: ({ cell }) => {
 			const id = cell.getValue() as string
 			return <p>{id.slice(-5)}</p>
-		}
+		},
+		enableSorting: false
 	},
+	{
+		accessorKey: "createdAt",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Date" />
+		),
+		cell: ({ row }) => {
+			const createdAt = row.original.createdAt
+			return (
+				<div className="flex flex-col text-sm">
+					<span>{new Date(createdAt).toLocaleDateString()}</span>
+					<span className="text-gray-500">
+						{new Date(createdAt).toLocaleTimeString()}
+					</span>
+				</div>
+			)
+		},
+		enableSorting: false
+	},
+
 	{
 		accessorKey: "product",
 		header: ({ column }) => (
@@ -66,26 +89,15 @@ export const columns: ColumnDef<
 				</div>
 			)
 		},
-		enableSorting: true
+		enableSorting: false
 	},
-	{
-		accessorKey: "status",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Status" />
-		),
-		enableSorting: true,
-		cell: ({ cell }) => {
-			const status = cell.getValue() as OrderStatus
 
-			return <OrderStatusBadge status={status} />
-		}
-	},
 	{
 		accessorKey: "customer",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Customer" />
 		),
-		enableSorting: true,
+		enableSorting: false,
 		cell: ({ row }) => {
 			const customer = row.original.customer
 			return customer ? (
@@ -100,6 +112,10 @@ export const columns: ColumnDef<
 					</div>
 				</div>
 			) : null
+		},
+		filterFn: (row, columnId, filterValue) => {
+			const name = row.original.customer?.user?.name?.toLowerCase() || ""
+			return name.includes(String(filterValue).toLowerCase())
 		}
 	},
 	{
@@ -107,7 +123,7 @@ export const columns: ColumnDef<
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Farmer" />
 		),
-		enableSorting: true,
+		enableSorting: false,
 		cell: ({ row }) => {
 			const farmer = row.original.farmer
 			return farmer ? (
@@ -124,35 +140,15 @@ export const columns: ColumnDef<
 			) : null
 		}
 	},
-	{
-		accessorKey: "address",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Pickup Location" />
-		),
-		cell: ({ row }) => {
-			const pickupLocation = row.original.address
-			return pickupLocation ? (
-				<div className="flex flex-col gap-1">
-					<div className="flex items-center gap-1">
-						<MapPin className="h-4 w-4" />
-						<AddressDetailsDrawerDialog
-							address={pickupLocation}
-							title="Pickup"
-						/>
-						{/* <span className="text-sm">{order.pickupLocation.region}</span> */}
-					</div>
-					{/* <span className="text-xs text-gray-500">
-						Window: {order.pickupWindow}
-					</span> */}
-				</div>
-			) : null
-		}
-	},
 
 	{
 		accessorKey: "totalPrice",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Total Price" />
+			<DataTableColumnHeader
+				column={column}
+				title="Total Price"
+				className="min-w-max"
+			/>
 		),
 		cell: ({ cell }) => {
 			const totalPrice = cell.getValue() as Order["totalPrice"]
@@ -161,23 +157,20 @@ export const columns: ColumnDef<
 					<p>{formatPHP(totalPrice)}/</p>
 				</>
 			)
-		}
+		},
+		enableSorting: false
 	},
+
 	{
-		accessorKey: "createdAt",
+		accessorKey: "status",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Date" />
+			<DataTableColumnHeader column={column} title="Status" />
 		),
-		cell: ({ row }) => {
-			const createdAt = row.original.createdAt
-			return (
-				<div className="flex flex-col text-sm">
-					<span>{new Date(createdAt).toLocaleDateString()}</span>
-					<span className="text-gray-500">
-						{new Date(createdAt).toLocaleTimeString()}
-					</span>
-				</div>
-			)
+		enableSorting: false,
+		cell: ({ cell }) => {
+			const status = cell.getValue() as OrderStatus
+
+			return <OrderStatusBadge status={status} />
 		}
 	},
 
@@ -190,18 +183,6 @@ export const columns: ColumnDef<
 
 			return (
 				<>
-					{/* <DeleteCategoriesDialog
-						open={showProductDialog}
-						onOpenChange={setShowProductDialog}
-						ids={[category.id]}
-						showTrigger={false}
-						onSuccess={() => row.toggleSelected(false)}
-					/>
-					<UpdateCategoryDialog
-						category={row.original}
-						showUpdateDialog={showUpdateDialog}
-						setShowUpdateDialog={setShowUpdateDialog}
-					/> */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="ghost" className="h-8 w-8 p-0">
