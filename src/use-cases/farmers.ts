@@ -10,7 +10,7 @@ import {
 	getPendingFarmerCount,
 	updateFarmerByUserId,
 	getApprovedFarmers,
-	getTopPerformingFarmers
+	getTopFarmers
 } from "@/data-access/farmers"
 
 export const getPendingFarmerCountUseCase = async () => {
@@ -52,11 +52,11 @@ export const createFarmerByUserIdUseCase = async (
 	return await createFarmerByUserId(data)
 }
 
-export const getTopPerformingFarmersUseCase = async () => {
+export const getTopFarmersUseCase = async () => {
 	try {
-		return await getTopPerformingFarmers()
+		return await getTopFarmers()
 	} catch (error) {
-		throw error
+		console.log(error)
 	}
 }
 

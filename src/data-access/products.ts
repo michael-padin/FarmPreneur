@@ -26,22 +26,6 @@ import { db } from "@/lib/db"
 // 	})
 // }
 
-export const getTopProducts = async (limit = 5) => {
-	return await db.product.findMany({
-		take: limit,
-		orderBy: {
-			orders: {
-				_count: "desc"
-			}
-		},
-		include: {
-			_count: {
-				select: { orders: true }
-			}
-		}
-	})
-}
-
 export const getTotalProducts = async () => {
 	return await db.product.count()
 }
@@ -141,6 +125,111 @@ export const getPendingProducts = async () => {
 			category: true
 		}
 	})
+}
+
+export const getTopProducts = async (limit = 10) => {
+	const products = await db.product.findMany({
+		select: {
+			id: true,
+			title: true,
+			price: true,
+			unit: true,
+			images: {
+				where: { isPrimary: true },
+				select: { url: true }
+			},
+			reviews: {
+				select: { rating: true }
+			},
+			orders: {
+				where: {
+					createdAt: {
+						gte: new Date(new Date().setMonth(new Date().getMonth() - 1))
+					},
+					status: "COMPLETED"
+				},
+				select: { quantity: true }
+			},
+			createdAt: true // Include created date for fallback ranking
+		},
+		where: {
+			listingStatus: "APPROVED"
+		}
+	})
+
+	const weights = {
+		monthlySales: 0.6,
+		averageRating: 0.3,
+		numberOfReviews: 0.1
+	}
+
+	const metrics = products.map((product) => {
+		const averageRating =
+			product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+				product.reviews.length || 0
+		const monthlySales = product.orders.reduce(
+			(sum, order) => sum + order.quantity,
+			0
+		)
+		const numberOfReviews = product.reviews.length
+
+		return { averageRating, monthlySales, numberOfReviews }
+	})
+
+	const maxValues = {
+		monthlySales: Math.max(...metrics.map((m) => m.monthlySales), 1),
+		averageRating: 5,
+		numberOfReviews: Math.max(...metrics.map((m) => m.numberOfReviews), 1)
+	}
+
+	// Check if all metrics are zero
+	const areAllZero = metrics.every(
+		({ monthlySales, averageRating, numberOfReviews }) =>
+			monthlySales === 0 && averageRating === 0 && numberOfReviews === 0
+	)
+
+	// Map products to final scores or fallback
+	const rankedProducts = products.map((product, index) => {
+		const { averageRating, monthlySales, numberOfReviews } = metrics[index]
+
+		const normalizedSales = monthlySales / maxValues.monthlySales || 0.1 // Default to 0.1 for fallback
+		const normalizedRating = averageRating / maxValues.averageRating || 0.1
+		const normalizedReviews = numberOfReviews / maxValues.numberOfReviews || 0.1
+
+		const finalScore =
+			weights.monthlySales * normalizedSales +
+			weights.averageRating * normalizedRating +
+			weights.numberOfReviews * normalizedReviews
+
+		return {
+			id: product.id,
+			name: product.title,
+			averageRating: averageRating.toFixed(1),
+			numberOfReviews,
+			image: product.images[0]?.url || null,
+			monthlySales,
+			price: product.price,
+			unit: product.unit,
+			finalScore: Number(finalScore.toFixed(3)),
+			createdAt: product.createdAt // Fallback sorting
+		}
+	})
+
+	// Fallback if all scores are zero
+	if (areAllZero) {
+		return rankedProducts
+			.sort((a, b) => {
+				const dateA = new Date(a.createdAt)
+				const dateB = new Date(b.createdAt)
+				return dateB.getTime() - dateA.getTime() // Compare timestamps
+			})
+			.slice(0, limit)
+	}
+
+	// Sort by final score
+	return rankedProducts
+		.sort((a, b) => b.finalScore - a.finalScore)
+		.slice(0, limit)
 }
 
 // MARK: MUTATIONS

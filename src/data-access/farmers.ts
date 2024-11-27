@@ -180,10 +180,130 @@ export const getTopPerformingFarmers = async (limit = 5) => {
 	})
 }
 
+export const getTopFarmers = async (limit = 10) => {
+	const farmers = await db.farmer.findMany({
+		select: {
+			id: true,
+			farmName: true,
+			farmImages: {
+				select: { url: true }
+			},
+			user: {
+				select: {
+					name: true,
+					profilePicture: { select: { url: true } }
+				}
+			},
+			products: { select: { id: true } }, // Number of products
+			orders: {
+				select: {
+					id: true,
+					status: true,
+					createdAt: true // Include for fallback sorting
+				}
+			},
+			reviews: { select: { rating: true } },
+			address: { select: { fullAddress: true } },
+			createdAt: true // Include for fallback ranking
+		},
+		where: {
+			applicationStatus: "APPROVED"
+		}
+	})
+
+	// Define weights for scoring
+	const weights = {
+		totalSales: 0.5, // 50% weight for sales
+		averageRating: 0.3, // 30% weight for ratings
+		responseRate: 0.2 // 20% weight for response rate
+	}
+
+	// Calculate metrics for each farmer
+	const metrics = farmers.map((farmer) => {
+		const totalSales = farmer.orders.filter(
+			(order) => order.status === "COMPLETED"
+		).length
+		const averageRating =
+			farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
+				farmer.reviews.length || 0
+		const responseRate =
+			farmer.orders.filter((order) => order.status !== "PENDING").length /
+			(farmer.orders.length || 1)
+		const numberOfProducts = farmer.products.length
+
+		return { totalSales, averageRating, responseRate, numberOfProducts }
+	})
+
+	// Find max values for normalization
+	const maxValues = {
+		totalSales: Math.max(...metrics.map((m) => m.totalSales), 1),
+		averageRating: 5, // Ratings are out of 5
+		responseRate: 1, // Response rate is a percentage
+		numberOfProducts: Math.max(...metrics.map((m) => m.numberOfProducts), 1)
+	}
+
+	// Check if all metrics (except products) are zero
+	const arePrimaryMetricsZero = metrics.every(
+		({ totalSales, averageRating, responseRate }) =>
+			totalSales === 0 && averageRating === 0 && responseRate === 0
+	)
+
+	// Check if all products are zero
+	const areProductsZero = metrics.every(
+		({ numberOfProducts }) => numberOfProducts === 0
+	)
+
+	// Map farmers to final scores or fallback
+	const rankedFarmers = farmers.map((farmer, index) => {
+		const { totalSales, averageRating, responseRate, numberOfProducts } =
+			metrics[index]
+
+		// Normalize metrics
+		const normalizedSales = totalSales / maxValues.totalSales || 0.1
+		const normalizedRating = averageRating / maxValues.averageRating || 0.1
+		const normalizedResponseRate = responseRate / maxValues.responseRate || 0.1
+
+		// Compute final score based on weights
+		const finalScore =
+			weights.totalSales * normalizedSales +
+			weights.averageRating * normalizedRating +
+			weights.responseRate * normalizedResponseRate
+
+		return {
+			id: farmer.id,
+			name: farmer.user.name || farmer.farmName,
+			averageRating: averageRating.toFixed(1),
+			totalSales,
+			responseRate: (responseRate * 100).toFixed(1) + "%",
+			image: farmer.user.profilePicture?.url || farmer.farmImages?.[0]?.url,
+			address: farmer.address?.fullAddress,
+			finalScore: Number(finalScore.toFixed(3)),
+			numberOfProducts,
+			createdAt: farmer.createdAt // Fallback sorting
+		}
+	})
+
+	// Fallback if all primary metrics are zero
+	if (arePrimaryMetricsZero) {
+		if (!areProductsZero) {
+			// Sort by number of products
+			return rankedFarmers
+				.sort((a, b) => b.numberOfProducts - a.numberOfProducts)
+				.slice(0, limit)
+		}
+		// If products are also zero, sort by createdAt
+		// return rankedFarmers
+		// 	.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+		// 	.slice(0, limit)
+	}
+
+	// Sort by final score and limit the results
+	return rankedFarmers
+		.sort((a, b) => b.finalScore - a.finalScore)
+		.slice(0, limit)
+}
+
 // MARK: MUTATIONS
-
-export const createFarmer = async () => {}
-
 export const createFarmerByUserId = async (
 	data: FarmRegistrationSchema & { userId: string }
 ) => {

@@ -35,7 +35,7 @@ export const deleteProductsByIdUseCase = async (ids: string[]) => {
 	return deleteProductsById(ids)
 }
 
-export const getTopProductsUseCase = async (limit = 5) => {
+export const getTopProductsUseCase = async (limit = 10) => {
 	try {
 		return await getTopProducts(limit)
 	} catch (error) {

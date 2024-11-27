@@ -37,3 +37,15 @@ export const getFirstWord = (str: string) => {
 	// Return the first word
 	return words[0] || "" // Return an empty string if there are no words
 }
+
+export const abbreviateNumber = (num: number) => {
+	if (num >= 1e9) {
+		return (num / 1e9).toFixed(1).replace(/\.0$/, "") + "b" // Billion
+	} else if (num >= 1e6) {
+		return (num / 1e6).toFixed(1).replace(/\.0$/, "") + "m" // Million
+	} else if (num >= 1e3) {
+		return (num / 1e3).toFixed(1).replace(/\.0$/, "") + "k" // Thousand
+	} else {
+		return num.toString() // Less than 1000
+	}
+}
