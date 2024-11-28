@@ -253,7 +253,7 @@ export function AdminEditProductForm({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{farmers.length > 0 ? (
+										{farmers && farmers.length > 0 ? (
 											farmers.map((farmer) => (
 												<SelectItem key={farmer.id} value={farmer.id}>
 													{farmer.user.name}

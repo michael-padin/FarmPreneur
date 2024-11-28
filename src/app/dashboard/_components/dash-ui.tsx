@@ -415,11 +415,11 @@ export function DashUI() {
 													<Badge
 														variant={
 															order.status === "Completed"
-																? "success"
+																? "default"
 																: order.status === "Pending"
-																	? "warning"
+																	? "destructive"
 																	: order.status === "In Progress"
-																		? "info"
+																		? "outline"
 																		: "destructive"
 														}
 													>

@@ -175,7 +175,7 @@ export const OrderStatusBadge = ({
 	className,
 	showText
 }: OrderStatusBadgeProps) => {
-	const getStatusStyles = (status: ProductListingStatus) => {
+	const getStatusStyles = (status: ProductListingStatus | OrderStatus) => {
 		switch (status) {
 			case "PENDING":
 				return `text-yellow-800  ${showText ? "bg-yellow-100" : "bg-yellow-200"} hover:bg-yellow-200`
