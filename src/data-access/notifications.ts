@@ -1,0 +1,55 @@
+import { db } from "@/lib/db"
+import { NotificationType } from "@prisma/client"
+
+export const getNotificationsByUserId = async (userId: string) => {
+	return await db.notification.findMany({
+		where: {
+			userId: userId
+		},
+		orderBy: {
+			createdAt: "desc"
+		}
+	})
+}
+
+export const markNotificationAsRead = async (notificationId: string) => {
+	return await db.notification.update({
+		where: {
+			id: notificationId
+		},
+		data: {
+			isRead: true
+		}
+	})
+}
+
+// MARK: MUTATIONS
+export const createNotificationByUserId = async (data: {
+	userId: string
+	message: string
+	type: NotificationType
+	title: string
+	metadata?: Record<string, string>
+}) => {
+	return await db.notification.create({
+		data: {
+			isRead: false,
+			type: data.type,
+			userId: data.userId,
+			message: data.message,
+			title: data.title,
+			metadata: data.metadata
+		}
+	})
+}
+
+export const markAllNotificationsAsRead = async (userId: string) => {
+	return await db.notification.updateMany({
+		where: {
+			userId: userId
+		},
+		data: {
+			isRead: true
+		}
+	})
+}

@@ -1,0 +1,150 @@
+"use client"
+
+import {
+	getNotificationsByUserIdUseCase,
+	markAllNotificationsAsReadUseCase,
+	markNotificationAsReadUseCase
+} from "@/use-cases/notifications"
+import { pusherClient } from "@/lib/pusher"
+import { Notification } from "@/types/notification"
+import React, {
+	createContext,
+	useState,
+	useContext,
+	useEffect,
+	ReactNode,
+	useCallback
+} from "react"
+
+// Context type
+interface NotificationContextType {
+	notifications: Notification[]
+	unreadCount: number
+	markAllAsRead: () => void
+	markAsRead: (notificationId: string) => Promise<void>
+	fetchInitialNotifications: (userId: string) => Promise<void>
+	setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
+}
+
+const NotificationContext = createContext<NotificationContextType | undefined>(
+	undefined
+)
+
+export function NotificationProvider({
+	children,
+	userId
+}: {
+	children: ReactNode
+	userId: string
+}) {
+	const [notifications, setNotifications] = useState<Notification[]>([])
+	const [unreadCount, setUnreadCount] = useState(0)
+
+	// Fetch initial notifications
+	const fetchInitialNotifications = useCallback(async (userId: string) => {
+		try {
+			const initialNotifications = (await getNotificationsByUserIdUseCase(
+				userId
+			)) as Notification[]
+			setNotifications(initialNotifications)
+			setUnreadCount(
+				initialNotifications.filter((notification) => !notification.isRead)
+					.length
+			)
+		} catch (error) {
+			console.error("Failed to fetch initial notifications", error)
+		}
+	}, [])
+
+	const markAllAsRead = useCallback(async () => {
+		const result = await markAllNotificationsAsReadUseCase(userId)
+
+		if (result) {
+			setNotifications((prevNotifications) =>
+				prevNotifications.map((notification) => ({
+					...notification,
+					isRead: true
+				}))
+			)
+
+			setUnreadCount(0)
+		}
+	}, [userId])
+
+	// Mark notification as read
+	const markAsRead = useCallback(async (notificationId: string) => {
+		try {
+			const result = await markNotificationAsReadUseCase(notificationId)
+
+			if (result) {
+				setNotifications((prev) =>
+					prev.map((notification) =>
+						notification.id === notificationId
+							? { ...notification, isRead: true }
+							: notification
+					)
+				)
+				// Update unread count
+				setUnreadCount((prev) => prev - 1)
+			}
+		} catch (error) {
+			console.error("Failed to mark notification as read", error)
+		}
+	}, [])
+
+	useEffect(() => {
+		if (!userId) return
+
+		// Fetch initial notifications
+		fetchInitialNotifications(userId)
+	}, [fetchInitialNotifications, userId])
+
+	// Setup Pusher subscription
+	useEffect(() => {
+		// Subscribe to Pusher channel
+		const channel = pusherClient.subscribe(`user-${userId}-notifications`)
+
+		const handleNewNotification = (newNotification: Notification) => {
+			setNotifications((prev) => [newNotification, ...prev])
+
+			// Increment unread count if the new notification is unread
+			if (!newNotification.isRead) {
+				setUnreadCount((prev) => prev + 1)
+			}
+		}
+
+		channel.bind("new-notification", handleNewNotification)
+
+		// Cleanup subscription
+		return () => {
+			pusherClient.unsubscribe(`user-${userId}-notifications`)
+			channel.unbind("new-notification", handleNewNotification)
+		}
+	}, [userId])
+
+	return (
+		<NotificationContext.Provider
+			value={{
+				notifications,
+				unreadCount,
+				setNotifications,
+				markAsRead,
+				markAllAsRead,
+				fetchInitialNotifications
+			}}
+		>
+			{children}
+		</NotificationContext.Provider>
+	)
+}
+
+// Custom hook to use the Notification Context
+export function useNotifications() {
+	const context = useContext(NotificationContext)
+	if (context === undefined) {
+		throw new Error(
+			"useNotifications must be used within a NotificationProvider"
+		)
+	}
+	return context
+}

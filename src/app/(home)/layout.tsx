@@ -15,9 +15,7 @@ export default async function Layout({
 	return (
 		<div>
 			{children}
-			<div className="lg:hidden">
-				<BottomNav />
-			</div>
+			<div className="lg:hidden">{/* <BottomNav /> */}</div>
 		</div>
 	)
 }

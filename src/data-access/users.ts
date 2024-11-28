@@ -234,6 +234,17 @@ export const getTotalUsersByDate = async (date: Date) => {
 	})
 }
 
+export const getAdminIds = async () => {
+	return await db.user.findMany({
+		where: {
+			role: "ADMIN"
+		},
+		select: {
+			id: true
+		}
+	})
+}
+
 // MARK: MUTATIONS
 export const createUserWithOTP = async (
 	data: RegisterSchema & {
@@ -260,9 +271,7 @@ export const createUserWithOTP = async (
 					type: "PROFILE"
 				}
 			},
-			customer: {
-				create: {}
-			},
+
 			emailOtp: {
 				create: {
 					email: data.email,

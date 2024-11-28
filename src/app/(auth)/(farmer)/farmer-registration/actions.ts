@@ -4,6 +4,7 @@ import { farmRegistrationSchema, FarmRegistrationSchema } from "./types"
 import { createUserFarmerByIdUseCase } from "@/use-cases/users"
 import { pusherServer } from "@/lib/pusher"
 import { getPendingFarmerCountUseCase } from "@/use-cases/farmers"
+import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
 
 export const upsertFarmerAction = async (
 	data: FarmRegistrationSchema & { userId: string }
@@ -22,6 +23,17 @@ export const upsertFarmerAction = async (
 		if (createdFarmer.applicationStatus === "PENDING") {
 			await pusherServer.trigger("pending-farmers-count", "update", {
 				count: await getPendingFarmerCountUseCase()
+			})
+
+			await createNotificationsForAdminsUseCase({
+				title: "Farmer Approval",
+				message: `New farmer waiting for approval with email ${data.user.email}`,
+				type: "FARMER_APPROVAL",
+				userId: createdFarmer.userId
+			})
+
+			await pusherServer.trigger("pending-farmers", "update", {
+				data: createdFarmer
 			})
 		}
 

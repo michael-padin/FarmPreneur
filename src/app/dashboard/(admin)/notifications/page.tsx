@@ -1,43 +1,34 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle
-} from "@/components/ui/card"
-import { Suspense } from "react"
-import { DataTableSkeleton } from "../../_components/data-table-skeleton"
 import { Metadata } from "next"
 import { DashboardHeader } from "@/app/_components/header"
-import NotifUI1 from "./_components/notif-ui1"
-
-const getNotificationsByEmail = () => {
-	return null
-}
+import { auth } from "@/auth"
+import { BreadcrumbResponsive } from "@/components/fg/back-button"
+import { NotificationList } from "./_components/notification-list"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
 	title: "Notifications"
 }
 
 export default async function Page() {
-	const notifications = getNotificationsByEmail()
+	const session = await auth()
+	const user = session?.user
+
+	if (!user) {
+		return <div>You are not logged in</div>
+	}
+
+	const breadcrumbItems = [
+		{ href: "/dashboard", label: "Dashboard" },
+		{ label: "Notifications" }
+	]
+
 	return (
 		<>
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<Card>
-					<CardHeader className="">
-						<CardTitle>Notifications</CardTitle>
-						<CardDescription></CardDescription>
-					</CardHeader>
-					<CardContent className="">
-						<Suspense fallback={<DataTableSkeleton />}>
-							{/* <DataTable data={usersPromise} /> */}
-							<NotifUI1 />
-							{/* <NotifUi2 /> */}
-						</Suspense>
-					</CardContent>
-				</Card>
+				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
+				<NotificationList />
 			</div>
 		</>
 	)

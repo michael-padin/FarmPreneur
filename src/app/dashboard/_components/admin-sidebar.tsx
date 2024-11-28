@@ -13,11 +13,13 @@ import {
 } from "lucide-react"
 import { usePendingFarmerCount } from "@/contexts/pending-farmer-count-context"
 import { DashboardSidebar } from "./sidebar"
+import { useNotifications } from "@/contexts/notification-context"
 
 interface AdminSidebarProps {
 	user: Session["user"] | undefined
 }
 export function AdminSidebar({ user }: AdminSidebarProps) {
+	const { unreadCount } = useNotifications()
 	const { pendingFarmerCount } = usePendingFarmerCount()
 	const items: SidebarItem[] = [
 		{
@@ -68,7 +70,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 		{
 			name: "Notifications",
 			url: "/dashboard/notifications",
-			icon: BellRing
+			icon: BellRing,
+			badge: unreadCount
 		},
 
 		{

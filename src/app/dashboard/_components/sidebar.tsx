@@ -92,8 +92,10 @@ export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 										<Link href={item.url}>
 											{item.icon && <item.icon />}
 											<span>{item.name}</span>
-											{item.badge && (
-												<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+											{item.badge !== 0 && item.badge && (
+												<SidebarMenuBadge className="bg-primary text-primary-foreground">
+													{item.badge}
+												</SidebarMenuBadge>
 											)}
 										</Link>
 									</SidebarMenuButton>

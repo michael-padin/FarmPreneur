@@ -2,28 +2,19 @@ import { auth } from "@/auth"
 import { FPSignOutButton } from "@/components/fg/fp-signout-button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
-	DropdownMenuRadioGroup,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import {
-	BadgeCheck,
-	Bell,
-	ChevronsUpDown,
-	MessageCircle,
-	TestTubeDiagonal
-} from "lucide-react"
-import { Session } from "next-auth"
+import { BadgeCheck, Bell, TestTubeDiagonal } from "lucide-react"
 import Link from "next/link"
+import { NotificationBell } from "./notification-bell"
 
 export async function DashboardHeader() {
 	const session = await auth()
@@ -35,8 +26,9 @@ export async function DashboardHeader() {
 					<SidebarTrigger className="-ml-1" />
 					{/* <Separator orientation="vertical" className="mr-2 h-4" /> */}
 				</div>
-				<div className="flex w-full items-center justify-end gap-1">
-					<ModeToggle />
+				<div className="flex w-full items-center justify-end gap-4">
+					<NotificationBell />
+					{/* <ModeToggle />/ */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Avatar className="cursor-pointer rounded-lg">
@@ -72,8 +64,8 @@ export async function DashboardHeader() {
 									</div>
 								</div>
 							</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuRadioGroup>
+							<DropdownMenuGroup>
+								<ModeToggle />
 								<DropdownMenuItem asChild>
 									<Link href="/dashboard/account">
 										<BadgeCheck />
@@ -94,7 +86,7 @@ export async function DashboardHeader() {
 										</Link>
 									</DropdownMenuItem>
 								)}
-							</DropdownMenuRadioGroup>
+							</DropdownMenuGroup>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem asChild>
 								<FPSignOutButton className="w-full" />
