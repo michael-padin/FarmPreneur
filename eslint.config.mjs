@@ -49,6 +49,7 @@ export default [
 		},
 		rules: {
 			"no-var": "warn",
+			"@typescript-eslint/ban-ts-comment": "warn",
 			"import/no-anonymous-default-export": "warn",
 			"@typescript-eslint/no-unused-vars": "warn",
 			"react/jsx-uses-react": "error"
