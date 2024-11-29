@@ -20,7 +20,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 		<main className="w-full">
 			<header className="fixed left-0 right-0 top-0 z-50 w-full bg-background py-4 pb-0 md:hidden">
 				<div className="flex w-full items-center justify-between px-4">
-					<h1 className="text-xl font-medium">Products</h1>
+					<h1 className="text-2xl font-semibold">Products</h1>
 					<div className="flex gap-2">
 						{/* <MessageCircleMore className="stroke-primary" /> */}
 						<Button asChild>
