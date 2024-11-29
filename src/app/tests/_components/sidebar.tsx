@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sidebar"
 import { SidebarItem } from "@/constants/navItems"
 import { cn } from "@/lib/utils"
+import { sub } from "date-fns"
 import { ArrowLeft, Command } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -87,6 +88,29 @@ const TestsSidebar = ({ items }: TestsSidebarProps) => {
 															{/* <SidebarMenuBadge>24</SidebarMenuBadge> */}
 														</Link>
 													</SidebarMenuSubButton>
+													{subItem.items && (
+														<SidebarMenuSub>
+															{subItem.items.map((subItem2) => (
+																<SidebarMenuSubItem key={subItem2.name}>
+																	<SidebarMenuSubButton
+																		asChild
+																		isActive={
+																			pathName.split("/")[4] ===
+																			subItem2.url.split("/")[4]
+																		}
+																		// size="sm"
+																	>
+																		<Link href={subItem2.url}>
+																			{/* {subItem.icon && <subItem.icon />} */}
+																			<span>{subItem2.name}</span>
+																			{/* TODO: Add Badge number for pending farmers */}
+																			{/* <SidebarMenuBadge>24</SidebarMenuBadge> */}
+																		</Link>
+																	</SidebarMenuSubButton>
+																</SidebarMenuSubItem>
+															))}
+														</SidebarMenuSub>
+													)}
 												</SidebarMenuSubItem>
 											))}
 										</SidebarMenuSub>

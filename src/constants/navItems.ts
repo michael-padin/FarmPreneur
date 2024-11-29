@@ -63,5 +63,40 @@ export const testSidebarItems = [
 			{ name: "Client Page", url: "/tests/auth/session/client" },
 			{ name: "Server Page", url: "/tests/auth/session/server" }
 		]
+	},
+	{
+		name: "Products",
+		url: "#",
+		items: [{ name: "Sample UI/1", url: "/tests/products/sample-ui/ui-1" }]
+	},
+	{
+		name: "Categories",
+		url: "#",
+		items: [
+			{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" },
+			{ name: "Sample UI/2", url: "/tests/categories/sample-ui/ui-2" },
+			{ name: "Sample UI/3", url: "/tests/categories/sample-ui/ui-3" },
+			{ name: "Sample UI/4", url: "/tests/categories/sample-ui/ui-4" }
+		]
+	},
+	{
+		name: "Orders",
+		url: "#",
+		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+	},
+	{
+		name: "Customers",
+		url: "#",
+		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+	},
+	{
+		name: "Farmers",
+		url: "#",
+		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+	},
+	{
+		name: "Pending Farmers",
+		url: "#",
+		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
 	}
 ]
