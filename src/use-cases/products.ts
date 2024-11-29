@@ -1,6 +1,8 @@
+import { ProductListingStatus } from "@prisma/client"
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { createProductType } from "@/app/dashboard/farmer/products/create/types"
+import { auth } from "@/auth"
 import {
 	createProductFromAdmin,
 	deleteProductsById,
@@ -8,6 +10,7 @@ import {
 	getPendingProducts,
 	getProductById,
 	getProductReviewStats,
+	getProducts,
 	getTopProducts,
 	getTopSellingProducts,
 	getTotalProducts,
@@ -79,6 +82,23 @@ export const getTopSellingProductsUseCase = async (limit = 10) => {
 export const getPendingProductsUseCase = async () => {
 	try {
 		return await getPendingProducts()
+	} catch (error) {
+		throw error
+	}
+}
+
+// FARMER QUERIES HERE
+export const getProductsUseCase = async (filter: {
+	status: ProductListingStatus | null
+}) => {
+	try {
+		const session = await auth()
+		if (!session || !session.user) throw new Error("Unauthorized")
+
+		return await getProducts({
+			status: filter.status,
+			userId: session.user.id!
+		})
 	} catch (error) {
 		throw error
 	}

@@ -1,6 +1,7 @@
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { db } from "@/lib/db"
+import { ProductListingStatus } from "@prisma/client"
 
 // export const createProduct = async (data: createProductType) => {
 // 	await db.product.create({
@@ -230,6 +231,37 @@ export const getTopProducts = async (limit = 10) => {
 	return rankedProducts
 		.sort((a, b) => b.finalScore - a.finalScore)
 		.slice(0, limit)
+}
+
+// FARMER QUERIES HERE
+export const getProducts = async (filter: {
+	userId: string
+	status?: ProductListingStatus | null
+}) => {
+	console.log("filter :>> ", filter)
+	return await db.product.findMany({
+		where: {
+			farmer: {
+				userId: filter.userId
+			},
+			...(filter.status && { listingStatus: filter.status })
+		},
+		include: {
+			farmer: {
+				select: {
+					user: {
+						select: {
+							name: true,
+							email: true
+						}
+					}
+				}
+			},
+			images: true,
+			pickupLocation: true,
+			category: true
+		}
+	})
 }
 
 // MARK: MUTATIONS

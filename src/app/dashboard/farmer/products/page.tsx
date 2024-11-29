@@ -1,31 +1,53 @@
-import { Box, MessageCircleMore } from "lucide-react"
-
 import { BottomNav } from "../_components/bottom-navigation"
 import { StatusTabs } from "./_components/tab-list"
+import { FarmerProductList } from "./_components/mobile-product-list"
+import { Button } from "@/components/ui/button"
+import { searchParamsCache } from "./_components/searchParams"
+import { type SearchParams } from "nuqs/server"
+import { Suspense } from "react"
+import { ProductSkeleton } from "./_components/product-skeleton"
+import Link from "next/link"
+import { FilterProducts } from "./_components/filter-products"
 
-export default function ProductsPage() {
+type PageProps = {
+	searchParams: Promise<SearchParams>
+}
+
+export default async function ProductsPage({ searchParams }: PageProps) {
+	await searchParamsCache.parse(searchParams)
+
 	return (
 		<main className="w-full">
-			<header className="fixed left-0 right-0 top-0 w-full bg-background px-4 py-4 md:hidden">
-				<div className="flex w-full items-center justify-between">
-					<h1 className="text-xl">Products</h1>
-					<div>
-						<MessageCircleMore className="stroke-primary" />
+			<header className="fixed left-0 right-0 top-0 z-50 w-full bg-background py-4 pb-0 md:hidden">
+				<div className="flex w-full items-center justify-between px-4">
+					<h1 className="text-xl font-medium">Products</h1>
+					<div className="flex gap-2">
+						{/* <MessageCircleMore className="stroke-primary" /> */}
+						<Button asChild>
+							<Link
+								href={"/dashboard/farmer/products/create"}
+								className="flex items-center"
+							>
+								Add Product
+							</Link>
+						</Button>
 					</div>
 				</div>
-				<div></div>
+
+				<FilterProducts />
 				<StatusTabs />
 			</header>
-			<div className="h-screen">
-				{/* Main Content */}
-				<div className="flex h-full flex-col items-center justify-center text-muted-foreground">
-					<div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-						<Box className="h-8 w-8" />
-					</div>
-					<p className="text-sm">No products listed</p>
+
+			<div className="pb-24 pt-44">
+				<div className="px-4">
+					<Suspense
+						fallback={<ProductSkeleton />}
+						key={searchParamsCache.get("status")}
+					>
+						<FarmerProductList />
+					</Suspense>
 				</div>
 			</div>
-			<main className="container mx-auto max-w-md flex-1 p-4"></main>
 			<BottomNav />
 		</main>
 	)
