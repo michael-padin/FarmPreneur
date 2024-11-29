@@ -1,8 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { products, Product } from "./mock-prouct"
 import Image from "next/image"
 
-export function ProductItem({ product = products[0] }: { product?: Product }) {
+interface Product {
+	id: string
+	name: string
+	image: string
+	price: number
+	unit: string
+	status: string
+}
+
+export function ProductItem({ product }: { product: Product }) {
 	return (
 		<Card className="overflow-hidden">
 			<CardContent className="p-0">
