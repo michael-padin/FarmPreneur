@@ -459,6 +459,9 @@ enum ProductListingStatus {
   PENDING
   APPROVED
   REJECTED
+  OUT_OF_STOCK
+  EXPIRED
+  PAUSED
 }
 
 // MARK: NotificationType
