@@ -1,6 +1,7 @@
 import "./globals.css"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
@@ -26,9 +27,11 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
-				<Providers>{children}</Providers>
-				<Toaster />
-				<LoadTimeTracker />
+				<NuqsAdapter>
+					<Providers>{children}</Providers>
+					<Toaster />
+				</NuqsAdapter>
+				{/* <LoadTimeTracker /> */}
 			</body>
 		</html>
 	)
