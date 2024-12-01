@@ -2,8 +2,10 @@ import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registratio
 import {
 	createFarmDetailsAddress,
 	createFarmerAddress,
-	createUserAddress
+	createUserAddress,
+	getFarmerAddresses
 } from "@/data-access/address"
+import { getFarmerByUserId } from "@/data-access/farmers"
 import { AddressSchema } from "@/validations/address"
 
 export const createFarmDetailsAddressUseCase = async (
@@ -30,4 +32,19 @@ export const createFarmerAddressUseCase = async (
 	data: FarmRegistrationSchema & { farmerId: string }
 ) => {
 	return await createFarmerAddress(data)
+}
+
+export const getFarmerAddressesUseCase = async (userId: string) => {
+	try {
+		const farmer = await getFarmerByUserId(userId)
+		console.log("farmer :>> ", farmer)
+
+		if (!farmer) {
+			throw new Error("No farmer found!")
+		}
+
+		return await getFarmerAddresses(farmer.id)
+	} catch (error) {
+		console.error("error in getFarmerAddresses", error)
+	}
 }

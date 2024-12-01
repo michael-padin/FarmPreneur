@@ -23,6 +23,14 @@ export const getAddress = async (id: string) => {
 	})
 }
 
+export const getFarmerAddresses = async (farmerId: string) => {
+	return await db.address.findMany({
+		where: {
+			farmerId: farmerId
+		}
+	})
+}
+
 export const createUserAddress = async (
 	data: AddressSchema & { userId: string }
 ) => {
