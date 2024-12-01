@@ -12,6 +12,8 @@ import {
 import { searchParamsCache } from "./searchParams"
 import { getProductsUseCase } from "@/use-cases/products"
 import { formatDate } from "@/lib/utils"
+import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
+import { UnitKey, UNITS_MAP } from "@/constants/unit"
 
 export async function FarmerProductList() {
 	const { status, search } = searchParamsCache.all()
@@ -19,19 +21,6 @@ export async function FarmerProductList() {
 		status,
 		search
 	})
-
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case "ACTIVE":
-				return "bg-green-500"
-			case "PENDING":
-				return "bg-yellow-500"
-			case "INACTIVE":
-				return "bg-red-500"
-			default:
-				return "bg-gray-500"
-		}
-	}
 
 	return (
 		<div className="space-y-4">
@@ -49,20 +38,24 @@ export async function FarmerProductList() {
 									/>
 								</div>
 								<div className="min-w-0 flex-1">
-									<div className="flex items-start justify-between gap-2">
+									<div className="flex items-center justify-between gap-2">
 										<h2 className="truncate font-semibold">{product.title}</h2>
-										<div className="flex items-center space-x-2">
-											<div
-												className={`h-2 w-2 rounded-full ${getStatusColor(product.listingStatus)}`}
+										{/* <div className="flex items-center">
+											<ProductListingStatusBadge
+												status={product.listingStatus}
+												showText
 											/>
-											<span className="text-xs font-medium">
-												{product.listingStatus}
-											</span>
-										</div>
+										</div> */}
 									</div>
 									<p className="line-clamp-2 text-sm text-muted-foreground">
 										{product.description}
 									</p>
+									<div className="mt-2 flex w-full items-start justify-end">
+										<ProductListingStatusBadge
+											status={product.listingStatus}
+											showText
+										/>
+									</div>
 								</div>
 							</div>
 						</CardHeader>
@@ -71,13 +64,15 @@ export async function FarmerProductList() {
 								<div>
 									<p className="text-muted-foreground">Price</p>
 									<p className="font-medium">
-										₱{product.price.toFixed(2)}/{product.unit}
+										₱{product.price.toFixed(2)}/
+										{UNITS_MAP[(product.unit || "kg") as UnitKey].abbreviation}
 									</p>
 								</div>
 								<div>
 									<p className="text-muted-foreground">Stock</p>
 									<p className="font-medium">
-										{product.quantity} {product.unit}
+										{product.quantity}{" "}
+										{UNITS_MAP[(product.unit || "kg") as UnitKey].abbreviation}
 									</p>
 								</div>
 							</div>

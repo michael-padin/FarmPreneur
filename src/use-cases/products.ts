@@ -1,9 +1,8 @@
 import { ProductListingStatus } from "@prisma/client"
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
-import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
-import { createProductType } from "@/app/dashboard/farmer/products/create/types"
 import { auth } from "@/auth"
 import {
+	createProduct,
 	createProductFromAdmin,
 	deleteProductsById,
 	getAllProducts,
@@ -17,10 +16,27 @@ import {
 	getTotalProductsByDate,
 	updateProduct
 } from "@/data-access/products"
+import { getFarmerByUserId } from "@/data-access/farmers"
+import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
+import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 
-export const createProductUseCase = async (data: createProductType) => {
+export const createProductUseCase = async (
+	data: CreateProductSchemaFarmer & { userId: string; slug: string }
+) => {
 	try {
-		// await createProduct(data)
+		const farmer = await getFarmerByUserId(data.userId)
+
+		if (!farmer) {
+			throw new Error("No farmer found!")
+		}
+		const createdProduct = await createProduct({
+			...data,
+			farmerId: farmer.id
+		})
+		return {
+			...createdProduct,
+			...farmer
+		}
 	} catch (error) {
 		throw error
 	}
