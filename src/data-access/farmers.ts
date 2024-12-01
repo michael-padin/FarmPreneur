@@ -44,8 +44,6 @@ export const getFarmerByUserId = async (userId: string) => {
 	})
 }
 
-export const getFarmerById = async () => {}
-
 export const getFarmers = async () => {
 	return await db.user.findMany({
 		where: {
@@ -276,7 +274,7 @@ export const getTopFarmers = async (limit = 10) => {
 			totalSales,
 			responseRate: (responseRate * 100).toFixed(1) + "%",
 			image: farmer.user.profilePicture?.url || farmer.farmImages?.[0]?.url,
-			address: farmer.address?.fullAddress,
+			address: farmer.address?.[0]?.fullAddress,
 			finalScore: Number(finalScore.toFixed(3)),
 			numberOfProducts,
 			createdAt: farmer.createdAt // Fallback sorting
@@ -358,18 +356,18 @@ export const updateFarmerByUserId = async (
 					birthDate: data.farmer!.birthDate,
 					farmName: data?.farmer?.farmName,
 					farmDescription: data?.farmer?.farmDescription,
-					applicationStatus: data?.farmer?.applicationStatus,
-					address: {
-						update: {
-							latitude: data.farmer.address.latitude,
-							longitude: data.farmer.address.longitude,
-							fullAddress: data.farmer.address.fullAddress,
-							street: data.farmer.address.street,
-							region: data.farmer.address.region,
-							country: data.farmer.address.country,
-							postalCode: data.farmer.address.postalCode
-						}
-					}
+					applicationStatus: data?.farmer?.applicationStatus
+					// address: {
+					// 	update: {
+					// 		latitude: data.farmer.address.latitude,
+					// 		longitude: data.farmer.address.longitude,
+					// 		fullAddress: data.farmer.address.fullAddress,
+					// 		street: data.farmer.address.street,
+					// 		region: data.farmer.address.region,
+					// 		country: data.farmer.address.country,
+					// 		postalCode: data.farmer.address.postalCode
+					// 	}
+					// }
 				}
 			}))
 

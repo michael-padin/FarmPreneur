@@ -1,32 +1,54 @@
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
+import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { db } from "@/lib/db"
 import { ProductListingStatus } from "@prisma/client"
 
-// export const createProduct = async (data: createProductType) => {
-// 	await db.product.create({
-// 		data: {
-
-// 			title: data.title,
-// 			description: data.description,
-// 			price: data.price,
-// 			quantity: data.quantity,
-// 			categoryId: data.category,
-// 			images: {
-// 				createMany: {
-// 					data: data.images.map((image) => ({
-// 						type: "PRODUCT",
-// 						url: image.url,
-// 						filename: image.filename,
-// 						size: image.size,
-// 						mimeType: image.mimeType
-// 					}))
-// 				}
-// 			}
-// 		}
-// 	})
-// }
-
+export const createProduct = async (
+	data: CreateProductSchemaFarmer & {
+		farmerId: string
+		slug: string
+	}
+) => {
+	return await db.product.create({
+		data: {
+			listingStatus: "PENDING",
+			title: data.title,
+			description: data.description,
+			unit: data.unit,
+			slug: data.slug,
+			price: data.price,
+			quantity: data.quantity,
+			categoryId: data.categoryId,
+			pickupLocationId: data.pickupLocationId,
+			farmerId: data.farmerId,
+			images: {
+				createMany: {
+					data: data.images.map((image) => ({
+						type: "PRODUCT",
+						url: image.url,
+						filename: image.filename,
+						size: image.size,
+						mimeType: image.mimeType
+					}))
+				}
+			}
+		},
+		include: {
+			farmer: {
+				select: {
+					id: true,
+					farmName: true
+				}
+			},
+			images: {
+				select: {
+					url: true
+				}
+			}
+		}
+	})
+}
 export const getTotalProducts = async () => {
 	return await db.product.count()
 }
