@@ -67,7 +67,10 @@ export const testSidebarItems = [
 	{
 		name: "Products",
 		url: "#",
-		items: [{ name: "Sample UI/1", url: "/tests/products/sample-ui/ui-1" }]
+		items: [
+			{ name: "Sample UI/1", url: "/tests/products/sample-ui/ui-1" },
+			{ name: "Sample UI/2", url: "/tests/products/sample-ui/ui-2" }
+		]
 	},
 	{
 		name: "Categories",
@@ -82,21 +85,25 @@ export const testSidebarItems = [
 	{
 		name: "Orders",
 		url: "#",
-		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+		items: [{ name: "Sample UI/1", url: "/tests/orders/sample-ui/ui-1" }]
 	},
 	{
 		name: "Customers",
 		url: "#",
-		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+		items: [{ name: "Sample UI/1", url: "/tests/customers/sample-ui/ui-1" }]
 	},
 	{
 		name: "Farmers",
 		url: "#",
-		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+		items: [{ name: "Sample UI/1", url: "/tests/farmers/sample-ui/ui-1" }]
 	},
 	{
 		name: "Pending Farmers",
 		url: "#",
-		items: [{ name: "Sample UI/1", url: "/tests/categories/sample-ui/ui-1" }]
+		items: [
+			{ name: "Sample UI/1", url: "/tests/pending-farmers/sample-ui/ui-1" },
+			{ name: "Sample UI/2", url: "/tests/pending-farmers/sample-ui/ui-2" },
+			{ name: "Sample UI/3", url: "/tests/pending-farmers/sample-ui/ui-3" }
+		]
 	}
 ]
