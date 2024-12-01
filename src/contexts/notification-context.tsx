@@ -17,6 +17,7 @@ import React, {
 } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Context type
 interface NotificationContextType {
@@ -40,6 +41,7 @@ export function NotificationProvider({
 	userId: string
 }) {
 	const router = useRouter()
+	const isDesktop = useMediaQuery("(min-width: 768px)")
 	const [notifications, setNotifications] = useState<NotificationType[]>([])
 	const [unreadCount, setUnreadCount] = useState(0)
 
@@ -119,6 +121,8 @@ export function NotificationProvider({
 					label: "View",
 					onClick: () => router.push("/dashboard/notifications")
 				},
+				dismissible: true,
+				position: isDesktop ? "top-right" : "bottom-right",
 				duration: 5000
 			})
 

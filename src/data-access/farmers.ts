@@ -155,7 +155,8 @@ export const getApprovedFarmers = async () => {
 					isEmailVerified: true,
 					emailVerified: true
 				}
-			}
+			},
+			address: true
 		}
 	})
 }

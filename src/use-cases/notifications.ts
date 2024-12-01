@@ -19,6 +19,26 @@ export const getNotificationsByUserIdUseCase = async (userId: string) => {
 	}
 }
 
+export const createNotificationByUserIdUseCase = async (data: {
+	userId: string
+	message: string
+	type: NotificationType
+	title: string
+	metadata?: NotifMetadata
+}) => {
+	console.log("data :>> ", data)
+	try {
+		const notification = await createNotificationByUserId(data)
+		await pusherServer.trigger(
+			`user-${data.userId}-notifications`,
+			"new-notification",
+			notification
+		)
+	} catch (e) {
+		throw e
+	}
+}
+
 export const markNotificationAsReadUseCase = async (notificationId: string) => {
 	try {
 		return await markNotificationAsRead(notificationId)

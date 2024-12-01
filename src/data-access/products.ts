@@ -91,7 +91,7 @@ export const getAllProducts = async () => {
 }
 
 export const getProductById = async (id: string) => {
-	return await db.product.findUnique({
+	return await db.product.findFirst({
 		where: { id },
 		include: {
 			farmer: true,
@@ -395,17 +395,7 @@ export const updateProduct = async (
 						id: data.categoryId
 					}
 				},
-				pickupLocation: {
-					update: {
-						fullAddress: data.pickupLocation?.fullAddress || "",
-						street: data.pickupLocation?.street || "",
-						region: data.pickupLocation?.region || "",
-						country: data.pickupLocation?.country || "",
-						postalCode: data.pickupLocation?.postalCode || "",
-						latitude: data.pickupLocation?.latitude || 0,
-						longitude: data.pickupLocation?.longitude || 0
-					}
-				},
+
 				slug: data.slug,
 				unit: data.unit,
 				images: {
@@ -421,7 +411,18 @@ export const updateProduct = async (
 					}))
 				}
 			},
-			include: { images: true }
+			include: {
+				images: true,
+				farmer: {
+					include: {
+						user: {
+							select: {
+								id: true
+							}
+						}
+					}
+				}
+			}
 		})
 
 		return updatedProduct

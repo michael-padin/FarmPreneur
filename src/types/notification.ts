@@ -1,6 +1,7 @@
 import {
 	NotificationType,
-	Notification as PrismaNotification
+	Notification as PrismaNotification,
+	ProductListingStatus
 } from "@prisma/client"
 
 export { NotificationType }
@@ -10,6 +11,7 @@ export type NotifMetadata = {
 		productId?: string
 		productImage?: string
 		productName?: string
+		productListingStatus?: ProductListingStatus
 	}
 	farmer?: {
 		farmerId?: string

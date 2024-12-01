@@ -35,7 +35,7 @@ export const createProductUseCase = async (
 		})
 		return {
 			...createdProduct,
-			...farmer
+			farmer
 		}
 	} catch (error) {
 		throw error
