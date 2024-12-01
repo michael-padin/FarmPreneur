@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { NotifMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
 
 export const getNotificationsByUserId = async (userId: string) => {
@@ -29,7 +30,7 @@ export const createNotificationByUserId = async (data: {
 	message: string
 	type: NotificationType
 	title: string
-	metadata?: Record<string, string>
+	metadata?: NotifMetadata
 }) => {
 	return await db.notification.create({
 		data: {

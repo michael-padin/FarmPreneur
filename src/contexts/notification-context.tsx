@@ -15,6 +15,8 @@ import React, {
 	ReactNode,
 	useCallback
 } from "react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 // Context type
 interface NotificationContextType {
@@ -37,6 +39,7 @@ export function NotificationProvider({
 	children: ReactNode
 	userId: string
 }) {
+	const router = useRouter()
 	const [notifications, setNotifications] = useState<Notification[]>([])
 	const [unreadCount, setUnreadCount] = useState(0)
 
@@ -85,7 +88,7 @@ export function NotificationProvider({
 					)
 				)
 				// Update unread count
-				setUnreadCount((prev) => prev - 1)
+				setUnreadCount((prev) => (prev < 1 ? 0 : prev - 1))
 			}
 		} catch (error) {
 			console.error("Failed to mark notification as read", error)
@@ -107,6 +110,15 @@ export function NotificationProvider({
 		const handleNewNotification = (newNotification: Notification) => {
 			setNotifications((prev) => [newNotification, ...prev])
 
+			toast.info(`${newNotification.title}`, {
+				description: newNotification.message,
+				action: {
+					label: "View",
+					onClick: () => router.push("/dashboard/notifications")
+				},
+				duration: 5000
+			})
+
 			// Increment unread count if the new notification is unread
 			if (!newNotification.isRead) {
 				setUnreadCount((prev) => prev + 1)
@@ -120,7 +132,7 @@ export function NotificationProvider({
 			pusherClient.unsubscribe(`user-${userId}-notifications`)
 			channel.unbind("new-notification", handleNewNotification)
 		}
-	}, [userId])
+	}, [userId, router])
 
 	return (
 		<NotificationContext.Provider

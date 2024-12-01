@@ -8,8 +8,8 @@ import {
 } from "@/data-access/notifications"
 import { getAdminIds } from "@/data-access/users"
 import { pusherServer } from "@/lib/pusher"
+import { NotifMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
-import { trackAllowedDynamicAccess } from "next/dist/server/app-render/dynamic-rendering"
 
 export const getNotificationsByUserIdUseCase = async (userId: string) => {
 	try {
@@ -31,7 +31,7 @@ export const createNotificationsForAdminsUseCase = async (data: {
 	title: string
 	message: string
 	type: NotificationType
-	userId: string
+	metadata?: NotifMetadata
 }) => {
 	try {
 		const adminIds = await getAdminIds()
@@ -43,7 +43,7 @@ export const createNotificationsForAdminsUseCase = async (data: {
 					message: data.message,
 					type: data.type,
 					title: data.title,
-					metadata: { userId: data.userId }
+					metadata: data.metadata
 				})
 			})
 		)

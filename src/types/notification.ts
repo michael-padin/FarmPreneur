@@ -5,10 +5,23 @@ import {
 
 export { NotificationType }
 
-type NotifMetadata = {
-	orderId?: string
-	farmerId?: string
-	userId?: string
+export type NotifMetadata = {
+	product?: {
+		productId?: string
+		productImage?: string
+		productName?: string
+	}
+	farmer?: {
+		farmerId?: string
+		farmerName?: string
+	}
+	user?: {
+		userId?: string
+		name?: string
+	}
+	order?: {
+		orderId?: string
+	}
 }
 
 export interface Notification extends PrismaNotification {
