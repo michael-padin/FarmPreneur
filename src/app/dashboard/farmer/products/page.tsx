@@ -23,7 +23,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 					<h1 className="text-2xl font-semibold">Products</h1>
 					<div className="flex gap-2">
 						{/* <MessageCircleMore className="stroke-primary" /> */}
-						<Button asChild>
+						<Button asChild size="sm">
 							<Link
 								href={"/dashboard/farmer/products/create"}
 								className="flex items-center"
