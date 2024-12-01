@@ -2,7 +2,7 @@
 import { createProductUseCase } from "@/use-cases/products"
 import { createProductSchema, CreateProductSchema } from "./validations"
 import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
-import { getCategoryBySlug } from "@/data-access/categories"
+import { getProductBySlug } from "@/data-access/products"
 import { getErrorMessage } from "@/lib/handle-error"
 import { pusherServer } from "@/lib/pusher"
 import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
@@ -23,7 +23,7 @@ export const createProduct = async (
 		let counter = 0
 
 		while (
-			(await getCategoryBySlug(uniqueSlug)) &&
+			(await getProductBySlug(uniqueSlug)) &&
 			counter < INITIAL_MAX_ITERATIONS
 		) {
 			counter++

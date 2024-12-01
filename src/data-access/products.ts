@@ -292,6 +292,12 @@ export const getProducts = async (filter: {
 	})
 }
 
+export const getProductBySlug = async (slug: string) => {
+	return await db.product.findUnique({
+		where: { slug }
+	})
+}
+
 // MARK: MUTATIONS
 
 export const createProductFromAdmin = async (

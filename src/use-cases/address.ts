@@ -37,7 +37,6 @@ export const createFarmerAddressUseCase = async (
 export const getFarmerAddressesUseCase = async (userId: string) => {
 	try {
 		const farmer = await getFarmerByUserId(userId)
-		console.log("farmer :>> ", farmer)
 
 		if (!farmer) {
 			throw new Error("No farmer found!")
