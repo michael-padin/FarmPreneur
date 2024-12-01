@@ -237,14 +237,20 @@ export const getTopProducts = async (limit = 10) => {
 export const getProducts = async (filter: {
 	userId: string
 	status?: ProductListingStatus | null
+	search?: string
 }) => {
-	console.log("filter :>> ", filter)
 	return await db.product.findMany({
 		where: {
 			farmer: {
 				userId: filter.userId
 			},
-			...(filter.status && { listingStatus: filter.status })
+			...(filter.status && { listingStatus: filter.status }),
+			...(filter.search && {
+				OR: [
+					{ title: { contains: filter.search, mode: "insensitive" } },
+					{ description: { contains: filter.search, mode: "insensitive" } }
+				]
+			})
 		},
 		include: {
 			farmer: {

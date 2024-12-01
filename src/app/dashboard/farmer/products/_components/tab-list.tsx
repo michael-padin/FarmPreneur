@@ -20,7 +20,7 @@ export function StatusTabs() {
 	const [isLoading, startTransition] = useTransition()
 	const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-	const [activeStatus, setActiveStatus] = useQueryState(
+	const [activeStatus, setActiveStatus] = useQueryState<ProductListingStatus>(
 		"status",
 		searchParams.status.withOptions({
 			startTransition,

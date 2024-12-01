@@ -42,7 +42,9 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 				<div className="px-4">
 					<Suspense
 						fallback={<ProductSkeleton />}
-						key={searchParamsCache.get("status")}
+						key={
+							searchParamsCache.get("status") || searchParamsCache.get("search")
+						}
 					>
 						<FarmerProductList />
 					</Suspense>

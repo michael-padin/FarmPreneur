@@ -14,9 +14,10 @@ import { getProductsUseCase } from "@/use-cases/products"
 import { formatDate } from "@/lib/utils"
 
 export async function FarmerProductList() {
-	const { status } = searchParamsCache.all()
+	const { status, search } = searchParamsCache.all()
 	const products = await getProductsUseCase({
-		status
+		status,
+		search
 	})
 
 	const getStatusColor = (status: string) => {
@@ -34,7 +35,7 @@ export async function FarmerProductList() {
 
 	return (
 		<div className="space-y-4">
-			{products.length > 0 ? (
+			{products && products.length > 0 ? (
 				products?.map((product) => (
 					<Card key={product.id} className="">
 						<CardHeader className="p-4 pb-2">

@@ -2,16 +2,15 @@ import { ProductListingStatus } from "@prisma/client"
 import {
 	createSearchParamsCache,
 	createSerializer,
-	parseAsInteger,
 	parseAsString,
-	parseAsStringEnum,
-	parseAsStringLiteral
+	parseAsStringEnum
 } from "nuqs/server"
 
 export const searchParams = {
 	status: parseAsStringEnum<ProductListingStatus>(
 		Object.values(ProductListingStatus)
-	)
+	),
+	search: parseAsString.withDefault("")
 }
 
 export const searchParamsCache = createSearchParamsCache(searchParams)

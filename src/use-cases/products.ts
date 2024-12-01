@@ -90,17 +90,19 @@ export const getPendingProductsUseCase = async () => {
 // FARMER QUERIES HERE
 export const getProductsUseCase = async (filter: {
 	status: ProductListingStatus | null
+	search: string | null
 }) => {
 	try {
 		const session = await auth()
 		if (!session || !session.user) throw new Error("Unauthorized")
 
 		return await getProducts({
+			search: filter.search!,
 			status: filter.status,
 			userId: session.user.id!
 		})
 	} catch (error) {
-		throw error
+		console.error(error)
 	}
 }
 
