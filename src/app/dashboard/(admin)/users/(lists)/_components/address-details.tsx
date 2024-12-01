@@ -50,7 +50,6 @@ export const AddressDetailsDrawerDialog = ({
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<div>
-					{/* <p className="w-[180px] truncate">{address?.fullAddress}</p> */}
 					<DialogTrigger asChild>
 						<span className="cursor-pointer text-xs text-primary">
 							View in map
