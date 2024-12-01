@@ -54,12 +54,37 @@ export const BackButton = ({ fallbackRoute, ...props }: BackButtonProps) => {
 		<Button
 			onClick={handleClick}
 			variant="ghost"
-			size="icon"
+			asChild
 			className={cn("", props.className)}
 			{...props}
 		>
 			<ArrowLeft className="h-4 w-4" />
 		</Button>
+	)
+}
+
+export const HeaderBackButton = ({
+	fallbackRoute,
+	...props
+}: BackButtonProps) => {
+	const router = useRouter()
+
+	const handleClick = () => {
+		if (fallbackRoute) {
+			router.push(fallbackRoute)
+		} else {
+			router.back()
+		}
+	}
+
+	return (
+		<button
+			onClick={handleClick}
+			className={cn("flex", props.className)}
+			{...props}
+		>
+			<ArrowLeft />
+		</button>
 	)
 }
 
