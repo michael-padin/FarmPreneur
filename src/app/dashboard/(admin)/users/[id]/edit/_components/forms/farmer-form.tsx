@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/select"
 import { FarmerApprovalBadge } from "../../../../(lists)/_components/badges"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
+import { AddressSchema } from "@/validations/address"
 
 interface FarmerFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
@@ -65,7 +66,10 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 			name: user?.name || "",
 			password: "",
 			isEmailVerified: user?.isEmailVerified || false,
-			farmer: (user?.farmer as EditUserSchema["farmer"]) || null
+			farmer: {
+				...((user?.farmer as EditUserSchema["farmer"]) || null),
+				address: { ...(user.farmer?.address[0] as AddressSchema) }
+			}
 		}
 	})
 

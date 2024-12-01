@@ -9,6 +9,7 @@ import {
 } from "@/use-cases/farmers"
 import { pusherServer } from "@/lib/pusher"
 import { updateAdminUserUseCase } from "@/use-cases/users"
+import { sendApprovalEmail } from "@/lib/nodemailer"
 
 export const updateCustomer = async (
 	data: EditUserSchema & {
@@ -56,6 +57,17 @@ export const updateFarmer = async (
 			await pusherServer.trigger("pending-farmers-count", "update", {
 				count: await getPendingFarmerCountUseCase()
 			})
+		}
+
+		if (
+			farmer.applicationStatus === "PENDING" &&
+			updatedFarmer?.applicationStatus === "APPROVED"
+		) {
+			await sendApprovalEmail(
+				farmer.user.email!,
+				farmer.user.name!,
+				farmer.farmName!
+			)
 		}
 
 		/**
