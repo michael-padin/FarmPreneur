@@ -1,31 +1,54 @@
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
+import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { db } from "@/lib/db"
+import { ProductListingStatus } from "@prisma/client"
 
-// export const createProduct = async (data: createProductType) => {
-// 	await db.product.create({
-// 		data: {
-
-// 			title: data.title,
-// 			description: data.description,
-// 			price: data.price,
-// 			quantity: data.quantity,
-// 			categoryId: data.category,
-// 			images: {
-// 				createMany: {
-// 					data: data.images.map((image) => ({
-// 						type: "PRODUCT",
-// 						url: image.url,
-// 						filename: image.filename,
-// 						size: image.size,
-// 						mimeType: image.mimeType
-// 					}))
-// 				}
-// 			}
-// 		}
-// 	})
-// }
-
+export const createProduct = async (
+	data: CreateProductSchemaFarmer & {
+		farmerId: string
+		slug: string
+	}
+) => {
+	return await db.product.create({
+		data: {
+			listingStatus: "PENDING",
+			title: data.title,
+			description: data.description,
+			unit: data.unit,
+			slug: data.slug,
+			price: data.price,
+			quantity: data.quantity,
+			categoryId: data.categoryId,
+			pickupLocationId: data.pickupLocationId,
+			farmerId: data.farmerId,
+			images: {
+				createMany: {
+					data: data.images.map((image) => ({
+						type: "PRODUCT",
+						url: image.url,
+						filename: image.filename,
+						size: image.size,
+						mimeType: image.mimeType
+					}))
+				}
+			}
+		},
+		include: {
+			farmer: {
+				select: {
+					id: true,
+					farmName: true
+				}
+			},
+			images: {
+				select: {
+					url: true
+				}
+			}
+		}
+	})
+}
 export const getTotalProducts = async () => {
 	return await db.product.count()
 }
@@ -68,7 +91,7 @@ export const getAllProducts = async () => {
 }
 
 export const getProductById = async (id: string) => {
-	return await db.product.findUnique({
+	return await db.product.findFirst({
 		where: { id },
 		include: {
 			farmer: true,
@@ -232,6 +255,49 @@ export const getTopProducts = async (limit = 10) => {
 		.slice(0, limit)
 }
 
+// FARMER QUERIES HERE
+export const getProducts = async (filter: {
+	userId: string
+	status?: ProductListingStatus | null
+	search?: string
+}) => {
+	return await db.product.findMany({
+		where: {
+			farmer: {
+				userId: filter.userId
+			},
+			...(filter.status && { listingStatus: filter.status }),
+			...(filter.search && {
+				OR: [
+					{ title: { contains: filter.search, mode: "insensitive" } },
+					{ description: { contains: filter.search, mode: "insensitive" } }
+				]
+			})
+		},
+		include: {
+			farmer: {
+				select: {
+					user: {
+						select: {
+							name: true,
+							email: true
+						}
+					}
+				}
+			},
+			images: true,
+			pickupLocation: true,
+			category: true
+		}
+	})
+}
+
+export const getProductBySlug = async (slug: string) => {
+	return await db.product.findUnique({
+		where: { slug }
+	})
+}
+
 // MARK: MUTATIONS
 
 export const createProductFromAdmin = async (
@@ -329,17 +395,7 @@ export const updateProduct = async (
 						id: data.categoryId
 					}
 				},
-				pickupLocation: {
-					update: {
-						fullAddress: data.pickupLocation?.fullAddress || "",
-						street: data.pickupLocation?.street || "",
-						region: data.pickupLocation?.region || "",
-						country: data.pickupLocation?.country || "",
-						postalCode: data.pickupLocation?.postalCode || "",
-						latitude: data.pickupLocation?.latitude || 0,
-						longitude: data.pickupLocation?.longitude || 0
-					}
-				},
+
 				slug: data.slug,
 				unit: data.unit,
 				images: {
@@ -355,7 +411,18 @@ export const updateProduct = async (
 					}))
 				}
 			},
-			include: { images: true }
+			include: {
+				images: true,
+				farmer: {
+					include: {
+						user: {
+							select: {
+								id: true
+							}
+						}
+					}
+				}
+			}
 		})
 
 		return updatedProduct

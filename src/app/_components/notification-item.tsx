@@ -6,12 +6,14 @@ import { X } from "lucide-react"
 interface NotificationItemProps extends Notification {
 	markAsRead: (id: string) => void
 	Icon: React.ReactNode
+	nodeMessage?: React.ReactNode
 }
 
 export function NotificationItem({
 	id,
 	title,
 	message,
+	nodeMessage,
 	createdAt,
 	isRead,
 	markAsRead,
@@ -24,12 +26,14 @@ export function NotificationItem({
 			{Icon}
 			<div className="flex-1 space-y-1">
 				<div className="flex items-center gap-2">
-					<p className="text-sm font-medium">{title}</p>
+					<p className="font-medium">{title}</p>
 					{!isRead && (
 						<span className="flex h-2 w-2 rounded-full bg-blue-600"></span>
 					)}
 				</div>
-				<p className="text-sm text-muted-foreground">{message}</p>
+				{nodeMessage || (
+					<p className="text-sm text-muted-foreground">{message}</p>
+				)}
 				<p className="text-xs text-muted-foreground">
 					{formatDistanceToNowStrict(createdAt, { addSuffix: true })}
 				</p>

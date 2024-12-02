@@ -12,7 +12,7 @@ export const updateProductSchema = z.object({
 	unit: z.string().min(1, "Required"),
 	quantity: z.coerce.number().min(1, "Required"),
 	images: imageSchema.array().min(1, "Required"),
-	pickupLocation: addressSchema.optional(),
+	pickupLocationId: z.string().min(1, "Required"),
 	listingStatus: z.nativeEnum(ProductListingStatus)
 })
 

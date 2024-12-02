@@ -6,7 +6,7 @@ import {
 	markNotificationAsReadUseCase
 } from "@/use-cases/notifications"
 import { pusherClient } from "@/lib/pusher"
-import { Notification } from "@/types/notification"
+import { Notification as NotificationType } from "@/types/notification"
 import React, {
 	createContext,
 	useState,
@@ -15,15 +15,18 @@ import React, {
 	ReactNode,
 	useCallback
 } from "react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Context type
 interface NotificationContextType {
-	notifications: Notification[]
+	notifications: NotificationType[]
 	unreadCount: number
 	markAllAsRead: () => void
 	markAsRead: (notificationId: string) => Promise<void>
 	fetchInitialNotifications: (userId: string) => Promise<void>
-	setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
+	setNotifications: React.Dispatch<React.SetStateAction<NotificationType[]>>
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -37,7 +40,9 @@ export function NotificationProvider({
 	children: ReactNode
 	userId: string
 }) {
-	const [notifications, setNotifications] = useState<Notification[]>([])
+	const router = useRouter()
+	const isDesktop = useMediaQuery("(min-width: 768px)")
+	const [notifications, setNotifications] = useState<NotificationType[]>([])
 	const [unreadCount, setUnreadCount] = useState(0)
 
 	// Fetch initial notifications
@@ -45,7 +50,7 @@ export function NotificationProvider({
 		try {
 			const initialNotifications = (await getNotificationsByUserIdUseCase(
 				userId
-			)) as Notification[]
+			)) as NotificationType[]
 			setNotifications(initialNotifications)
 			setUnreadCount(
 				initialNotifications.filter((notification) => !notification.isRead)
@@ -85,7 +90,7 @@ export function NotificationProvider({
 					)
 				)
 				// Update unread count
-				setUnreadCount((prev) => prev - 1)
+				setUnreadCount((prev) => (prev < 1 ? 0 : prev - 1))
 			}
 		} catch (error) {
 			console.error("Failed to mark notification as read", error)
@@ -104,8 +109,26 @@ export function NotificationProvider({
 		// Subscribe to Pusher channel
 		const channel = pusherClient.subscribe(`user-${userId}-notifications`)
 
-		const handleNewNotification = (newNotification: Notification) => {
+		const notificationSound = new Audio("/notification.mp3")
+
+		// this function will run every notification received
+		const handleNewNotification = (newNotification: NotificationType) => {
 			setNotifications((prev) => [newNotification, ...prev])
+
+			toast(`${newNotification.title}`, {
+				description: newNotification.message,
+
+				dismissible: true,
+				position: isDesktop ? "top-right" : "bottom-right",
+				duration: 5000
+			})
+
+			notificationSound.play()
+			// if ("Notification" in window && Notification.permission === "granted") {
+			// 	new Notification(newNotification.title, {
+			// 		body: newNotification.message
+			// 	})
+			// }
 
 			// Increment unread count if the new notification is unread
 			if (!newNotification.isRead) {
@@ -120,7 +143,7 @@ export function NotificationProvider({
 			pusherClient.unsubscribe(`user-${userId}-notifications`)
 			channel.unbind("new-notification", handleNewNotification)
 		}
-	}, [userId])
+	}, [userId, router])
 
 	return (
 		<NotificationContext.Provider

@@ -3,6 +3,7 @@ import { render } from "@react-email/components"
 import { OTPEmail } from "@/components/fg/fp-otp-email"
 import { MailOptions } from "nodemailer/lib/json-transport"
 import { FPResetPasswordEmail } from "@/components/fg/fp-reset-password-email"
+import { FPApprovalEmail } from "@/components/fg/fp-approval-email"
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
@@ -49,6 +50,19 @@ export const sendOTPEmail = async (
 		})
 	)
 	await sendEmail(to, "Email Verification", otp, html)
+}
+
+export const sendApprovalEmail = async (
+	to: string,
+	farmerName: string,
+	farmName: string
+) => {
+	const dashboardUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer`
+
+	const html = await render(
+		FPApprovalEmail({ dashboardUrl, farmerName, farmName })
+	)
+	await sendEmail(to, "Farm Approved", farmerName, html)
 }
 
 export const sendResetPasswordEmail = async (

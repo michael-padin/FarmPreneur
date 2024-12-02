@@ -8,7 +8,8 @@ import {
 	Megaphone,
 	Bell,
 	ShieldCheck,
-	HelpCircle
+	HelpCircle,
+	Box
 } from "lucide-react"
 
 interface NotificationIconProps {
@@ -30,7 +31,7 @@ export function NotificationIcon({
 		case NotificationType.FARMER_APPROVAL:
 			return <UserCheck {...iconProps} aria-label="Farmer Approval" />
 		case NotificationType.PRODUCT_APPROVAL:
-			return <CheckCircle {...iconProps} aria-label="Product Approval" />
+			return <Box {...iconProps} aria-label="Product Approval" />
 		case NotificationType.NEW_MESSAGE:
 			return <MessageSquare {...iconProps} aria-label="New Message" />
 		case NotificationType.NEW_PRODUCT:

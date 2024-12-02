@@ -11,30 +11,103 @@ import { Notification } from "@/types/notification"
 export const NotificationList = () => {
 	const { markAllAsRead, markAsRead, notifications } = useNotifications()
 
-	const getNotifItemLink = (notif: Notification) => {
+	const renderMessage = (notif: Notification) => {
 		switch (notif.type) {
 			case NotificationType.ORDER_STATUS:
-				const hasOrderId = !!notif.metadata.orderId
-				return hasOrderId ? `/dashboard/orders/${notif.metadata.orderId}` : "#"
+				return null
 			case NotificationType.FARMER_APPROVAL:
-				const hasUserId = !!notif.metadata?.userId
-				return hasUserId
-					? `/dashboard/users/${notif.metadata.userId}/edit`
-					: "#"
+				return (
+					<div className=" ">
+						<div className="mb-2 space-y-1">
+							<p>
+								A new farmer{" "}
+								<span className="capitalize text-primary">
+									{notif.metadata.user?.name}
+								</span>{" "}
+								has registered and is awaiting your approval.
+							</p>
+							<div className="text-sm">
+								{/* <div className="flex gap-1 text-sm">
+									<p className="text-muted-foreground">Name</p>
+									<span className="capitalize text-primary">
+										{notif?.metadata.productName}
+									</span>
+								</div> */}
+								<div className="mt-2 w-full">
+									<Button
+										variant={"outline"}
+										size={"sm"}
+										asChild
+										className="w-full lg:w-1/6"
+										onClick={() => markAsRead(notif.id)}
+									>
+										<Link
+											href={`/dashboard/users/${notif.metadata?.user?.userId}/edit`}
+										>
+											Review
+										</Link>
+									</Button>
+								</div>
+
+								{/* <p>Farmer ID: {notif.metadata.farmerId}</p> */}
+							</div>
+						</div>
+					</div>
+				)
 			case NotificationType.PRODUCT_APPROVAL:
-			// return `/dashboard/products/${notification.id}`
+				return (
+					<div className=" ">
+						<div className="mb-2 space-y-1">
+							<p>
+								A new product{" "}
+								<span className="capitalize text-primary">
+									{notif.metadata.product?.productName}
+								</span>{" "}
+								has been submitted and is awaiting your review .
+							</p>
+							<div className="flex gap-1 text-sm">
+								<p className="text-muted-foreground">From:</p>
+								<Link
+									href={`/dashboard/users/${notif.metadata.farmer?.farmerId}/edit`}
+									className="underline-offset-2 hover:underline"
+								>
+									<span className="text-primary">
+										{notif.metadata.farmer?.farmerName}
+									</span>
+								</Link>
+							</div>
+
+							<div className="mt-2 w-full">
+								<Button
+									variant={"outline"}
+									size={"sm"}
+									asChild
+									className="w-full lg:w-1/6"
+									onClick={() => markAsRead(notif.id)}
+								>
+									<Link
+										href={`/dashboard/products/${notif.metadata.product?.productId}/edit`}
+									>
+										Review
+									</Link>
+								</Button>
+							</div>
+
+							{/* <p>Farmer ID: {notif.metadata.farmerId}</p> */}
+						</div>
+					</div>
+				)
 			case NotificationType.NEW_MESSAGE:
-			// return `/dashboard/messages/${notification.id}`
-			case NotificationType.NEW_PRODUCT:
-			// return `/dashboard/products/${notification.id}`
-			case NotificationType.PROMOTION:
-			// return `/dashboard/products/${notification.id}`
-			case NotificationType.SYSTEM_ALERT:
-			// return `/dashboard/messages/${notification.id}`
-			case NotificationType.VERIFICATION:
-			// return `/dashboard/users/${notification.id}`
+				return (
+					// <NewMessageNotificationItem
+					// 	title={notif.title}
+					// 	message={notif.message}
+					// 	metadata={notif.metadata}
+					// />
+					null
+				)
 			default:
-				return `#`
+				return null
 		}
 	}
 
@@ -50,22 +123,17 @@ export const NotificationList = () => {
 			</div>
 			<div className="">
 				{notifications.map((notif) => (
-					<Link
-						href={getNotifItemLink(notif) || "#"}
+					<NotificationItem
 						key={notif.id}
-						onClick={() => !notif.isRead && markAsRead(notif.id)}
-					>
-						<NotificationItem
-							key={notif.id}
-							{...notif}
-							markAsRead={markAsRead}
-							Icon={
-								<div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-									<NotificationIcon type={notif.type} className="h-5 w-5" />
-								</div>
-							}
-						/>
-					</Link>
+						{...notif}
+						markAsRead={markAsRead}
+						nodeMessage={renderMessage(notif)}
+						Icon={
+							<div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+								<NotificationIcon type={notif.type} className="h-5 w-5" />
+							</div>
+						}
+					/>
 				))}
 			</div>
 		</div>

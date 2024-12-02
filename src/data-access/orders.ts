@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { OrderStatus } from "@prisma/client"
 
 export const getOrders = async () => {
 	return await db.order.findMany({
@@ -79,5 +80,57 @@ export const getRecentOrders = async () => {
 			address: true
 		},
 		take: 10
+	})
+}
+
+export const getFarmerOrders = async (filter: {
+	status: OrderStatus | null
+	search: string | null
+	userId: string
+}) => {
+	return await db.order.findMany({
+		where: {
+			farmer: {
+				userId: filter.userId
+			},
+			...(filter.status && { status: filter.status }),
+			...(filter.search && {
+				OR: [
+					{
+						product: { title: { contains: filter.search, mode: "insensitive" } }
+					},
+					{
+						customer: {
+							user: { name: { contains: filter.search, mode: "insensitive" } }
+						}
+					}
+				]
+			})
+		},
+		include: {
+			product: {
+				include: {
+					images: true
+				}
+			},
+			customer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			farmer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			}
+		}
 	})
 }
