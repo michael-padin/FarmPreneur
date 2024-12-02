@@ -29,14 +29,15 @@ export async function FarmerProductList() {
 					<Card key={product.id} className="">
 						<CardHeader className="p-4 pb-2">
 							<div className="flex items-start gap-4">
-								<div className="relative aspect-square h-24">
-									<Image
-										src={product.images[0]?.url || "/placeholder.svg"}
-										alt={product.title}
-										fill
-										className="rounded-lg object-cover"
-									/>
-								</div>
+								<Image
+									src={product.images[0]?.url || "/placeholder.svg"}
+									alt={product.title}
+									height={96}
+									width={96}
+									priority
+									quality={75}
+									className="aspect-square rounded-lg object-cover"
+								/>
 								<div className="min-w-0 flex-1">
 									<div className="flex items-center justify-between gap-2">
 										<h2 className="truncate font-semibold">{product.title}</h2>
