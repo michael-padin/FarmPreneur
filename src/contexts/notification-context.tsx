@@ -117,21 +117,18 @@ export function NotificationProvider({
 
 			toast(`${newNotification.title}`, {
 				description: newNotification.message,
-				action: {
-					label: "View",
-					onClick: () => router.push("/dashboard/notifications")
-				},
+
 				dismissible: true,
 				position: isDesktop ? "top-right" : "bottom-right",
 				duration: 5000
 			})
 
 			notificationSound.play()
-			if ("Notification" in window && Notification.permission === "granted") {
-				new Notification(newNotification.title, {
-					body: newNotification.message
-				})
-			}
+			// if ("Notification" in window && Notification.permission === "granted") {
+			// 	new Notification(newNotification.title, {
+			// 		body: newNotification.message
+			// 	})
+			// }
 
 			// Increment unread count if the new notification is unread
 			if (!newNotification.isRead) {

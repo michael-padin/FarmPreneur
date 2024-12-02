@@ -1,10 +1,12 @@
 import { auth } from "@/auth"
 import {
+	getFarmerOrders,
 	getOrders,
 	getRecentOrders,
 	getTotalOrders,
 	getTotalOrdersByDate
 } from "@/data-access/orders"
+import { OrderStatus } from "@prisma/client"
 
 export const getOrdersUseCase = async () => {
 	const session = await auth()
@@ -31,6 +33,16 @@ export const getTotalOrdersUseCase = async () => {
 	} catch (error) {
 		throw error
 	}
+}
+
+export const getFarmerOrdersUseCase = async (filter: {
+	status: OrderStatus | null
+	search: string | null
+}) => {
+	const session = await auth()
+	if (!session || !session.user) throw new Error("Unauthorized")
+
+	return await getFarmerOrders({ ...filter, userId: session.user.id })
 }
 
 export const getRecentOrdersUseCase = async () => {
