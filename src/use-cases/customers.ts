@@ -12,3 +12,11 @@ export const updateCustomerByUserIdUseCase = async (
 ) => {
 	return await updateCustomerByUserId(data)
 }
+
+export const createCustomerUseCase = async (
+	data: EditUserSchema & {
+		userId: string
+	}
+) => {
+	return await updateCustomerByUserId(data)
+}
