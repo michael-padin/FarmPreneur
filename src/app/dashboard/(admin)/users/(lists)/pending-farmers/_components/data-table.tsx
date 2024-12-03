@@ -32,11 +32,25 @@ import {
 	SheetTrigger
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Filter, RotateCcw } from "lucide-react"
+import {
+	Calendar,
+	CheckCircle,
+	Clock,
+	Eye,
+	Filter,
+	Mail,
+	MapPin,
+	MoreVertical,
+	Phone,
+	RotateCcw,
+	ThumbsDown,
+	ThumbsUp
+} from "lucide-react"
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
@@ -44,17 +58,33 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { getCommonPinningStyles } from "@/lib/data-table"
 import { columns } from "./columns"
 import { getPendingFarmersUseCase } from "@/use-cases/farmers"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from "@/components/ui/dialog"
+import Image from "next/image"
+import {
+	FarmerApprovalBadge,
+	ProductListingStatusBadge
+} from "../../_components/badges"
+import { format } from "date-fns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getPendingFarmersUseCase>>>
 }
 
 export function DataTable({ data }: DataTableProps) {
+	const pendingfarmers = use(data)
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 	const table = useReactTable({
-		data: use(data),
+		data: pendingfarmers,
 		columns: columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -80,6 +110,7 @@ export function DataTable({ data }: DataTableProps) {
 		table.resetRowSelection()
 		table.resetPagination()
 	}, [table])
+	console.log("PENDING FARMERS:", pendingfarmers)
 	return (
 		<>
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
@@ -184,7 +215,7 @@ export function DataTable({ data }: DataTableProps) {
 					</Button>
 				</div>
 			</div>
-			<div className="rounded-md border">
+			<div className="hidden rounded-md border lg:block">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -319,6 +350,120 @@ export function DataTable({ data }: DataTableProps) {
 					<div className="p-4 text-center">No results.</div>
 				)}
 			</div> */}
+			{/* Mobile View */}
+			<div className="space-y-4 md:hidden">
+				{pendingfarmers.map((farmer) => (
+					<Card key={farmer.user.email} className="overflow-hidden">
+						<CardHeader className="border-b bg-muted/40 p-4">
+							<div className="flex items-center justify-between">
+								<div className="flex items-center gap-2">
+									<CardTitle className="text-base font-medium">
+										{farmer.user.name}
+									</CardTitle>
+									{farmer.user.isEmailVerified && (
+										<CheckCircle className="h-4 w-4 text-green-500" />
+									)}
+								</div>
+								<div className="flex items-center gap-2">
+									{/* <Badge variant="secondary">{farmer.applicationStatus}</Badge> */}
+									<FarmerApprovalBadge status={farmer!.applicationStatus!} />
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant="ghost" size="icon">
+												<MoreVertical className="h-4 w-4" />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end">
+											<DropdownMenuItem>
+												<ThumbsUp className="mr-2 h-4 w-4" />
+												Approve
+											</DropdownMenuItem>
+											<DropdownMenuItem className="text-destructive">
+												<ThumbsDown className="mr-2 h-4 w-4" />
+												Reject
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</div>
+						</CardHeader>
+						<CardContent className="space-y-4 p-4">
+							<div className="space-y-3">
+								<div className="flex items-center gap-2">
+									<Mail className="h-4 w-4 text-muted-foreground" />
+									<span className="text-sm">{farmer.user.email}</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<Calendar className="h-4 w-4 text-muted-foreground" />
+									<span className="text-sm">
+										{farmer.birthDate
+											? format(new Date(farmer.birthDate), "MMM d yyyy")
+											: ""}
+									</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<Phone className="h-4 w-4 text-muted-foreground" />
+									<span className="text-sm">{farmer.contactNumber}</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<MapPin className="h-4 w-4 text-muted-foreground" />
+									<span className="text-sm">
+										{farmer.address?.fullAddress
+											? farmer.address.fullAddress
+											: "N/A"}
+									</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<Clock className="h-4 w-4 text-muted-foreground" />
+									<span className="text-sm text-muted-foreground">
+										Applied:
+									</span>
+									<span className="text-sm">
+										{format(new Date(farmer.user.createdAt), "MMM d yyyy")}
+									</span>
+								</div>
+							</div>
+
+							<div className="space-y-2">
+								<div className="flex items-center justify-between">
+									<span className="text-sm font-medium">
+										Verification Document
+									</span>
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant="outline" size="sm">
+												<Eye className="mr-2 h-4 w-4" />
+												View
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="max-w-2xl">
+											<DialogHeader>
+												<DialogTitle>Verification Document</DialogTitle>
+											</DialogHeader>
+											<div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
+												<Image
+													src={farmer.verificationDocument!.image!.url!}
+													alt="Verification document"
+													fill
+													className="object-cover"
+												/>
+											</div>
+										</DialogContent>
+									</Dialog>
+								</div>
+								<div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted">
+									<Image
+										src={farmer.verificationDocument!.image!.url!}
+										alt="Verification document thumbnail"
+										fill
+										className="object-cover"
+									/>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				))}
+			</div>
 			<DataTablePagination table={table} />
 		</>
 	)

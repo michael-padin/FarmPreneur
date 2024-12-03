@@ -35,17 +35,21 @@ import {
 import { getCommonPinningStyles } from "@/lib/data-table"
 import { columns } from "./columns"
 import { getOrdersUseCase } from "@/use-cases/orders"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { format } from "date-fns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getOrdersUseCase>>>
 }
 
 export function DataTable({ data }: DataTableProps) {
+	const orders = use(data)
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 	const table = useReactTable({
-		data: use(data),
+		data: orders,
 		columns: columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -177,7 +181,7 @@ export function DataTable({ data }: DataTableProps) {
 					</Button>
 				</div>
 			</div>
-			<div className="rounded-md border">
+			<div className="hidden rounded-md border lg:block">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -312,6 +316,58 @@ export function DataTable({ data }: DataTableProps) {
 					<div className="p-4 text-center">No results.</div>
 				)}
 			</div> */}
+			<div className="space-y-4 md:hidden">
+				{orders.length > 0 ? (
+					orders.map((order) => (
+						<Card key={order.id} className="overflow-hidden">
+							<CardHeader className="border-b bg-muted/40 p-4">
+								<div className="flex items-center justify-between">
+									<CardTitle className="text-base font-medium">
+										{order.id}
+									</CardTitle>
+									<Badge
+										variant={
+											order.status === "COMPLETED" ? "default" : "secondary"
+										}
+									>
+										{order.status}
+									</Badge>
+								</div>
+							</CardHeader>
+							<CardContent className="grid gap-3 p-4 text-sm">
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Date</span>
+									<span className="font-medium">
+										{format(new Date(order.createdAt), "MMM d, yyyy")}
+									</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Product</span>
+									<span className="font-medium">{order.product.title}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Customer</span>
+									<span className="font-medium">
+										{order.customer?.user.name}
+									</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Farmer</span>
+									<span className="font-medium">{order.farmer?.farmName}</span>
+								</div>
+								<div className="flex justify-between border-t pt-3">
+									<span className="font-medium">Total Price</span>
+									<span className="font-bold">{order.totalPrice}</span>
+								</div>
+							</CardContent>
+						</Card>
+					))
+				) : (
+					<Card className="p-6 text-center text-muted-foreground">
+						No orders found
+					</Card>
+				)}
+			</div>
 			<DataTablePagination table={table} />
 		</>
 	)

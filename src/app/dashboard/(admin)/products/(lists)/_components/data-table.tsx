@@ -32,27 +32,33 @@ import {
 	SheetTrigger
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Filter, RotateCcw } from "lucide-react"
+import { Filter, MoreVertical, RotateCcw } from "lucide-react"
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { getCommonPinningStyles } from "@/lib/data-table"
 import { columns } from "./columns"
 import { getAllProductsUseCase } from "@/use-cases/products"
+import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
+import { Badge } from "@/components/ui/badge"
+import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getAllProductsUseCase>>>
 }
 
 export function DataTable({ data }: DataTableProps) {
+	const products = use(data)
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 	const table = useReactTable({
-		data: use(data),
+		data: products,
 		columns: columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -182,7 +188,7 @@ export function DataTable({ data }: DataTableProps) {
 					</Button>
 				</div>
 			</div>
-			<div className="rounded-md border">
+			<div className="hidden rounded-md border lg:block">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -317,6 +323,81 @@ export function DataTable({ data }: DataTableProps) {
 					<div className="p-4 text-center">No results.</div>
 				)}
 			</div> */}
+			{/* Mobile Product Cards */}
+			<div className="grid gap-4 md:hidden">
+				{products.map((product) => (
+					<Card key={product.id}>
+						<CardContent className="p-3">
+							<div className="flex gap-3">
+								<div className="relative h-16 w-16 flex-shrink-0">
+									<Image
+										src={product.images[0].url}
+										alt={product.title}
+										layout="fill"
+										objectFit="cover"
+										className="rounded-md"
+									/>
+								</div>
+								<div className="min-w-0 flex-1">
+									<div className="flex items-start justify-between">
+										<div>
+											<h3 className="truncate font-semibold">
+												{product.title}
+											</h3>
+											{/* <Badge
+												variant="secondary"
+												className="bg-yellow-100 text-xs text-yellow-800"
+											>
+												{product.listingStatus}
+											</Badge> */}
+											<ProductListingStatusBadge
+												status={product.listingStatus}
+												showText
+											/>
+										</div>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													variant="ghost"
+													size="icon"
+													className="-mr-2 h-8 w-8"
+												>
+													<MoreVertical className="h-4 w-4" />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align="end">
+												<DropdownMenuItem>Edit</DropdownMenuItem>
+												<DropdownMenuItem>Delete</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</div>
+									<p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+										{product.description}
+									</p>
+									<div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+										<div className="flex justify-between">
+											<span className="font-medium">Price:</span>
+											<span>₱{product.price.toFixed(2)}</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="font-medium">Quantity:</span>
+											<span>{product.quantity}</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="font-medium">Unit:</span>
+											<span>{product.unit}</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="font-medium">Farmer:</span>
+											<span>{product.farmer?.user.name}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				))}
+			</div>
 			<DataTablePagination table={table} />
 		</>
 	)
