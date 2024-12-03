@@ -7,6 +7,7 @@ import { Suspense } from "react"
 import { OrderItemSkeleton } from "./_components/order-skeleton"
 import { FilterProducts } from "./_components/filter-products"
 import { MessageCircleMore } from "lucide-react"
+import { OrderListWrapper } from "./_components/order-list-wrapper"
 
 type PageProps = {
 	searchParams: Promise<SearchParams>
@@ -31,20 +32,7 @@ export default function OrdersPage({ searchParams }: PageProps) {
 
 			<div className="pb-24 pt-44">
 				<div className="px-4">
-					<Suspense
-						fallback={
-							<div className="space-y-4">
-								<OrderItemSkeleton />
-								<OrderItemSkeleton />
-								<OrderItemSkeleton />
-							</div>
-						}
-						key={
-							searchParamsCache.get("status") || searchParamsCache.get("search")
-						}
-					>
-						<FarmerOrderList searchParams={searchParams} />
-					</Suspense>
+					<OrderListWrapper searchParams={searchParams} />
 				</div>
 			</div>
 			<BottomNav />

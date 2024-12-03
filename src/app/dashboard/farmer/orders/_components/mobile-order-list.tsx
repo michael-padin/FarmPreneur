@@ -2,15 +2,10 @@ import { ShoppingCart } from "lucide-react"
 import { searchParamsCache } from "./searchParams"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
 import { OrderItem } from "./order-item"
-import { SearchParams } from "nuqs"
 
-type FarmerOrderListProps = {
-	searchParams: Promise<SearchParams>
-}
-
-export async function FarmerOrderList({ searchParams }: FarmerOrderListProps) {
-	await searchParamsCache.parse(searchParams)
+export async function FarmerOrderList() {
 	const { status, search } = searchParamsCache.all()
+
 	const orders = await getFarmerOrdersUseCase({
 		status,
 		search
