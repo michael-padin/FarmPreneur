@@ -14,38 +14,28 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { BottomNav } from "../_components/bottom-navigation"
-import { auth } from "@/auth"
+import { FarmerInfo } from "./_components/farmer-info"
+import { SignOutBtn } from "./_components/sign-out-btn"
 
-export default async function FarmerProfilePage() {
-	const session = await auth()
+export const experimental_ppr = true
 
-	// const farmerDetails = await getUserInfoUseCase()
+export default function FarmerProfilePage() {
 	return (
 		<>
 			<div className="w-full pb-24">
 				<div className="w-full">
-					<header className="fixed left-0 right-0 top-0 z-50 w-full bg-background py-4 pb-0 md:hidden">
+					<header className="left-0 right-0 top-0 z-50 w-full py-4 pb-0 md:hidden">
 						<div className="mx-4 border-b">
 							<div className="flex w-full items-center justify-between">
 								<h1 className="text-2xl font-semibold">Profile</h1>
-								<div className="flex gap-2">
-									<MessageCircleMore className="stroke-primary" />
+								<div className="">
+									<MessageCircleMore className="text-primary" />
 								</div>
 							</div>
-							<div className="py-4">
-								<div className="flex flex-col">
-									<Avatar className="h-24 w-24 border-4 border-primary/10">
-										<AvatarImage src="/placeholder.svg" alt="Profile picture" />
-										<AvatarFallback>AA</AvatarFallback>
-									</Avatar>
-									<div className="mt-4">
-										<h1 className="text-xl font-semibold">Andrew Ainsley</h1>
-									</div>
-								</div>
-							</div>
+							<FarmerInfo />
 						</div>
 					</header>
-					<div className="p-4 pt-60">
+					<div className="p-4">
 						<Link
 							href="/edit-profile"
 							className="flex items-center justify-between rounded-lg py-2"
@@ -116,10 +106,7 @@ export default async function FarmerProfilePage() {
 							<ChevronRight className="h-5 w-5" />
 						</Link>
 
-						<button className="flex w-full items-center gap-3 rounded-lg py-2 text-red-500">
-							<LogOut className="h-5 w-5" />
-							<span>Logout</span>
-						</button>
+						<SignOutBtn className="w-full" />
 					</div>
 				</div>
 			</div>

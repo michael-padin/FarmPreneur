@@ -2,6 +2,34 @@ import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registratio
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
 
+export const getFarmerOwnProfile = async (userId: string) => {
+	return await db.farmer.findUnique({
+		where: {
+			userId: userId
+		},
+		include: {
+			_count: {
+				select: {
+					address: true,
+					farmImages: true,
+					orders: true,
+					products: true,
+					reviews: true
+				}
+			},
+			user: {
+				include: {
+					profilePicture: true
+				}
+			},
+			reviews: true,
+
+			address: true,
+			farmImages: true
+		}
+	})
+}
+
 export const getFarmerByUserId = async (userId: string) => {
 	return await db.farmer.findUnique({
 		where: {

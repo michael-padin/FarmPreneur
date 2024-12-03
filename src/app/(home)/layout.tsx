@@ -12,6 +12,7 @@ export default async function Layout({
 
 	if (user?.role === "FARMER") redirect("/dashboard/farmer")
 	if (user?.role === "ADMIN") redirect("/dashboard")
+
 	return (
 		<div>
 			{children}
