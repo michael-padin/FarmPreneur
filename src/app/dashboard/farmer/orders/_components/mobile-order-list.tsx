@@ -1,29 +1,17 @@
-import Image from "next/image"
-import {
-	MoreVertical,
-	Eye,
-	Pencil,
-	Trash2,
-	Box,
-	ShoppingCart
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
+import { ShoppingCart } from "lucide-react"
 import { searchParamsCache } from "./searchParams"
-import { formatDate } from "@/lib/utils"
-import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
 import { OrderItem } from "./order-item"
+import { SearchParams } from "nuqs"
 
-export async function FarmerOrderList() {
+type FarmerOrderListProps = {
+	searchParams: Promise<SearchParams>
+}
+
+export const experimental_ppr = true
+
+export async function FarmerOrderList({ searchParams }: FarmerOrderListProps) {
+	await searchParamsCache.parse(searchParams)
 	const { status, search } = searchParamsCache.all()
 	const orders = await getFarmerOrdersUseCase({
 		status,

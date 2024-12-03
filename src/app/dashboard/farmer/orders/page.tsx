@@ -43,7 +43,7 @@ export default async function OrdersPage({ searchParams }: PageProps) {
 							searchParamsCache.get("status") || searchParamsCache.get("search")
 						}
 					>
-						<FarmerOrderList />
+						<FarmerOrderList searchParams={searchParams} />
 					</Suspense>
 				</div>
 			</div>

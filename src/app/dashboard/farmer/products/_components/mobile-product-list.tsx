@@ -14,8 +14,16 @@ import { getProductsUseCase } from "@/use-cases/products"
 import { formatDate } from "@/lib/utils"
 import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { SearchParams } from "nuqs/server"
 
-export async function FarmerProductList() {
+interface FarmerProductListProps {
+	searchParams: Promise<SearchParams>
+}
+
+export async function FarmerProductList({
+	searchParams
+}: FarmerProductListProps) {
+	await searchParamsCache.parse(searchParams)
 	const { status, search } = searchParamsCache.all()
 	const products = await getProductsUseCase({
 		status,
