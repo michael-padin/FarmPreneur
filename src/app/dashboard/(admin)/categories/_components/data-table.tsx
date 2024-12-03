@@ -25,7 +25,14 @@ import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagi
 import { Input } from "@/components/ui/input"
 
 import { Button } from "@/components/ui/button"
-import { RotateCcw } from "lucide-react"
+import {
+	Calendar,
+	ChevronRight,
+	LinkIcon,
+	MoreVertical,
+	Package,
+	RotateCcw
+} from "lucide-react"
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -35,17 +42,24 @@ import {
 import { getCommonPinningStyles } from "@/lib/data-table"
 import { columns } from "./columns"
 import { getCategoriesUseCase } from "@/use-cases/categories"
+import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+// import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
 }
 
 export function DataTable({ data }: DataTableProps) {
+	const categories = use(data)
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 	const table = useReactTable({
-		data: use(data),
+		data: categories,
 		columns: columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -71,6 +85,13 @@ export function DataTable({ data }: DataTableProps) {
 		table.resetRowSelection()
 		table.resetPagination()
 	}, [table])
+
+	const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+
+	const toggleDescription = (id: string) => {
+		setExpandedCategory(expandedCategory === id ? null : id)
+	}
+
 	return (
 		<>
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
@@ -175,7 +196,7 @@ export function DataTable({ data }: DataTableProps) {
 					</Button>
 				</div>
 			</div>
-			<div className="rounded-md border">
+			<div className="hidden rounded-md border lg:block">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -310,6 +331,82 @@ export function DataTable({ data }: DataTableProps) {
 					<div className="p-4 text-center">No results.</div>
 				)}
 			</div> */}
+			{/* Mobile Category Cards */}
+			<div className="grid gap-4 md:hidden">
+				{categories.map((category) => (
+					<Card key={category.id} className="overflow-hidden">
+						<CardContent className="p-0">
+							<div className="flex items-center gap-3 bg-muted p-3">
+								<div className="relative h-16 w-16 flex-shrink-0">
+									<Image
+										src={category.image!.url!}
+										alt={category.name}
+										layout="fill"
+										objectFit="cover"
+										className="rounded-md"
+									/>
+								</div>
+								<div className="min-w-0 flex-1">
+									<h3 className="truncate font-semibold">{category.name}</h3>
+									<button
+										onClick={() => toggleDescription(category.id)}
+										className="mt-1 flex items-center text-sm text-primary"
+									>
+										{expandedCategory === category.id
+											? "Hide details"
+											: "Show details"}
+										<ChevronRight
+											className={`ml-1 h-4 w-4 transition-transform ${expandedCategory === category.id ? "rotate-90" : ""}`}
+										/>
+									</button>
+								</div>
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button variant="ghost" size="icon" className="h-8 w-8">
+											<MoreVertical className="h-4 w-4" />
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent align="end">
+										<DropdownMenuItem>Edit</DropdownMenuItem>
+										<DropdownMenuItem>Delete</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
+							</div>
+							<div
+								className={`space-y-2 p-3 ${expandedCategory === category.id ? "" : "hidden"}`}
+							>
+								<p className="text-sm text-muted-foreground">
+									{category.description}
+								</p>
+							</div>
+							<div className="space-y-2 p-3">
+								<div className="flex items-center gap-2">
+									<Badge variant="secondary" className="text-xs font-normal">
+										<Package className="mr-1 h-3 w-3" />
+										{category._count.products} Products
+									</Badge>
+									<Badge variant="secondary" className="text-xs font-normal">
+										<LinkIcon className="mr-1 h-3 w-3" />
+										{category.slug}
+									</Badge>
+								</div>
+								<div className="flex justify-between text-xs text-muted-foreground">
+									<div className="flex items-center">
+										<Calendar className="mr-1 h-3 w-3" />
+										Created:{" "}
+										{format(new Date(category.createdAt), "MMM d, yyyy")}
+									</div>
+									<div className="flex items-center">
+										<Calendar className="mr-1 h-3 w-3" />
+										Updated:{" "}
+										{format(new Date(category.updatedAt), "MMM d, yyyy")}
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				))}
+			</div>
 			<DataTablePagination table={table} />
 		</>
 	)
