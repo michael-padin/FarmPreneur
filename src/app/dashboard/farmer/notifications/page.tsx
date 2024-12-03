@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 	title: "Notifications"
 }
 
-export default async function Page() {
+export default function Page() {
 	return (
 		<main className="w-full">
 			<header className="fixed left-0 right-0 top-0 z-50 w-full border-b bg-background pb-0 md:hidden">

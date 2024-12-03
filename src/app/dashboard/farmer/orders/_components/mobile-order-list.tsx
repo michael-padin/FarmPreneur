@@ -8,8 +8,6 @@ type FarmerOrderListProps = {
 	searchParams: Promise<SearchParams>
 }
 
-export const experimental_ppr = true
-
 export async function FarmerOrderList({ searchParams }: FarmerOrderListProps) {
 	await searchParamsCache.parse(searchParams)
 	const { status, search } = searchParamsCache.all()

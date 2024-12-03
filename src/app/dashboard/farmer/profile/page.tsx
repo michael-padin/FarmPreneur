@@ -116,7 +116,7 @@ export default async function FarmerProfilePage() {
 							<ChevronRight className="h-5 w-5" />
 						</Link>
 
-						<button className="flex w-full items-center gap-3 rounded-lg py-2 text-red-500 hover:bg-red-50">
+						<button className="flex w-full items-center gap-3 rounded-lg py-2 text-red-500">
 							<LogOut className="h-5 w-5" />
 							<span>Logout</span>
 						</button>
