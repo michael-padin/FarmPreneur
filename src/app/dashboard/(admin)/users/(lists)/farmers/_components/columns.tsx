@@ -64,7 +64,12 @@ export const columns: ColumnDef<
 			const address = farmer?.address
 			return (
 				address &&
-				name && <AddressDetailsDrawerDialog name={name} address={address} />
+				name && (
+					<div>
+						<p className="w-[180px] truncate">{address[0]?.fullAddress}</p>
+						<AddressDetailsDrawerDialog name={name} address={address[0]} />
+					</div>
+				)
 			)
 		}
 	},

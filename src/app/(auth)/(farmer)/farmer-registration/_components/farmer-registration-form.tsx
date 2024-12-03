@@ -43,13 +43,13 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 		defaultValues: {
 			contactNumber: user?.farmer?.contactNumber || "+639",
 			address: {
-				fullAddress: user?.farmer?.address?.fullAddress || "",
-				street: user?.farmer?.address?.street || "",
-				region: user?.farmer?.address?.region || "",
-				country: user?.farmer?.address?.country || "",
-				postalCode: user?.farmer?.address?.postalCode || "",
-				latitude: user?.farmer?.address?.latitude || 0,
-				longitude: user?.farmer?.address?.longitude || 0
+				fullAddress: user?.farmer?.address?.[0].fullAddress || "",
+				street: user?.farmer?.address?.[0].street || "",
+				region: user?.farmer?.address?.[0].region || "",
+				country: user?.farmer?.address?.[0].country || "",
+				postalCode: user?.farmer?.address?.[0].postalCode || "",
+				latitude: user?.farmer?.address?.[0].latitude || 0,
+				longitude: user?.farmer?.address?.[0].longitude || 0
 			},
 			user: {
 				name: user?.name || "",
@@ -71,7 +71,6 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 	})
 
 	const onSubmit = async (data: FarmRegistrationSchema) => {
-		console.log("user.id :>> ", user?.id)
 		startTransition(async () => {
 			const { error } = await upsertFarmerAction({
 				...data,

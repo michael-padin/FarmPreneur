@@ -27,9 +27,14 @@ export const upsertFarmerAction = async (
 
 			await createNotificationsForAdminsUseCase({
 				title: "Farmer Approval",
-				message: `New farmer waiting for approval with email ${data.user.email}`,
+				message: `A new farmer has registered`,
 				type: "FARMER_APPROVAL",
-				userId: createdFarmer.userId
+				metadata: {
+					user: {
+						userId: createdFarmer.userId,
+						name: createdFarmer.farmName || ""
+					}
+				}
 			})
 
 			await pusherServer.trigger("pending-farmers", "update", {

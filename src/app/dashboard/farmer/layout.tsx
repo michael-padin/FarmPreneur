@@ -15,6 +15,7 @@ import { Bell, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getUserFarmerByIdUseCase } from "@/use-cases/users"
 import { FarmerSidebar } from "./_components/sidebar"
+import { NotificationProvider } from "@/contexts/notification-context"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -46,8 +47,10 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			<SidebarProvider>
-				<FarmerSidebar user={session.user} />
-				{children}
+				<NotificationProvider userId={user.id}>
+					<FarmerSidebar user={session.user} />
+					{children}
+				</NotificationProvider>
 			</SidebarProvider>
 		</ThemeProvider>
 	)

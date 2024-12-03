@@ -25,10 +25,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { PRODUCT_STATUS } from "@/constants/product-status"
 import { ProductListingStatusBadge } from "../../../../users/(lists)/_components/badges"
-import { ProductListingStatus } from "@prisma/client"
+import { Address, ProductListingStatus } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { FPUnitSelect } from "@/components/fg/fp-select-unit"
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
 import { Textarea } from "@/components/ui/textarea"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { S3PATH } from "@/constants/s3-path"
@@ -36,6 +35,29 @@ import { useRouter } from "next/navigation"
 import { getProductByIdUseCase } from "@/use-cases/products"
 import { UpdateProductSchema, updateProductSchema } from "../validations"
 import { adminUpdateProduct } from "../actions"
+import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
+
+function CustomTrigger({ address }: { address: Address }) {
+	return (
+		<div className="flex items-center space-x-2">
+			{/* <MapPin className="h-4 w-4 text-muted-foreground" /> */}
+			<div className="flex-1 text-left">
+				{address ? (
+					<div className="flex flex-col">
+						<span className="truncate font-medium">{address.fullAddress}</span>
+						{address.label && (
+							<span className="text-xs text-muted-foreground">
+								{address.label}
+							</span>
+						)}
+					</div>
+				) : (
+					<span className="text-muted-foreground">Select an address</span>
+				)}
+			</div>
+		</div>
+	)
+}
 
 interface AdminEditProductFormProps {
 	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
@@ -66,17 +88,19 @@ export function AdminEditProductForm({
 			quantity: product?.quantity,
 			listingStatus: product?.listingStatus,
 			images: product?.images,
-			pickupLocation: {
-				fullAddress: product?.pickupLocation?.fullAddress || "",
-				street: product?.pickupLocation?.street || "",
-				region: product?.pickupLocation?.region || "",
-				country: product?.pickupLocation?.country || "",
-				postalCode: product?.pickupLocation?.postalCode || "",
-				latitude: product?.pickupLocation?.latitude || 0,
-				longitude: product?.pickupLocation?.longitude || 0
-			}
+			pickupLocationId: product?.pickupLocationId || ""
 		}
 	})
+	const farmerId = form.watch("farmerId")
+	const foundFarmer = farmers?.find((farmer) => farmer.id === farmerId)
+	const pickupLocationId = form.watch("pickupLocationId")
+	const categoryId = form.watch("categoryId")
+	const foundCategory = categories?.find(
+		(category) => category.id === categoryId
+	)
+	const foundAddress = foundFarmer?.address?.find(
+		(address) => address.id === pickupLocationId
+	)
 
 	const onSubmit = async (data: UpdateProductSchema) => {
 		startUpdateTransition(async () => {
@@ -133,23 +157,51 @@ export function AdminEditProductForm({
 					/>
 					<FormField
 						control={form.control}
-						name="pickupLocation"
+						name="pickupLocationId"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Pickup Location</FormLabel>
-								<FormControl>
-									<AddressLocationPicker
-										onAddressSelect={(address) => {
-											field.onChange(address)
-										}}
-										defaultCenter={{
-											lng: field.value?.longitude || 0,
-											lat: field.value?.latitude || 0
-										}}
-										defaultValue={field.value?.fullAddress}
-										showMap
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
+									<FormControl>
+										<SelectTrigger className="w-full">
+											<SelectValue placeholder="Select an address">
+												<CustomTrigger address={foundAddress!} />
+											</SelectValue>
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{foundFarmer?.address &&
+										foundFarmer?.address?.length > 0 ? (
+											foundFarmer?.address.map((address) => (
+												<SelectItem key={address.id} value={address.id}>
+													<div className="flex flex-col">
+														<span className="truncate">
+															{address.fullAddress}
+														</span>
+														{address.label && (
+															<span className="text-xs text-muted-foreground">
+																Label: {address.label}
+															</span>
+														)}
+													</div>
+												</SelectItem>
+											))
+										) : (
+											<SelectItem disabled value="#">
+												No Address
+											</SelectItem>
+										)}
+									</SelectContent>
+								</Select>
+								{pickupLocationId && (
+									<AddressDetailsDrawerDialog
+										address={foundAddress!}
+										name="Pickup"
 									/>
-								</FormControl>
+								)}
 								<FormMessage />
 							</FormItem>
 						)}
@@ -213,7 +265,9 @@ export function AdminEditProductForm({
 								>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder="Select a category" />
+											<SelectValue placeholder="Select category">
+												{foundCategory?.name}
+											</SelectValue>
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>

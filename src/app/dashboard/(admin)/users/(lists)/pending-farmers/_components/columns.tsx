@@ -72,7 +72,10 @@ export const columns: ColumnDef<
 			const address = row.original.address
 			const name = row.original.user.name
 			return address && name ? (
-				<AddressDetailsDrawerDialog name={name} address={address} />
+				<div>
+					<p className="w-[180px] truncate">{address[0]?.fullAddress}</p>
+					<AddressDetailsDrawerDialog name={name} address={address[0]} />
+				</div>
 			) : (
 				"N/A"
 			)

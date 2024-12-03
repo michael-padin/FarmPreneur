@@ -33,15 +33,14 @@ export default function ForgotPasswordForm() {
 		}
 	})
 
-	async function onSubmit(data: ForgotPasswordType) {
-		startTransition(() => {
-			sendPasswordResetEmail(data).then((res) => {
-				if (res.error) {
-					showErrorToast(res.error)
-				} else {
-					toast.success("Email sent")
-				}
-			})
+	const onSubmit = (data: ForgotPasswordType) => {
+		startTransition(async () => {
+			const { error } = await sendPasswordResetEmail(data)
+			if (error) {
+				showErrorToast(error)
+				return
+			}
+			toast.success("Email sent")
 		})
 	}
 

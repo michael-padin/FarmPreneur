@@ -18,7 +18,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { AddressDetailsDrawerDialog } from "./address-details"
 import { getAllProductsUseCase } from "@/use-cases/products"
-import { FarmerApprovalBadge } from "../../../users/(lists)/_components/badges"
+import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
 import { ProductImageCell } from "./product-image-cell"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
 import { DeleteProductsDialog } from "./delete-products-dialog"
@@ -57,7 +57,7 @@ export const columns: ColumnDef<
 		enableSorting: true,
 		cell: ({ row }) => {
 			const product = row.original
-			return <FarmerApprovalBadge status={product.listingStatus} />
+			return <ProductListingStatusBadge status={product.listingStatus} />
 		}
 	},
 	{
