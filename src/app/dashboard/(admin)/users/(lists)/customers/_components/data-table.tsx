@@ -101,8 +101,6 @@ export function DataTable({ data }: DataTableProps) {
 		table.resetPagination()
 	}, [table])
 
-	console.log("custormers:", customers)
-
 	return (
 		<>
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
@@ -378,11 +376,18 @@ export function DataTable({ data }: DataTableProps) {
 							</div>
 
 							<Collapsible>
-								<CollapsibleTrigger className="flex w-full items-center justify-between border-t p-4 hover:bg-muted/50">
-									<span className="text-sm font-medium">Activity Summary</span>
-									<Button variant="ghost" size="sm">
-										View Details
-									</Button>
+								<CollapsibleTrigger
+									className="flex w-full items-center justify-between border-t p-4 hover:bg-muted/50"
+									asChild
+								>
+									<div className="">
+										<span className="text-sm font-medium">
+											Activity Summary
+										</span>
+										<Button variant="ghost" size="sm">
+											View Details
+										</Button>
+									</div>
 								</CollapsibleTrigger>
 								<CollapsibleContent>
 									<div className="grid grid-cols-2 gap-4 border-t bg-muted/20 p-4">

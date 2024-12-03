@@ -1,23 +1,15 @@
 import { Metadata } from "next"
 import { DashboardHeader } from "@/app/_components/header"
-import { auth } from "@/auth"
 import { BreadcrumbResponsive } from "@/components/fg/back-button"
 import { NotificationList } from "./_components/notification-list"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Suspense } from "react"
 
 export const metadata: Metadata = {
 	title: "Notifications"
 }
 
-export default async function Page() {
-	const session = await auth()
-	const user = session?.user
+export const experimental_ppr = true
 
-	if (!user) {
-		return <div>You are not logged in</div>
-	}
-
+export default function Page() {
 	const breadcrumbItems = [
 		{ href: "/dashboard", label: "Dashboard" },
 		{ label: "Notifications" }

@@ -59,7 +59,6 @@ import { getCommonPinningStyles } from "@/lib/data-table"
 import { columns } from "./columns"
 import { getPendingFarmersUseCase } from "@/use-cases/farmers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import {
 	Dialog,
 	DialogContent,
@@ -68,10 +67,7 @@ import {
 	DialogTrigger
 } from "@/components/ui/dialog"
 import Image from "next/image"
-import {
-	FarmerApprovalBadge,
-	ProductListingStatusBadge
-} from "../../_components/badges"
+import { FarmerApprovalBadge } from "../../_components/badges"
 import { format } from "date-fns"
 
 interface DataTableProps {
@@ -110,7 +106,6 @@ export function DataTable({ data }: DataTableProps) {
 		table.resetRowSelection()
 		table.resetPagination()
 	}, [table])
-	console.log("PENDING FARMERS:", pendingfarmers)
 	return (
 		<>
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
@@ -408,8 +403,8 @@ export function DataTable({ data }: DataTableProps) {
 								<div className="flex items-center gap-2">
 									<MapPin className="h-4 w-4 text-muted-foreground" />
 									<span className="text-sm">
-										{farmer.address?.fullAddress
-											? farmer.address.fullAddress
+										{farmer.address[0].fullAddress
+											? farmer.address[0].fullAddress
 											: "N/A"}
 									</span>
 								</div>

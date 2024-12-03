@@ -13,12 +13,10 @@ import { getCategoriesUseCase } from "@/use-cases/categories"
 import { DataTable } from "./_components/data-table"
 import { BreadcrumbResponsive } from "@/components/fg/back-button"
 
-async function getCategories() {
-	return await getCategoriesUseCase()
-}
+export const experimental_ppr = true
 
-export default async function CategoriesPage() {
-	const categoriesPromise = getCategories()
+export default function CategoriesPage() {
+	const categoriesPromise = getCategoriesUseCase()
 
 	const breadcrumbItems = [
 		{ href: "/dashboard", label: "Dashboard" },

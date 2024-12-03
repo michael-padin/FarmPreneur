@@ -1,5 +1,4 @@
 "use client"
-import { buttonVariants } from "@/components/ui/button"
 import {
 	Sidebar,
 	SidebarContent,
@@ -14,11 +13,10 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
-	SidebarRail
+	SidebarRail,
+	useSidebar
 } from "@/components/ui/sidebar"
 import { SidebarItem } from "@/constants/navItems"
-import { cn } from "@/lib/utils"
-import { sub } from "date-fns"
 import { ArrowLeft, Command } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -28,6 +26,7 @@ interface TestsSidebarProps {
 }
 
 const TestsSidebar = ({ items }: TestsSidebarProps) => {
+	const { setOpenMobile } = useSidebar()
 	const pathName = usePathname()
 	return (
 		<Sidebar collapsible="icon">
@@ -64,7 +63,7 @@ const TestsSidebar = ({ items }: TestsSidebarProps) => {
 										tooltip={item.name}
 										isActive={pathName.split("/")[2] === item.url.split("/")[2]}
 									>
-										<Link href={item.url}>
+										<Link href={item.url} onClick={() => setOpenMobile(false)}>
 											{item.icon && <item.icon />}
 											<span>{item.name}</span>
 										</Link>
@@ -81,7 +80,10 @@ const TestsSidebar = ({ items }: TestsSidebarProps) => {
 														}
 														// size="sm"
 													>
-														<Link href={subItem.url}>
+														<Link
+															href={subItem.url}
+															onClick={() => setOpenMobile(false)}
+														>
 															{/* {subItem.icon && <subItem.icon />} */}
 															<span>{subItem.name}</span>
 															{/* TODO: Add Badge number for pending farmers */}
@@ -100,7 +102,10 @@ const TestsSidebar = ({ items }: TestsSidebarProps) => {
 																		}
 																		// size="sm"
 																	>
-																		<Link href={subItem2.url}>
+																		<Link
+																			href={subItem2.url}
+																			onClick={() => setOpenMobile(false)}
+																		>
 																			{/* {subItem.icon && <subItem.icon />} */}
 																			<span>{subItem2.name}</span>
 																			{/* TODO: Add Badge number for pending farmers */}

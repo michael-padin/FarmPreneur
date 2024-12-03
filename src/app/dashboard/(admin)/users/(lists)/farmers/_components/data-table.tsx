@@ -58,16 +58,12 @@ import { getCommonPinningStyles } from "@/lib/data-table"
 import { getFarmersUseCase } from "@/use-cases/farmers"
 import { columns } from "./columns"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger
 } from "@/components/ui/collapsible"
-import {
-	FarmerApprovalBadge,
-	ProductListingStatusBadge
-} from "../../_components/badges"
+import { FarmerApprovalBadge } from "../../_components/badges"
 import { format } from "date-fns"
 
 interface DataTableProps {
@@ -405,17 +401,24 @@ export function DataTable({ data }: DataTableProps) {
 								<div className="flex items-center gap-2">
 									<MapPin className="h-4 w-4 text-muted-foreground" />
 									<span className="text-sm">
-										{farmer.farmer?.address?.fullAddress}
+										{farmer.farmer?.address[0]?.fullAddress}
 									</span>
 								</div>
 							</div>
 
 							<Collapsible>
-								<CollapsibleTrigger className="flex w-full items-center justify-between border-t p-4 hover:bg-muted/50">
-									<span className="text-sm font-medium">Activity Summary</span>
-									<Button variant="ghost" size="sm">
-										View Details
-									</Button>
+								<CollapsibleTrigger
+									className="flex w-full items-center justify-between border-t p-4 hover:bg-muted/50"
+									asChild
+								>
+									<div>
+										<span className="text-sm font-medium">
+											Activity Summary
+										</span>
+										<Button variant="ghost" size="sm">
+											View Details
+										</Button>
+									</div>
 								</CollapsibleTrigger>
 								<CollapsibleContent>
 									<div className="grid grid-cols-3 gap-4 border-t bg-muted/20 p-4">

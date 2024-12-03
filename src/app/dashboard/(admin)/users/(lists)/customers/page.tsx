@@ -17,29 +17,22 @@ export const metadata: Metadata = {
 	title: "Customers"
 }
 
-const CustomersPage = async () => {
-	const session = await auth()
-	if (!session || session.user.role !== "ADMIN") {
-		redirect("/login")
-	}
+export const experimental_ppr = true
 
+export default function CustomersPage() {
 	const customersPromise = getCustomersUseCase()
 
 	return (
-		<>
-			<Card className="">
-				<CardHeader className="p-4 lg:p-6">
-					<CardTitle>Customers</CardTitle>
-					<CardDescription>Manage customers account</CardDescription>
-				</CardHeader>
-				<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
-					<Suspense fallback={<DataTableSkeleton />}>
-						<DataTable data={customersPromise} />
-					</Suspense>
-				</CardContent>
-			</Card>
-		</>
+		<Card className="">
+			<CardHeader className="p-4 lg:p-6">
+				<CardTitle>Customers</CardTitle>
+				<CardDescription>Manage customers account</CardDescription>
+			</CardHeader>
+			<CardContent className="p-4 pt-0 lg:p-6 lg:pt-0">
+				<Suspense fallback={<DataTableSkeleton />}>
+					<DataTable data={customersPromise} />
+				</Suspense>
+			</CardContent>
+		</Card>
 	)
 }
-
-export default CustomersPage

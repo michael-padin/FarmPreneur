@@ -17,15 +17,13 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { BreadcrumbResponsive } from "@/components/fg/back-button"
 import { Plus } from "lucide-react"
 
-const getAllProducts = async () => {
-	return await getAllProductsUseCase()
-}
+export const experimental_ppr = true
 
 export const metadata: Metadata = {
 	title: "Products"
 }
-export default async function Page() {
-	const products = getAllProducts()
+export default function Page() {
+	const products = getAllProductsUseCase()
 	const breadcrumbItems = [
 		{ href: "/dashboard", label: "Dashboard" },
 		{ label: "Products" }

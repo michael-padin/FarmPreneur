@@ -17,17 +17,8 @@ export const metadata: Metadata = {
 	title: "Pending Farmers"
 }
 
-const getPendingFarmers = async () => {
-	return await getPendingFarmersUseCase()
-}
-
-const UsersPage = async () => {
-	const session = await auth()
-	if (!session || !session.user || session.user.role !== "ADMIN") {
-		redirect("/login")
-	}
-
-	const pendingFarmersPromise = getPendingFarmers()
+export default function UsersPage() {
+	const pendingFarmersPromise = getPendingFarmersUseCase()
 
 	return (
 		<Card className="">
@@ -43,5 +34,3 @@ const UsersPage = async () => {
 		</Card>
 	)
 }
-
-export default UsersPage
