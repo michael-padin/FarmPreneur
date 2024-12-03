@@ -1,4 +1,3 @@
-import { addressSchema } from "@/validations/address"
 import { imageSchema } from "@/validations/image"
 import { z } from "zod"
 

@@ -67,21 +67,15 @@ const defaultValues: CreateProductSchema = {
 	pickupLocationId: ""
 }
 interface CreateProductFormProps {
-	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
-	addressesPromise: Promise<
-		Awaited<ReturnType<typeof getFarmerAddressesUseCase>>
-	>
-	userId: string
+	categoriesPromise: Awaited<ReturnType<typeof getCategoriesUseCase>>
+	addressesPromise: Awaited<ReturnType<typeof getFarmerAddressesUseCase>>
 }
 export function CreateProductForm({
-	userId,
 	categoriesPromise,
 	addressesPromise
 }: CreateProductFormProps) {
 	const router = useRouter()
-	const categories = use(categoriesPromise)
 
-	const addresses = use(addressesPromise)
 	const [isUpdatePending, startUpdateTransition] = useTransition()
 	const form = useForm<CreateProductSchema>({
 		resolver: zodResolver(createProductSchema),
@@ -89,13 +83,13 @@ export function CreateProductForm({
 	})
 
 	const pickupLocationId = form.watch("pickupLocationId")
-	const foundAddress = addresses?.find(
+	const foundAddress = addressesPromise?.find(
 		(address) => address.id === pickupLocationId
 	)
 
 	const onSubmit = async (data: CreateProductSchema) => {
 		startUpdateTransition(async () => {
-			const { error } = await createProduct({ ...data, userId })
+			const { error } = await createProduct(data)
 			if (error) {
 				showErrorToast(error)
 				return
@@ -184,8 +178,8 @@ export function CreateProductForm({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{addresses && addresses?.length > 0 ? (
-											addresses.map((address) => (
+										{addressesPromise && addressesPromise?.length > 0 ? (
+											addressesPromise.map((address) => (
 												<SelectItem key={address.id} value={address.id}>
 													<div className="flex flex-col">
 														<span className="truncate">
@@ -279,8 +273,8 @@ export function CreateProductForm({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{categories.length > 0 ? (
-											categories.map((category) => (
+										{categoriesPromise.length > 0 ? (
+											categoriesPromise.map((category) => (
 												<SelectItem key={category.id} value={category.id}>
 													{category.name}
 												</SelectItem>
