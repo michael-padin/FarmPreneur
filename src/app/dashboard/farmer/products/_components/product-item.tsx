@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { MoreVertical, Eye, Pencil, Trash2, Box } from "lucide-react"
+import { MoreVertical, Eye, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import {
