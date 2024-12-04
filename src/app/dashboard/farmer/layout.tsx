@@ -5,14 +5,7 @@ import React from "react"
 import { Metadata } from "next"
 import ThemeProvider from "@/components/theme-provider"
 
-import {
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger
-} from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import { Bell, MessageCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { getUserFarmerByIdUseCase } from "@/use-cases/users"
 import { FarmerSidebar } from "./_components/sidebar"
 import { NotificationProvider } from "@/contexts/notification-context"

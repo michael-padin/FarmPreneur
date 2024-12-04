@@ -1,4 +1,5 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
+import { auth } from "@/auth"
 import {
 	createFarmDetailsAddress,
 	createFarmerAddress,
@@ -34,16 +35,15 @@ export const createFarmerAddressUseCase = async (
 	return await createFarmerAddress(data)
 }
 
-export const getFarmerAddressesUseCase = async (userId: string) => {
-	try {
-		const farmer = await getFarmerByUserId(userId)
-
-		if (!farmer) {
-			throw new Error("No farmer found!")
-		}
-
-		return await getFarmerAddresses(farmer.id)
-	} catch (error) {
-		console.error("error in getFarmerAddresses", error)
+export const getFarmerAddressesUseCase = async () => {
+	const session = await auth()
+	if (!session || !session.user) {
+		throw new Error("Unauthorized")
 	}
+	const farmer = await getFarmerByUserId(session.user.id)
+
+	if (!farmer) {
+		throw new Error("No farmer found!")
+	}
+	return await getFarmerAddresses(farmer.id)
 }

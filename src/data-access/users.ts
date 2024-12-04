@@ -261,39 +261,50 @@ export const createUserWithOTP = async (
 		}
 	}
 ) => {
-	return await db.user.create({
-		data: {
-			email: data.email,
-			password: data.password,
-			name: data.name,
-			role: data.role,
-			profilePicture: {
-				create: {
-					url: "",
-					filename: "",
-					size: 0,
-					mimeType: "",
-					type: "PROFILE"
+	return await db.$transaction(async (tx) => {
+		const createdUser = await db.user.create({
+			data: {
+				email: data.email,
+				password: data.password,
+				name: data.name,
+				role: data.role,
+				profilePicture: {
+					create: {
+						url: "",
+						filename: "",
+						size: 0,
+						mimeType: "",
+						type: "PROFILE"
+					}
+				},
+				emailOtp: {
+					create: {
+						email: data.email,
+						expiresAt: data.emailOtp.expiresAt,
+						otp: data.emailOtp.otp
+					}
 				}
 			},
-
-			emailOtp: {
-				create: {
-					email: data.email,
-					expiresAt: data.emailOtp.expiresAt,
-					otp: data.emailOtp.otp
-				}
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				role: true,
+				isEmailVerified: true,
+				createdAt: true,
+				image: true
 			}
-		},
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			role: true,
-			isEmailVerified: true,
-			createdAt: true,
-			image: true
+		})
+
+		if (createdUser.role === "CUSTOMER") {
+			await tx.customer.create({
+				data: {
+					userId: createdUser.id
+				}
+			})
 		}
+
+		return createdUser
 	})
 }
 

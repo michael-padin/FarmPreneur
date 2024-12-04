@@ -1,21 +1,18 @@
+import { type SearchParams } from "nuqs/server"
 import { BottomNav } from "../_components/bottom-navigation"
 import { StatusTabs } from "./_components/tab-list"
-import { FarmerProductList } from "./_components/mobile-product-list"
 import { Button } from "@/components/ui/button"
-import { searchParamsCache } from "./_components/searchParams"
-import { type SearchParams } from "nuqs/server"
-import { Suspense } from "react"
-import { ProductSkeleton } from "./_components/product-skeleton"
 import Link from "next/link"
 import { FilterProducts } from "./_components/filter-products"
+import { FarmerProductListWrapper } from "./_components/product-list-wrapper"
 
 type PageProps = {
 	searchParams: Promise<SearchParams>
 }
 
-export default async function ProductsPage({ searchParams }: PageProps) {
-	await searchParamsCache.parse(searchParams)
+export const experimental_ppr = true
 
+export default function ProductsPage({ searchParams }: PageProps) {
 	return (
 		<main className="w-full">
 			<header className="fixed left-0 right-0 top-0 z-50 w-full bg-background py-4 pb-0 md:hidden">
@@ -40,14 +37,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
 			<div className="pb-24 pt-44">
 				<div className="px-4">
-					<Suspense
-						fallback={<ProductSkeleton />}
-						key={
-							searchParamsCache.get("status") || searchParamsCache.get("search")
-						}
-					>
-						<FarmerProductList />
-					</Suspense>
+					<FarmerProductListWrapper searchParams={searchParams} />
 				</div>
 			</div>
 			<BottomNav />

@@ -6,17 +6,20 @@ import { getProductBySlug } from "@/data-access/products"
 import { getErrorMessage } from "@/lib/handle-error"
 import { pusherServer } from "@/lib/pusher"
 import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
+import { auth } from "@/auth"
 
-export const createProduct = async (
-	data: CreateProductSchema & {
-		userId: string
-	}
-) => {
+export const createProduct = async (data: CreateProductSchema) => {
 	const parsedData = createProductSchema.safeParse(data)
 	if (!parsedData.success) {
 		return { error: "Invalid fields" }
 	}
 	try {
+		const session = await auth()
+
+		if (!session?.user) {
+			return { error: "Unauthorized" }
+		}
+		const userId = session.user.id || ""
 		const slug = generateSlug(data.title)
 
 		let uniqueSlug = slug
@@ -31,6 +34,7 @@ export const createProduct = async (
 		}
 		const createdProduct = await createProductUseCase({
 			...data,
+			userId,
 			slug: uniqueSlug
 		})
 		if (createdProduct.listingStatus === "PENDING") {
