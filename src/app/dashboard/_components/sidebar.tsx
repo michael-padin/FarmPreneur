@@ -15,7 +15,8 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
-	SidebarRail
+	SidebarRail,
+	useSidebar
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -46,6 +47,7 @@ interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
+	const { setOpenMobile } = useSidebar()
 	const pathName = usePathname()
 	const splitIndex = user?.role === "ADMIN" ? 2 : 3
 	const splitIndexForSub = user?.role === "ADMIN" ? 3 : 4
@@ -89,7 +91,7 @@ export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 											item.url.split("/")[splitIndex]
 										}
 									>
-										<Link href={item.url}>
+										<Link href={item.url} onClick={() => setOpenMobile(false)}>
 											{item.icon && <item.icon />}
 											<span>{item.name}</span>
 											{item.badge !== 0 && item.badge && (
@@ -111,7 +113,10 @@ export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 														}
 														// size="sm"
 													>
-														<Link href={subItem.url}>
+														<Link
+															href={subItem.url}
+															onClick={() => setOpenMobile(false)}
+														>
 															{/* {subItem.icon && <subItem.icon />} */}
 															<span>{subItem.name}</span>
 															{/* TODO: Add Badge number for pending farmers */}

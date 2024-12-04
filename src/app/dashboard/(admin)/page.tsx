@@ -12,6 +12,8 @@ import { getRecentOrdersUseCase } from "@/use-cases/orders"
 import TopFarmProducts from "../_components/top-selling-produce"
 import { Skeleton } from "@/components/ui/skeleton"
 
+export const experimental_ppr = true
+
 export default function AdminDashboardPage() {
 	const recentOrdersPromise = getRecentOrdersUseCase()
 
@@ -20,7 +22,9 @@ export default function AdminDashboardPage() {
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
 				<div>
-					<Greetings />
+					<Suspense fallback={<Skeleton className="h-6 w-full" />}>
+						<Greetings />
+					</Suspense>
 					<p className="text-sm text-muted-foreground">
 						Here is an overview of the marketplace.
 					</p>

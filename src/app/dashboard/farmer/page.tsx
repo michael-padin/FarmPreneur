@@ -1,7 +1,3 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
-import { getUserFarmerByIdUseCase } from "@/use-cases/users"
-import { Dashboard } from "./_components/client2"
 import { BottomNav } from "./_components/bottom-navigation"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -9,16 +5,10 @@ import { TotalProducts } from "../_components/total-products"
 import { TotalOrders } from "../_components/total-orders"
 import { AverageRating } from "../_components/average-rating"
 import { Greetings } from "../_components/greeting"
-import { getRecentOrdersUseCase } from "@/use-cases/orders"
 
-const getUserFarmer = async (id: string) => {
-	const res = await getUserFarmerByIdUseCase(id)
-	return res
-}
+export const experimental_ppr = true
 
-export default async function FarmerDashboard() {
-	const recentOrdersPromise = getRecentOrdersUseCase()
-
+export default function FarmerDashboard() {
 	return (
 		<>
 			{/* <Dashboard /> */}

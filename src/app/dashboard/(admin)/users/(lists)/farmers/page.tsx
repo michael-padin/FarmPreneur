@@ -5,8 +5,6 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
 import { getFarmersUseCase } from "@/use-cases/farmers"
 
 import { Suspense } from "react"
@@ -17,17 +15,10 @@ import { Metadata } from "next"
 export const metadata: Metadata = {
 	title: "Farmers"
 }
+export const experimental_ppr = true
 
-const getFarmers = async () => {
-	return await getFarmersUseCase()
-}
-
-const UsersPage = async () => {
-	const session = await auth()
-	if (!session || !session.user || session.user.role !== "ADMIN") {
-		redirect("/login")
-	}
-	const farmerListPromise = getFarmers()
+export default function UsersPage() {
+	const farmerListPromise = getFarmersUseCase()
 
 	return (
 		<Card className="">
@@ -43,5 +34,3 @@ const UsersPage = async () => {
 		</Card>
 	)
 }
-
-export default UsersPage
