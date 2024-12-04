@@ -47,6 +47,13 @@ export const getFarmerByUserId = async (userId: string) => {
 			updatedAt: true,
 			address: true,
 			orders: true,
+			_count: {
+				select: {
+					products: true,
+					orders: true,
+					reviews: true
+				}
+			},
 			reviews: true,
 			verificationDocument: {
 				select: {

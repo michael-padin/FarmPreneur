@@ -48,6 +48,19 @@ export const getTotalOrdersByDate = async (date: Date) => {
 	})
 }
 
+export const getTotalRevenueByDate = async (date: Date) => {
+	return await db.order.aggregate({
+		where: {
+			createdAt: {
+				gte: date
+			}
+		},
+		_sum: {
+			totalPrice: true
+		}
+	})
+}
+
 export const getRecentOrders = async () => {
 	return await db.order.findMany({
 		orderBy: {

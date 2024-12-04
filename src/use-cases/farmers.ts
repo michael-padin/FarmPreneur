@@ -2,6 +2,7 @@
 import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { auth } from "@/auth"
+import { getCountCategories } from "@/data-access/categories"
 import {
 	createFarmerByUserId,
 	getFarmerApprovalStatusByUserId,
@@ -14,6 +15,8 @@ import {
 	getTopFarmers,
 	getFarmerOwnProfile
 } from "@/data-access/farmers"
+import { getTotalRevenueByDate } from "@/data-access/orders"
+import { getTotalProducts } from "@/data-access/products"
 
 export const getFarmerOwnProfileUseCase = async () => {
 	const session = await auth()
@@ -74,6 +77,80 @@ export const getTopFarmersUseCase = async () => {
 	} catch (error) {
 		console.log(error)
 	}
+}
+
+export const getFarmerMetricsUseCase = async () => {
+	const session = await auth()
+	if (!session || !session.user) throw new Error("Unauthorized")
+
+	const farmer = await getFarmerByUserId(session.user.id!)
+
+	if (!farmer) throw new Error("No farmer found!")
+
+	const totalProducts = farmer._count.products
+	const productIds =
+		(farmer.products.length > 0 &&
+			farmer.products.map((product) => product.id)) ||
+		[]
+	const categoriesCount = await getCountCategories(productIds)
+
+	const totalOrders = farmer._count.orders
+	const pendingOrdersCount = farmer.orders.filter(
+		(product) => product.status === "PENDING"
+	).length
+	const completedOrdersCount = farmer.orders.filter(
+		(product) => product.status === "COMPLETED"
+	).length
+
+	const currentDate = new Date()
+	const lastMonthDate = new Date(
+		currentDate.getFullYear(),
+		currentDate.getMonth() - 1,
+		1
+	)
+
+	const totalRevenue = farmer.orders.reduce(
+		(sum, order) => sum + order.totalPrice,
+		0
+	)
+
+	const {
+		_sum: { totalPrice: lastMonthRevenue = 0 }
+	} = await getTotalRevenueByDate(lastMonthDate)
+
+	const revenueGrowthPercentage = lastMonthRevenue
+		? ((totalRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
+		: totalRevenue > 0
+			? 100
+			: 0
+
+	const averageRating =
+		farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
+			farmer.reviews.length || 0
+
+	const totalReviews = farmer.reviews.length
+
+	return {
+		revenue: {
+			totalRevenue,
+			revenueGrowthPercentage
+		},
+		products: {
+			totalProducts,
+			categoriesCount
+		},
+		orders: {
+			totalOrders,
+			pendingOrdersCount,
+			completedOrdersCount
+		},
+		rating: {
+			averageRating,
+			totalReviews
+		}
+	}
+
+	// Get the user's farmer
 }
 
 // MARK: MUTATIONS

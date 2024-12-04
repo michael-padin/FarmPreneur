@@ -1,38 +1,46 @@
 import { BottomNav } from "./_components/bottom-navigation"
 import { Suspense } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { TotalProducts } from "../_components/total-products"
-import { TotalOrders } from "../_components/total-orders"
-import { AverageRating } from "../_components/average-rating"
 import { Greetings } from "../_components/greeting"
+import { MessageCircleMore } from "lucide-react"
+import { FarmerMetrics } from "./_components/farmer-metrics"
+import { FarmerMetricCardSkeleton } from "./_components/farmer-metric-card-skeleton"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const experimental_ppr = true
 
 export default function FarmerDashboard() {
 	return (
 		<>
-			{/* <Dashboard /> */}
-			<div className="space-y-4 px-10 py-5 lg:px-5">
-				<div>
-					<Greetings />
-					<p className="text-sm text-muted-foreground">
-						Here is an overview of your marketplace.
-					</p>
-				</div>
-				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-					<Suspense fallback={<Skeleton className="h-24" />}>
-						<TotalProducts />
-					</Suspense>
-					<Suspense fallback={<Skeleton className="h-24" />}>
-						<TotalOrders />
-					</Suspense>
-					<Suspense fallback={<Skeleton className="h-24" />}>
-						<AverageRating />
+			<div className="w-full p-4 lg:px-5">
+				<header className="pb-4">
+					<div className="flex items-center justify-between">
+						<div>
+							<Greetings />
+							<p className="text-sm text-muted-foreground">
+								Here is an overview of your farm.
+							</p>
+						</div>
+						<MessageCircleMore className="text-primary" />
+					</div>
+				</header>
+				<div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
+					<Suspense
+						fallback={
+							<>
+								<FarmerMetricCardSkeleton />
+								<FarmerMetricCardSkeleton />
+								<FarmerMetricCardSkeleton />
+								<FarmerMetricCardSkeleton />
+							</>
+						}
+					>
+						<FarmerMetrics />
 					</Suspense>
 				</div>
 				<div className="grid grid-cols-1 gap-4 lg:grid-cols-6 lg:grid-rows-2">
-					<div className="lg:col-span-6 lg:row-span-2">
-						{/* <Card className="h-full">
+					{/* <div className="lg:col-span-6 lg:row-span-2">
+						<Card className="h-full">
 							<CardHeader>
 								<CardTitle>Recent Orders</CardTitle>
 							</CardHeader>
@@ -41,8 +49,8 @@ export default function FarmerDashboard() {
 									<RecentOrdersTable data={recentOrdersPromise} />
 								</Suspense>
 							</CardContent>
-						</Card>{" "} */}
-					</div>
+						</Card>
+					</div> */}
 					{/* <Card className="lg:col-span-2 lg:row-span-2">
 						<CardHeader>
 							<div className="flex items-center justify-between">
@@ -92,8 +100,6 @@ export default function FarmerDashboard() {
 						</CardContent>
 					</Card>
 				</div> */}
-
-				{/* <DashUI3 /> */}
 			</div>
 			<BottomNav />
 		</>

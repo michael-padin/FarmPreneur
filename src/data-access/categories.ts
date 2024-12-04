@@ -35,6 +35,17 @@ export const createCategory = async (
 	})
 }
 
+export const getCountCategories = async (productIds: string[]) => {
+	return await db.category.count({
+		where: {
+			products: {
+				some: {
+					id: { in: productIds }
+				}
+			}
+		}
+	})
+}
 export const getCategoryBySlug = async (slug: string) => {
 	return await db.category.findUnique({
 		where: { slug }

@@ -62,7 +62,7 @@ export const getTopProductsUseCase = async (limit = 10) => {
 	}
 }
 
-export const getTotalProductsUseCase = async () => {
+export const getTotalProductsUseCase = async (userId?: string) => {
 	const currentDate = new Date()
 	const lastMonthDate = new Date(
 		currentDate.getFullYear(),
@@ -70,7 +70,7 @@ export const getTotalProductsUseCase = async () => {
 		1
 	)
 	try {
-		const totalProducts = await getTotalProducts()
+		const totalProducts = await getTotalProducts(userId)
 		const increaseChange =
 			totalProducts - (await getTotalProductsByDate(lastMonthDate))
 		return { totalProducts, increaseChange }

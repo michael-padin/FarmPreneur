@@ -8,12 +8,7 @@ import {
 	getProductByIdUseCase,
 	updateProductUseCase
 } from "@/use-cases/products"
-import {
-	createNotificationByUserIdUseCase,
-	createNotificationsForAdminsUseCase
-} from "@/use-cases/notifications"
-import { pusherServer } from "@/lib/pusher"
-import { createNotificationByUserId } from "@/data-access/notifications"
+import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
 
 export const adminUpdateProduct = async (
 	data: UpdateProductSchema & {

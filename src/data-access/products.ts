@@ -49,8 +49,10 @@ export const createProduct = async (
 		}
 	})
 }
-export const getTotalProducts = async () => {
-	return await db.product.count()
+export const getTotalProducts = async (farmerId?: string) => {
+	return await db.product.count({
+		where: farmerId ? { farmerId } : {}
+	})
 }
 
 export const getTotalProductsByDate = async (date: Date) => {
