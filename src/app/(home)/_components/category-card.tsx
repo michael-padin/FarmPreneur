@@ -25,7 +25,9 @@ export function CategoryCard({
 					/>
 				</div>
 				<div className="px-1 py-2">
-					<h3 className="mb-2 truncate text-sm font-semibold">{title}</h3>
+					<h3 className="mb-2 truncate text-sm font-semibold text-primary">
+						{title}
+					</h3>
 					{/* <p className="line-clamp-2 text-sm text-muted-foreground">
 						{description}
 					</p> */}

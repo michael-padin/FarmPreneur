@@ -9,15 +9,13 @@ export default async function Categories() {
 	return (
 		<section className="mx-auto -mt-16 w-full rounded-lg px-0 py-5 lg:container lg:-mt-0 lg:px-4">
 			<div className="">
-				<div className="relative rounded-md bg-background p-2">
-					<h1 className="mb-2 font-semibold text-primary lg:text-2xl">
-						Categories
-					</h1>
+				<div className="relative rounded-md bg-background py-4 pl-4">
+					<h1 className="mb-4 font-semibold lg:text-2xl">Categories</h1>
 
 					<div>
 						<div className="">
 							<ScrollArea className="w-full whitespace-nowrap">
-								<div className="flex gap-2 overflow-hidden">
+								<div className="flex gap-4">
 									{categories.length > 0 ? (
 										categories.map((category) => (
 											<Link
