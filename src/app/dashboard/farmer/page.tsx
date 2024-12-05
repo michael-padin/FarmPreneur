@@ -4,8 +4,6 @@ import { Greetings } from "../_components/greeting"
 import { MessageCircleMore } from "lucide-react"
 import { FarmerMetrics } from "./_components/farmer-metrics"
 import { FarmerMetricCardSkeleton } from "./_components/farmer-metric-card-skeleton"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 
 export const experimental_ppr = true
 
