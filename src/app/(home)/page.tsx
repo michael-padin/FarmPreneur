@@ -1,12 +1,6 @@
-import {
-	Categories,
-	DailyDiscovery,
-	DesktopNav,
-	Features,
-	MobileNav
-} from "./_components"
+import { Categories, DesktopNav, MobileNav } from "./_components"
 
-const Home = async () => {
+export default function Home() {
 	return (
 		<div>
 			<header>
@@ -31,12 +25,10 @@ const Home = async () => {
 					</div>
 				</section>
 				<Categories />
-				<Features />
-				<DailyDiscovery />
+				{/* <Features />
+				<DailyDiscovery /> */}
 			</main>
 			{/* <Footer /> */}
 		</div>
 	)
 }
-
-export default Home

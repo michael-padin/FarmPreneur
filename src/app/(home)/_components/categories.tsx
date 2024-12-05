@@ -1,83 +1,48 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Apple, Carrot, Egg, Bean } from "lucide-react"
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem
-} from "@/components/ui/carousel"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { getCategoriesUseCase } from "@/use-cases/categories"
+import Link from "next/link"
+import { CategoryCard } from "./category-card"
 
-const categories = [
-	{ name: "Fruits", icon: Apple },
-	{ name: "Vegetables", icon: Carrot },
-	{ name: "Eggs", icon: Egg },
-	{ name: "Seeds", icon: Bean }
-]
+export default async function Categories() {
+	const categories = await getCategoriesUseCase()
 
-// Define the structure of the color map
-interface ColorMap {
-	[key: string]: {
-		background: string
-		color: string
-	}
-}
-// Define background and text/icon colors with lighter backgrounds
-const colorMap: ColorMap = {
-	Fruits: {
-		background: "bg-red-100", // Lighter red background
-		color: "text-red-600"
-	},
-	Vegetables: {
-		background: "bg-green-100", // Lighter green background
-		color: "text-green-600"
-	},
-	Eggs: {
-		background: "bg-yellow-100", // Lighter yellow background
-		color: "text-yellow-600"
-	},
-	Seeds: {
-		background: "bg-orange-100", // Lighter brown or orange-like background
-		color: "text-orange-600"
-	}
-}
-
-export default function Categories() {
 	return (
-		<section className="container mx-auto -mt-16 rounded-lg px-0 py-5 lg:-mt-0 lg:px-4">
+		<section className="mx-auto -mt-16 w-full rounded-lg px-0 py-5 lg:container lg:-mt-0 lg:px-4">
 			<div className="">
-				<div className="relative rounded-md bg-background">
-					<Carousel
-						className="overflow-hidden p-2"
-						opts={{
-							align: "start",
-							dragFree: true
-						}}
-					>
-						<h1 className="mb-2 font-semibold text-primary lg:text-2xl">
-							Categories
-						</h1>
-						<CarouselContent className="-ml-2 flex">
-							{[...categories, ...categories].map((category) => {
-								const styles = colorMap[category.name] || {}
-								return (
-									<CarouselItem
-										key={category.name}
-										className="basis-[30%] pl-2 lg:basis-[16%]"
-									>
-										<Card
-											className={`overflow-hidden ${styles.background} border-none`}
-										>
-											<CardContent className="flex flex-col items-center justify-center p-4">
-												<category.icon className={`h-8 w-8 ${styles.color}`} />
-												<span className={`text-xs ${styles.color}`}>
-													{category.name}
-												</span>
-											</CardContent>
-										</Card>
-									</CarouselItem>
-								)
-							})}
-						</CarouselContent>
-					</Carousel>
+				<div className="relative rounded-md bg-background p-2">
+					<h1 className="mb-2 font-semibold text-primary lg:text-2xl">
+						Categories
+					</h1>
+
+					<div>
+						<div className="">
+							<ScrollArea className="w-full whitespace-nowrap">
+								<div className="flex gap-2 overflow-hidden">
+									{categories.length > 0 ? (
+										categories.map((category) => (
+											<Link
+												key={category.id}
+												href={`/products/categories/${category.slug}`}
+											>
+												<CategoryCard
+													description={category.description || ""}
+													imageUrl={category.image?.url || "/placeholder.svg"}
+													title={category.name}
+												/>
+											</Link>
+										))
+									) : (
+										<div className="h-28">
+											<h2 className="m-auto text-center text-lg font-semibold text-muted-foreground">
+												No categories found
+											</h2>
+										</div>
+									)}
+								</div>
+								<ScrollBar orientation="horizontal" className="invisible" />
+							</ScrollArea>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>

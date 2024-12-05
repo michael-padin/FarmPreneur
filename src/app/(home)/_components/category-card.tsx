@@ -1,37 +1,36 @@
-/* eslint-disable @next/next/no-img-element */
-"use client"
-import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
 
-interface ProductCardProps {
-	image: string
+interface CategoryCardProps {
 	title: string
 	description: string
-	link: string
+	imageUrl: string
 }
 
-export default function CategoryCard({
-	image,
+export function CategoryCard({
 	title,
 	description,
-	link
-}: ProductCardProps) {
+	imageUrl
+}: CategoryCardProps) {
 	return (
-		<Link className="overflow-hidden rounded-lg bg-white shadow" href={link}>
-			<img
-				alt={title}
-				className="h-48 w-full object-cover"
-				height="200"
-				src={image}
-				style={{
-					aspectRatio: "300/200",
-					objectFit: "cover"
-				}}
-				width="300"
-			/>
-			<div className="p-4">
-				<h3 className="mb-2 text-lg font-bold">{title}</h3>
-				<p className="text-gray-500">{description}</p>
-			</div>
-		</Link>
+		<Card className="border-none">
+			<CardContent className="w-28 p-0">
+				<div className="relative h-20 overflow-hidden rounded-lg">
+					<Image
+						src={imageUrl}
+						alt={title}
+						fill
+						priority
+						className="h-full w-full object-cover"
+					/>
+				</div>
+				<div className="px-1 py-2">
+					<h3 className="mb-2 truncate text-sm font-semibold">{title}</h3>
+					{/* <p className="line-clamp-2 text-sm text-muted-foreground">
+						{description}
+					</p> */}
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
