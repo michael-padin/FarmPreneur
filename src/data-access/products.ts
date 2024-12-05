@@ -2,7 +2,7 @@ import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { db } from "@/lib/db"
-import { ProductListingStatus } from "@prisma/client"
+import { Address, ProductListingStatus } from "@prisma/client"
 
 export const createProduct = async (
 	data: CreateProductSchemaFarmer & {
@@ -294,6 +294,37 @@ export const getProducts = async (filter: {
 	})
 }
 
+export const getDailyProducts = async (address?: Address) => {
+	return await db.product.findMany({
+		where: {
+			listingStatus: ProductListingStatus.APPROVED
+		},
+		orderBy: {
+			createdAt: "desc"
+		},
+		take: 100,
+		include: {
+			farmer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			_count: {
+				select: {
+					reviews: true
+				}
+			},
+			images: true,
+			pickupLocation: true,
+			reviews: true,
+			category: true
+		}
+	})
+}
 export const getProductBySlug = async (slug: string) => {
 	return await db.product.findUnique({
 		where: { slug }

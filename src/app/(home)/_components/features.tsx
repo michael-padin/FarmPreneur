@@ -1,58 +1,52 @@
-"use client"
-import { products } from "@/data"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { getDailyProductsUseCase } from "@/use-cases/products"
+import { Box } from "lucide-react"
 import Link from "next/link"
 import ProductCard from "./product-card"
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem
-} from "@/components/ui/carousel"
 
-const Features = () => {
+export async function Features() {
+	const products = await getDailyProductsUseCase()
+	const images = products.map((product) => product.images?.[0].url || "")
 	return (
 		<section className="container mx-auto rounded-lg px-0 lg:px-4">
 			<div className="rounded-lg bg-background p-2 py-4">
-				<div className="flex items-center justify-between">
-					<h3 className="mb-2 font-semibold text-primary lg:text-2xl">
-						Featured Products
-					</h3>
-					<Link
-						href="/products"
-						className="text- text-xs leading-normal text-primary underline-offset-2 hover:underline lg:text-base"
-					>
-						See all
-					</Link>
+				<div className="relative rounded-md bg-background py-4 pl-4">
+					<h3 className="mb-4 font-semibold lg:text-2xl"> Featured Products</h3>
+					<div className="">
+						<ScrollArea className="w-full whitespace-nowrap">
+							<div className="flex gap-4">
+								{products.length > 0 ? (
+									products.map((product, index) => (
+										<Link href={`/products/${product.slug}`} key={index}>
+											<ProductCard
+												description={product.description}
+												images={images || "/placeholder.svg"}
+												title={product.title}
+												averageRating={product.averageRating}
+												reviews={product._count.reviews}
+												price={product.price}
+												farmer={product.farmer?.user.name || ""}
+												unit={product.unit || "kg"}
+												className="border-none shadow-none"
+											/>
+										</Link>
+									))
+								) : (
+									<div className="pt-20">
+										<div className="flex h-full flex-col items-center justify-center text-muted-foreground">
+											<div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-background">
+												<Box className="h-8 w-8 text-primary" />
+											</div>
+											<p className="text-sm">No products found</p>
+										</div>
+									</div>
+								)}
+							</div>
+							<ScrollBar orientation="horizontal" className="invisible" />
+						</ScrollArea>
+					</div>
 				</div>
-				<Carousel
-					className="overflow-hidden"
-					opts={{
-						align: "start",
-						dragFree: true
-					}}
-				>
-					<CarouselContent className="-ml-2 flex">
-						{[...products, ...products].map((product, index) => (
-							<CarouselItem
-								key={product.title}
-								className="basis-2/5 pl-2 lg:basis-[18%]"
-							>
-								<ProductCard
-									description={product.description}
-									key={index}
-									images={product.images}
-									title={product.title}
-									price={product.price}
-									farmer={product.farmDetails}
-									unit={product.unit}
-									className="border-none shadow-none"
-								/>
-							</CarouselItem>
-						))}
-					</CarouselContent>
-				</Carousel>
 			</div>
 		</section>
 	)
 }
-
-export default Features

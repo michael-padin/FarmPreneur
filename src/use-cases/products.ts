@@ -1,11 +1,14 @@
-import { ProductListingStatus } from "@prisma/client"
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
+import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
+import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { auth } from "@/auth"
+import { getFarmerByUserId } from "@/data-access/farmers"
 import {
 	createProduct,
 	createProductFromAdmin,
 	deleteProductsById,
 	getAllProducts,
+	getDailyProducts,
 	getPendingProducts,
 	getProductById,
 	getProductReviewStats,
@@ -16,9 +19,7 @@ import {
 	getTotalProductsByDate,
 	updateProduct
 } from "@/data-access/products"
-import { getFarmerByUserId } from "@/data-access/farmers"
-import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
-import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
+import { Address, ProductListingStatus } from "@prisma/client"
 
 export const createProductUseCase = async (
 	data: CreateProductSchemaFarmer & { userId: string; slug: string }
@@ -116,6 +117,22 @@ export const getProductsUseCase = async (filter: {
 		status: filter.status,
 		userId: session.user.id!
 	})
+}
+
+export const getDailyProductsUseCase = async (address?: Address) => {
+	const dailyProducts = await getDailyProducts()
+
+	const products = dailyProducts.map((product) => {
+		const averageRating =
+			product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+				product.reviews.length || 0
+		return {
+			...product,
+			averageRating
+		}
+	})
+
+	return products
 }
 
 // MARK: MUTATIONS

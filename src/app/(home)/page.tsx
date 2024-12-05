@@ -1,4 +1,6 @@
 import { Categories, DesktopNav, MobileNav } from "./_components"
+import { DailyDiscovery } from "./_components/daily-discovery"
+import { Features } from "./_components/features"
 
 export default function Home() {
 	return (
@@ -25,8 +27,8 @@ export default function Home() {
 					</div>
 				</section>
 				<Categories />
-				{/* <Features />
-				<DailyDiscovery /> */}
+				<Features />
+				<DailyDiscovery />
 			</main>
 			{/* <Footer /> */}
 		</div>

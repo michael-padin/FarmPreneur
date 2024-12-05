@@ -1,7 +1,9 @@
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
+import { Star } from "lucide-react"
+import Image from "next/image"
 
 const formatPrice = (price: number, unit: string) => {
 	return (
@@ -18,40 +20,53 @@ interface ProductCardProps {
 	farmer: string
 	unit: string
 	title: string
+	averageRating: number
+	reviews: number
 	description: string
 	className?: string
 }
 
 export default function ProductCard({
+	title,
 	images,
 	price,
+	reviews,
 	farmer,
+	averageRating,
 	unit,
 	description,
 	className
 }: ProductCardProps) {
 	return (
-		<Link href={`${"/products/1"}`}>
-			<Card className={`${cn("", className)}`}>
-				<CardContent className="p-2">
-					<div className="-mx-2 -mt-2">
-						<AspectRatio ratio={1 / 1}>
-							<img
-								className="w-full rounded-md rounded-b-none object-cover"
-								src={images[0]}
-							/>
-						</AspectRatio>
-					</div>
-					<div className="overflow-hidden pt-2">
-						<p className="line-clamp-2 text-xs lg:text-base">{description}</p>
-						<div className="mt-2 flex items-center justify-between">
-							<p className="text-sm font-semibold text-primary lg:text-base">
-								{formatPrice(price, unit)}
-							</p>
+		<Card className={`${cn("", className)}`}>
+			<CardContent className="p-0">
+				<AspectRatio ratio={1 / 1}>
+					<Image
+						className="w-full rounded-xl object-cover"
+						src={images[0]}
+						alt={title}
+						fill
+					/>
+				</AspectRatio>
+				<div className="overflow-hidden pt-1">
+					<p className="font-semibold lg:text-base">{title}</p>
+					<div className="mb-1 flex items-center gap-2">
+						<div className="flex items-center">
+							<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+							<span className="ml-1 text-sm font-medium">{averageRating}</span>
 						</div>
+						<Separator orientation="vertical" className="h-4 w-px" />
+						<span className="text-sm text-muted-foreground">
+							{reviews} Reviews
+						</span>
 					</div>
-				</CardContent>
-			</Card>
-		</Link>
+					<div className="mt-2 flex items-center justify-between">
+						<p className="text-sm font-semibold text-primary lg:text-base">
+							{formatPrice(price, unit)}
+						</p>
+					</div>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
