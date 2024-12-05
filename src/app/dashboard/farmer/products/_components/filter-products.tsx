@@ -19,7 +19,7 @@ export function FilterProducts() {
 		})
 	)
 
-	const debouncedSetFilterValues = useDebouncedCallback(setSearch, 300)
+	const debouncedSetFilterValues = useDebouncedCallback(setSearch, 500)
 
 	return (
 		<div className="my-4 mb-1 flex gap-2 px-4">

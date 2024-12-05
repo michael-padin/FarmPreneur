@@ -4,9 +4,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export function ProductSkeleton() {
 	return (
-		<div className="space-y-4">
+		<div className="space-y-2">
 			{[...Array(3)].map((_, index) => (
-				<Card key={index} className="">
+				<Card key={index} className="border-none">
 					<CardHeader className="p-4 pb-2">
 						<div className="flex items-start gap-4">
 							<Skeleton className="h-24 w-24 rounded-lg" />

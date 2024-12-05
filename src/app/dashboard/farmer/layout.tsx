@@ -39,12 +39,12 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-			<SidebarProvider>
-				<NotificationProvider userId={user.id}>
-					<FarmerSidebar user={session.user} />
-					{children}
-				</NotificationProvider>
-			</SidebarProvider>
+			{/* <SidebarProvider> */}
+			<NotificationProvider userId={user.id}>
+				{/* <FarmerSidebar user={session.user} /> */}
+				{children}
+			</NotificationProvider>
+			{/* </SidebarProvider> */}
 		</ThemeProvider>
 	)
 }

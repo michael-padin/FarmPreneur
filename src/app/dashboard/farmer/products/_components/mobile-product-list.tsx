@@ -23,10 +23,10 @@ export async function FarmerProductList() {
 	})
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-2">
 			{products && products.length > 0 ? (
 				products?.map((product) => (
-					<Card key={product.id} className="">
+					<Card key={product.id} className="border-none">
 						<CardHeader className="p-4 pb-2">
 							<div className="flex items-start gap-4">
 								<Image
@@ -112,8 +112,8 @@ export async function FarmerProductList() {
 			) : (
 				<div className="pt-20">
 					<div className="flex h-full flex-col items-center justify-center text-muted-foreground">
-						<div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-							<Box className="h-8 w-8" />
+						<div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-background">
+							<Box className="h-8 w-8 text-primary" />
 						</div>
 						<p className="text-sm">No products found</p>
 					</div>

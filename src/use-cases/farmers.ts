@@ -149,8 +149,6 @@ export const getFarmerMetricsUseCase = async () => {
 			totalReviews
 		}
 	}
-
-	// Get the user's farmer
 }
 
 // MARK: MUTATIONS
