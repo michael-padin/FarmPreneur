@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export function OrderItemSkeleton() {
 	return (
-		<Card>
+		<Card className="border-none">
 			<CardContent className="p-4">
 				<div className="flex items-start gap-4">
 					<Skeleton className="h-[100px] w-[100px] rounded-lg" />

@@ -14,7 +14,7 @@ export async function OrderListWrapper({ searchParams }: FarmerOrderListProps) {
 	return (
 		<Suspense
 			fallback={
-				<div className="space-y-4">
+				<div className="space-y-2">
 					<OrderItemSkeleton />
 					<OrderItemSkeleton />
 					<OrderItemSkeleton />
