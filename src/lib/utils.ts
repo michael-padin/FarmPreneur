@@ -22,10 +22,7 @@ export const isOtpExpired = (expiresAt: Date) => {
 }
 
 export const formatPHP = (amount: number) => {
-	return new Intl.NumberFormat("en-PH", {
-		style: "currency",
-		currency: "PHP"
-	}).format(amount)
+	return new Intl.NumberFormat("en-PH", {}).format(amount)
 }
 
 export const isDevelopment = process.env.NODE_ENV === "development"
