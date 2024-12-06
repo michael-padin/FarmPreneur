@@ -78,6 +78,55 @@ export const getFarmerByUserId = async (userId: string) => {
 		}
 	})
 }
+export const getFarmerById = async (id: string) => {
+	return await db.farmer.findUnique({
+		where: {
+			id: id
+		},
+		select: {
+			id: true,
+			birthDate: true,
+			applicationStatus: true,
+			contactNumber: true,
+			farmName: true,
+			farmDescription: true,
+			userId: true,
+			createdAt: true,
+			updatedAt: true,
+			address: true,
+			orders: true,
+			_count: {
+				select: {
+					products: true,
+					orders: true,
+					reviews: true
+				}
+			},
+			reviews: true,
+			verificationDocument: {
+				select: {
+					image: true,
+					type: true
+				}
+			},
+			farmImages: true,
+			products: true,
+			user: {
+				select: {
+					emailVerified: true,
+					id: true,
+					name: true,
+					email: true,
+					role: true,
+					isEmailVerified: true,
+					createdAt: true,
+					image: true,
+					updatedAt: true
+				}
+			}
+		}
+	})
+}
 
 export const getFarmers = async () => {
 	return await db.user.findMany({

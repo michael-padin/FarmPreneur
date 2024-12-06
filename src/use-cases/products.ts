@@ -1,16 +1,17 @@
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
+import { createProductFromAdmin } from "@/app/dashboard/(admin)/products/create/actions"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { auth } from "@/auth"
 import { getFarmerByUserId } from "@/data-access/farmers"
 import {
 	createProduct,
-	createProductFromAdmin,
 	deleteProductsById,
 	getAllProducts,
 	getDailyProducts,
 	getPendingProducts,
 	getProductById,
+	getProductBySlug,
 	getProductReviewStats,
 	getProducts,
 	getTopProducts,
@@ -140,6 +141,11 @@ export const createProductFromAdminUseCase = async (
 	data: CreateProductSchema & { slug: string }
 ) => {
 	return await createProductFromAdmin(data)
+}
+
+export const getProductBySlugUseCase = async (slug: string) => {
+	if (!slug) throw new Error("No slug provided")
+	return await getProductBySlug(slug)
 }
 
 export const updateProductUseCase = async (

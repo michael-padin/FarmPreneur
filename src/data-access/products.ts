@@ -327,7 +327,26 @@ export const getDailyProducts = async (address?: Address) => {
 }
 export const getProductBySlug = async (slug: string) => {
 	return await db.product.findUnique({
-		where: { slug }
+		where: { slug },
+		include: {
+			farmer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			reviews: true,
+			images: true,
+			category: {
+				select: {
+					name: true
+				}
+			},
+			pickupLocation: true
+		}
 	})
 }
 

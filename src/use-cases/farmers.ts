@@ -5,18 +5,18 @@ import { auth } from "@/auth"
 import { getCountCategories } from "@/data-access/categories"
 import {
 	createFarmerByUserId,
-	getFarmerApprovalStatusByUserId,
-	getFarmerByUserId,
-	getFarmers,
-	getPendingFarmers,
-	getPendingFarmerCount,
-	updateFarmerByUserId,
 	getApprovedFarmers,
+	getFarmerApprovalStatusByUserId,
+	getFarmerById,
+	getFarmerByUserId,
+	getFarmerOwnProfile,
+	getFarmers,
+	getPendingFarmerCount,
+	getPendingFarmers,
 	getTopFarmers,
-	getFarmerOwnProfile
+	updateFarmerByUserId
 } from "@/data-access/farmers"
 import { getTotalRevenueByDate } from "@/data-access/orders"
-import { getTotalProducts } from "@/data-access/products"
 
 export const getFarmerOwnProfileUseCase = async () => {
 	const session = await auth()
@@ -148,6 +148,31 @@ export const getFarmerMetricsUseCase = async () => {
 			averageRating,
 			totalReviews
 		}
+	}
+}
+
+export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
+	const farmer = await getFarmerById(id)
+
+	if (!farmer) throw new Error("No farmer found!")
+
+	const totalProducts = farmer._count.products
+	const averageRating =
+		farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
+			farmer.reviews.length || 0
+
+	const totalReviews = farmer.reviews.length
+	return {
+		numberOfProducts: totalProducts,
+		totalReviews,
+		averageRating,
+		farmName: farmer.farmName,
+		name: farmer.user.name,
+		contactNumber: farmer.contactNumber,
+		address: farmer.address[0].fullAddress,
+		image: farmer.farmImages[0].url,
+		responseRate: 100,
+		id: farmer.id
 	}
 }
 
