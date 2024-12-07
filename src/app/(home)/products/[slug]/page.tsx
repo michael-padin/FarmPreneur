@@ -3,14 +3,13 @@
  * @see https://v0.dev/t/XQyO7EHnAuO
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
 import { formatPHP } from "@/lib/utils"
 import { getProductBySlugUseCase } from "@/use-cases/products"
-import { MinusIcon, PlusIcon } from "lucide-react"
+import { MinusIcon, PlusIcon, Star } from "lucide-react"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 import ProductBottomNav from "./_components/bottom-nav"
@@ -55,13 +54,25 @@ export default async function Page(props: { params: Params }) {
 						</div>
 					</div>
 					<div className="grid bg-background p-3">
-						<div className="flex items-center gap-4">
+						<div className="flex items-center justify-between gap-4">
 							<div className="text-2xl font-semibold text-primary">
 								<span className="text-xs">₱</span>
 								{formatPHP(product?.price || 0)}/
 								{UNITS_MAP[product.unit as UnitKey].abbreviation}
 							</div>
-							<Badge variant={"outline"}>{product.category?.name}</Badge>
+							<div className="mb-1 flex items-center gap-2">
+								<div className="flex items-center">
+									<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+									<span className="ml-1 text-sm font-medium">
+										{product.averageRating}
+									</span>
+								</div>
+								<Separator orientation="vertical" className="h-4 w-px" />
+								<span className="text-sm text-muted-foreground">
+									{product._count.orders} Sold
+								</span>
+							</div>
+							{/* <Badge variant={"outline"}>{product.category?.name}</Badge> */}
 						</div>
 						<div className="grid">
 							<h1 className="text-2xl font-semibold capitalize">
@@ -69,7 +80,7 @@ export default async function Page(props: { params: Params }) {
 							</h1>
 							<Separator className="my-2" />
 							<div className="space-y-4">
-								<div className="space-y-1">
+								<div className="">
 									<Label className="text-base" htmlFor="description">
 										Description
 									</Label>
@@ -77,7 +88,7 @@ export default async function Page(props: { params: Params }) {
 										{product.description}
 									</p>
 								</div>
-								<div className="space-y-1">
+								<div className="">
 									<Label className="text-base" htmlFor="stock">
 										Stock
 									</Label>
@@ -91,7 +102,7 @@ export default async function Page(props: { params: Params }) {
 										Quantity
 									</Label>
 									<div className="flex items-center gap-2">
-										<div className="flex w-[100px] items-center justify-between gap-2 rounded-full bg-muted px-3 py-2">
+										<div className="flex w-[100px] items-center justify-between gap-2 rounded-full bg-muted px-3 py-1">
 											<Button
 												className="h-4 w-4 text-gray-500 hover:bg-transparent dark:text-gray-400"
 												size="icon"

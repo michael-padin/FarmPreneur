@@ -145,7 +145,17 @@ export const createProductFromAdminUseCase = async (
 
 export const getProductBySlugUseCase = async (slug: string) => {
 	if (!slug) throw new Error("No slug provided")
-	return await getProductBySlug(slug)
+	const product = await getProductBySlug(slug)
+
+	if (!product) throw new Error("Product not found")
+
+	const averageRating =
+		product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+			product.reviews.length || 0
+	return {
+		...product,
+		averageRating
+	}
 }
 
 export const updateProductUseCase = async (

@@ -338,6 +338,15 @@ export const getProductBySlug = async (slug: string) => {
 					}
 				}
 			},
+			_count: {
+				select: {
+					orders: {
+						where: {
+							status: "COMPLETED"
+						}
+					}
+				}
+			},
 			reviews: true,
 			images: true,
 			category: {

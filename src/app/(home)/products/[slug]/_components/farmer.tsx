@@ -24,10 +24,10 @@ export async function Farmer({ farmerId }: FarmerProps) {
 						/>
 					</div>
 					<div className="flex-1">
-						<h2 className="text:sm break-words font-semibold lg:text-xl">
+						<h2 className="break-words font-semibold capitalize lg:text-xl">
 							{farmer.name}
 						</h2>
-						<p className="inline-flex items-center gap-0.5 text-xs text-muted-foreground lg:text-base">
+						<p className="inline-flex items-center gap-0.5 text-sm text-muted-foreground lg:text-base">
 							<MapPin className="h-4 w-4" />
 							<span className="truncate">{farmer.address}</span>
 						</p>
@@ -42,7 +42,7 @@ export async function Farmer({ farmerId }: FarmerProps) {
 							<div className="font-semibold text-primary">
 								{farmer.averageRating}
 							</div>
-							<div className="text-xs text-muted-foreground lg:text-sm">
+							<div className="text-sm text-muted-foreground lg:text-sm">
 								Rating
 							</div>
 						</div>
@@ -50,7 +50,7 @@ export async function Farmer({ farmerId }: FarmerProps) {
 							<div className="font-semibold text-primary">
 								{abbreviateNumber(farmer.numberOfProducts)}
 							</div>
-							<div className="text-xs text-muted-foreground lg:text-sm">
+							<div className="text-sm text-muted-foreground lg:text-sm">
 								Products
 							</div>
 						</div>
@@ -58,18 +58,15 @@ export async function Farmer({ farmerId }: FarmerProps) {
 							<div className="font-semibold text-primary">
 								{farmer.responseRate}
 							</div>
-							<div className="text-xs text-muted-foreground lg:text-sm">
+							<div className="text-sm text-muted-foreground lg:text-sm">
 								Response
 							</div>
 						</div>
 					</div>
 					<div className="flex h-full items-end">
 						<Button className="" variant={"outline"} asChild size={"sm"}>
-							<Link
-								href={`/dashboard/farmer/farmer-details/${farmer.id}`}
-								className="text-xs"
-							>
-								Visit Farm
+							<Link href={`/dashboard/farmer/farmer-details/${farmer.id}`}>
+								Visit
 							</Link>
 						</Button>
 					</div>
