@@ -3,7 +3,6 @@
  * @see https://v0.dev/t/XQyO7EHnAuO
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -12,9 +11,10 @@ import { UnitKey, UNITS_MAP } from "@/constants/unit"
 import { formatPHP } from "@/lib/utils"
 import { getProductBySlugUseCase } from "@/use-cases/products"
 import { MinusIcon, PlusIcon } from "lucide-react"
-import Image from "next/image"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 import { Farmer } from "./_components/farmer"
+import { Gallery } from "./_components/gallery"
 
 type Params = Promise<{ slug: string }>
 
@@ -36,18 +36,22 @@ export default async function Page(props: { params: Params }) {
 			<div className="space-y-4">
 				<div className="lg:gap-12b grid items-start lg:container md:grid-cols-2 lg:mx-auto lg:px-4">
 					<div className="grid gap-4">
-						<AspectRatio ratio={1 / 1} className="relative">
-							<Image
-								src={product!.images[0].url}
-								alt={product!.title}
-								placeholder="blur"
-								blurDataURL="./placeholder.svg"
-								fill
-								className="object-cover"
-							/>
-						</AspectRatio>
+						<div className="bg-background">
+							<Suspense
+								fallback={
+									<div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
+								}
+							>
+								<Gallery
+									images={product.images.slice(0, 5).map((image) => ({
+										src: image.url!,
+										altText: image.altText || ""
+									}))}
+								/>
+							</Suspense>
+						</div>
 					</div>
-					<div className="grid bg-background p-4">
+					<div className="grid bg-background p-3">
 						<div className="flex items-center gap-4">
 							<div className="text-2xl font-bold text-primary">
 								<span className="text-xs">₱</span>
