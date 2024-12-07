@@ -13,6 +13,7 @@ import { getProductBySlugUseCase } from "@/use-cases/products"
 import { MinusIcon, PlusIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
+import ProductBottomNav from "./_components/bottom-nav"
 import { Farmer } from "./_components/farmer"
 import { Gallery } from "./_components/gallery"
 import { TopNav } from "./_components/top-nav"
@@ -35,7 +36,7 @@ export default async function Page(props: { params: Params }) {
 	return (
 		<main className="relative bg-muted">
 			<TopNav />
-			<div className="space-y-4">
+			<div className="space-y-4 pb-20">
 				<div className="lg:gap-12b grid items-start lg:container md:grid-cols-2 lg:mx-auto lg:px-4">
 					<div className="grid gap-4">
 						<div className="bg-background">
@@ -55,7 +56,7 @@ export default async function Page(props: { params: Params }) {
 					</div>
 					<div className="grid bg-background p-3">
 						<div className="flex items-center gap-4">
-							<div className="text-2xl font-bold text-primary">
+							<div className="text-2xl font-semibold text-primary">
 								<span className="text-xs">₱</span>
 								{formatPHP(product?.price || 0)}/
 								{UNITS_MAP[product.unit as UnitKey].abbreviation}
@@ -63,7 +64,9 @@ export default async function Page(props: { params: Params }) {
 							<Badge variant={"outline"}>{product.category?.name}</Badge>
 						</div>
 						<div className="grid">
-							<h1 className="text-2xl font-bold capitalize">{product.title}</h1>
+							<h1 className="text-2xl font-semibold capitalize">
+								{product.title}
+							</h1>
 							<Separator className="my-2" />
 							<div className="space-y-4">
 								<div className="space-y-1">
@@ -111,7 +114,7 @@ export default async function Page(props: { params: Params }) {
 					<Farmer farmerId={product.farmer!.id} />
 				</div>
 			</div>
-			{/* <ProductBottomNav /> */}
+			<ProductBottomNav />
 		</main>
 	)
 }

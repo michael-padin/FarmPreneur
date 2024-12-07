@@ -1,19 +1,43 @@
+"use client"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { MessageCircle, ShoppingCart } from "lucide-react"
+import Link from "next/link"
 
 export default function ProductBottomNav() {
 	return (
-		<div className="fixed bottom-0 left-0 z-50 w-full border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700">
-			<div className="mx-auto grid h-16 max-w-lg grid-cols-4">
-				<Button variant="secondary" className="grid h-full" size={"lg"}>
-					<MessageCircle />
-					<p className="">Message</p>
-				</Button>
-				<Button variant="secondary" className="block" size={"lg"}>
-					<ShoppingCart className="size-20" />
-					<span className="text-xs">Cart</span>
-				</Button>
-				<Button className="col-span-2 h-full rounded-none">Buy Now</Button>
+		<div className="fixed bottom-0 left-0 right-0 bg-background">
+			<div className="flex h-full w-full">
+				<div className="flex h-14 gap-4 p-2 px-4">
+					<div>
+						<Link href={"#"}>
+							<div className="flex flex-col items-center">
+								<MessageCircle className="h-6 w-6 text-primary" />
+								<span className="text-xs">Message</span>
+							</div>
+						</Link>
+					</div>
+					<Separator orientation="vertical" />
+					<div>
+						<button
+							className="flex flex-col items-center rounded-none"
+							onClick={() => console.log("Add to cart clicked")}
+						>
+							<div className="flex flex-col items-center">
+								<ShoppingCart className="h-6 w-6 text-primary" />
+								<span className="text-xs">Add to Cart</span>
+							</div>
+						</button>
+					</div>
+				</div>
+				<div className="w-full flex-1">
+					<Button
+						className="h-full w-full rounded-none bg-primary text-primary-foreground"
+						onClick={() => console.log("Buy now clicked")}
+					>
+						Buy Now
+					</Button>
+				</div>
 			</div>
 		</div>
 	)

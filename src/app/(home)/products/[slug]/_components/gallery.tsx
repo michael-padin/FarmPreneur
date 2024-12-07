@@ -16,7 +16,7 @@ export function Gallery({
 
 	return (
 		<div>
-			<div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden">
+			<div className="relative aspect-square max-h-[550px] w-full overflow-hidden">
 				{images[imageIndex] && (
 					<Image
 						className="h-full w-full object-cover"
