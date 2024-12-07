@@ -5,7 +5,6 @@ import ProductCard from "./product-card"
 
 export async function DailyDiscovery() {
 	const products = await getDailyProductsUseCase()
-	const images = products.map((product) => product.images?.[0].url || "")
 
 	return (
 		<section className="mx-auto rounded-lg px-0 py-5 lg:container lg:px-4">
@@ -17,7 +16,7 @@ export async function DailyDiscovery() {
 							<Link href={`/products/${product.slug}`} key={index}>
 								<ProductCard
 									description={product.description}
-									images={images || "/placeholder.svg"}
+									image={product.images[0].url || "/placeholder.svg"}
 									title={product.title}
 									averageRating={product.averageRating}
 									reviews={product._count.reviews}

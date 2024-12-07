@@ -15,7 +15,7 @@ const formatPrice = (price: number, unit: string) => {
 }
 
 interface ProductCardProps {
-	images: string[]
+	image: string
 	price: number
 	farmer: string
 	unit: string
@@ -28,7 +28,7 @@ interface ProductCardProps {
 
 export default function ProductCard({
 	title,
-	images,
+	image,
 	price,
 	reviews,
 	farmer,
@@ -43,7 +43,7 @@ export default function ProductCard({
 				<AspectRatio ratio={1 / 1}>
 					<Image
 						className="w-full rounded-xl object-cover"
-						src={images[0]}
+						src={image || `/placeholder.svg`}
 						alt={title}
 						fill
 					/>
