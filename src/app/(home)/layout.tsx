@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
-import { BottomNav } from "./_components"
 import { redirect } from "next/navigation"
+import UnderConstruction from "./_components/under-construction"
 
 export default async function Layout({
 	children
@@ -14,9 +14,9 @@ export default async function Layout({
 	if (user?.role === "ADMIN") redirect("/dashboard")
 
 	return (
-		<div>
-			{children}
-			<div className="lg:hidden">{/* <BottomNav /> */}</div>
-		</div>
+		<>
+			<UnderConstruction />
+			<div className="lg:hidden">{children}</div>
+		</>
 	)
 }
