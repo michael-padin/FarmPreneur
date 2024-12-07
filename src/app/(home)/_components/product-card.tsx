@@ -1,4 +1,3 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
@@ -39,17 +38,21 @@ export default function ProductCard({
 }: ProductCardProps) {
 	return (
 		<Card className={`${cn("", className)}`}>
-			<CardContent className="p-0">
-				<AspectRatio ratio={1 / 1}>
+			<CardContent className="group p-0">
+				<div className="relative aspect-square overflow-hidden">
 					<Image
-						className="w-full rounded-xl object-cover"
+						className="rounded-xl object-cover"
 						src={image || `/placeholder.svg`}
 						alt={title}
 						fill
+						priority
+						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 					/>
-				</AspectRatio>
+				</div>
 				<div className="overflow-hidden pt-1">
-					<p className="font-semibold lg:text-base">{title}</p>
+					<p className="w-full truncate font-semibold underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
+						{title}
+					</p>
 					<div className="mb-1 flex items-center gap-2">
 						<div className="flex items-center">
 							<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />

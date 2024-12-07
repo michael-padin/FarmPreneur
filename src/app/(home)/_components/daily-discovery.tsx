@@ -8,12 +8,17 @@ export async function DailyDiscovery() {
 
 	return (
 		<section className="mx-auto rounded-lg px-0 py-5 lg:container lg:px-4">
-			<div className="rounded-lg bg-background p-4">
+			<div className="rounded-lg bg-background p-3">
 				<h3 className="mb-4 font-semibold lg:text-2xl">Daily Discovery</h3>
 				<div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
 					{products.length > 0 ? (
 						products.map((product, index) => (
-							<Link href={`/products/${product.slug}`} key={index}>
+							<Link
+								href={`/products/${product.slug}`}
+								key={index}
+								className="inline-block h-full w-full"
+								prefetch
+							>
 								<ProductCard
 									description={product.description}
 									image={product.images[0].url || "/placeholder.svg"}
