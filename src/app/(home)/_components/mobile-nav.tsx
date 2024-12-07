@@ -1,10 +1,9 @@
+import { auth } from "@/auth"
+import IconBadge from "@/components/fg/fg-icon-badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircleMore, Search, ShoppingCart } from "lucide-react"
-import { useSession } from "next-auth/react"
 import Link from "next/link"
-import IconBadge from "@/components/fg/fg-icon-badge"
-import { auth } from "@/auth"
 
 const MobileNav = async () => {
 	const session = await auth()

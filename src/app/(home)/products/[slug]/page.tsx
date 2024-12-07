@@ -15,6 +15,7 @@ import { notFound } from "next/navigation"
 import { Suspense } from "react"
 import { Farmer } from "./_components/farmer"
 import { Gallery } from "./_components/gallery"
+import { TopNav } from "./_components/top-nav"
 
 type Params = Promise<{ slug: string }>
 
@@ -32,7 +33,8 @@ export default async function Page(props: { params: Params }) {
 	}
 
 	return (
-		<main className="bg-muted">
+		<main className="relative bg-muted">
+			<TopNav />
 			<div className="space-y-4">
 				<div className="lg:gap-12b grid items-start lg:container md:grid-cols-2 lg:mx-auto lg:px-4">
 					<div className="grid gap-4">

@@ -30,7 +30,7 @@ export function Gallery({
 			</div>
 
 			{images.length > 1 ? (
-				<ul className="flex flex-wrap items-center gap-2 overflow-auto px-3 pt-3 lg:mb-0">
+				<ul className="flex flex-wrap items-center gap-2 px-3 pt-3 lg:mb-0">
 					{images.map((image, index) => {
 						const isActive = index === imageIndex
 
