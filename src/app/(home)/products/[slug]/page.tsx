@@ -73,11 +73,17 @@ export default async function Page(props: { params: Params }) {
 									<Label className="text-base" htmlFor="description">
 										Description
 									</Label>
-									<p
-										className="text-gray-500 dark:text-gray-400"
-										id="description"
-									>
+									<p className="text-muted-foreground" id="description">
 										{product.description}
+									</p>
+								</div>
+								<div className="space-y-1">
+									<Label className="text-base" htmlFor="stock">
+										Stock
+									</Label>
+									<p className="text-muted-foreground" id="stock">
+										{product.quantity}{" "}
+										{UNITS_MAP[product.unit as UnitKey].abbreviation}
 									</p>
 								</div>
 								<div className="flex items-center gap-4">

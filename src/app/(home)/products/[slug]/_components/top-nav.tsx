@@ -1,17 +1,19 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { ArrowLeft, MessageCircleMore, ShoppingCart } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export function TopNav() {
+	const countCart = 1
+	const countMessages = 10
 	const router = useRouter()
 	const [scrolled, setScrolled] = useState(false)
 
 	useEffect(() => {
 		const handleScroll = () => {
-			// if the window is scrolled down by at least 60 pixels, set the scrolled state to true
 			const isScrolled = window.scrollY > 60
 			if (isScrolled !== scrolled) {
 				setScrolled(isScrolled)
@@ -25,55 +27,74 @@ export function TopNav() {
 		}
 	}, [scrolled])
 
+	const navButtonClasses = cn(
+		"flex items-center justify-center rounded-full p-1.5",
+		scrolled ? "bg-transparent text-primary" : "bg-black/20 text-white"
+	)
+
+	const badgeClasses = cn(
+		"absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[0.6rem] font-medium text-primary-foreground"
+	)
+
 	return (
 		<div
-			className={`fixed left-0 right-0 top-0 z-10 ${scrolled ? "bg-white shadow-md" : "bg-transparent"}`}
+			className={cn(
+				"fixed left-0 right-0 top-0 z-10",
+				scrolled ? "bg-white shadow-md" : "bg-transparent"
+			)}
 		>
 			<div className="flex items-center justify-between p-3 px-1.5">
-				<div
-					className={`flex items-center justify-center rounded-full p-1.5 ${scrolled ? "bg-transparent text-primary" : "bg-black/20 text-white"}`}
-				>
-					<Button
-						size={"icon"}
-						className={"cursor-pointer hover:bg-transparent hover:text-current"}
-						variant={"ghost"}
-						asChild
+				<div className={navButtonClasses}>
+					<button
+						className="cursor-pointer hover:bg-transparent hover:text-current"
 						onClick={() => router.back()}
 					>
 						<ArrowLeft className="h-6 w-6" />
-					</Button>
+					</button>
 				</div>
 				<div className="flex gap-3">
-					<div
-						className={`flex items-center justify-center rounded-full p-1.5 ${scrolled ? "bg-transparent text-primary" : "bg-black/20 text-white"}`}
-					>
-						<Button
-							size={"icon"}
-							className={
-								"cursor-pointer hover:bg-transparent hover:text-current"
-							}
-							variant={"ghost"}
-							asChild
-						>
-							<ShoppingCart className={`h-6 w-6`} />
-						</Button>
-					</div>
-					<div
-						className={`flex items-center justify-center rounded-full p-1.5 ${scrolled ? "bg-transparent text-primary" : "bg-black/20 text-white"}`}
-					>
-						<Button
-							size={"icon"}
-							className={
-								"cursor-pointer hover:bg-transparent hover:text-current"
-							}
-							variant={"ghost"}
-							asChild
-						>
-							<MessageCircleMore className={`h-6 w-6`} />
-						</Button>
-					</div>
+					<NavLink
+						href="/cart"
+						count={countCart}
+						Icon={ShoppingCart}
+						navButtonClasses={navButtonClasses}
+						badgeClasses={badgeClasses}
+					/>
+					<NavLink
+						href="/messages"
+						count={countMessages}
+						Icon={MessageCircleMore}
+						navButtonClasses={navButtonClasses}
+						badgeClasses={badgeClasses}
+					/>
 				</div>
 			</div>
 		</div>
 	)
 }
+
+type NavLinkProps = {
+	href: string
+	count: number
+	Icon: React.ComponentType<{ className?: string }>
+	navButtonClasses: string
+	badgeClasses: string
+}
+
+const NavLink = ({
+	href,
+	count,
+	Icon,
+	navButtonClasses,
+	badgeClasses
+}: NavLinkProps) => (
+	<Link
+		href={href}
+		className="cursor-pointer hover:bg-transparent hover:text-current"
+	>
+		<div className={`${navButtonClasses} relative`}>
+			<Icon className="h-6 w-6" />
+			{count > 0 && <span className={badgeClasses}>{count}</span>}
+		</div>
+	</Link>
+)
