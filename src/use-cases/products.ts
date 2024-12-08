@@ -3,6 +3,7 @@ import { createProductFromAdmin } from "@/app/dashboard/(admin)/products/create/
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { auth } from "@/auth"
+import { UnitKey } from "@/constants/unit"
 import { getFarmerByUserId } from "@/data-access/farmers"
 import {
 	createProduct,
@@ -145,6 +146,7 @@ export const createProductFromAdminUseCase = async (
 
 export const getProductBySlugUseCase = async (slug: string) => {
 	if (!slug) throw new Error("No slug provided")
+
 	const product = await getProductBySlug(slug)
 
 	if (!product) throw new Error("Product not found")
@@ -152,9 +154,24 @@ export const getProductBySlugUseCase = async (slug: string) => {
 	const averageRating =
 		product.reviews.reduce((sum, review) => sum + review.rating, 0) /
 			product.reviews.length || 0
+
 	return {
-		...product,
-		averageRating
+		price: product.price,
+		unit: product.unit as UnitKey,
+		averageRating,
+		_count: {
+			orders: product._count.orders
+		},
+		title: product.title,
+		description: product.description,
+		quantity: product.quantity,
+		farmer: {
+			id: product.farmer?.id || ""
+		},
+		images: product.images.map((image) => ({
+			src: image.url,
+			altText: image.altText || ""
+		}))
 	}
 }
 
