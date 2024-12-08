@@ -43,7 +43,7 @@ export default async function Page(props: { params: Params }) {
 						<Farmer farmerId={product.farmer.id} />
 					</div>
 				</div>
-				<ProductBottomNav />
+				<ProductBottomNav product={product} />
 			</main>
 		</QuantityProvider>
 	)

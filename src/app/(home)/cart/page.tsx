@@ -1,7 +1,9 @@
 import CartListPage from "./_components/cart-list"
 
-const CartPage = () => {
-	return <CartListPage />
+export default function CartPage() {
+	return (
+		<div className="bg-muted">
+			<CartListPage />
+		</div>
+	)
 }
-
-export default CartPage

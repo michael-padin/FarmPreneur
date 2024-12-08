@@ -1,154 +1,153 @@
 "use client"
-import { useState } from "react"
-import { Minus, Plus, ChevronLeft, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import Recommend from "../../_components/recommend"
-import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useCart } from "@/contexts/cart-context"
+import { formatPHP } from "@/lib/utils"
+import { ArrowLeft, ChevronRight, ShoppingCart } from "lucide-react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { DeleteItemButton } from "./delete-item-button"
+import { EditItemQuantityButton } from "./edit-quantity-button"
 
 export default function CartListPage() {
-	const [cartItems, setCartItems] = useState([
-		{
-			id: 1,
-			name: "Fresh Mangoes",
-			price: 120,
-			quantity: 2,
-			image: "/placeholder.svg?height=80&width=80"
-		},
-		{
-			id: 2,
-			name: "Organic Rice (5kg)",
-			price: 250,
-			quantity: 1,
-			image: "/placeholder.svg?height=80&width=80"
-		},
-		{
-			id: 3,
-			name: "Coconuts",
-			price: 45,
-			quantity: 3,
-			image: "/placeholder.svg?height=80&width=80"
-		}
-	])
-
-	const updateQuantity = (id: number, change: number) => {
-		setCartItems((items) =>
-			items
-				.map((item) =>
-					item.id === id
-						? { ...item, quantity: Math.max(0, item.quantity + change) }
-						: item
-				)
-				.filter((item) => item.quantity > 0)
-		)
-	}
-
-	const subtotal = cartItems.reduce(
-		(sum, item) => sum + item.price * item.quantity,
-		0
-	)
-	const deliveryFee = 50
-	const total = subtotal + deliveryFee
-
+	const router = useRouter()
+	const { cart, removeItem, updateQuantity } = useCart()
 	return (
-		<div className="min-h-screen bg-gray-100 pb-20">
-			<header className="sticky top-0 z-10 bg-white p-4 shadow-sm">
-				<div className="flex items-center">
-					<Button variant="ghost" size="icon" className="mr-2">
-						<ChevronLeft className="h-6 w-6" />
-					</Button>
-					<h1 className="text-lg font-semibold">Cart ({cartItems.length})</h1>
+		<div className="flex min-h-screen flex-col">
+			<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<div className="flex h-14 items-center p-2 lg:container">
+					<div className="flex flex-1 items-center justify-between">
+						<div className="flex items-center gap-2">
+							<button
+								className="cursor-pointer hover:bg-transparent hover:text-current"
+								onClick={() => router.back()}
+							>
+								<ArrowLeft className="h-6 w-6" />
+							</button>
+							<h1 className="text-xl font-semibold">
+								Shopping Cart ({cart.distinctProductsCount})
+							</h1>
+						</div>
+						{/* <Button variant="ghost" size="sm">
+							Edit
+						</Button> */}
+					</div>
 				</div>
 			</header>
 
-			<main className="container mx-auto px-0 py-8">
-				<ul className="space-y-2 px-2">
-					{cartItems.map((item) => (
-						<li
-							key={item.id}
-							className="flex items-center rounded-lg bg-white p-4 shadow"
-						>
-							<img
-								src={item.image}
-								alt={item.name}
-								className="mr-4 h-20 w-20 rounded-md object-cover"
-							/>
-							<div className="flex-grow">
-								<h3 className="font-semibold">{item.name}</h3>
-								<p className="font-medium text-green-600">₱{item.price}</p>
-								<div className="mt-2 flex items-center">
-									<Button
-										variant="outline"
-										size="icon"
-										onClick={() => updateQuantity(item.id, -1)}
-									>
-										<Minus className="h-4 w-4" />
-									</Button>
-									<span className="mx-2 font-semibold">{item.quantity}</span>
-									<Button
-										variant="outline"
-										size="icon"
-										onClick={() => updateQuantity(item.id, 1)}
-									>
-										<Plus className="h-4 w-4" />
-									</Button>
+			{cart.distinctProductsCount > 0 ? (
+				<>
+					<ScrollArea className="flex-1 p-2">
+						<div className="space-y-4 lg:container">
+							{cart.farmers.map((farmer) => (
+								<Card
+									key={farmer.farmer.id}
+									className="border-none bg-background"
+								>
+									<CardContent className="space-y-4 p-4">
+										<div className="flex items-center justify-between">
+											<div className="flex items-center gap-2">
+												<h2 className="text-lg font-semibold">
+													{farmer.farmer.name}
+												</h2>
+												<ChevronRight className="h-4 w-4" />
+											</div>
+											{/* <Button variant="ghost" size="sm">
+										Edit
+									</Button> */}
+										</div>
+
+										<div className="space-y-4">
+											{farmer.items.map((item) => (
+												<div key={item.id} className="flex gap-4">
+													<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+														<Image
+															src={item.product.image}
+															alt={item.product.name}
+															fill
+															className="object-cover"
+														/>
+													</div>
+													<div className="flex flex-1 flex-col gap-1">
+														<div className="flex items-center justify-between">
+															<h3 className="font-medium">
+																{item.product.name}
+															</h3>
+															<DeleteItemButton
+																cartId={item.id}
+																optimisticUpdate={removeItem}
+															/>
+														</div>
+														<div className="flex items-center gap-2">
+															<span className="text-sm text-muted-foreground">
+																per {item.product.unit}
+															</span>
+														</div>
+														<div className="mt-auto flex items-center justify-between">
+															<div className="flex items-center gap-2">
+																<span className="text-lg font-semibold text-primary">
+																	₱{formatPHP(item.product.price)}
+																</span>
+															</div>
+															<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+																<EditItemQuantityButton
+																	type="minus"
+																	item={{
+																		id: item.id,
+																		quantity: item.quantity,
+																		farmerId: farmer.farmer.id
+																	}}
+																	optimisticUpdate={updateQuantity}
+																/>
+																<span className="text-base font-medium">
+																	{item.quantity}
+																</span>
+																<EditItemQuantityButton
+																	type="plus"
+																	item={{
+																		id: item.id,
+																		quantity: item.quantity,
+																		farmerId: farmer.farmer.id
+																	}}
+																	optimisticUpdate={updateQuantity}
+																/>
+															</div>
+														</div>
+													</div>
+												</div>
+											))}
+										</div>
+									</CardContent>
+								</Card>
+							))}
+						</div>
+					</ScrollArea>
+
+					<div className="sticky bottom-0 border-t bg-background">
+						<div className="p-2 lg:container">
+							<div className="mb-2 flex items-center justify-center">
+								<div className="text-lg">
+									Total:{" "}
+									<span className="font-semibold text-primary">
+										₱{formatPHP(cart.total)}
+									</span>
 								</div>
 							</div>
-							<Button
-								variant="ghost"
-								size="icon"
-								onClick={() => updateQuantity(item.id, -item.quantity)}
-							>
-								<X className="h-5 w-5 text-gray-500" />
+							<Button className="w-full" size="lg">
+								Check Out ({cart.distinctProductsCount})
 							</Button>
-						</li>
-					))}
-				</ul>
-
-				<div className="px-2">
-					<div className="mt-6 rounded-lg bg-white p-4 shadow">
-						<h2 className="mb-4 text-lg font-semibold">Order Summary</h2>
-						<div className="mb-2 flex justify-between">
-							<span>Subtotal</span>
-							<span>₱{subtotal}</span>
-						</div>
-						<div className="mb-2 flex justify-between">
-							<span>Delivery Fee</span>
-							<span>₱{deliveryFee}</span>
-						</div>
-						<div className="mt-4 flex justify-between text-lg font-semibold">
-							<span>Total</span>
-							<span>₱{total}</span>
 						</div>
 					</div>
+				</>
+			) : (
+				<div className="flex h-full flex-col items-center justify-center pt-20 text-muted-foreground">
+					<div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-background">
+						<ShoppingCart className="h-8 w-8 text-primary" />
+					</div>
+					<p className="text-sm">No items in cart</p>
 				</div>
-
-				{/* <div className="px-2">
-					<Button className="mt-6 w-full rounded-lg bg-green-600 py-3 font-semibold text-white hover:bg-green-700">
-						Proceed to Checkout
-					</Button>
-				</div> */}
-
-				<section className="mt-12">
-					<div className="">
-						<div className="mt-2 flex justify-between p-2">
-							<h3>You May Also Like</h3>
-							<p>See all</p>
-						</div>
-						<div className="bg-background p-2">
-							<Recommend />
-						</div>
-					</div>
-				</section>
-			</main>
-
-			<footer className="shadow-up fixed bottom-0 left-0 right-0 z-50 bg-white p-4">
-				<Button
-					className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white hover:bg-green-700"
-					asChild
-				>
-					<Link href="/proceed-checkout">Checkout (₱{total})</Link>
-				</Button>
-			</footer>
+			)}
 		</div>
 	)
 }

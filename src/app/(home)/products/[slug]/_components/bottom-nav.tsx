@@ -1,12 +1,43 @@
 "use client"
+import { addToCart } from "@/actions/cart"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { useCart } from "@/contexts/cart-context"
 import { useQuantity } from "@/contexts/quantity-context"
+import { getProductBySlugUseCase } from "@/use-cases/products"
 import { MessageCircle, ShoppingCart } from "lucide-react"
 import Link from "next/link"
+import { useActionState, useEffect } from "react"
+import { toast } from "sonner"
 
-export default function ProductBottomNav() {
-	const { quantity, setQuantity, stock } = useQuantity()
+export default function ProductBottomNav({
+	product
+}: {
+	product: Awaited<ReturnType<typeof getProductBySlugUseCase>>
+}) {
+	const { addItem } = useCart()
+	const { quantity } = useQuantity()
+	const [state, formAction] = useActionState(addToCart, null)
+	const actionWithProductId = formAction.bind(null, {
+		productId: product.id,
+		quantity
+	})
+
+	// Show toast when state changes
+	useEffect(() => {
+		if (state) {
+			if (state.success) {
+				toast.success("Added to cart", {
+					description: `${product.title} has been added to your cart.`
+				})
+			} else {
+				toast.error("Error", {
+					description: state.error || "Failed to add item to cart"
+				})
+			}
+		}
+	}, [state, product.title])
+
 	return (
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background">
 			<div className="flex h-full w-full">
@@ -20,17 +51,32 @@ export default function ProductBottomNav() {
 						</Link>
 					</div>
 					<Separator orientation="vertical" />
-					<div>
+					<form
+						action={async () => {
+							addItem(
+								{ id: product.farmer.id, name: product.farmer.name },
+								{
+									id: product.id,
+									name: product.title,
+									price: product.price,
+									image: product.images[0].src,
+									unit: product.unit
+								},
+								quantity
+							)
+							actionWithProductId()
+						}}
+					>
 						<button
 							className="flex flex-col items-center rounded-none"
-							onClick={() => console.log("Add to cart clicked")}
+							type="submit"
 						>
 							<div className="flex flex-col items-center">
 								<ShoppingCart className="h-6 w-6 text-primary" />
 								<span className="text-xs">Add to Cart</span>
 							</div>
 						</button>
-					</div>
+					</form>
 				</div>
 				<div className="w-full flex-1">
 					<Button

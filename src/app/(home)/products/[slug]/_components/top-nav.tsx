@@ -1,5 +1,6 @@
 "use client"
 
+import { useCart } from "@/contexts/cart-context"
 import { cn } from "@/lib/utils"
 import { ArrowLeft, MessageCircleMore, ShoppingCart } from "lucide-react"
 import Link from "next/link"
@@ -7,10 +8,14 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export function TopNav() {
-	const countCart = 1
+	const {
+		cart: { distinctProductsCount, farmers }
+	} = useCart()
 	const countMessages = 10
 	const router = useRouter()
 	const [scrolled, setScrolled] = useState(false)
+
+	console.log("farmers :>> ", farmers)
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -55,7 +60,7 @@ export function TopNav() {
 				<div className="flex gap-3">
 					<NavLink
 						href="/cart"
-						count={countCart}
+						count={distinctProductsCount}
 						Icon={ShoppingCart}
 						navButtonClasses={navButtonClasses}
 						badgeClasses={badgeClasses}
