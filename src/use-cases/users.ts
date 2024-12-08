@@ -37,7 +37,11 @@ export const getUserFarmerByIdUseCase = async (id: string) => {
 }
 
 export const getUserWithPasswordByEmailUseCase = async (email: string) => {
-	return await getUserWithPasswordByEmail(email)
+	const user = await getUserWithPasswordByEmail(email)
+
+	if (!user) throw new Error("User not found!")
+
+	return user
 }
 
 export const getCustomersUseCase = async () => {

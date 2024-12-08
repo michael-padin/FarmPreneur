@@ -188,7 +188,17 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 			email: email
 		},
 		include: {
-			profilePicture: true
+			profilePicture: true,
+			customer: {
+				select: {
+					id: true
+				}
+			},
+			farmer: {
+				select: {
+					id: true
+				}
+			}
 		}
 	})
 }

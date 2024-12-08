@@ -156,6 +156,7 @@ export const getProductBySlugUseCase = async (slug: string) => {
 			product.reviews.length || 0
 
 	return {
+		id: product.id,
 		price: product.price,
 		unit: product.unit as UnitKey,
 		averageRating,
@@ -166,7 +167,8 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		description: product.description,
 		quantity: product.quantity,
 		farmer: {
-			id: product.farmer?.id || ""
+			id: product.farmer?.id || "",
+			name: product.farmer?.farmName || product.farmer?.user.name || ""
 		},
 		images: product.images.map((image) => ({
 			src: image.url,
