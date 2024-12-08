@@ -1,8 +1,8 @@
 import { compare } from "bcryptjs"
 import type { NextAuthConfig } from "next-auth"
 import { type Provider } from "next-auth/providers"
-import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
 
 import { LoginSchema } from "./types"
 import { getUserWithPasswordByEmailUseCase } from "./use-cases/users"
@@ -30,7 +30,11 @@ const providers: Provider[] = [
 						picture: user.profilePicture?.url,
 						isEmailVerified: user.isEmailVerified,
 						emailVerified: user.emailVerified,
-						createdAt: user.createdAt
+						createdAt: user.createdAt,
+						...(user.role === "CUSTOMER" && {
+							customerId: user.customer?.id || ""
+						}),
+						...(user.role === "FARMER" && { farmerId: user.farmer?.id || "" })
 					}
 
 					return newUser

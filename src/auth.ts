@@ -2,10 +2,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import NextAuth, { DefaultSession, Session } from "next-auth"
 import { Adapter } from "next-auth/adapters"
 
-import authConfig from "./auth.config"
-import { db } from "./lib/db"
 import { ROLE } from "@prisma/client"
 import { DefaultJWT } from "next-auth/jwt"
+import authConfig from "./auth.config"
+import { db } from "./lib/db"
 
 declare module "next-auth" {
 	/**
@@ -14,6 +14,8 @@ declare module "next-auth" {
 	interface Session {
 		user: {
 			id: string
+			customerId?: string
+			farmerId?: string
 			role: ROLE
 			profilePicture: string | null
 			isEmailVerified: boolean
