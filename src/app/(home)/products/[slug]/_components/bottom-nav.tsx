@@ -1,12 +1,14 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { useQuantity } from "@/contexts/quantity-context"
 import { MessageCircle, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 
 export default function ProductBottomNav() {
+	const { quantity, setQuantity, stock } = useQuantity()
 	return (
-		<div className="fixed bottom-0 left-0 right-0 bg-background">
+		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background">
 			<div className="flex h-full w-full">
 				<div className="flex h-14 gap-4 p-2 px-4">
 					<div>
