@@ -7,9 +7,13 @@ export const getOrders = async () => {
 			createdAt: "desc"
 		},
 		include: {
-			product: {
+			items: {
 				include: {
-					images: true
+					product: {
+						include: {
+							images: true
+						}
+					}
 				}
 			},
 			farmer: {
@@ -67,9 +71,13 @@ export const getRecentOrders = async () => {
 			createdAt: "desc"
 		},
 		include: {
-			product: {
+			items: {
 				include: {
-					images: true
+					product: {
+						include: {
+							images: true
+						}
+					}
 				}
 			},
 			farmer: {
@@ -110,7 +118,13 @@ export const getFarmerOrders = async (filter: {
 			...(filter.search && {
 				OR: [
 					{
-						product: { title: { contains: filter.search, mode: "insensitive" } }
+						items: {
+							some: {
+								product: {
+									title: { contains: filter.search, mode: "insensitive" }
+								}
+							}
+						}
 					},
 					{
 						customer: {
@@ -121,9 +135,11 @@ export const getFarmerOrders = async (filter: {
 			})
 		},
 		include: {
-			product: {
+			items: {
 				include: {
-					images: true
+					product: {
+						include: { images: true }
+					}
 				}
 			},
 			customer: {
@@ -144,6 +160,54 @@ export const getFarmerOrders = async (filter: {
 					}
 				}
 			}
+		}
+	})
+}
+
+export const createOrder = async (data: {
+	items: {
+		quantity: number
+		price: number
+		productId: string
+	}[]
+	addressId: string
+	customerId: string
+	farmerId: string
+}) => {
+	return await db.order.create({
+		data: {
+			items: {
+				create: data.items.map((item) => ({
+					quantity: item.quantity,
+					price: item.price,
+					productId: item.productId
+				}))
+			},
+			addressId: data.addressId,
+			customerId: data.customerId,
+			farmerId: data.farmerId
+		},
+		include: {
+			items: true,
+			customer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			farmer: {
+				include: {
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			},
+			address: true
 		}
 	})
 }

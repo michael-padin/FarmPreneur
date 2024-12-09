@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 
 export function TopNav() {
 	const {
-		cart: { distinctProductsCount, farmers }
+		cart: { distinctProductsCount }
 	} = useCart()
 	const countMessages = 10
 	const router = useRouter()

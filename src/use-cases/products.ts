@@ -170,7 +170,7 @@ export const getProductBySlugUseCase = async (slug: string) => {
 			longitude: product.pickupLocation!.longitude
 		},
 		_count: {
-			orders: product._count.orders
+			orders: product._count.orderItem
 		},
 
 		farmer: {

@@ -110,7 +110,7 @@ export const getFarmerMetricsUseCase = async () => {
 	)
 
 	const totalRevenue = farmer.orders.reduce(
-		(sum, order) => sum + order.totalPrice,
+		(sum, order) => sum + order.totalPrice!,
 		0
 	)
 

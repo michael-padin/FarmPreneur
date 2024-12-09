@@ -16,8 +16,8 @@ export function OrderItem({ order }: OrderItemProps) {
 			<CardContent className="p-4">
 				<div className="flex items-start gap-4">
 					<Image
-						src={`${order.product.images[0].url || "/placeholder.svg"}`}
-						alt={order.product.title}
+						src={`${order.items[0].product.images[0].url || "/placeholder.svg"}`}
+						alt={order.items[0].product.title}
 						width={100}
 						height={100}
 						className="rounded-lg object-cover"
@@ -25,7 +25,9 @@ export function OrderItem({ order }: OrderItemProps) {
 					<div className="flex-1 space-y-1">
 						<div className="flex items-start justify-between">
 							<div>
-								<h3 className="font-semibold">{order.product.title}</h3>
+								<h3 className="font-semibold">
+									{order.items[0].product.title}
+								</h3>
 								<p className="text-sm text-muted-foreground">
 									Order # {order.id.slice(0, 6)}
 								</p>
@@ -36,10 +38,10 @@ export function OrderItem({ order }: OrderItemProps) {
 							<span>
 								Quantity:{" "}
 								{`${order.quantity} /
-									${UNITS_MAP[(order.product.unit || "kg") as UnitKey].abbreviation}`}
+									${UNITS_MAP[(order.items[0].product.unit || "kg") as UnitKey].abbreviation}`}
 							</span>
 							<span className="font-semibold">
-								{formatPHP(order.product.price)}
+								{formatPHP(order.items[0].product.price)}
 							</span>
 						</div>
 						<div className="text-sm text-muted-foreground">

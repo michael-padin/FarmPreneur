@@ -193,8 +193,8 @@ model Product {
   cartItems        CartItem[]
   images           Image[]
   reviews          ProductReview[]
-  orders           Order[]
   wishlistItems    WishlistItem[]
+  orderItem        OrderItem[]
 
   @@index([categoryId])
   @@index([farmerId])
@@ -266,11 +266,9 @@ model Order {
   id         String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
-  quantity   Int
-  totalPrice Float
+  quantity   Int?
+  totalPrice Float?
   status     OrderStatus    @default(IN_PROGRESS)
-  product    Product        @relation(fields: [productId], references: [id], onDelete: Cascade) // Order refers to the product
-  productId  String         @db.ObjectId
   address    Address?       @relation(fields: [addressId], references: [id])
   addressId  String?        @db.ObjectId
   farmer     Farmer         @relation(fields: [farmerId], references: [id])
@@ -278,12 +276,23 @@ model Order {
   customer   Customer?      @relation(fields: [customerId], references: [id])
   customerId String?        @db.ObjectId
   review     ProductReview?
+  items      OrderItem[]
 
   @@index([status])
   @@index([customerId])
   @@index([farmerId])
   @@index([createdAt])
   @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  quantity  Int
+  price     Float // Store the price at the time of order for historical accuracy
+  orderId   String  @unique @db.ObjectId
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 // MARK: CATEGORY

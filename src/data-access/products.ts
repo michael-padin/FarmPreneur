@@ -70,7 +70,13 @@ export const getAllProducts = async () => {
 			_count: {
 				select: {
 					cartItems: true,
-					orders: true,
+					orderItem: {
+						where: {
+							order: {
+								status: "COMPLETED"
+							}
+						}
+					},
 					reviews: true,
 					images: true,
 					wishlistItems: true
@@ -117,14 +123,18 @@ export const getProductReviewStats = async () => {
 export const getTopSellingProducts = async (limit = 10) => {
 	return await db.product.findMany({
 		take: limit,
-		orderBy: {
-			orders: {
-				_count: "desc"
-			}
-		},
+
 		include: {
 			_count: {
-				select: { orders: true }
+				select: {
+					orderItem: {
+						where: {
+							order: {
+								status: "COMPLETED"
+							}
+						}
+					}
+				}
 			}
 		}
 	})
@@ -166,12 +176,14 @@ export const getTopProducts = async (limit = 10) => {
 			reviews: {
 				select: { rating: true }
 			},
-			orders: {
+			orderItem: {
 				where: {
-					createdAt: {
-						gte: new Date(new Date().setMonth(new Date().getMonth() - 1))
-					},
-					status: "COMPLETED"
+					order: {
+						createdAt: {
+							gte: new Date(new Date().setMonth(new Date().getMonth() - 1))
+						},
+						status: "COMPLETED"
+					}
 				},
 				select: { quantity: true }
 			},
@@ -192,7 +204,7 @@ export const getTopProducts = async (limit = 10) => {
 		const averageRating =
 			product.reviews.reduce((sum, review) => sum + review.rating, 0) /
 				product.reviews.length || 0
-		const monthlySales = product.orders.reduce(
+		const monthlySales = product.orderItem.reduce(
 			(sum, order) => sum + order.quantity,
 			0
 		)
@@ -340,9 +352,11 @@ export const getProductBySlug = async (slug: string) => {
 			},
 			_count: {
 				select: {
-					orders: {
+					orderItem: {
 						where: {
-							status: "COMPLETED"
+							order: {
+								status: "COMPLETED"
+							}
 						}
 					}
 				}

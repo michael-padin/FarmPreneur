@@ -12,6 +12,8 @@ import {
 	VisibilityState
 } from "@tanstack/react-table"
 
+import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
+import { Input } from "@/components/ui/input"
 import {
 	Table,
 	TableBody,
@@ -21,11 +23,10 @@ import {
 	TableRow
 } from "@/components/ui/table"
 import { use, useCallback, useState } from "react"
-import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
-import { Input } from "@/components/ui/input"
 
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { RotateCcw } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -33,11 +34,10 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { columns } from "./columns"
 import { getOrdersUseCase } from "@/use-cases/orders"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
+import { RotateCcw } from "lucide-react"
+import { columns } from "./columns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getOrdersUseCase>>>
@@ -343,7 +343,9 @@ export function DataTable({ data }: DataTableProps) {
 								</div>
 								<div className="flex justify-between">
 									<span className="text-muted-foreground">Product</span>
-									<span className="font-medium">{order.product.title}</span>
+									<span className="font-medium">
+										{order.items[0].product.title}
+									</span>
 								</div>
 								<div className="flex justify-between">
 									<span className="text-muted-foreground">Customer</span>

@@ -12,7 +12,7 @@ import { NotificationType } from "@prisma/client"
 
 export const getNotificationsByUserIdUseCase = async (userId: string) => {
 	if (!userId) {
-		return {}
+		return []
 	}
 	return await getNotificationsByUserId(userId)
 }

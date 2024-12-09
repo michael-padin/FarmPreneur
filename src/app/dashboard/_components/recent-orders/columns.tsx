@@ -10,14 +10,14 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { ColumnDef } from "@tanstack/react-table"
-import { MapPin, MoreHorizontal, Package, Phone, User } from "lucide-react"
-import { useState } from "react"
-import { toast } from "sonner"
+import { formatPHP } from "@/lib/utils"
 import { getRecentOrdersUseCase } from "@/use-cases/orders"
 import { Order, OrderStatus } from "@prisma/client"
+import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal, Package, Phone, User } from "lucide-react"
 import Image from "next/image"
-import { formatPHP } from "@/lib/utils"
+import { useState } from "react"
+import { toast } from "sonner"
 import { OrderStatusBadge } from "../../(admin)/users/(lists)/_components/badges"
 
 export const columns: ColumnDef<
@@ -63,7 +63,7 @@ export const columns: ColumnDef<
 			<DataTableColumnHeader column={column} title="Product" />
 		),
 		cell: ({ row }) => {
-			const product = row.original.product
+			const product = row.original.items[0].product
 			const quantity = row.original.quantity
 			return (
 				<div className="flex items-center gap-3">
@@ -147,10 +147,10 @@ export const columns: ColumnDef<
 			/>
 		),
 		cell: ({ cell }) => {
-			const totalPrice = cell.getValue() as Order["totalPrice"]
+			const totalPrice = cell.getValue() as Order["addressId"]
 			return (
 				<>
-					<p>{formatPHP(totalPrice)}/</p>
+					<p>{formatPHP(Number(totalPrice))}/</p>
 				</>
 			)
 		},

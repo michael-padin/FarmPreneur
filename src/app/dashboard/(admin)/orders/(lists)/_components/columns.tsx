@@ -10,15 +10,15 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { formatPHP } from "@/lib/utils"
+import { getOrdersUseCase } from "@/use-cases/orders"
+import { Order, OrderStatus } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
-import { MapPin, MoreHorizontal, Package, Phone, User } from "lucide-react"
+import { MoreHorizontal, Package, Phone, User } from "lucide-react"
+import Image from "next/image"
 import { useState } from "react"
 import { toast } from "sonner"
-import { Order, OrderStatus } from "@prisma/client"
-import Image from "next/image"
-import { formatPHP } from "@/lib/utils"
 import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
-import { getOrdersUseCase } from "@/use-cases/orders"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getOrdersUseCase>>[0]
@@ -63,7 +63,7 @@ export const columns: ColumnDef<
 			<DataTableColumnHeader column={column} title="Product" />
 		),
 		cell: ({ row }) => {
-			const product = row.original.product
+			const product = row.original.items[0].product
 			const quantity = row.original.quantity
 			return (
 				<div className="flex items-center gap-3">
@@ -154,7 +154,7 @@ export const columns: ColumnDef<
 			const totalPrice = cell.getValue() as Order["totalPrice"]
 			return (
 				<>
-					<p>{formatPHP(totalPrice)}/</p>
+					<p>{formatPHP(totalPrice!)}/</p>
 				</>
 			)
 		},
