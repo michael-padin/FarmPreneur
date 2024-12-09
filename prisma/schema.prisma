@@ -130,10 +130,9 @@ model Customer {
   contactNumber String?
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String          @unique @db.ObjectId
-  address       Address?        @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  addressId     String?         @unique @db.ObjectId
+  address       Address[]
   orders        Order[]
-  cart          CartItem[]
+  cart          Cart?
   wishlist      WishlistItem[]
   reviews       ProductReview[]
   createdAt     DateTime        @default(now())
@@ -142,19 +141,27 @@ model Customer {
   @@map("customers")
 }
 
+// MARK: CART
+model Cart {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  items      CartItem[]
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  customerId String     @unique @db.ObjectId
+
+  @@map("carts")
+}
+
 // MARK: CART ITEM
 model CartItem {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  quantity   Int
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String   @db.ObjectId
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId String   @db.ObjectId
-  updatedAt  DateTime @updatedAt // Time the cart item was last updated
-  addedAt    DateTime @default(now()) // Time the item was added to the cart
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  quantity  Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  updatedAt DateTime @updatedAt // Time the cart item was last updated
+  addedAt   DateTime @default(now()) // Time the item was added to the cart
+  cart      Cart?    @relation(fields: [cartId], references: [id])
+  cartId    String?  @db.ObjectId
 
-  @@unique([customerId, productId])
-  @@index([customerId])
   @@map("cart_items")
 }
 
@@ -285,6 +292,7 @@ model Order {
   @@map("orders")
 }
 
+// MARK: ORDER ITEM
 model OrderItem {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   quantity  Int
@@ -293,6 +301,8 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   productId String  @db.ObjectId
   product   Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
 }
 
 // MARK: CATEGORY
@@ -384,10 +394,11 @@ model Address {
   note         String?
   locationType String?
   order        Order[]
-  product      Product[]
   farmer       Farmer?   @relation(fields: [farmerId], references: [id])
-  customer     Customer?
+  customer     Customer? @relation(fields: [customerId], references: [id])
   farmerId     String?   @db.ObjectId
+  Product      Product[]
+  customerId   String?   @db.ObjectId
 
   @@index([country, region])
   @@index([latitude, longitude])
