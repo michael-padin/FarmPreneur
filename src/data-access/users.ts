@@ -191,7 +191,10 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 			profilePicture: true,
 			customer: {
 				select: {
-					id: true
+					id: true,
+					cart: {
+						select: { id: true }
+					}
 				}
 			},
 			farmer: {
@@ -224,7 +227,6 @@ export const getCustomers = async () => {
 					address: true,
 					_count: {
 						select: {
-							cart: true,
 							orders: true,
 							reviews: true,
 							wishlist: true
@@ -271,51 +273,60 @@ export const createUserWithOTP = async (
 		}
 	}
 ) => {
-	return await db.$transaction(async (tx) => {
-		const createdUser = await db.user.create({
-			data: {
-				email: data.email,
-				password: data.password,
-				name: data.name,
-				role: data.role,
-				profilePicture: {
-					create: {
-						url: "",
-						filename: "",
-						size: 0,
-						mimeType: "",
-						type: "PROFILE"
+	try {
+		return await db.$transaction(async (tx) => {
+			const createdUser = await tx.user.create({
+				data: {
+					email: data.email,
+					password: data.password,
+					name: data.name,
+					role: data.role,
+					profilePicture: {
+						create: {
+							url: "",
+							filename: "",
+							size: 0,
+							mimeType: "",
+							type: "PROFILE"
+						}
+					},
+					emailOtp: {
+						create: {
+							email: data.email,
+							expiresAt: data.emailOtp.expiresAt,
+							otp: data.emailOtp.otp
+						}
 					}
 				},
-				emailOtp: {
-					create: {
-						email: data.email,
-						expiresAt: data.emailOtp.expiresAt,
-						otp: data.emailOtp.otp
-					}
-				}
-			},
-			select: {
-				id: true,
-				name: true,
-				email: true,
-				role: true,
-				isEmailVerified: true,
-				createdAt: true,
-				image: true
-			}
-		})
-
-		if (createdUser.role === "CUSTOMER") {
-			await tx.customer.create({
-				data: {
-					userId: createdUser.id
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					role: true,
+					isEmailVerified: true,
+					createdAt: true,
+					image: true
 				}
 			})
-		}
 
-		return createdUser
-	})
+			if (createdUser.role === "CUSTOMER") {
+				const createCustomer = await tx.customer.create({
+					data: {
+						userId: createdUser.id
+					},
+					select: { id: true }
+				})
+
+				await tx.cart.create({
+					data: { customerId: createCustomer.id }
+				})
+			}
+
+			return createdUser
+		})
+	} catch (error) {
+		throw error
+	}
 }
 
 export const updateVerifiedUser = async (userId: string) => {

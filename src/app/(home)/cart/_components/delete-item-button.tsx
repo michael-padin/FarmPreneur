@@ -1,18 +1,18 @@
 "use client"
 
-import { removeFromCart } from "@/actions/cart"
+import { removeFromCart } from "@/lib/actions"
 import { Trash2 } from "lucide-react"
 import { useActionState } from "react"
 
 export function DeleteItemButton({
-	cartId,
+	itemId,
 	optimisticUpdate
 }: {
-	cartId: string
+	itemId: string
 	optimisticUpdate: any
 }) {
 	const [message, formAction] = useActionState(removeFromCart, null)
-	const actionWithCartId = formAction.bind(null, cartId)
+	const actionWithCartId = formAction.bind(null, itemId)
 
 	return (
 		<form

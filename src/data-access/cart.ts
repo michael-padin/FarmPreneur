@@ -1,24 +1,28 @@
 import { db } from "@/lib/db"
 
-export const getCart = async (customerId: string) => {
-	return await db.cartItem.findMany({
-		where: { customerId },
+export const getCartById = async (id: string) => {
+	return await db.cart.findUnique({
+		where: { id },
 		include: {
-			product: {
+			items: {
 				include: {
-					images: true,
-					farmer: {
-						select: {
-							farmName: true,
-							id: true
-						}
-					},
-					pickupLocation: {
-						select: {
-							id: true,
-							fullAddress: true,
-							latitude: true,
-							longitude: true
+					product: {
+						include: {
+							images: true,
+							farmer: {
+								select: {
+									farmName: true,
+									id: true
+								}
+							},
+							pickupLocation: {
+								select: {
+									id: true,
+									fullAddress: true,
+									latitude: true,
+									longitude: true
+								}
+							}
 						}
 					}
 				}

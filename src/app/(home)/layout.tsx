@@ -1,7 +1,7 @@
-import { getCartServerFunction } from "@/actions/cart"
 import { auth } from "@/auth"
 import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
+import { getCartUseCase } from "@/use-cases/cart"
 import { redirect } from "next/navigation"
 import UnderConstruction from "./_components/under-construction"
 
@@ -16,7 +16,7 @@ export default async function Layout({
 	if (user?.role === "FARMER") redirect("/dashboard/farmer")
 	if (user?.role === "ADMIN") redirect("/dashboard")
 
-	const cartPromise = getCartServerFunction(user?.customerId || "")
+	const cartPromise = getCartUseCase(user?.cartId || "")
 	return (
 		<div>
 			<NotificationProvider userId={user?.id}>

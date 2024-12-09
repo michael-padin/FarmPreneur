@@ -27,14 +27,12 @@ export interface CartItem {
 }
 export interface GroupedCartItem {
 	farmer: Farmer
-	locations: {
-		pickupLocation: PickupLocation
-		cartItems: CartItem[]
-	}[]
+	items: CartItem[]
 }
 
 export interface CartState {
 	items: CartItem[]
+	groupedItems: GroupedCartItem[]
 	totalItems: number
 	total: number
 	distinctProductsCount: number

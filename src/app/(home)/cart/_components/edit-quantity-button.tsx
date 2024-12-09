@@ -1,6 +1,6 @@
 "use client"
 
-import { updateItemQuantity } from "@/actions/cart"
+import { updateItemQuantity } from "@/lib/actions"
 import clsx from "clsx"
 import { MinusIcon, PlusIcon } from "lucide-react"
 import { useActionState, useEffect } from "react"

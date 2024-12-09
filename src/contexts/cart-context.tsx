@@ -1,8 +1,7 @@
 "use client"
 
-import { groupCartItemsByFarmerAndLocation } from "@/lib/utils"
-import { CartState, GroupedCartItem, Product } from "@/types/cart"
-import crypto from "crypto"
+import { groupCartItemsByFarmer } from "@/lib/utils"
+import { CartState, Product } from "@/types/cart"
 import { createContext, use, useContext, useOptimistic } from "react"
 
 export interface CartContextType {
@@ -11,11 +10,11 @@ export interface CartContextType {
 	removeItem: (itemId: string) => void
 	updateQuantity: (itemId: string, quantity: number) => void
 	clearCart: () => void
-	groupedCart: GroupedCartItem[]
 }
 
 const initialState: CartState = {
 	items: [],
+	groupedItems: [],
 	totalItems: 0,
 	distinctProductsCount: 0,
 	total: 0
@@ -63,7 +62,11 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 					...state,
 					items: [
 						...state.items,
-						{ id: crypto.randomUUID(), product, quantity }
+						{
+							id: `id-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+							product,
+							quantity
+						}
 					]
 				})
 			}
@@ -94,11 +97,12 @@ function updateCartState(state: CartState): CartState {
 		(sum, item) => sum + item.quantity * item.product.price,
 		0
 	)
-
+	const groupedItems = groupCartItemsByFarmer(state.items)
 	const distinctProductsCount = state.items.length
 
 	return {
 		...state,
+		groupedItems,
 		totalItems,
 		total,
 		distinctProductsCount
@@ -117,8 +121,6 @@ export function CartProvider({
 		initialCart,
 		cartReducer
 	)
-
-	const groupedCart = groupCartItemsByFarmerAndLocation(optimisticCart.items)
 
 	const addItem = (product: Product, quantity: number) => {
 		addOptimisticCart({
@@ -146,7 +148,6 @@ export function CartProvider({
 		<CartContext.Provider
 			value={{
 				cart: optimisticCart,
-				groupedCart,
 				addItem,
 				removeItem,
 				updateQuantity,
