@@ -1,69 +1,45 @@
 "use client"
-import { useRef, useEffect } from "react"
+import { useNotifications } from "@/contexts/notification-context"
+import { Bell, Box, Home, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, User, Bell, Heart } from "lucide-react"
-import IconBadge from "@/components/fg/fg-icon-badge"
-
-const navItems = [
-	{ name: "Home", icon: Home, href: "/" },
-	{ name: "Likes", icon: Heart, href: "/likes" },
-	{ name: "Notifications", icon: Bell, href: "/notifications" },
-	{ name: "Me", icon: User, href: "/me" }
-]
 
 const BottomNav = () => {
-	const pathname = usePathname()
-	const navRef = useRef<HTMLDivElement>(null)
-
-	useEffect(() => {
-		const activeItem = navRef.current?.querySelector(`a[href="${pathname}"]`)
-		if (activeItem) {
-			activeItem.scrollIntoView({
-				inline: "center",
-				block: "nearest"
-			})
-		}
-	}, [pathname])
-
+	const { unreadCount } = useNotifications()
+	const pathName = usePathname()
+	const navItems = [
+		{ label: "Home", icon: Home, url: "/" },
+		{ label: "Orders", icon: Box, url: "/orders" },
+		{
+			label: "Notifications",
+			icon: Bell,
+			url: "/notifications",
+			badge: unreadCount > 0 ? unreadCount : null
+		},
+		{ label: "Me", icon: User, url: "/me" }
+	]
 	return (
-		<nav className="fixed bottom-0 left-0 right-0 z-40 bg-background">
-			<div className="mx-auto max-w-screen-xl shadow-2xl shadow-black">
-				<div
-					ref={navRef}
-					className="scrollbar-hide flex justify-around overflow-x-auto"
-					style={{ scrollSnapType: "x mandatory" }}
-				>
-					{navItems.map((item) => {
-						const isActive = pathname === item.href
-						return (
-							<Link
-								key={item.name}
-								href={item.href}
-								className={`flex min-w-[4rem] flex-col items-center justify-center py-2 transition-all duration-300 ease-in-out ${
-									isActive ? "text-primary" : "text-foreground"
-								}`}
-								style={{ scrollSnapAlign: "center" }}
-								aria-label={item.name}
-							>
-								<div>
-									<IconBadge
-										icon={item.icon}
-										count={item.name === "Notifications" ? 12 : 0}
-										badgePosition="top-right"
-										size="icon"
-										variant="ghost"
-										badgeColor="bg-primary text-white"
-										iconColor={`${isActive ? "fill-primary stroke-primary" : "stroke-foreground fill-none"}`}
-									/>
-								</div>
-								<span className="-mt-2 line-clamp-1 text-xs font-medium">
-									{item.name}
+		<nav className="fixed bottom-0 left-0 right-0 border-t bg-background md:hidden">
+			<div className="flex justify-around p-3">
+				{navItems.map((item, index) => (
+					<Link
+						key={index}
+						href={`${item.url}`}
+						className={`flex flex-col items-center gap-1 ${
+							pathName === item.url ? "text-primary" : "text-muted-foreground"
+						}`}
+					>
+						<div className="relative">
+							<item.icon className="h-6 w-6" />
+							{item.badge && (
+								<span className="absolute -right-1 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-center text-xs font-semibold leading-none text-white">
+									{item.badge}
 								</span>
-							</Link>
-						)
-					})}
-				</div>
+							)}
+						</div>
+						<span className="text-xs">{item.label}</span>
+					</Link>
+				))}
 			</div>
 		</nav>
 	)

@@ -1,9 +1,9 @@
 "use client"
 
+import { NavLink } from "@/app/(home)/_components/nav-link"
 import { useCart } from "@/contexts/cart-context"
 import { cn } from "@/lib/utils"
 import { ArrowLeft, MessageCircleMore, ShoppingCart } from "lucide-react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -14,8 +14,6 @@ export function TopNav() {
 	const countMessages = 10
 	const router = useRouter()
 	const [scrolled, setScrolled] = useState(false)
-
-	console.log("farmers :>> ", farmers)
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -77,29 +75,3 @@ export function TopNav() {
 		</div>
 	)
 }
-
-type NavLinkProps = {
-	href: string
-	count: number
-	Icon: React.ComponentType<{ className?: string }>
-	navButtonClasses: string
-	badgeClasses: string
-}
-
-const NavLink = ({
-	href,
-	count,
-	Icon,
-	navButtonClasses,
-	badgeClasses
-}: NavLinkProps) => (
-	<Link
-		href={href}
-		className="cursor-pointer hover:bg-transparent hover:text-current"
-	>
-		<div className={`${navButtonClasses} relative`}>
-			<Icon className="h-6 w-6" />
-			{count > 0 && <span className={badgeClasses}>{count}</span>}
-		</div>
-	</Link>
-)

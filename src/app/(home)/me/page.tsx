@@ -1,11 +1,9 @@
-import { MobileNav } from "../_components"
-import Image from "next/image"
 import { auth } from "@/auth"
 import { Icons } from "@/components/icons"
+import Image from "next/image"
 import Link from "next/link"
-import Recommend from "../_components/recommend"
 import { redirect } from "next/navigation"
-import { FPSignOutButton } from "@/components/fg/fp-signout-button"
+import Recommend from "../_components/recommend"
 
 const getUser = async () => {
 	// const res = await getUserByEmail()
@@ -22,7 +20,7 @@ export default async function BuyerProfilePage() {
 
 	return (
 		<>
-			<MobileNav />
+			{/* <TopNav /> */}
 			<div className="min-h-screen bg-gray-100 pb-16 pt-[72px]">
 				<div className="mx-auto">
 					<div className="space-y-4 bg-primary px-2 pb-4">

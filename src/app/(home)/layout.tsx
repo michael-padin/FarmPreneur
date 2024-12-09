@@ -1,6 +1,7 @@
 import { getCartServerFunction } from "@/actions/cart"
 import { auth } from "@/auth"
 import { CartProvider } from "@/contexts/cart-context"
+import { NotificationProvider } from "@/contexts/notification-context"
 import { redirect } from "next/navigation"
 import UnderConstruction from "./_components/under-construction"
 
@@ -17,9 +18,11 @@ export default async function Layout({
 
 	const cartPromise = getCartServerFunction(user?.customerId || "")
 	return (
-		<CartProvider initialCartPromise={cartPromise}>
-			<UnderConstruction />
-			<div className="lg:hidden">{children}</div>
-		</CartProvider>
+		<NotificationProvider userId={user!.id}>
+			<CartProvider initialCartPromise={cartPromise}>
+				<UnderConstruction />
+				<div className="lg:hidden">{children}</div>
+			</CartProvider>
+		</NotificationProvider>
 	)
 }

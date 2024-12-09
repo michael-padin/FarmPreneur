@@ -1,14 +1,14 @@
-import { Categories, DesktopNav, MobileNav } from "./_components"
+import { BottomNav, Categories } from "./_components"
 import { DailyDiscovery } from "./_components/daily-discovery"
 import { Features } from "./_components/features"
+import { HomeNav } from "./_components/home-nav"
+
+export const experimental_ppr = true
 
 export default function Home() {
 	return (
 		<div>
-			<header>
-				<MobileNav />
-				<DesktopNav />
-			</header>
+			<HomeNav />
 			<main className="bg-secondary pb-12">
 				<section className="m-auto w-full">
 					{/* <div className="absolute  inset-0  bg-black/20 backdrop-blur-sm"></div> */}
@@ -29,8 +29,8 @@ export default function Home() {
 				<Categories />
 				<Features />
 				<DailyDiscovery />
+				<BottomNav />
 			</main>
-			{/* <Footer /> */}
 		</div>
 	)
 }
