@@ -26,17 +26,13 @@ export default function ProductBottomNav({
 	// Show toast when state changes
 	useEffect(() => {
 		if (state) {
-			if (state.success) {
-				toast.success("Added to cart", {
-					description: `${product.title} has been added to your cart.`
-				})
-			} else {
+			if (state.error) {
 				toast.error("Error", {
 					description: state.error || "Failed to add item to cart"
 				})
 			}
 		}
-	}, [state, product.title])
+	}, [state])
 
 	return (
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background">
@@ -80,10 +76,7 @@ export default function ProductBottomNav({
 					</form>
 				</div>
 				<div className="w-full flex-1">
-					<Button
-						className="h-full w-full rounded-none bg-primary text-primary-foreground"
-						onClick={() => console.log("Buy now clicked")}
-					>
+					<Button className="h-full w-full rounded-none bg-primary text-primary-foreground">
 						Buy Now
 					</Button>
 				</div>

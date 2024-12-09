@@ -1,5 +1,4 @@
 "use server"
-import { auth } from "@/auth"
 import {
 	createNotificationByUserId,
 	getNotificationsByUserId,
@@ -12,11 +11,10 @@ import { NotifMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
 
 export const getNotificationsByUserIdUseCase = async (userId: string) => {
-	try {
-		return await getNotificationsByUserId(userId)
-	} catch (e) {
-		throw e
+	if (!userId) {
+		return {}
 	}
+	return await getNotificationsByUserId(userId)
 }
 
 export const createNotificationByUserIdUseCase = async (data: {

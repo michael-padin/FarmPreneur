@@ -2,6 +2,7 @@
 
 import { groupCartItemsByFarmerAndLocation } from "@/lib/utils"
 import { CartState, GroupedCartItem, Product } from "@/types/cart"
+import crypto from "crypto"
 import { createContext, use, useContext, useOptimistic } from "react"
 
 export interface CartContextType {

@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/contexts/cart-context"
 import { cn } from "@/lib/utils"
-import { MessageCircleMore, Search, ShoppingCart } from "lucide-react"
+import { MessageCircleMore, ShoppingCart } from "lucide-react"
 import { Session } from "next-auth"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { NavLink } from "./nav-link"
 
-export function MobileNav({ user }: { user: Session["user"] }) {
+export function MobileNav({ user }: { user?: Session["user"] }) {
 	const countMessages = 10
 	const {
 		cart: { distinctProductsCount }
@@ -49,15 +49,18 @@ export function MobileNav({ user }: { user: Session["user"] }) {
 			)}
 		>
 			<div className="flex items-center justify-between gap-4 lg:container">
-				{user ? (
+				{user && (
 					<div className="w-full">
 						<Input placeholder="Search" className="w-full" />
 					</div>
-				) : (
-					<div>
-						<h1 className="text-xl font-bold text-primary">FarmPreneur</h1>
-					</div>
 				)}
+				<div>
+					<h1
+						className={`text-xl font-bold ${scrolled ? "text-primary" : "text-primary-foreground"}`}
+					>
+						FarmPreneur
+					</h1>
+				</div>
 
 				{user ? (
 					<div className="flex items-center gap-4 text-primary-foreground">
@@ -78,8 +81,8 @@ export function MobileNav({ user }: { user: Session["user"] }) {
 					</div>
 				) : (
 					<div className="flex items-center gap-4">
-						<Search className="text-foreground" />
-						<Button variant="default" asChild>
+						{/* <Search className="text-foreground" /> */}
+						<Button variant={scrolled ? "default" : "secondary"} asChild>
 							<Link href="/signup">Sign up</Link>
 						</Button>
 					</div>

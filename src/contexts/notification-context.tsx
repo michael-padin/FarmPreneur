@@ -1,23 +1,23 @@
 "use client"
 
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { pusherClient } from "@/lib/pusher"
+import { Notification as NotificationType } from "@/types/notification"
 import {
 	getNotificationsByUserIdUseCase,
 	markAllNotificationsAsReadUseCase,
 	markNotificationAsReadUseCase
 } from "@/use-cases/notifications"
-import { pusherClient } from "@/lib/pusher"
-import { Notification as NotificationType } from "@/types/notification"
+import { useRouter } from "next/navigation"
 import React, {
 	createContext,
-	useState,
+	ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
-	ReactNode,
-	useCallback
+	useState
 } from "react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Context type
 interface NotificationContextType {
@@ -38,7 +38,7 @@ export function NotificationProvider({
 	userId
 }: {
 	children: ReactNode
-	userId: string
+	userId?: string
 }) {
 	const router = useRouter()
 	const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -62,7 +62,7 @@ export function NotificationProvider({
 	}, [])
 
 	const markAllAsRead = useCallback(async () => {
-		const result = await markAllNotificationsAsReadUseCase(userId)
+		const result = await markAllNotificationsAsReadUseCase(userId || "")
 
 		if (result) {
 			setNotifications((prevNotifications) =>

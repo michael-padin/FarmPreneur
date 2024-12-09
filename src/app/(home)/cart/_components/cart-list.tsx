@@ -2,11 +2,14 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/contexts/cart-context"
 import { formatPHP } from "@/lib/utils"
 import { ArrowLeft, ChevronRight, ShoppingCart } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { Fragment } from "react"
 import { DeleteItemButton } from "./delete-item-button"
 import { EditItemQuantityButton } from "./edit-quantity-button"
 
@@ -14,7 +17,6 @@ export default function CartListPage() {
 	const router = useRouter()
 	const { groupedCart, removeItem, updateQuantity, cart } = useCart()
 
-	console.log("groupedCart :>> ", groupedCart)
 	return (
 		<div className="flex min-h-screen flex-col">
 			<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -57,17 +59,21 @@ export default function CartListPage() {
 											</div>
 										</div>
 
-										<div className="ml-2 space-y-4">
-											{group.locations.map((location) => (
-												<div key={location.pickupLocation.id} className="">
-													<p className="tex-xs mb-2">
-														Pickup Location:{" "}
-														<span className="mb-2 text-muted-foreground">
-															{location.pickupLocation.fullAddress}
-														</span>
-													</p>
-
-													<div className="ml-2 space-y-4">
+										<div className="space-y-4">
+											{group.locations.map((location, locationIndex) => (
+												<Fragment key={location.pickupLocation.id}>
+													<div className="mb-2 flex items-center justify-between text-sm">
+														<div className="w-full">
+															<div className="flex justify-between">
+																<p className="">Pickup Location: </p>
+																<button className="text-primary">View</button>
+															</div>
+															<span className="mb-2 text-muted-foreground">
+																{location.pickupLocation.fullAddress}
+															</span>
+														</div>
+													</div>
+													<div className="space-y-4">
 														{location.cartItems.map((item) => (
 															<div key={item.id} className="flex gap-4">
 																<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
@@ -88,16 +94,15 @@ export default function CartListPage() {
 																			optimisticUpdate={removeItem}
 																		/>
 																	</div>
-																	<div className="flex items-center gap-2">
-																		<span className="text-sm text-muted-foreground">
-																			per {item.product.unit}
-																		</span>
-																	</div>
+
 																	<div className="mt-auto flex items-center justify-between">
 																		<div className="flex items-center gap-2">
-																			<span className="text-lg font-semibold text-primary">
-																				₱{formatPHP(item.product.price)}
-																			</span>
+																			<p className="text-primary">
+																				₱{formatPHP(item.product.price)}/
+																				<span className="">
+																					{item.product.unit}
+																				</span>
+																			</p>
 																		</div>
 																		<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
 																			<EditItemQuantityButton
@@ -125,7 +130,10 @@ export default function CartListPage() {
 															</div>
 														))}
 													</div>
-												</div>
+													{locationIndex !== group.locations.length - 1 && (
+														<Separator className="my-2" />
+													)}
+												</Fragment>
 											))}
 										</div>
 									</CardContent>
@@ -135,8 +143,8 @@ export default function CartListPage() {
 					</ScrollArea>
 
 					<div className="sticky bottom-0 border-t bg-background">
-						<div className="p-2 lg:container">
-							<div className="mb-2 flex items-center justify-center">
+						<div className="grid grid-cols-2 p-2 lg:container">
+							<div className="flex items-center justify-center">
 								<div className="text-lg">
 									Total:{" "}
 									<span className="font-semibold text-primary">
@@ -144,8 +152,10 @@ export default function CartListPage() {
 									</span>
 								</div>
 							</div>
-							<Button className="w-full" size="lg">
-								Check Out ({cart.distinctProductsCount})
+							<Button className="w-full" size="lg" asChild>
+								<Link href="/checkout?from=cart">
+									Check Out ({cart.distinctProductsCount})
+								</Link>
 							</Button>
 						</div>
 					</div>

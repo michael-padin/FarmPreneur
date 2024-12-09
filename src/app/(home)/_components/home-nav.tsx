@@ -7,7 +7,7 @@ export async function HomeNav() {
 
 	return (
 		<header>
-			<MobileNav user={session!.user} />
+			<MobileNav user={session?.user} />
 			<DesktopNav />
 		</header>
 	)
