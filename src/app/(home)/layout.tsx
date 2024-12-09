@@ -18,11 +18,13 @@ export default async function Layout({
 
 	const cartPromise = getCartServerFunction(user?.customerId || "")
 	return (
-		<NotificationProvider userId={user!.id}>
-			<CartProvider initialCartPromise={cartPromise}>
-				<UnderConstruction />
-				<div className="lg:hidden">{children}</div>
-			</CartProvider>
-		</NotificationProvider>
+		<div>
+			<NotificationProvider userId={user!.id}>
+				<CartProvider initialCartPromise={cartPromise}>
+					<UnderConstruction />
+					<div className="lg:hidden">{children}</div>
+				</CartProvider>
+			</NotificationProvider>
+		</div>
 	)
 }
