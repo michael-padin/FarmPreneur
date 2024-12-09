@@ -1,4 +1,4 @@
-import { CartItem, Farmer, GroupedCartItem } from "@/types/cart"
+import { CartItem, GroupedCartItem } from "@/types/cart"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -48,49 +48,26 @@ export const abbreviateNumber = (num: number) => {
 	}
 }
 
-export function groupCartItemsByFarmerAndLocation(
+export function groupCartItemsByFarmer(
 	cartItems: CartItem[]
 ): GroupedCartItem[] {
-	// Create a map to group cart items by farmer ID
-	const farmerMap = new Map<
-		string,
-		{
-			farmer: Farmer
-			locationMap: Map<string, CartItem[]>
-		}
-	>()
+	const grouped = cartItems.reduce(
+		(acc, cartItem) => {
+			const farmerId = cartItem.product.farmer.id
 
-	// Group cart items
-	cartItems.forEach((cartItem) => {
-		const product = cartItem.product
+			if (!acc[farmerId]) {
+				acc[farmerId] = {
+					farmer: cartItem.product.farmer,
+					items: []
+				}
+			}
 
-		// Ensure farmer entry exists
-		if (!farmerMap.has(product.farmer.id)) {
-			farmerMap.set(product.farmer.id, {
-				farmer: product.farmer,
-				locationMap: new Map<string, CartItem[]>()
-			})
-		}
+			acc[farmerId].items.push(cartItem)
 
-		const farmerEntry = farmerMap.get(product.farmer.id)!
+			return acc
+		},
+		{} as Record<string, GroupedCartItem>
+	)
 
-		// Ensure location entry exists for this farmer
-		if (!farmerEntry.locationMap.has(product.pickupLocation.id)) {
-			farmerEntry.locationMap.set(product.pickupLocation.id, [])
-		}
-
-		// Add cart item to the correct location for this farmer
-		farmerEntry.locationMap.get(product.pickupLocation.id)!.push(cartItem)
-	})
-
-	// Transform the map into the final grouped structure
-	return Array.from(farmerMap.values()).map((farmerGroup) => ({
-		farmer: farmerGroup.farmer,
-		locations: Array.from(farmerGroup.locationMap.entries()).map(
-			([locationId, cartItems]) => ({
-				pickupLocation: cartItems[0].product.pickupLocation,
-				cartItems
-			})
-		)
-	}))
+	return Object.values(grouped)
 }
