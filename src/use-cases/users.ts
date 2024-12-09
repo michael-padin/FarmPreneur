@@ -38,9 +38,7 @@ export const getUserFarmerByIdUseCase = async (id: string) => {
 
 export const getUserWithPasswordByEmailUseCase = async (email: string) => {
 	const user = await getUserWithPasswordByEmail(email)
-
 	if (!user) throw new Error("User not found!")
-
 	return user
 }
 
@@ -80,7 +78,11 @@ export const createUserWithOTPUseCase = async (
 		}
 	}
 ) => {
-	return await createUserWithOTP(data)
+	try {
+		return await createUserWithOTP(data)
+	} catch (error) {
+		throw error
+	}
 }
 export const updateVerifiedUserUseCase = async (userId: string) => {
 	return await updateVerifiedUser(userId)

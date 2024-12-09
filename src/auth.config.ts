@@ -11,7 +11,9 @@ const providers: Provider[] = [
 	Credentials({
 		async authorize(credentials) {
 			const validateFields = LoginSchema.safeParse(credentials)
-			if (validateFields.success) {
+			if (!validateFields.success) return null
+
+			try {
 				const { email, password } = validateFields.data
 				const user = await getUserWithPasswordByEmailUseCase(email)
 
@@ -32,15 +34,18 @@ const providers: Provider[] = [
 						emailVerified: user.emailVerified,
 						createdAt: user.createdAt,
 						...(user.role === "CUSTOMER" && {
-							customerId: user.customer?.id || ""
+							customerId: user.customer?.id || "",
+							cartId: user.customer?.cart?.id || ""
 						}),
 						...(user.role === "FARMER" && { farmerId: user.farmer?.id || "" })
 					}
 
 					return newUser
 				}
+				return null
+			} catch (error) {
+				throw error
 			}
-			return null
 		}
 	}),
 	Google({

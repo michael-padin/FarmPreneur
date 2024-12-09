@@ -4,8 +4,9 @@ import { z } from "zod"
 
 import { signIn } from "@/auth"
 
-import { LoginSchema } from "./_types"
+import { getErrorMessage } from "@/lib/handle-error"
 import { getUserByEmailUseCase } from "@/use-cases/users"
+import { LoginSchema } from "./_types"
 
 export const signInWithCredentials = async (
 	data: z.infer<typeof LoginSchema>
@@ -34,7 +35,7 @@ export const signInWithCredentials = async (
 				case "CredentialsSignin":
 					return { error: "Invalid credentials" }
 				default:
-					return { error: "Something went wrong" }
+					return { error: getErrorMessage(error.cause?.err) }
 			}
 		}
 

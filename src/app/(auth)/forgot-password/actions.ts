@@ -1,6 +1,6 @@
 "use server"
-import jwt from "jsonwebtoken"
 import { sendResetPasswordEmail } from "@/lib/nodemailer"
+import jwt from "jsonwebtoken"
 import { ForgotPasswordSchema, ForgotPasswordType } from "./types"
 
 export const sendPasswordResetEmail = async (data: ForgotPasswordType) => {
@@ -23,9 +23,6 @@ export const sendPasswordResetEmail = async (data: ForgotPasswordType) => {
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log(error.message)
-			return {
-				error: "Something went wrong"
-			}
 		}
 		throw error
 	}

@@ -18,6 +18,7 @@ declare module "next-auth" {
 			farmerId?: string
 			role: ROLE
 			profilePicture: string | null
+			cartId?: string
 			isEmailVerified: boolean
 			emailVerified: Date | null
 		} & DefaultSession["user"]
@@ -33,6 +34,7 @@ declare module "next-auth" {
 
 	interface User {
 		role: ROLE
+		cartId?: string
 		profilePicture: string | null
 		isEmailVerified: boolean
 		emailVerified: Date | null
