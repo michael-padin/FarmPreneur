@@ -1,18 +1,20 @@
 "use client"
 
-import { CartFarmer, CartState, Farmer, Product } from "@/types/cart"
+import { groupCartItemsByFarmerAndLocation } from "@/lib/utils"
+import { CartState, GroupedCartItem, Product } from "@/types/cart"
 import { createContext, use, useContext, useOptimistic } from "react"
 
 export interface CartContextType {
 	cart: CartState
-	addItem: (farmer: Farmer, product: Product, quantity: number) => void
-	removeItem: (farmerId: string, itemId: string) => void
-	updateQuantity: (farmerId: string, itemId: string, quantity: number) => void
+	addItem: (product: Product, quantity: number) => void
+	removeItem: (itemId: string) => void
+	updateQuantity: (itemId: string, quantity: number) => void
 	clearCart: () => void
+	groupedCart: GroupedCartItem[]
 }
 
 const initialState: CartState = {
-	farmers: [],
+	items: [],
 	totalItems: 0,
 	distinctProductsCount: 0,
 	total: 0
@@ -21,12 +23,12 @@ const initialState: CartState = {
 type CartAction =
 	| {
 			type: "ADD_ITEM"
-			payload: { farmer: Farmer; product: Product; quantity: number }
+			payload: { product: Product; quantity: number }
 	  }
-	| { type: "REMOVE_ITEM"; payload: { farmerId: string; itemId: string } }
+	| { type: "REMOVE_ITEM"; payload: { itemId: string } }
 	| {
 			type: "UPDATE_QUANTITY"
-			payload: { farmerId: string; itemId: string; quantity: number }
+			payload: { itemId: string; quantity: number }
 	  }
 	| { type: "CLEAR_CART" }
 
@@ -35,81 +37,47 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 function cartReducer(state: CartState, action: CartAction): CartState {
 	switch (action.type) {
 		case "ADD_ITEM": {
-			const { farmer, product, quantity } = action.payload
-			const farmerIndex = state.farmers.findIndex(
-				(f) => f.farmer.id === farmer.id
+			const { product, quantity } = action.payload
+
+			const existingItemIndex = state.items.findIndex(
+				(item) => item.product.id === product.id
 			)
 
-			if (farmerIndex > -1) {
-				const itemIndex = state.farmers[farmerIndex].items.findIndex(
-					(item) => item.product.id === product.id
+			let updatedItems
+			if (existingItemIndex !== -1) {
+				// Update quantity if item already exists
+				updatedItems = state.items.map((item, index) =>
+					index === existingItemIndex
+						? {
+								...item,
+								quantity: item.quantity + quantity
+							}
+						: item
 				)
-				if (itemIndex > -1) {
-					// Update existing item
-					const updatedFarmers = state.farmers.map((f, index) =>
-						index === farmerIndex
-							? {
-									...f,
-									items: f.items.map((item, idx) =>
-										idx === itemIndex
-											? { ...item, quantity: item.quantity + quantity }
-											: item
-									)
-								}
-							: f
-					)
-					return updateCartState({ ...state, farmers: updatedFarmers })
-				} else {
-					// Add new item to existing farmer
-					const updatedFarmers = state.farmers.map((f, index) =>
-						index === farmerIndex
-							? {
-									...f,
-									items: [
-										...f.items,
-										{ id: crypto.randomUUID(), product, quantity }
-									]
-								}
-							: f
-					)
-					return updateCartState({ ...state, farmers: updatedFarmers })
-				}
+				return updateCartState({ ...state, items: updatedItems })
 			} else {
-				// Add new farmer and item
-				const newFarmer: CartFarmer = {
-					farmer,
-					items: [{ id: crypto.randomUUID(), product, quantity }]
-				}
+				// Add new item to the cart
+				updatedItems = [...state.items, product]
 				return updateCartState({
 					...state,
-					farmers: [...state.farmers, newFarmer]
+					items: [
+						...state.items,
+						{ id: crypto.randomUUID(), product, quantity }
+					]
 				})
 			}
 		}
 		case "REMOVE_ITEM": {
-			const { farmerId, itemId } = action.payload
-			const updatedFarmers = state.farmers
-				.map((f) =>
-					f.farmer.id === farmerId
-						? { ...f, items: f.items.filter((item) => item.id !== itemId) }
-						: f
-				)
-				.filter((f) => f.items.length > 0)
-			return updateCartState({ ...state, farmers: updatedFarmers })
+			const { itemId } = action.payload
+			const updatedItems = state.items.filter((item) => item.id !== itemId)
+			return updateCartState({ ...state, items: updatedItems })
 		}
 		case "UPDATE_QUANTITY": {
-			const { farmerId, itemId, quantity } = action.payload
-			const updatedFarmers = state.farmers.map((f) =>
-				f.farmer.id === farmerId
-					? {
-							...f,
-							items: f.items.map((item) =>
-								item.id === itemId ? { ...item, quantity } : item
-							)
-						}
-					: f
+			const { itemId, quantity } = action.payload
+			const updatedItems = state.items.map((item) =>
+				item.id === itemId ? { ...item, quantity } : item
 			)
-			return updateCartState({ ...state, farmers: updatedFarmers })
+			return updateCartState({ ...state, items: updatedItems })
 		}
 		case "CLEAR_CART": {
 			return initialState
@@ -120,25 +88,13 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 function updateCartState(state: CartState): CartState {
-	const totalItems = state.farmers.reduce(
-		(sum, farmer) =>
-			sum + farmer.items.reduce((itemSum, item) => itemSum + item.quantity, 0),
-		0
-	)
-	const total = state.farmers.reduce(
-		(sum, farmer) =>
-			sum +
-			farmer.items.reduce(
-				(itemSum, item) => itemSum + item.product.price * item.quantity,
-				0
-			),
+	const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0)
+	const total = state.items.reduce(
+		(sum, item) => sum + item.quantity * item.product.price,
 		0
 	)
 
-	const distinctProductsCount = state.farmers.reduce(
-		(sum, farmer) => sum + farmer.items.length,
-		0
-	)
+	const distinctProductsCount = state.items.length
 
 	return {
 		...state,
@@ -161,25 +117,23 @@ export function CartProvider({
 		cartReducer
 	)
 
-	const addItem = (farmer: Farmer, product: Product, quantity: number) => {
+	const groupedCart = groupCartItemsByFarmerAndLocation(optimisticCart.items)
+
+	const addItem = (product: Product, quantity: number) => {
 		addOptimisticCart({
 			type: "ADD_ITEM",
-			payload: { farmer, product, quantity }
+			payload: { product, quantity }
 		})
 	}
 
-	const removeItem = (farmerId: string, itemId: string) => {
-		addOptimisticCart({ type: "REMOVE_ITEM", payload: { farmerId, itemId } })
+	const removeItem = (itemId: string) => {
+		addOptimisticCart({ type: "REMOVE_ITEM", payload: { itemId } })
 	}
 
-	const updateQuantity = (
-		farmerId: string,
-		itemId: string,
-		quantity: number
-	) => {
+	const updateQuantity = (itemId: string, quantity: number) => {
 		addOptimisticCart({
 			type: "UPDATE_QUANTITY",
-			payload: { farmerId, itemId, quantity }
+			payload: { itemId, quantity }
 		})
 	}
 
@@ -191,6 +145,7 @@ export function CartProvider({
 		<CartContext.Provider
 			value={{
 				cart: optimisticCart,
+				groupedCart,
 				addItem,
 				removeItem,
 				updateQuantity,

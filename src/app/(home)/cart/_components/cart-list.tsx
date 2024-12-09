@@ -12,7 +12,9 @@ import { EditItemQuantityButton } from "./edit-quantity-button"
 
 export default function CartListPage() {
 	const router = useRouter()
-	const { cart, removeItem, updateQuantity } = useCart()
+	const { groupedCart, removeItem, updateQuantity, cart } = useCart()
+
+	console.log("groupedCart :>> ", groupedCart)
 	return (
 		<div className="flex min-h-screen flex-col">
 			<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -40,80 +42,88 @@ export default function CartListPage() {
 				<>
 					<ScrollArea className="flex-1 p-2">
 						<div className="space-y-4 lg:container">
-							{cart.farmers.map((farmer) => (
+							{groupedCart.map((group) => (
 								<Card
-									key={farmer.farmer.id}
+									key={group.farmer.id}
 									className="border-none bg-background"
 								>
-									<CardContent className="space-y-4 p-4">
+									<CardContent className="space-y-2 p-4">
 										<div className="flex items-center justify-between">
 											<div className="flex items-center gap-2">
 												<h2 className="text-lg font-semibold">
-													{farmer.farmer.name}
+													{group.farmer.name}
 												</h2>
 												<ChevronRight className="h-4 w-4" />
 											</div>
-											{/* <Button variant="ghost" size="sm">
-										Edit
-									</Button> */}
 										</div>
 
-										<div className="space-y-4">
-											{farmer.items.map((item) => (
-												<div key={item.id} className="flex gap-4">
-													<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
-														<Image
-															src={item.product.image}
-															alt={item.product.name}
-															fill
-															className="object-cover"
-														/>
-													</div>
-													<div className="flex flex-1 flex-col gap-1">
-														<div className="flex items-center justify-between">
-															<h3 className="font-medium">
-																{item.product.name}
-															</h3>
-															<DeleteItemButton
-																cartId={item.id}
-																optimisticUpdate={removeItem}
-															/>
-														</div>
-														<div className="flex items-center gap-2">
-															<span className="text-sm text-muted-foreground">
-																per {item.product.unit}
-															</span>
-														</div>
-														<div className="mt-auto flex items-center justify-between">
-															<div className="flex items-center gap-2">
-																<span className="text-lg font-semibold text-primary">
-																	₱{formatPHP(item.product.price)}
-																</span>
+										<div className="ml-2 space-y-4">
+											{group.locations.map((location) => (
+												<div key={location.pickupLocation.id} className="">
+													<p className="tex-xs mb-2">
+														Pickup Location:{" "}
+														<span className="mb-2 text-muted-foreground">
+															{location.pickupLocation.fullAddress}
+														</span>
+													</p>
+
+													<div className="ml-2 space-y-4">
+														{location.cartItems.map((item) => (
+															<div key={item.id} className="flex gap-4">
+																<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+																	<Image
+																		src={item.product.image}
+																		alt={item.product.name}
+																		fill
+																		className="object-cover"
+																	/>
+																</div>
+																<div className="flex flex-1 flex-col gap-1">
+																	<div className="flex items-center justify-between">
+																		<h3 className="font-medium">
+																			{item.product.name}
+																		</h3>
+																		<DeleteItemButton
+																			cartId={item.id}
+																			optimisticUpdate={removeItem}
+																		/>
+																	</div>
+																	<div className="flex items-center gap-2">
+																		<span className="text-sm text-muted-foreground">
+																			per {item.product.unit}
+																		</span>
+																	</div>
+																	<div className="mt-auto flex items-center justify-between">
+																		<div className="flex items-center gap-2">
+																			<span className="text-lg font-semibold text-primary">
+																				₱{formatPHP(item.product.price)}
+																			</span>
+																		</div>
+																		<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+																			<EditItemQuantityButton
+																				type="minus"
+																				item={{
+																					id: item.id,
+																					quantity: item.quantity
+																				}}
+																				optimisticUpdate={updateQuantity}
+																			/>
+																			<span className="text-base font-medium">
+																				{item.quantity}
+																			</span>
+																			<EditItemQuantityButton
+																				type="plus"
+																				item={{
+																					id: item.id,
+																					quantity: item.quantity
+																				}}
+																				optimisticUpdate={updateQuantity}
+																			/>
+																		</div>
+																	</div>
+																</div>
 															</div>
-															<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
-																<EditItemQuantityButton
-																	type="minus"
-																	item={{
-																		id: item.id,
-																		quantity: item.quantity,
-																		farmerId: farmer.farmer.id
-																	}}
-																	optimisticUpdate={updateQuantity}
-																/>
-																<span className="text-base font-medium">
-																	{item.quantity}
-																</span>
-																<EditItemQuantityButton
-																	type="plus"
-																	item={{
-																		id: item.id,
-																		quantity: item.quantity,
-																		farmerId: farmer.farmer.id
-																	}}
-																	optimisticUpdate={updateQuantity}
-																/>
-															</div>
-														</div>
+														))}
 													</div>
 												</div>
 											))}

@@ -159,13 +159,20 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		id: product.id,
 		price: product.price,
 		unit: product.unit as UnitKey,
-		averageRating,
-		_count: {
-			orders: product._count.orders
-		},
 		title: product.title,
 		description: product.description,
 		quantity: product.quantity,
+		averageRating,
+		pickupLocation: {
+			id: product.pickupLocation!.id,
+			fullAddress: product.pickupLocation!.fullAddress || "",
+			latitude: product.pickupLocation!.latitude,
+			longitude: product.pickupLocation!.longitude
+		},
+		_count: {
+			orders: product._count.orders
+		},
+
 		farmer: {
 			id: product.farmer?.id || "",
 			name: product.farmer?.farmName || product.farmer?.user.name || ""

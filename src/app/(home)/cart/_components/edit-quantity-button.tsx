@@ -35,16 +35,11 @@ export function EditItemQuantityButton({
 	optimisticUpdate
 }: {
 	item: {
-		farmerId: string
 		id: string
 		quantity: number
 	}
 	type: "plus" | "minus"
-	optimisticUpdate?: (
-		farmerId: string,
-		itemId: string,
-		quantity: number
-	) => void
+	optimisticUpdate?: (itemId: string, quantity: number) => void
 }) {
 	const [message, formAction, isPending] = useActionState(
 		updateItemQuantity,
@@ -67,7 +62,7 @@ export function EditItemQuantityButton({
 	return (
 		<form
 			action={() => {
-				optimisticUpdate?.(item.farmerId, item.id, payload.quantity)
+				optimisticUpdate?.(item.id, payload.quantity)
 				actionWithPayload()
 			}}
 		>

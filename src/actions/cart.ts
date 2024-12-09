@@ -1,8 +1,9 @@
 "use server"
 import { auth } from "@/auth"
+import { UnitKey } from "@/constants/unit"
 import { getCart } from "@/data-access/cart"
 import { db } from "@/lib/db"
-import { CartFarmer, CartItem, CartState } from "@/types/cart"
+import { CartItem, CartState } from "@/types/cart"
 import { revalidatePath } from "next/cache"
 
 export async function getCartServerFunction(
@@ -10,7 +11,7 @@ export async function getCartServerFunction(
 ): Promise<CartState> {
 	if (!customerId) {
 		return {
-			farmers: [],
+			items: [],
 			totalItems: 0,
 			total: 0,
 			distinctProductsCount: 0
@@ -19,55 +20,45 @@ export async function getCartServerFunction(
 
 	const cartItems = await getCart(customerId)
 
-	const cartItemsByFarmer = (): CartState => {
-		const farmersMap: Record<string, CartFarmer> = {}
-		let totalItems = 0
-		let total = 0
-
-		for (const item of cartItems) {
-			const farmer = item.product.farmer
-			const farmerId = farmer!.id
-
-			if (!farmersMap[farmerId]) {
-				farmersMap[farmerId] = {
-					farmer: {
-						id: farmerId,
-						name: farmer!.farmName!
-					},
-					items: []
-				}
+	const shapedCartItems = cartItems.map((item) => ({
+		id: item.id,
+		product: {
+			id: item.product.id,
+			name: item.product.title,
+			price: item.product.price,
+			image: item.product.images[0].url,
+			pickupLocation: {
+				id: item.product.pickupLocation!.id,
+				fullAddress: item.product.pickupLocation!.fullAddress || "",
+				latitude: item.product.pickupLocation!.latitude,
+				longitude: item.product.pickupLocation!.longitude
+			},
+			unit: item.product.unit as UnitKey,
+			farmer: {
+				id: item.product.farmer!.id,
+				name: item.product.farmer!.farmName || ""
 			}
+		},
+		quantity: item.quantity
+	}))
 
-			farmersMap[farmerId].items.push({
-				id: item.id,
-				product: {
-					id: item.productId,
-					name: item.product.title,
-					price: item.product.price,
-					image: item.product.images[0].url,
-					unit: item.product.unit!
-				},
-				quantity: item.quantity
-			})
+	const totalItems = shapedCartItems.reduce(
+		(sum, item) => sum + item.quantity,
+		0
+	)
+	const total = shapedCartItems.reduce(
+		(sum, item) => sum + item.quantity * item.product.price,
+		0
+	)
 
-			totalItems += item.quantity
-			total += item.quantity * item.product.price
-		}
+	const distinctProductsCount = shapedCartItems.length
 
-		const farmers = Object.values(farmersMap)
-
-		return {
-			farmers,
-			totalItems,
-			total,
-			distinctProductsCount: farmers.reduce(
-				(sum, farmer) => sum + farmer.items.length,
-				0
-			)
-		}
+	return {
+		items: shapedCartItems,
+		totalItems,
+		total,
+		distinctProductsCount
 	}
-
-	return cartItemsByFarmer()
 }
 
 export async function addToCart(

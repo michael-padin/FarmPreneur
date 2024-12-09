@@ -54,13 +54,14 @@ export default function ProductBottomNav({
 					<form
 						action={async () => {
 							addItem(
-								{ id: product.farmer.id, name: product.farmer.name },
 								{
 									id: product.id,
 									name: product.title,
 									price: product.price,
 									image: product.images[0].src,
-									unit: product.unit
+									unit: product.unit,
+									pickupLocation: product.pickupLocation!,
+									farmer: product.farmer
 								},
 								quantity
 							)

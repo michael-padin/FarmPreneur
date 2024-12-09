@@ -12,6 +12,14 @@ export const getCart = async (customerId: string) => {
 							farmName: true,
 							id: true
 						}
+					},
+					pickupLocation: {
+						select: {
+							id: true,
+							fullAddress: true,
+							latitude: true,
+							longitude: true
+						}
 					}
 				}
 			}
