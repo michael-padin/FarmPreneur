@@ -1,9 +1,8 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import React, { useTransition } from "react"
+import { useTransition } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 
 import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { Button } from "@/components/ui/button"
@@ -17,10 +16,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+import { showErrorToast } from "@/lib/handle-error"
+import { useRouter } from "next/navigation"
 import { registerSchema, RegisterSchema } from "../_types"
 import { register } from "../action"
-import { useRouter } from "next/navigation"
-import { showErrorToast } from "@/lib/handle-error"
 
 const RegisterForm = () => {
 	const router = useRouter()
@@ -44,8 +43,6 @@ const RegisterForm = () => {
 				showErrorToast(error)
 				return
 			}
-
-			toast.success("Customer created successfully!")
 			router.push("/verify-email")
 		})
 	}
