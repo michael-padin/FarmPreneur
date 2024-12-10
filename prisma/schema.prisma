@@ -297,7 +297,7 @@ model OrderItem {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   quantity  Int
   price     Float // Store the price at the time of order for historical accuracy
-  orderId   String  @unique @db.ObjectId
+  orderId   String  @db.ObjectId
   order     Order   @relation(fields: [orderId], references: [id])
   productId String  @db.ObjectId
   product   Product @relation(fields: [productId], references: [id])
