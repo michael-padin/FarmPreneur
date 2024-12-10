@@ -27,33 +27,15 @@ export async function addToCart(
 ): Promise<{ success: boolean; cartItem?: CartItem; error?: string }> {
 	const { productId, quantity } = payload
 
-	console.log("payload :>> ", payload)
-
 	const session = await auth()
 
 	if (!session || !session.user.customerId) {
 		return { success: false, error: "You must be logged in to add to cart" }
 	}
-	const customerId = session.user.customerId
 
-	let cartId = session.user.cartId
+	const cartId = session.user.cartId
 
 	try {
-		if (!cartId && customerId) {
-			const createdCart = await db.cart.create({
-				data: {
-					customer: {
-						connect: {
-							id: customerId
-						}
-					}
-				},
-				select: {
-					id: true
-				}
-			})
-			cartId = createdCart.id
-		}
 		const product = await db.product.findUnique({
 			where: { id: productId },
 			include: {

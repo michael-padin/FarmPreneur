@@ -13,39 +13,35 @@ const providers: Provider[] = [
 			const validateFields = LoginSchema.safeParse(credentials)
 			if (!validateFields.success) return null
 
-			try {
-				const { email, password } = validateFields.data
-				const user = await getUserWithPasswordByEmailUseCase(email)
+			const { email, password } = validateFields.data
+			const user = await getUserWithPasswordByEmailUseCase(email)
 
-				if (!user || !user.password) return null
+			if (!user || !user.password) return null
 
-				// compare the actual password and the hash password
-				const passwordMatch = await compare(password, user.password)
+			// compare the actual password and the hash password
+			const passwordMatch = await compare(password, user.password)
 
-				if (passwordMatch) {
-					const newUser = {
-						id: user.id,
-						role: user.role,
-						profilePicture: user.profilePicture?.url || "",
-						name: user.name,
-						email: user.email,
-						picture: user.profilePicture?.url,
-						isEmailVerified: user.isEmailVerified,
-						emailVerified: user.emailVerified,
-						createdAt: user.createdAt,
-						...(user.role === "CUSTOMER" && {
-							customerId: user.customer?.id || "",
-							cartId: user.customer?.cart?.id || ""
-						}),
-						...(user.role === "FARMER" && { farmerId: user.farmer?.id || "" })
-					}
-
-					return newUser
+			if (passwordMatch) {
+				const newUser = {
+					id: user.id,
+					role: user.role,
+					profilePicture: user.profilePicture?.url || "",
+					name: user.name,
+					email: user.email,
+					picture: user.profilePicture?.url,
+					isEmailVerified: user.isEmailVerified,
+					emailVerified: user.emailVerified,
+					createdAt: user.createdAt,
+					...(user.role === "CUSTOMER" && {
+						customerId: user.customer?.id || "",
+						cartId: user.customer?.cart?.id || ""
+					}),
+					...(user.role === "FARMER" && { farmerId: user.farmer?.id || "" })
 				}
-				return null
-			} catch (error) {
-				throw error
+
+				return newUser
 			}
+			return null
 		}
 	}),
 	Google({
