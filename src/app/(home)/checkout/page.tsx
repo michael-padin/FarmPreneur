@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { BackButton } from "./_components/back-button"
+import CartCheckOutListSkeleton from "./_components/checkout-list-skeleton"
 import { CheckoutWrapper } from "./_components/checkout-wrapper"
 
 export const experimental_ppr = true
@@ -10,7 +11,6 @@ const PickupCheckoutPage = ({
 	searchParams?: Promise<{
 		productId?: string
 		quantity?: number
-		from: "product" | "cart"
 	}>
 }) => {
 	return (
@@ -25,7 +25,7 @@ const PickupCheckoutPage = ({
 					</div>
 				</div>
 			</header>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<CartCheckOutListSkeleton />}>
 				<CheckoutWrapper searchParams={searchParams} />
 			</Suspense>
 		</div>

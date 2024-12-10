@@ -7,7 +7,13 @@ export const createCustomerByUserId = async () => {}
 
 export const getCustomerByUserId = async () => {}
 
-export const getCustomerById = async () => {}
+export const getCustomerById = async (id: string) => {
+	return await db.customer.findUnique({
+		where: {
+			id
+		}
+	})
+}
 
 export const getCustomers = async () => {
 	return await db.customer.findMany({

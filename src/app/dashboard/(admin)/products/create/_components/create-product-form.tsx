@@ -1,4 +1,7 @@
 "use client"
+import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { FPUnitSelect } from "@/components/fg/fp-select-unit"
+import { Button } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
@@ -8,14 +11,7 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
-import { getCategoriesUseCase } from "@/use-cases/categories"
-import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { use, useTransition } from "react"
-import { showErrorToast } from "@/lib/handle-error"
-import { toast } from "sonner"
-import { createProductFromAdmin } from "../actions"
+import { Input } from "@/components/ui/input"
 import {
 	Select,
 	SelectContent,
@@ -23,18 +19,21 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { PRODUCT_STATUS } from "@/constants/product-status"
-import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
-import { ProductListingStatus } from "@prisma/client"
-import { Button } from "@/components/ui/button"
-import { FPUnitSelect } from "@/components/fg/fp-select-unit"
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
 import { Textarea } from "@/components/ui/textarea"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { PRODUCT_STATUS } from "@/constants/product-status"
 import { S3PATH } from "@/constants/s3-path"
-import { createProductSchema, CreateProductSchema } from "../validations"
+import { showErrorToast } from "@/lib/handle-error"
+import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { ProductListingStatus } from "@prisma/client"
 import { useRouter } from "next/navigation"
+import { use, useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
+import { createProductFromAdmin } from "../actions"
+import { createProductSchema, CreateProductSchema } from "../validations"
 
 const defaultValues: CreateProductSchema = {
 	title: "",
@@ -45,16 +44,7 @@ const defaultValues: CreateProductSchema = {
 	categoryId: "",
 	farmerId: "",
 	listingStatus: "PENDING",
-	images: [],
-	pickupLocation: {
-		fullAddress: "",
-		street: "",
-		region: "",
-		country: "",
-		postalCode: "",
-		latitude: 0,
-		longitude: 0
-	}
+	images: []
 }
 interface CreateProductFormProps {
 	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
@@ -121,29 +111,6 @@ export function CreateProductForm({
 									Provide a detailed description of your product.
 								</FormDescription>
 
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="pickupLocation"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Pickup Location</FormLabel>
-								<FormControl>
-									<AddressLocationPicker
-										onAddressSelect={(address) => {
-											field.onChange(address)
-										}}
-										defaultCenter={{
-											lng: field.value?.longitude || 0,
-											lat: field.value?.latitude || 0
-										}}
-										defaultValue={field.value?.fullAddress}
-										showMap
-									/>
-								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}

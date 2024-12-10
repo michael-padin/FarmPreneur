@@ -12,6 +12,17 @@ import {
 	VisibilityState
 } from "@tanstack/react-table"
 
+import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 import {
 	Table,
 	TableBody,
@@ -20,33 +31,13 @@ import {
 	TableHeader,
 	TableRow
 } from "@/components/ui/table"
-import { use, useCallback, useState } from "react"
-import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
-import { Input } from "@/components/ui/input"
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger
-} from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { Filter, MoreVertical, RotateCcw } from "lucide-react"
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { columns } from "./columns"
 import { getAllProductsUseCase } from "@/use-cases/products"
-import { Card, CardContent } from "@/components/ui/card"
+import { MoreVertical, RotateCcw } from "lucide-react"
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
+import { use, useCallback, useState } from "react"
 import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
+import { columns } from "./columns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getAllProductsUseCase>>>

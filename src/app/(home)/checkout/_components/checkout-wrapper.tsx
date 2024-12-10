@@ -1,5 +1,4 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+import { getCheckoutDataUseCase } from "@/use-cases/customers"
 import CartCheckOutList from "./checkout-list"
 
 export async function CheckoutWrapper({
@@ -8,19 +7,17 @@ export async function CheckoutWrapper({
 	searchParams?: Promise<{
 		productId?: string
 		quantity?: number
-		from: "cart" | "product"
 	}>
 }) {
 	const params = await searchParams
-	const session = await auth()
 
-	if (!session) {
-		redirect("/login")
+	const productId = params?.productId
+	const quantity = params?.quantity
+	const checkoutData = await getCheckoutDataUseCase(productId, quantity)
+
+	if (!checkoutData.distinctProductsCount) {
+		return null
 	}
 
-	if (session.user.role !== "CUSTOMER") {
-		redirect("/login")
-	}
-
-	return <>{params?.from === "cart" ? <CartCheckOutList /> : <div></div>}</>
+	return <CartCheckOutList checkoutData={checkoutData} />
 }

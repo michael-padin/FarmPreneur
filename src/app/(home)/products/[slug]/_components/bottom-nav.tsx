@@ -36,8 +36,8 @@ export default function ProductBottomNav({
 
 	return (
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background">
-			<div className="flex h-full w-full">
-				<div className="flex h-14 gap-4 p-2 px-4">
+			<div className="flex h-16 w-full items-center gap-4 p-2">
+				<div className="flex h-full gap-4">
 					<div>
 						<Link href={"#"}>
 							<div className="flex flex-col items-center">
@@ -75,9 +75,13 @@ export default function ProductBottomNav({
 						</button>
 					</form>
 				</div>
-				<div className="w-full flex-1">
-					<Button className="h-full w-full rounded-none bg-primary text-primary-foreground">
-						Buy Now
+				<div className="flex h-full w-full flex-1 items-center">
+					<Button className="flex w-full" asChild size="lg">
+						<Link
+							href={`/checkout?productId=${product.id}&quantity=${quantity}`}
+						>
+							Buy Now
+						</Link>
 					</Button>
 				</div>
 			</div>

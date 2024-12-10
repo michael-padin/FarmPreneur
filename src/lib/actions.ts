@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
-import { CartItem } from "@/types/cart"
+import { CartItem, CartState } from "@/types/cart"
 import {
 	getFarmersUseCase,
 	getPendingFarmerCountUseCase
@@ -166,4 +166,81 @@ export async function removeFromCart(
 
 	revalidatePath("/cart")
 }
-// MARK: END OF CART
+
+// MARK: ORDER
+export async function placeOrder(
+	prevState: any,
+	payload: {
+		checkoutData: CartState
+	}
+): Promise<{ success: boolean; error?: string }> {
+	const { checkoutData } = payload
+
+	console.log("checkoutData :>> ", checkoutData)
+
+	try {
+		const session = await auth()
+
+		if (!session || !session.user)
+			return { success: false, error: "Unauthorized" }
+		const customerId = session.user.customerId
+
+		await db.$transaction(async (tx) => {
+			// Create orders and validate stock
+			for (const group of checkoutData.groupedItems) {
+				for (const item of group.items) {
+					// Fetch the current product stock
+					const product = await tx.product.findUnique({
+						where: { id: item.product.id },
+						select: { quantity: true, title: true }
+					})
+
+					if (!product) {
+						throw new Error(`Product with ID ${item.product.id} not found`)
+					}
+
+					// Check if the ordered quantity exceeds available stock
+					if (item.quantity > product.quantity) {
+						throw new Error(
+							`Insufficient stock for ${product.title}. Available: ${product.quantity}, Requested: ${item.quantity}`
+						)
+					}
+				}
+
+				// Create the order
+				await tx.order.create({
+					data: {
+						customerId,
+						farmerId: group.farmer.id,
+						totalPrice: checkoutData.total,
+						items: {
+							create: group.items.map((item) => ({
+								productId: item.product.id,
+								quantity: Number(item.quantity),
+								price: item.product.price
+							}))
+						},
+						status: "PENDING"
+					}
+				})
+
+				// Update product quantities
+				for (const item of group.items) {
+					await tx.product.update({
+						where: { id: item.product.id },
+						data: {
+							quantity: {
+								decrement: Number(item.quantity) // Reduce stock
+							}
+						}
+					})
+				}
+			}
+		})
+
+		return { success: true }
+	} catch (error: any) {
+		console.error(error.message)
+		return { success: false, error: error.message || "Failed to create order" }
+	}
+}
