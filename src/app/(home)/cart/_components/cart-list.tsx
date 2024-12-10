@@ -55,21 +55,20 @@ export default function CartListPage() {
 											</div>
 										</div>
 
-										<div className="mb-2 flex items-center justify-between text-sm">
-											<div className="w-full">
-												<div className="flex justify-between">
-													<p className="">Pickup Location: </p>
-													<button className="text-primary">View</button>
-												</div>
-												<span className="mb-2 text-muted-foreground">
-													{group.items[0].product.pickupLocation.fullAddress}
-												</span>
-											</div>
-										</div>
-
 										<div className="space-y-4">
 											{group.items.map((item) => (
 												<Fragment key={item.id}>
+													<div className="mb-2 flex items-center justify-between text-sm">
+														<div className="w-full">
+															<div className="flex justify-between">
+																<p className="">Pickup Location: </p>
+																<button className="text-primary">View</button>
+															</div>
+															<span className="mb-2 text-muted-foreground">
+																{item.product.pickupLocation.fullAddress}
+															</span>
+														</div>
+													</div>
 													<div className="space-y-4">
 														<div key={item.id} className="flex gap-4">
 															<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
