@@ -62,32 +62,34 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 					</h1>
 				</div>
 
-				{user ? (
-					<div className="flex items-center gap-2 text-primary-foreground">
-						<SearchSheet scrolled={scrolled} />
-						<NavLink
-							Icon={ShoppingCart}
-							badgeClasses={badgeClasses}
-							count={distinctProductsCount}
-							href="/cart"
-							navButtonClasses={navButtonClasses}
-						/>
-						<NavLink
-							href="/messages"
-							count={countMessages}
-							Icon={MessageCircleMore}
-							navButtonClasses={navButtonClasses}
-							badgeClasses={badgeClasses}
-						/>
-					</div>
-				) : (
-					<div className="flex items-center gap-4">
-						{/* <Search className="text-foreground" /> */}
-						<Button variant={scrolled ? "default" : "secondary"} asChild>
-							<Link href="/signup">Sign up</Link>
-						</Button>
-					</div>
-				)}
+				<div className="flex items-center gap-2 text-primary-foreground">
+					<SearchSheet scrolled={scrolled} />
+					{user ? (
+						<>
+							<NavLink
+								Icon={ShoppingCart}
+								badgeClasses={badgeClasses}
+								count={distinctProductsCount}
+								href="/cart"
+								navButtonClasses={navButtonClasses}
+							/>
+							<NavLink
+								href="/messages"
+								count={countMessages}
+								Icon={MessageCircleMore}
+								navButtonClasses={navButtonClasses}
+								badgeClasses={badgeClasses}
+							/>
+						</>
+					) : (
+						<div className="flex items-center gap-4">
+							{/* <Search className="text-foreground" /> */}
+							<Button variant={scrolled ? "default" : "secondary"} asChild>
+								<Link href="/signup">Sign up</Link>
+							</Button>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	)

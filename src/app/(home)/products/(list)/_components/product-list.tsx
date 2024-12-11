@@ -11,6 +11,7 @@ export async function ProductList() {
 		search,
 		sortBy
 	})
+
 	return (
 		<>
 			{products.length > 0 ? (

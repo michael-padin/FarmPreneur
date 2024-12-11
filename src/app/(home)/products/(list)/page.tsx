@@ -18,7 +18,12 @@ export default function ProductListPage({
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-2">
 						<BackButton />
-						<h1 className="text-2xl font-semibold">Products</h1>
+						<div className="">
+							<h2 className={`text-xs font-bold ${"text-primary"}`}>
+								FarmPreneur
+							</h2>
+							<h1 className="text-2xl font-semibold">Products</h1>
+						</div>
 					</div>
 					<TopNav />
 				</div>
