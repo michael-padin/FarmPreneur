@@ -1,12 +1,12 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { useCart } from "@/contexts/cart-context"
 import { cn } from "@/lib/utils"
 import { MessageCircleMore, ShoppingCart } from "lucide-react"
 import { Session } from "next-auth"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { SearchSheet } from "../products/[slug]/_components/search-sheet"
 import { NavLink } from "./nav-link"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
@@ -45,25 +45,26 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 		<div
 			className={cn(
 				"fixed left-0 right-0 top-0 z-10 p-3",
-				scrolled ? "bg-white shadow-md" : "bg-transparent"
+				scrolled ? "bg-white shadow-md" : "bg-primary"
 			)}
 		>
 			<div className="flex items-center justify-between gap-4 lg:container">
-				{user && (
-					<div className="w-full">
-						<Input placeholder="Search" className="w-full" />
+				<div className="flex items-center gap-2">
+					<div
+						className={`flex min-h-10 min-w-10 items-center justify-center rounded-lg bg-background font-bold text-primary ${scrolled ? "bg-primary text-white" : ""}`}
+					>
+						<h1>FP</h1>
 					</div>
-				)}
-				<div>
 					<h1
-						className={`text-xl font-bold ${scrolled ? "text-primary" : "text-primary-foreground"}`}
+						className={`font-bold ${scrolled ? "text-primary" : "text-primary-foreground"}`}
 					>
 						FarmPreneur
 					</h1>
 				</div>
 
 				{user ? (
-					<div className="flex items-center gap-4 text-primary-foreground">
+					<div className="flex items-center gap-2 text-primary-foreground">
+						<SearchSheet scrolled={scrolled} />
 						<NavLink
 							Icon={ShoppingCart}
 							badgeClasses={badgeClasses}

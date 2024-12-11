@@ -14,7 +14,7 @@ export function CategoryCard({
 }: CategoryCardProps) {
 	return (
 		<Card className="border-none">
-			<CardContent className="w-28 p-0">
+			<CardContent className="w-24 p-0">
 				<div className="relative h-20 overflow-hidden rounded-lg">
 					<Image
 						src={imageUrl}
@@ -24,10 +24,8 @@ export function CategoryCard({
 						className="h-full w-full object-cover"
 					/>
 				</div>
-				<div className="px-1 py-2">
-					<h3 className="mb-2 truncate text-sm font-semibold text-primary">
-						{title}
-					</h3>
+				<div className="px-1 pt-2">
+					<h3 className="truncate text-sm">{title}</h3>
 					{/* <p className="line-clamp-2 text-sm text-muted-foreground">
 						{description}
 					</p> */}

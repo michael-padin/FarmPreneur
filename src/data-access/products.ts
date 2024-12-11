@@ -346,6 +346,75 @@ export const getDailyProducts = async (address?: Address) => {
 		}
 	})
 }
+
+// MARK: SEARCH SUGGESTIONS
+export const getProductsSuggestions = async (filter: {
+	search: string | null
+}) => {
+	const search = filter.search
+	if (!search) {
+		return []
+	}
+	return await db.product.findMany({
+		where: {
+			OR: [
+				{
+					title: {
+						contains: search,
+						mode: "insensitive"
+					}
+				},
+				{
+					description: {
+						contains: search,
+						mode: "insensitive"
+					}
+				},
+				{
+					category: {
+						OR: [
+							{
+								name: {
+									contains: search,
+									mode: "insensitive"
+								}
+							},
+							{
+								description: {
+									contains: search,
+									mode: "insensitive"
+								}
+							}
+						]
+					}
+				},
+				{
+					farmer: {
+						OR: [
+							{
+								farmName: {
+									contains: search,
+									mode: "insensitive"
+								}
+							},
+							{
+								address: {
+									some: {
+										fullAddress: {
+											contains: search,
+											mode: "insensitive"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			]
+		}
+	})
+}
+
 export const getProductBySlug = async (slug: string) => {
 	return await db.product.findUnique({
 		where: { slug },

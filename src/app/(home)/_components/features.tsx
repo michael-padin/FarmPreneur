@@ -9,21 +9,20 @@ export async function Features() {
 	return (
 		<section className="mx-auto rounded-lg px-0 lg:container lg:px-4">
 			<div className="rounded-lg bg-background">
-				<div className="relative rounded-md bg-background py-3">
-					<h3 className="mb-4 px-3 font-semibold lg:text-2xl">
-						{" "}
+				<div className="relative rounded-md bg-background py-2">
+					<h3 className="mb-2 px-2 font-semibold lg:text-2xl">
 						Featured Products
 					</h3>
 					<div>
 						<div className="">
 							<ScrollArea className="overflow-hidden">
-								<div className="flex gap-3">
+								<div className="flex gap-2">
 									{products.length > 0 ? (
 										products.map((product, index) => (
 											<Link
 												href={`/products/${product.slug}`}
 												key={index}
-												className="inline-block h-full w-full truncate first:pl-3 last:pr-3"
+												className="inline-block h-full w-full truncate first:pl-2 last:pr-2"
 												prefetch
 											>
 												<ProductCard

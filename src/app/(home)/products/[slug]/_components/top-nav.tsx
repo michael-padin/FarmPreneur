@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { ArrowLeft, MessageCircleMore, ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { SearchSheet } from "./search-sheet"
 
 export function TopNav() {
 	const {
@@ -55,7 +56,10 @@ export function TopNav() {
 						<ArrowLeft className="h-6 w-6" />
 					</button>
 				</div>
-				<div className="flex gap-3">
+				<div className="flex gap-2">
+					<div className={cn(navButtonClasses)}>
+						<SearchSheet scrolled={scrolled} />
+					</div>
 					<NavLink
 						href="/cart"
 						count={distinctProductsCount}

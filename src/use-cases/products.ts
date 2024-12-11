@@ -170,8 +170,7 @@ export const getProductBySlugUseCase = async (slug: string) => {
 
 		farmer: {
 			id: product.farmer?.id || "",
-			farmName: product.farmer?.farmName || product.farmer?.user.name || "",
-			contactNumber: product.farmer?.contactNumber || "",
+			name: product.farmer?.farmName || product.farmer?.user.name || "",
 			addresses:
 				product.farmer?.address.map((address) => ({
 					id: address.id,

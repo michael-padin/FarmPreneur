@@ -6,9 +6,9 @@ export async function HomeNav() {
 	const session = await auth()
 
 	return (
-		<header>
+		<>
 			<MobileNav user={session?.user} />
 			<DesktopNav />
-		</header>
+		</>
 	)
 }

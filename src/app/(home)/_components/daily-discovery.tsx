@@ -7,10 +7,10 @@ export async function DailyDiscovery() {
 	const products = await getDailyProductsUseCase()
 
 	return (
-		<section className="mx-auto rounded-lg px-0 py-5 lg:container lg:px-4">
-			<div className="rounded-lg bg-background p-3">
-				<h3 className="mb-4 font-semibold lg:text-2xl">Daily Discovery</h3>
-				<div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+		<section className="-mx-2 rounded-lg px-0 py-2 lg:container lg:px-4">
+			<div className="rounded-lg p-2">
+				<h3 className="mb-2 font-semibold lg:text-2xl">Daily Discovery</h3>
+				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
 					{products.length > 0 ? (
 						products.map((product, index) => (
 							<Link

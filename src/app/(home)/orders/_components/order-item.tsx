@@ -23,7 +23,7 @@ export function OrderItem({
 					</div>
 					<div className="flex flex-1 flex-col gap-1">
 						<div className="flex items-center justify-between">
-							<h3 className="font-medium">{item.product.title}</h3>
+							<h3 className="">{item.product.title}</h3>
 						</div>
 						<div className="mt-auto flex items-center justify-between">
 							<div className="flex items-center gap-2">

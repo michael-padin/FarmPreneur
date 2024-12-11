@@ -14,11 +14,11 @@ export default function Order({
 }) {
 	return (
 		<Card key={order.farmer.id} className="border-none bg-background">
-			<CardContent className="w-full space-y-2 p-4">
+			<CardContent className="w-full space-y-3 p-2">
 				<div className="">
 					<div className="flex justify-between">
 						<div className="flex items-center gap-2">
-							<h2 className="text-lg font-semibold">{order.farmer.farmName}</h2>
+							<h2 className="font-semibold">{order.farmer.farmName}</h2>
 							<ChevronRight className="h-4 w-4" />
 						</div>
 						<OrderStatusBadge status={order.status} showText />
@@ -44,7 +44,7 @@ export default function Order({
 					</div>
 				</div>
 
-				<div className="w-full space-y-2">
+				<div className="w-full space-y-3">
 					{order.items.map((item, index) => (
 						<Fragment key={item.id}>
 							<OrderItem item={item} />

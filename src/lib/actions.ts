@@ -1,6 +1,7 @@
 "use server"
 
 import { auth } from "@/auth"
+import { getProductsSuggestions } from "@/data-access/products"
 import { db } from "@/lib/db"
 import { CartItem, CartState } from "@/types/cart"
 import {
@@ -240,5 +241,24 @@ export async function placeOrder(
 	} catch (error: any) {
 		console.error(error.message)
 		return { success: false, error: error.message || "Failed to create order" }
+	}
+}
+
+// MARK: PRODUCTS
+export async function searchProducts(searchTerm: string) {
+	if (!searchTerm) {
+		return {
+			products: []
+		}
+	}
+
+	try {
+		const products = await getProductsSuggestions({
+			search: searchTerm
+		})
+		return { products }
+	} catch (error) {
+		console.error(error)
+		return { products: [] }
 	}
 }

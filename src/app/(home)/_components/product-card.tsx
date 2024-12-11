@@ -37,11 +37,11 @@ export default function ProductCard({
 	className
 }: ProductCardProps) {
 	return (
-		<Card className={`${cn("", className)}`}>
+		<Card className={`${cn("overflow-hidden", className)}`}>
 			<CardContent className="group p-0">
 				<div className="relative aspect-square overflow-hidden">
 					<Image
-						className="rounded-xl object-cover"
+						className="object-cover"
 						src={image || `/placeholder.svg`}
 						alt={title}
 						fill
@@ -49,8 +49,8 @@ export default function ProductCard({
 						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 					/>
 				</div>
-				<div className="overflow-hidden pt-1">
-					<p className="w-full truncate font-semibold underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
+				<div className="overflow-hidden p-2">
+					<p className="tex-sm w-full truncate underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
 						{title}
 					</p>
 					<div className="mb-1 flex items-center gap-2">
