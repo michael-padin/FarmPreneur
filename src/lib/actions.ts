@@ -172,11 +172,12 @@ export async function placeOrder(
 	prevState: any,
 	payload: {
 		checkoutData: CartState
+		pickupLocationId: string
 	}
 ): Promise<{ success: boolean; error?: string }> {
-	const { checkoutData } = payload
+	const { checkoutData, pickupLocationId } = payload
 
-	console.log("checkoutData :>> ", checkoutData)
+	console.log("payload :>> ", payload)
 
 	try {
 		const session = await auth()
@@ -220,7 +221,8 @@ export async function placeOrder(
 								price: item.product.price
 							}))
 						},
-						status: "PENDING"
+						status: "PENDING",
+						pickupLocationId: pickupLocationId
 					}
 				})
 

@@ -25,12 +25,6 @@ export const getCartUseCase = async (cartId: string): Promise<CartState> => {
 				name: item.product.title,
 				price: item.product.price,
 				image: item.product.images[0].url,
-				pickupLocation: {
-					id: item.product.pickupLocation!.id,
-					fullAddress: item.product.pickupLocation!.fullAddress || "",
-					latitude: item.product.pickupLocation!.latitude,
-					longitude: item.product.pickupLocation!.longitude
-				},
 				unit: item.product.unit as UnitKey,
 				farmer: {
 					id: item.product.farmer!.id,

@@ -34,7 +34,7 @@ export const getOrders = async () => {
 					}
 				}
 			},
-			address: true
+			pickupLocation: true
 		}
 	})
 }
@@ -98,7 +98,7 @@ export const getRecentOrders = async () => {
 					}
 				}
 			},
-			address: true
+			pickupLocation: true
 		},
 		take: 10
 	})
@@ -164,6 +164,83 @@ export const getFarmerOrders = async (filter: {
 	})
 }
 
+export const getCustomerOrders = async (filter: {
+	status: OrderStatus | null
+	search: string | null
+	customerId: string
+}) => {
+	return await db.order.findMany({
+		where: {
+			customerId: filter.customerId,
+			...(filter.status && { status: filter.status }),
+			...(filter.search && {
+				OR: [
+					{
+						items: {
+							some: {
+								product: {
+									title: { contains: filter.search, mode: "insensitive" }
+								}
+							}
+						}
+					},
+					{
+						customer: {
+							user: { name: { contains: filter.search, mode: "insensitive" } }
+						}
+					}
+				]
+			})
+		},
+		include: {
+			items: {
+				include: {
+					product: {
+						select: {
+							title: true,
+							price: true,
+							unit: true,
+							images: {
+								select: {
+									url: true,
+									altText: true
+								}
+							}
+						}
+					}
+				}
+			},
+			pickupLocation: {
+				select: {
+					fullAddress: true,
+					latitude: true,
+					longitude: true,
+					note: true
+				}
+			},
+			customer: {
+				select: {
+					address: {
+						select: {
+							fullAddress: true,
+							longitude: true,
+							latitude: true,
+							street: true
+						}
+					}
+				}
+			},
+			farmer: {
+				select: {
+					contactNumber: true,
+					farmName: true,
+					id: true
+				}
+			}
+		}
+	})
+}
+
 export const createOrder = async (data: {
 	items: {
 		quantity: number
@@ -183,7 +260,7 @@ export const createOrder = async (data: {
 					productId: item.productId
 				}))
 			},
-			addressId: data.addressId,
+			pickupLocationId: data.addressId,
 			customerId: data.customerId,
 			farmerId: data.farmerId
 		},
@@ -207,7 +284,7 @@ export const createOrder = async (data: {
 					}
 				}
 			},
-			address: true
+			pickupLocation: true
 		}
 	})
 }

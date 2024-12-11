@@ -1,11 +1,20 @@
 "use client"
+import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { Card, CardContent } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from "@/components/ui/select"
 import { formatPHP } from "@/lib/utils"
 import { CartState } from "@/types/cart"
 import { ChevronRight } from "lucide-react"
 import Image from "next/image"
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import { PlaceOrder } from "./place-order"
 
 export default function CartCheckOutList({
@@ -13,6 +22,7 @@ export default function CartCheckOutList({
 }: {
 	checkoutData: CartState
 }) {
+	const [pickupLocationId, setPickupLocationId] = useState<string>("")
 	return (
 		<>
 			<ScrollArea className="flex-1 p-2">
@@ -28,21 +38,72 @@ export default function CartCheckOutList({
 										<ChevronRight className="h-4 w-4" />
 									</div>
 								</div>
-
+								<div className="mb-2 flex items-center justify-between text-sm">
+									<div className="w-full">
+										<div className="flex justify-between">
+											<div className="w-full">
+												<Select
+													onValueChange={setPickupLocationId}
+													defaultValue={pickupLocationId}
+												>
+													<Label htmlFor="pickup-location">
+														Select Pickup Location
+													</Label>
+													<SelectTrigger
+														className="w-full"
+														id="pickup-location"
+													>
+														<SelectValue placeholder="Argao, Cebu">
+															<span className="mb-2 text-muted-foreground">
+																{
+																	group.farmer.addresses.find(
+																		(address) => address.id === pickupLocationId
+																	)?.fullAddress
+																}
+															</span>
+														</SelectValue>
+													</SelectTrigger>
+													<SelectContent>
+														{group.farmer.addresses &&
+														group.farmer.addresses?.length > 0 ? (
+															group.farmer.addresses.map((address) => (
+																<SelectItem key={address.id} value={address.id}>
+																	<div className="flex flex-col">
+																		<span className="truncate">
+																			{address.fullAddress}
+																		</span>
+																		{/* {address.label && (
+															<span className="text-xs text-muted-foreground">
+																Label: {address.label}
+															</span>
+														)} */}
+																	</div>
+																</SelectItem>
+															))
+														) : (
+															<SelectItem disabled value="#">
+																No Address
+															</SelectItem>
+														)}
+													</SelectContent>
+												</Select>
+												{pickupLocationId && (
+													<AddressDetailsDrawerDialog
+														address={
+															group.farmer.addresses.find(
+																(address) => address.id === pickupLocationId
+															)!
+														}
+														title="Pickup Location"
+													/>
+												)}
+											</div>
+										</div>
+									</div>
+								</div>
 								<div className="w-full space-y-4">
 									{group.items.map((item) => (
 										<Fragment key={item.product.id}>
-											<div className="mb-2 flex items-center justify-between text-sm">
-												<div className="w-full">
-													<div className="flex justify-between">
-														<p className="">Pickup Location: </p>
-														<button className="text-primary">View</button>
-													</div>
-													<span className="mb-2 text-muted-foreground">
-														{item.product.pickupLocation.fullAddress}
-													</span>
-												</div>
-											</div>
 											<div className="space-y-4">
 												<div key={item.id} className="flex gap-4">
 													<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
@@ -50,6 +111,8 @@ export default function CartCheckOutList({
 															src={item.product.image}
 															alt={item.product.name}
 															fill
+															priority
+															sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 															className="object-cover"
 														/>
 													</div>
@@ -93,7 +156,10 @@ export default function CartCheckOutList({
 								</span>
 							</div>
 						</div>
-						<PlaceOrder checkoutData={checkoutData} />
+						<PlaceOrder
+							checkoutData={checkoutData}
+							pickupLocationId={pickupLocationId}
+						/>
 					</div>
 				</div>
 			) : (

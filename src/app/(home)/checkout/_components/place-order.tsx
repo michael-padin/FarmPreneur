@@ -7,13 +7,21 @@ import { useRouter } from "next/navigation"
 import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
 
-export function PlaceOrder({ checkoutData }: { checkoutData: CartState }) {
+export function PlaceOrder({
+	checkoutData,
+	pickupLocationId
+}: {
+	checkoutData: CartState
+	pickupLocationId: string
+}) {
 	const router = useRouter()
 	const [state, formAction, isPending] = useActionState(placeOrder, null)
 
 	const actions = formAction.bind(null, {
-		checkoutData
+		checkoutData,
+		pickupLocationId
 	})
+	console.log("actions :>> ", checkoutData, pickupLocationId)
 
 	useEffect(() => {
 		if (state) {

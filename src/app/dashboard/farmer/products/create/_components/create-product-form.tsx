@@ -1,5 +1,4 @@
 "use client"
-import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { FPUnitSelect } from "@/components/fg/fp-select-unit"
 import { Button } from "@/components/ui/button"
@@ -63,8 +62,7 @@ const defaultValues: CreateProductSchema = {
 	unit: "",
 	quantity: 0,
 	categoryId: "",
-	images: [],
-	pickupLocationId: ""
+	images: []
 }
 interface CreateProductFormProps {
 	categoriesPromise: Awaited<ReturnType<typeof getCategoriesUseCase>>
@@ -81,11 +79,6 @@ export function CreateProductForm({
 		resolver: zodResolver(createProductSchema),
 		defaultValues
 	})
-
-	const pickupLocationId = form.watch("pickupLocationId")
-	const foundAddress = addressesPromise?.find(
-		(address) => address.id === pickupLocationId
-	)
 
 	const onSubmit = async (data: CreateProductSchema) => {
 		startUpdateTransition(async () => {
@@ -156,56 +149,6 @@ export function CreateProductForm({
 								<FormDescription>
 									Upload an image of the product
 								</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="pickupLocationId"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Pickup Location</FormLabel>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-								>
-									<FormControl>
-										<SelectTrigger className="w-full">
-											<SelectValue placeholder="Select an address">
-												<CustomTrigger address={foundAddress!} />
-											</SelectValue>
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{addressesPromise && addressesPromise?.length > 0 ? (
-											addressesPromise.map((address) => (
-												<SelectItem key={address.id} value={address.id}>
-													<div className="flex flex-col">
-														<span className="truncate">
-															{address.fullAddress}
-														</span>
-														{address.label && (
-															<span className="text-xs text-muted-foreground">
-																Label: {address.label}
-															</span>
-														)}
-													</div>
-												</SelectItem>
-											))
-										) : (
-											<SelectItem disabled value="#">
-												No Address
-											</SelectItem>
-										)}
-									</SelectContent>
-								</Select>
-								{pickupLocationId && (
-									<AddressDetailsDrawerDialog
-										address={foundAddress!}
-										name="Pickup"
-									/>
-								)}
 								<FormMessage />
 							</FormItem>
 						)}

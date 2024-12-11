@@ -20,7 +20,6 @@ export const createProduct = async (
 			price: data.price,
 			quantity: data.quantity,
 			categoryId: data.categoryId,
-			pickupLocationId: data.pickupLocationId,
 			farmerId: data.farmerId,
 			images: {
 				createMany: {
@@ -92,8 +91,7 @@ export const getAllProducts = async () => {
 					}
 				}
 			},
-			images: true,
-			pickupLocation: true
+			images: true
 		}
 	})
 }
@@ -102,9 +100,23 @@ export const getProductById = async (id: string) => {
 	return await db.product.findFirst({
 		where: { id },
 		include: {
-			farmer: true,
+			farmer: {
+				select: {
+					farmName: true,
+					id: true,
+					contactNumber: true,
+					address: {
+						select: {
+							id: true,
+							fullAddress: true,
+							longitude: true,
+							latitude: true,
+							note: true
+						}
+					}
+				}
+			},
 			images: true,
-			pickupLocation: true,
 			category: true
 		}
 	})
@@ -156,7 +168,6 @@ export const getPendingProducts = async () => {
 				}
 			},
 			images: true,
-			pickupLocation: true,
 			category: true
 		}
 	})
@@ -300,7 +311,6 @@ export const getProducts = async (filter: {
 				}
 			},
 			images: true,
-			pickupLocation: true,
 			category: true
 		}
 	})
@@ -331,7 +341,6 @@ export const getDailyProducts = async (address?: Address) => {
 				}
 			},
 			images: true,
-			pickupLocation: true,
 			reviews: true,
 			category: true
 		}
@@ -342,12 +351,17 @@ export const getProductBySlug = async (slug: string) => {
 		where: { slug },
 		include: {
 			farmer: {
-				include: {
+				select: {
+					id: true,
+					farmName: true,
 					user: {
 						select: {
 							name: true
 						}
-					}
+					},
+					address: true,
+					contactNumber: true,
+					farmImages: true
 				}
 			},
 			_count: {
@@ -367,8 +381,7 @@ export const getProductBySlug = async (slug: string) => {
 				select: {
 					name: true
 				}
-			},
-			pickupLocation: true
+			}
 		}
 	})
 }
@@ -395,17 +408,7 @@ export const createProductFromAdmin = async (
 					id: data.categoryId
 				}
 			},
-			pickupLocation: {
-				create: {
-					fullAddress: data.pickupLocation?.fullAddress || "",
-					street: data.pickupLocation?.street || "",
-					region: data.pickupLocation?.region || "",
-					country: data.pickupLocation?.country || "",
-					postalCode: data.pickupLocation?.postalCode || "",
-					latitude: data.pickupLocation?.latitude || 0,
-					longitude: data.pickupLocation?.longitude || 0
-				}
-			},
+
 			slug: data.slug,
 			unit: data.unit,
 			images: {

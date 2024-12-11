@@ -1,7 +1,6 @@
 "use client"
 import * as React from "react"
 
-import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
 import {
 	Dialog,
@@ -22,17 +21,21 @@ import {
 	DrawerTrigger
 } from "@/components/ui/drawer"
 import { useMapbox } from "@/hooks/use-mapbox"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import "mapbox-gl/dist/mapbox-gl.css"
-import { Address } from "@prisma/client"
 
 interface AddressDetailsDrawerDialogProps {
-	address: Address
-	name?: string
+	address: {
+		fullAddress: string
+		longitude: number
+		latitude: number
+	}
+	title?: string
 }
 
 export const AddressDetailsDrawerDialog = ({
 	address,
-	name
+	title
 }: AddressDetailsDrawerDialogProps) => {
 	const [open, setOpen] = React.useState(false)
 	const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -58,9 +61,7 @@ export const AddressDetailsDrawerDialog = ({
 				</div>
 				<DialogContent className="max-w-screen-lg">
 					<DialogHeader>
-						<DialogTitle>
-							<span className="text-primary">{name}&apos;s</span> address
-						</DialogTitle>
+						<DialogTitle className="text-primary">{title}</DialogTitle>
 						<DialogDescription>{address?.fullAddress}</DialogDescription>
 					</DialogHeader>
 					<div>
@@ -83,9 +84,7 @@ export const AddressDetailsDrawerDialog = ({
 			</div>
 			<DrawerContent onOpenAutoFocus={(e) => e.preventDefault()}>
 				<DrawerHeader className="text-left">
-					<DrawerTitle>
-						<span className="text-primary">{name}&apos;s</span> address
-					</DrawerTitle>
+					<DrawerTitle className="text-primary">{title}</DrawerTitle>
 					<DrawerDescription>{address?.fullAddress}</DrawerDescription>
 				</DrawerHeader>
 				<div className="w-full px-4">

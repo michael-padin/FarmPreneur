@@ -8,7 +8,6 @@ import { ArrowLeft, ChevronRight, ShoppingCart } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Fragment } from "react"
 import { DeleteItemButton } from "./delete-item-button"
 import { EditItemQuantityButton } from "./edit-quantity-button"
 
@@ -57,74 +56,63 @@ export default function CartListPage() {
 
 										<div className="space-y-4">
 											{group.items.map((item) => (
-												<Fragment key={item.id}>
-													<div className="mb-2 flex items-center justify-between text-sm">
-														<div className="w-full">
-															<div className="flex justify-between">
-																<p className="">Pickup Location: </p>
-																<button className="text-primary">View</button>
-															</div>
-															<span className="mb-2 text-muted-foreground">
-																{item.product.pickupLocation.fullAddress}
-															</span>
+												<div className="space-y-4" key={item.id}>
+													<div key={item.id} className="flex gap-4">
+														<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+															<Image
+																src={item.product.image}
+																alt={item.product.name}
+																fill
+																priority
+																sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+																className="object-cover"
+															/>
 														</div>
-													</div>
-													<div className="space-y-4">
-														<div key={item.id} className="flex gap-4">
-															<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
-																<Image
-																	src={item.product.image}
-																	alt={item.product.name}
-																	fill
-																	className="object-cover"
+														<div className="flex flex-1 flex-col gap-1">
+															<div className="flex items-center justify-between">
+																<h3 className="font-medium">
+																	{item.product.name}
+																</h3>
+																<DeleteItemButton
+																	itemId={item.id}
+																	optimisticUpdate={removeItem}
 																/>
 															</div>
-															<div className="flex flex-1 flex-col gap-1">
-																<div className="flex items-center justify-between">
-																	<h3 className="font-medium">
-																		{item.product.name}
-																	</h3>
-																	<DeleteItemButton
-																		itemId={item.id}
-																		optimisticUpdate={removeItem}
-																	/>
-																</div>
 
-																<div className="mt-auto flex items-center justify-between">
-																	<div className="flex items-center gap-2">
-																		<p className="text-primary">
-																			₱{formatPHP(item.product.price)}/
-																			<span className="">
-																				{item.product.unit}
-																			</span>
-																		</p>
-																	</div>
-																	<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
-																		<EditItemQuantityButton
-																			type="minus"
-																			item={{
-																				id: item.id,
-																				quantity: item.quantity
-																			}}
-																			optimisticUpdate={updateQuantity}
-																		/>
-																		<span className="text-base font-medium">
-																			{item.quantity}
+															<div className="mt-auto flex items-center justify-between">
+																<div className="flex items-center gap-2">
+																	<p className="text-primary">
+																		₱{formatPHP(item.product.price)}/
+																		<span className="">
+																			{item.product.unit}
 																		</span>
-																		<EditItemQuantityButton
-																			type="plus"
-																			item={{
-																				id: item.id,
-																				quantity: item.quantity
-																			}}
-																			optimisticUpdate={updateQuantity}
-																		/>
-																	</div>
+																	</p>
+																</div>
+																<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+																	<EditItemQuantityButton
+																		type="minus"
+																		item={{
+																			id: item.id,
+																			quantity: item.quantity
+																		}}
+																		optimisticUpdate={updateQuantity}
+																	/>
+																	<span className="text-base font-medium">
+																		{item.quantity}
+																	</span>
+																	<EditItemQuantityButton
+																		type="plus"
+																		item={{
+																			id: item.id,
+																			quantity: item.quantity
+																		}}
+																		optimisticUpdate={updateQuantity}
+																	/>
 																</div>
 															</div>
 														</div>
 													</div>
-												</Fragment>
+												</div>
 											))}
 										</div>
 									</CardContent>

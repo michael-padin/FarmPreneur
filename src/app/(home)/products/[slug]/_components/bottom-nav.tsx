@@ -56,8 +56,12 @@ export default function ProductBottomNav({
 									price: product.price,
 									image: product.images[0].src,
 									unit: product.unit,
-									pickupLocation: product.pickupLocation!,
-									farmer: product.farmer
+									farmer: {
+										addresses: product.farmer!.addresses,
+										id: product.farmer!.id,
+										name: product.farmer!.farmName || "",
+										contactNumber: product.farmer!.contactNumber || ""
+									}
 								},
 								quantity
 							)

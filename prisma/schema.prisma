@@ -181,27 +181,25 @@ model WishlistItem {
 
 // MARK: PRODUCT
 model Product {
-  id               String               @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  title            String
-  description      String
-  price            Float
-  slug             String?              @unique
-  unit             String?
-  quantity         Int
-  listingStatus    ProductListingStatus @default(PENDING)
-  pickupLocation   Address?             @relation(fields: [pickupLocationId], references: [id], onDelete: NoAction)
-  pickupLocationId String               @db.ObjectId
-  category         Category?            @relation(fields: [categoryId], references: [id])
-  categoryId       String?              @db.ObjectId
-  farmer           Farmer?              @relation(fields: [farmerId], references: [id])
-  farmerId         String?              @db.ObjectId
-  cartItems        CartItem[]
-  images           Image[]
-  reviews          ProductReview[]
-  wishlistItems    WishlistItem[]
-  orderItem        OrderItem[]
+  id            String               @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  title         String
+  description   String
+  price         Float
+  slug          String?              @unique
+  unit          String?
+  quantity      Int
+  listingStatus ProductListingStatus @default(PENDING)
+  category      Category?            @relation(fields: [categoryId], references: [id])
+  categoryId    String?              @db.ObjectId
+  farmer        Farmer?              @relation(fields: [farmerId], references: [id])
+  farmerId      String?              @db.ObjectId
+  cartItems     CartItem[]
+  images        Image[]
+  reviews       ProductReview[]
+  wishlistItems WishlistItem[]
+  orderItem     OrderItem[]
 
   @@index([categoryId])
   @@index([farmerId])
@@ -270,20 +268,20 @@ model Image {
 
 // MARK: ORDER
 model Order {
-  id         String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  quantity   Int?
-  totalPrice Float?
-  status     OrderStatus    @default(IN_PROGRESS)
-  address    Address?       @relation(fields: [addressId], references: [id])
-  addressId  String?        @db.ObjectId
-  farmer     Farmer         @relation(fields: [farmerId], references: [id])
-  farmerId   String         @db.ObjectId
-  customer   Customer?      @relation(fields: [customerId], references: [id])
-  customerId String?        @db.ObjectId
-  review     ProductReview?
-  items      OrderItem[]
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  quantity         Int?
+  totalPrice       Float?
+  status           OrderStatus    @default(IN_PROGRESS)
+  pickupLocation   Address?       @relation(fields: [pickupLocationId], references: [id])
+  pickupLocationId String?        @db.ObjectId
+  farmer           Farmer         @relation(fields: [farmerId], references: [id])
+  farmerId         String         @db.ObjectId
+  customer         Customer?      @relation(fields: [customerId], references: [id])
+  customerId       String?        @db.ObjectId
+  review           ProductReview?
+  items            OrderItem[]
 
   @@index([status])
   @@index([customerId])
@@ -397,7 +395,6 @@ model Address {
   farmer       Farmer?   @relation(fields: [farmerId], references: [id])
   customer     Customer? @relation(fields: [customerId], references: [id])
   farmerId     String?   @db.ObjectId
-  Product      Product[]
   customerId   String?   @db.ObjectId
 
   @@index([country, region])

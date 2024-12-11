@@ -12,15 +12,17 @@ export const getCartById = async (id: string) => {
 							farmer: {
 								select: {
 									farmName: true,
-									id: true
-								}
-							},
-							pickupLocation: {
-								select: {
 									id: true,
-									fullAddress: true,
-									latitude: true,
-									longitude: true
+									contactNumber: true,
+									address: {
+										select: {
+											id: true,
+											fullAddress: true,
+											longitude: true,
+											latitude: true,
+											note: true
+										}
+									}
 								}
 							}
 						}

@@ -3,7 +3,6 @@ export interface Product {
 	name: string
 	price: number
 	image: string
-	pickupLocation: PickupLocation
 	unit: string
 	farmer: Farmer
 }
@@ -11,6 +10,8 @@ export interface Product {
 export interface Farmer {
 	id: string
 	name: string
+	contactNumber: string
+	addresses: Address[]
 }
 
 export interface PickupLocation {
@@ -25,6 +26,15 @@ export interface CartItem {
 	product: Product
 	quantity: number
 }
+
+export interface Address {
+	id: string
+	fullAddress: string
+	longitude: number
+	latitude: number
+	note: string
+}
+
 export interface GroupedCartItem {
 	farmer: Farmer
 	items: CartItem[]

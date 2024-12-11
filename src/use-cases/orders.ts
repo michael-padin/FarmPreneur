@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import {
+	getCustomerOrders,
 	getFarmerOrders,
 	getOrders,
 	getRecentOrders,
@@ -43,6 +44,23 @@ export const getFarmerOrdersUseCase = async (filter: {
 	if (!session || !session.user) throw new Error("Unauthorized")
 
 	return await getFarmerOrders({ ...filter, userId: session.user.id })
+}
+
+export const getCustomerOrdersUseCase = async (filter: {
+	status: OrderStatus | null
+	search: string | null
+}) => {
+	const session = await auth()
+	if (!session || !session.user) throw new Error("Unauthorized")
+
+	const customerId = session.user.customerId || ""
+
+	if (!customerId) throw new Error("Customer not found")
+
+	return await getCustomerOrders({
+		...filter,
+		customerId
+	})
 }
 
 export const getRecentOrdersUseCase = async () => {

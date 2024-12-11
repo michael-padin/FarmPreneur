@@ -55,16 +55,19 @@ export const getCheckoutDataUseCase = async (
 					name: product.title,
 					price: product.price,
 					image: product.images[0].url,
-					pickupLocation: {
-						id: product.pickupLocation!.id,
-						fullAddress: product.pickupLocation!.fullAddress || "",
-						latitude: product.pickupLocation!.latitude,
-						longitude: product.pickupLocation!.longitude
-					},
 					unit: product.unit as UnitKey,
 					farmer: {
 						id: product.farmer!.id,
-						name: product.farmer!.farmName || ""
+						name: product.farmer!.farmName || "",
+						contactNumber: product.farmer!.contactNumber || "",
+						addresses:
+							product.farmer?.address.map((address) => ({
+								id: address.id,
+								fullAddress: address.fullAddress || "",
+								longitude: address.longitude,
+								latitude: address.latitude,
+								note: address.note || ""
+							})) || []
 					}
 				},
 				quantity
@@ -104,22 +107,25 @@ export const getCheckoutDataUseCase = async (
 	}
 
 	const reshapedCart = cart.items.map((item) => ({
-		id: item.id,
+		id: item.product.id,
 		product: {
 			id: item.product.id,
 			name: item.product.title,
 			price: item.product.price,
 			image: item.product.images[0].url,
-			pickupLocation: {
-				id: item.product.pickupLocation!.id,
-				fullAddress: item.product.pickupLocation!.fullAddress || "",
-				latitude: item.product.pickupLocation!.latitude,
-				longitude: item.product.pickupLocation!.longitude
-			},
 			unit: item.product.unit as UnitKey,
 			farmer: {
 				id: item.product.farmer!.id,
-				name: item.product.farmer!.farmName || ""
+				name: item.product.farmer!.farmName || "",
+				contactNumber: item.product.farmer!.contactNumber || "",
+				addresses:
+					item.product.farmer?.address.map((address) => ({
+						id: address.id,
+						fullAddress: address.fullAddress || "",
+						longitude: address.longitude,
+						latitude: address.latitude,
+						note: address.note || ""
+					})) || []
 			}
 		},
 		quantity: item.quantity

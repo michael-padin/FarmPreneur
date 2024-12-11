@@ -163,19 +163,23 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		description: product.description,
 		quantity: product.quantity,
 		averageRating,
-		pickupLocation: {
-			id: product.pickupLocation!.id,
-			fullAddress: product.pickupLocation!.fullAddress || "",
-			latitude: product.pickupLocation!.latitude,
-			longitude: product.pickupLocation!.longitude
-		},
+
 		_count: {
 			orders: product._count.orderItem
 		},
 
 		farmer: {
 			id: product.farmer?.id || "",
-			name: product.farmer?.farmName || product.farmer?.user.name || ""
+			farmName: product.farmer?.farmName || product.farmer?.user.name || "",
+			contactNumber: product.farmer?.contactNumber || "",
+			addresses:
+				product.farmer?.address.map((address) => ({
+					id: address.id,
+					fullAddress: address.fullAddress || "",
+					longitude: address.longitude,
+					latitude: address.latitude,
+					note: address.note || ""
+				})) || []
 		},
 		images: product.images.map((image) => ({
 			src: image.url,
