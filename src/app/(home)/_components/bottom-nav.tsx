@@ -16,7 +16,7 @@ const BottomNav = () => {
 			url: "/notifications",
 			badge: unreadCount > 0 ? unreadCount : null
 		},
-		{ label: "Me", icon: User, url: "/me" }
+		{ label: "Profile", icon: User, url: "/profile" }
 	]
 	return (
 		<nav className="fixed bottom-0 left-0 right-0 border-t bg-background md:hidden">

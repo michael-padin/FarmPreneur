@@ -8,7 +8,57 @@ import {
 	updateCustomerByUserId
 } from "@/data-access/customers"
 import { getProductById } from "@/data-access/products"
+import { db } from "@/lib/db"
 import { groupCartItemsByFarmer } from "@/lib/utils"
+
+export const getCustomerProfileUseCase = async () => {
+	const session = await auth()
+
+	if (!session || !session.user) throw new Error("Unauthorized")
+
+	const customerId = session.user.customerId || ""
+
+	const customer = await getCustomerById(customerId)
+	if (!customer) throw new Error("Customer not found!")
+
+	const customerQuery = await db.customer.findUnique({
+		where: {
+			id: customerId
+		},
+		include: {
+			_count: {
+				select: {
+					address: true,
+					orders: true,
+					reviews: true
+				}
+			},
+			user: {
+				include: {
+					profilePicture: true
+				}
+			},
+			reviews: true,
+
+			address: true
+		}
+	})
+
+	return {
+		profilePicture: customerQuery?.user.profilePicture?.url || "",
+		name: customerQuery?.user.name || "",
+		email: customerQuery?.user.email || "",
+		address: {
+			fullAddress: customerQuery?.address?.[0]?.fullAddress || "",
+			latitude: customerQuery?.address?.[0]?.latitude || 0,
+			longitude: customerQuery?.address?.[0]?.longitude || 0
+		},
+		contactNumber: customerQuery?.contactNumber || "",
+		orders: customerQuery?._count.orders,
+		reviews: customerQuery?._count.reviews,
+		createdAt: customerQuery?.createdAt
+	}
+}
 
 export const getCustomersUseCase = async () => {
 	return await getCustomers()
