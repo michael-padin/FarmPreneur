@@ -172,13 +172,9 @@ export async function placeOrder(
 	prevState: any,
 	payload: {
 		checkoutData: CartState
-		pickupLocationId: string
 	}
 ): Promise<{ success: boolean; error?: string }> {
-	const { checkoutData, pickupLocationId } = payload
-
-	console.log("payload :>> ", payload)
-
+	const { checkoutData } = payload
 	try {
 		const session = await auth()
 
@@ -222,7 +218,7 @@ export async function placeOrder(
 							}))
 						},
 						status: "PENDING",
-						pickupLocationId: pickupLocationId
+						pickupLocationId: group.pickupLocationId
 					}
 				})
 

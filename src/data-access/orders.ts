@@ -192,6 +192,9 @@ export const getCustomerOrders = async (filter: {
 				]
 			})
 		},
+		orderBy: {
+			createdAt: "desc"
+		},
 		include: {
 			items: {
 				include: {

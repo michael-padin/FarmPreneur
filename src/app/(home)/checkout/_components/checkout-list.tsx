@@ -22,12 +22,34 @@ export default function CartCheckOutList({
 }: {
 	checkoutData: CartState
 }) {
+	const [newCheckoutData, setNewCheckoutData] =
+		useState<CartState>(checkoutData)
+	const [errors, setErrors] = useState<Record<number, boolean>>({})
 	const [pickupLocationId, setPickupLocationId] = useState<string>("")
+
+	const validateCheckout = () => {
+		const newErrors = {} as Record<number, boolean>
+
+		newCheckoutData.groupedItems.forEach((group, index) => {
+			if (!group.pickupLocationId) {
+				newErrors[index] = true
+			}
+		})
+
+		setErrors(newErrors)
+
+		if (Object.keys(newErrors).length > 0) {
+			return false
+		}
+
+		return true
+	}
+
 	return (
 		<>
 			<ScrollArea className="flex-1 p-2">
 				<div className="space-y-4 lg:container">
-					{checkoutData?.groupedItems?.map((group) => (
+					{checkoutData?.groupedItems?.map((group, index) => (
 						<Card key={group.farmer.id} className="border-none bg-background">
 							<CardContent className="w-full space-y-2 p-4">
 								<div className="flex items-center justify-between">
@@ -43,18 +65,46 @@ export default function CartCheckOutList({
 										<div className="flex justify-between">
 											<div className="w-full">
 												<Select
-													onValueChange={setPickupLocationId}
-													defaultValue={pickupLocationId}
+													onValueChange={(value) => {
+														setNewCheckoutData((prev) => {
+															return {
+																...prev,
+																groupedItems: [
+																	...prev.groupedItems.map((group, i) => {
+																		if (i === index) {
+																			return {
+																				...group,
+																				pickupLocationId: value
+																			}
+																		}
+																		return group
+																	})
+																]
+															}
+														})
+														setPickupLocationId(value)
+
+														// Clear error when a valid pickupLocationId is selected
+														setErrors((prev) => {
+															const newErrors = { ...prev }
+															newErrors[index] = false
+															return newErrors
+														})
+													}}
 												>
 													<Label htmlFor="pickup-location">
-														Select Pickup Location
+														Pickup Location
 													</Label>
 													<SelectTrigger
-														className="w-full"
+														className={`w-full ${
+															errors[index]
+																? "border-destructive text-destructive ring-destructive focus:ring-destructive"
+																: ""
+														}`}
 														id="pickup-location"
 													>
-														<SelectValue placeholder="Argao, Cebu">
-															<span className="mb-2 text-muted-foreground">
+														<SelectValue placeholder="Select Pickup Location">
+															<span className="mb-2">
 																{
 																	group.farmer.addresses.find(
 																		(address) => address.id === pickupLocationId
@@ -72,11 +122,6 @@ export default function CartCheckOutList({
 																		<span className="truncate">
 																			{address.fullAddress}
 																		</span>
-																		{/* {address.label && (
-															<span className="text-xs text-muted-foreground">
-																Label: {address.label}
-															</span>
-														)} */}
 																	</div>
 																</SelectItem>
 															))
@@ -157,8 +202,8 @@ export default function CartCheckOutList({
 							</div>
 						</div>
 						<PlaceOrder
-							checkoutData={checkoutData}
-							pickupLocationId={pickupLocationId}
+							checkoutData={newCheckoutData}
+							validateCheckout={validateCheckout}
 						/>
 					</div>
 				</div>

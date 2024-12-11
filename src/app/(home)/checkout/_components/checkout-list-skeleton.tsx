@@ -3,7 +3,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ChevronRight } from "lucide-react"
 
 export default function CartCheckOutListSkeleton() {
 	return (
@@ -16,7 +15,6 @@ export default function CartCheckOutListSkeleton() {
 								<div className="flex items-center justify-between">
 									<div className="flex items-center gap-2">
 										<Skeleton className="h-6 w-40" />
-										<ChevronRight className="h-4 w-4" />
 									</div>
 								</div>
 
@@ -27,9 +25,8 @@ export default function CartCheckOutListSkeleton() {
 												<div className="w-full">
 													<div className="flex justify-between">
 														<Skeleton className="h-4 w-28" />
-														<Skeleton className="h-4 w-8" />
 													</div>
-													<Skeleton className="mt-1 h-4 w-full" />
+													<Skeleton className="mt-1 h-10 w-full" />
 												</div>
 											</div>
 											<div className="space-y-4">

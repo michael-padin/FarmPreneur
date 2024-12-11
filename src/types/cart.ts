@@ -36,6 +36,7 @@ export interface Address {
 }
 
 export interface GroupedCartItem {
+	pickupLocationId?: string
 	farmer: Farmer
 	items: CartItem[]
 }

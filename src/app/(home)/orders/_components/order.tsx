@@ -44,13 +44,10 @@ export default function Order({
 					</div>
 				</div>
 
-				<div className="w-full">
+				<div className="w-full space-y-2">
 					{order.items.map((item, index) => (
 						<Fragment key={item.id}>
 							<OrderItem item={item} />
-							{index !== order.items.length - 1 && (
-								<div className="my-2 h-px bg-border" />
-							)}
 						</Fragment>
 					))}
 				</div>

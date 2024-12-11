@@ -9,29 +9,31 @@ import { toast } from "sonner"
 
 export function PlaceOrder({
 	checkoutData,
-	pickupLocationId
+	validateCheckout
 }: {
 	checkoutData: CartState
-	pickupLocationId: string
+	validateCheckout?: () => boolean
 }) {
 	const router = useRouter()
 	const [state, formAction, isPending] = useActionState(placeOrder, null)
 
-	const actions = formAction.bind(null, {
-		checkoutData,
-		pickupLocationId
+	const formActionsWithData = formAction.bind(null, {
+		checkoutData
 	})
-	console.log("actions :>> ", checkoutData, pickupLocationId)
 
 	useEffect(() => {
 		if (state) {
 			if (state.error) {
-				toast.error("Error", {
-					description: state.error || "Failed to create order"
+				toast.error(state.error, {
+					closeButton: true,
+					duration: 2000,
+					position: "top-right"
 				})
 			} else {
-				toast.success("Success", {
-					description: "Order created successfully"
+				toast.success("Order created successfully", {
+					closeButton: true,
+					duration: 2000,
+					position: "top-right"
 				})
 
 				router.push("/orders")
@@ -40,7 +42,19 @@ export function PlaceOrder({
 	}, [state, router])
 
 	return (
-		<form action={actions}>
+		<form
+			action={() => {
+				if (validateCheckout?.()) {
+					formActionsWithData()
+					return
+				}
+				toast.error("Please select a pickup location", {
+					closeButton: true,
+					duration: 2000,
+					position: "top-right"
+				})
+			}}
+		>
 			<Button className="w-full" size="lg" disabled={isPending}>
 				{isPending ? "Processing..." : "Place Order"}
 			</Button>
