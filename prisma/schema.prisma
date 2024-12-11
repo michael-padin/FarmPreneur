@@ -470,7 +470,6 @@ enum OrderStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
-  FAILED
 }
 
 // MARK: ProductStatus

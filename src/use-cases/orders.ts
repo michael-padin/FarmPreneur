@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import {
 	getCustomerOrders,
+	getCustomerOrderStatuses,
 	getFarmerOrders,
 	getOrders,
 	getRecentOrders,
@@ -61,6 +62,33 @@ export const getCustomerOrdersUseCase = async (filter: {
 		...filter,
 		customerId
 	})
+}
+
+export const getCustomerOrderCountUseCase = async () => {
+	try {
+		const session = await auth()
+		if (!session || !session.user) throw new Error("Unauthorized")
+
+		const customerId = session.user.customerId || ""
+		const orders = await getCustomerOrderStatuses(customerId)
+
+		const orderCounts = orders.reduce(
+			(counts, order) => {
+				counts[order.status] = (counts[order.status] || 0) + 1
+				return counts
+			},
+			{ PENDING: 0, COMPLETED: 0, IN_PROGRESS: 0, CANCELLED: 0 }
+		)
+
+		return {
+			pendingOrders: orderCounts.PENDING,
+			completedOrders: orderCounts.COMPLETED,
+			inProgressOrders: orderCounts.IN_PROGRESS,
+			cancelledOrders: orderCounts.CANCELLED
+		}
+	} catch (error) {
+		throw error
+	}
 }
 
 export const getRecentOrdersUseCase = async () => {

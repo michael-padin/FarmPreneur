@@ -77,7 +77,7 @@ export const AddressDetailsDrawerDialog = ({
 			<div>
 				{/* <p className="w-[180px] truncate">{address?.fullAddress}</p> */}
 				<DrawerTrigger asChild>
-					<span className="cursor-pointer text-xs text-primary">
+					<span className="cursor-pointer text-xs text-primary" role="button">
 						View in map
 					</span>
 				</DrawerTrigger>

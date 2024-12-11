@@ -7,14 +7,16 @@ import { useQueryState } from "nuqs"
 import { useRef, useTransition } from "react"
 import { searchParams } from "./searchParams"
 
-const orderStatusMap: Record<OrderStatus, { label: string }> = {
-	[OrderStatus.PENDING]: { label: "Pending" },
-	[OrderStatus.IN_PROGRESS]: { label: "In Progress" },
-	[OrderStatus.COMPLETED]: { label: "Completed" },
-	[OrderStatus.CANCELLED]: { label: "Cancelled" },
-	[OrderStatus.FAILED]: { label: "Failed" }
-}
-export function StatusTabs() {
+export function StatusTabs({
+	count
+}: {
+	count: {
+		inProgressOrders: number
+		pendingOrders: number
+		completedOrders: number
+		cancelledOrders: number
+	}
+}) {
 	const [isLoading, startTransition] = useTransition()
 	const scrollAreaRef = useRef<HTMLDivElement>(null)
 
@@ -25,6 +27,22 @@ export function StatusTabs() {
 			shallow: false // Send updates to the server
 		})
 	)
+	const orderStatusMap: Record<OrderStatus, { label: string; badge: number }> =
+		{
+			[OrderStatus.PENDING]: { label: "Pending", badge: count.pendingOrders },
+			[OrderStatus.IN_PROGRESS]: {
+				label: "In Progress",
+				badge: count.inProgressOrders
+			},
+			[OrderStatus.COMPLETED]: {
+				label: "Completed",
+				badge: count.completedOrders
+			},
+			[OrderStatus.CANCELLED]: {
+				label: "Cancelled",
+				badge: count.cancelledOrders
+			}
+		}
 
 	const statuses = Object.keys(orderStatusMap) as OrderStatus[]
 
@@ -38,9 +56,6 @@ export function StatusTabs() {
 							className={`relative flex-1 px-4 py-2 text-center text-sm font-medium transition-colors ${activeStatus === null ? "text-primary" : "text-muted-foreground"} focus-visible:outline-none`}
 						>
 							All
-							{/* <span className="ml-2 rounded-full bg-gray-100 py-0.5 text-xs text-gray-700">
-									{statusData[status].count}
-								</span> */}
 							{activeStatus === null && (
 								<motion.div
 									className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
@@ -57,9 +72,10 @@ export function StatusTabs() {
 								aria-current={activeStatus === status ? "page" : undefined}
 							>
 								{orderStatusMap[status].label}
-								{/* <span className="ml-2 rounded-full bg-gray-100 py-0.5 text-xs text-gray-700">
-									{statusData[status].count}
-								</span> */}
+
+								<span className="ml-2 text-xs text-muted-foreground">
+									{orderStatusMap[status].badge}
+								</span>
 								{activeStatus === status && (
 									<motion.div
 										className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"

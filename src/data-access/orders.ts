@@ -164,9 +164,20 @@ export const getFarmerOrders = async (filter: {
 	})
 }
 
+export const getCustomerOrderStatuses = async (customerId?: string) => {
+	return await db.order.findMany({
+		where: {
+			customerId
+		},
+		select: {
+			status: true
+		}
+	})
+}
+
 export const getCustomerOrders = async (filter: {
-	status: OrderStatus | null
-	search: string | null
+	status?: OrderStatus | null
+	search?: string | null
 	customerId: string
 }) => {
 	return await db.order.findMany({

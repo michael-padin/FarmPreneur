@@ -34,6 +34,7 @@ export function FilterProducts() {
 			</div>
 			<Button variant="outline" onClick={() => toast.info("Coming soon...")}>
 				<Filter className="h-4 w-4" />
+				<span className="sr-only">Filter</span>
 			</Button>
 		</div>
 	)

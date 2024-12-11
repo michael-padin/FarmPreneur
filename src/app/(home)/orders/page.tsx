@@ -1,10 +1,12 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { type SearchParams } from "nuqs/server"
+import { Suspense } from "react"
 import { BottomNav } from "../_components"
 import { FilterProducts } from "./_components/filter-products"
 import { OrdersNavLinks } from "./_components/nav-links"
 import { OrderListWrapper } from "./_components/order-list-wrapper"
-import { StatusTabs } from "./_components/tab-list"
+import { StatusTabsWrapper } from "./_components/status-tab-wrapper"
+import StatusTabsSkeleton from "./_components/status-tabs-skeleton"
 
 type PageProps = {
 	searchParams: Promise<SearchParams>
@@ -22,7 +24,9 @@ export default function OrdersPage({ searchParams }: PageProps) {
 				</div>
 
 				<FilterProducts />
-				<StatusTabs />
+				<Suspense fallback={<StatusTabsSkeleton />}>
+					<StatusTabsWrapper />
+				</Suspense>
 			</header>
 
 			<ScrollArea className="h-[calc(100vh-160px)]">

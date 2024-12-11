@@ -9,14 +9,6 @@ export function OrderItem({
 }) {
 	return (
 		<>
-			<div className="flex items-center justify-between text-sm">
-				{/* <div className="w-full">
-					<div className="flex justify-between">
-						<p className="">Pickup Location: </p>
-						<button className="text-primary">View</button>
-					</div>
-				</div> */}
-			</div>
 			<div className="">
 				<div key={item.id} className="flex gap-4">
 					<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
@@ -25,6 +17,8 @@ export function OrderItem({
 							alt={item.product.title}
 							fill
 							className="object-cover"
+							priority
+							sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 						/>
 					</div>
 					<div className="flex flex-1 flex-col gap-1">
