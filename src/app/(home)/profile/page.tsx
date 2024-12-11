@@ -13,17 +13,24 @@ export default function CustomerProfilePage() {
 			<header className="w-full p-4 md:hidden">
 				<div className="">
 					<div className="flex w-full items-center justify-between">
-						<h1 className="text-2xl font-semibold">Profile</h1>
+						<div className="">
+							<h2 className={`text-xs font-bold ${"text-primary"}`}>
+								FarmPreneur
+							</h2>
+							<h1 className="text-2xl font-bold">Profile</h1>
+						</div>
 						<ProfileNavLinks />
 					</div>
 				</div>
 			</header>
 			<main className="h-screen">
 				<div className="">
-					<div className="rounded-lg bg-background">
-						<CustomerInfo />
+					<div className="rounded-lg bg-background p-4">
+						<div className="pb-8">
+							<CustomerInfo />
+						</div>
 						<div className="w-full">
-							<div className="p-4">
+							<div className="">
 								<Link
 									href="/edit-profile"
 									className="flex items-center justify-between rounded-lg py-2"
