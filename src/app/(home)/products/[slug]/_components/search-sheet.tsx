@@ -58,11 +58,11 @@ export function SearchSheet({ scrolled }: { scrolled: boolean }) {
 					<Search className="h-6 w-6" />
 				</button>
 			</SheetTrigger>
-			<SheetContent side="top" className="h-screen min-w-full p-3">
+			<SheetContent side="top" className="min-w-full p-3">
 				<SheetHeader className="space-y-0 p-0">
 					<DialogTitle className="sr-only">Search Products</DialogTitle>
 					<DialogDescription className="sr-only">
-						DialogDescriptionSearch suggestions
+						Search suggestions
 					</DialogDescription>
 				</SheetHeader>
 				<div className="w-full">
