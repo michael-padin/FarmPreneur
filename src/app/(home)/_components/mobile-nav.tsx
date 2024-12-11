@@ -6,8 +6,8 @@ import { MessageCircleMore, ShoppingCart } from "lucide-react"
 import { Session } from "next-auth"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { SearchSheet } from "../products/[slug]/_components/search-sheet"
 import { NavLink } from "./nav-link"
+import { SearchSheet } from "./search-sheet"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
 	const countMessages = 10
