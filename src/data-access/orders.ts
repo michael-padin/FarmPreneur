@@ -185,8 +185,20 @@ export const getCustomerOrders = async (filter: {
 						}
 					},
 					{
-						customer: {
-							user: { name: { contains: filter.search, mode: "insensitive" } }
+						farmer: {
+							user: { name: { contains: filter.search, mode: "insensitive" } },
+							address: {
+								some: {
+									fullAddress: {
+										contains: filter.search,
+										mode: "insensitive"
+									}
+								}
+							},
+							farmName: {
+								contains: filter.search,
+								mode: "insensitive"
+							}
 						}
 					}
 				]

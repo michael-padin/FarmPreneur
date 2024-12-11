@@ -66,29 +66,7 @@ export const updateCustomerByUserId = async (
 				userId: data.userId
 			},
 			update: {
-				contactNumber: data.customer?.contactNumber,
-				address: {
-					upsert: {
-						create: {
-							latitude: data?.customer?.address?.latitude || 0,
-							longitude: data?.customer?.address?.longitude || 0,
-							fullAddress: data?.customer?.address?.fullAddress,
-							region: data?.customer?.address?.region,
-							postalCode: data?.customer?.address?.postalCode,
-							street: data?.customer?.address?.street,
-							country: data?.customer?.address?.country
-						},
-						update: {
-							latitude: data?.customer?.address?.latitude || 0,
-							longitude: data?.customer?.address?.longitude || 0,
-							fullAddress: data?.customer?.address?.fullAddress,
-							region: data?.customer?.address?.region,
-							postalCode: data?.customer?.address?.postalCode,
-							street: data?.customer?.address?.street,
-							country: data?.customer?.address?.country
-						}
-					}
-				}
+				contactNumber: data.customer?.contactNumber
 			}
 		})
 	})
