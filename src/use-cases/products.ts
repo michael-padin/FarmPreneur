@@ -1,3 +1,4 @@
+import { ProductSort } from "@/app/(home)/products/(list)/searchParams"
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
 import { createProductFromAdmin } from "@/app/dashboard/(admin)/products/create/actions"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
@@ -15,6 +16,7 @@ import {
 	getProductBySlug,
 	getProductReviewStats,
 	getProducts,
+	getProductsOnProductListPage,
 	getTopProducts,
 	getTopSellingProducts,
 	getTotalProducts,
@@ -119,6 +121,29 @@ export const getProductsUseCase = async (filter: {
 		status: filter.status,
 		userId: session.user.id!
 	})
+}
+
+// this query is on the product list page
+export const getProductsOnProductListPageUseCase = async (filter: {
+	search?: string
+	sortBy?: ProductSort
+}) => {
+	const products = await getProductsOnProductListPage({
+		search: filter.search,
+		sortBy: filter.sortBy
+	})
+
+	const shapedProducts = products.map((product) => {
+		const averageRating =
+			product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+				product.reviews.length || 0
+		return {
+			...product,
+			averageRating
+		}
+	})
+
+	return shapedProducts
 }
 
 export const getDailyProductsUseCase = async (address?: Address) => {

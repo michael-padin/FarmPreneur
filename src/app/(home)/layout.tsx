@@ -18,13 +18,11 @@ export default async function Layout({
 
 	const cartPromise = getCartUseCase(user?.cartId || "")
 	return (
-		<div>
-			<NotificationProvider userId={user?.id}>
-				<CartProvider initialCartPromise={cartPromise}>
-					<UnderConstruction />
-					<div className="lg:hidden">{children}</div>
-				</CartProvider>
-			</NotificationProvider>
-		</div>
+		<NotificationProvider userId={user?.id}>
+			<CartProvider initialCartPromise={cartPromise}>
+				<UnderConstruction />
+				<>{children}</>
+			</CartProvider>
+		</NotificationProvider>
 	)
 }

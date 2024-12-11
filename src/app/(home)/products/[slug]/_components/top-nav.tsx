@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { ArrowLeft, MessageCircleMore, ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { SearchSheet } from "./search-sheet"
+import { SearchSheet } from "../../../_components/search-sheet"
 
 export function TopNav() {
 	const {

@@ -1,10 +1,10 @@
 "use client"
 
-import { useRef, useTransition } from "react"
-import { useQueryState } from "nuqs"
-import { motion } from "motion/react"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { ProductListingStatus } from "@prisma/client"
+import { motion } from "motion/react"
+import { useQueryState } from "nuqs"
+import { useRef, useTransition } from "react"
 import { searchParams } from "./searchParams"
 
 const productListingStatusMap: Record<ProductListingStatus, { label: string }> =

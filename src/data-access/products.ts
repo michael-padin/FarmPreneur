@@ -1,3 +1,4 @@
+import { ProductSort } from "@/app/(home)/products/(list)/searchParams"
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
 import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
@@ -316,6 +317,80 @@ export const getProducts = async (filter: {
 	})
 }
 
+// this query is on the product list page - /products
+export const getProductsOnProductListPage = async (filters: {
+	search?: string
+	sortBy?: ProductSort
+}) => {
+	const {
+		search,
+		// category,
+		// rating,
+		// minPrice,
+		// maxPrice,
+		sortBy
+		// page = 1,
+		// limit = 20
+	} = filters
+
+	// Define sorting logic
+	const sortOptions: Record<string, any> = {
+		relevance: [
+			{ title: "desc" } // Boost popular products
+			// { title: { contains: search || "", mode: "insensitive" } }, // Partial match on title
+			// { description: { contains: search || "", mode: "insensitive" } } // Partial match on description
+		],
+		latest: { createdAt: "desc" },
+		topSales: { sales: "desc" },
+		priceLowToHigh: { price: "asc" },
+		priceHighToLow: { price: "desc" }
+	}
+
+	return await db.product.findMany({
+		where: {
+			AND: [
+				search
+					? {
+							OR: [
+								{ title: { contains: search, mode: "insensitive" } },
+								{ description: { contains: search, mode: "insensitive" } },
+								{
+									category: { name: { contains: search, mode: "insensitive" } }
+								}
+							]
+						}
+					: {}
+			]
+		},
+		orderBy:
+			sortBy === "relevance"
+				? sortOptions.relevance
+				: sortOptions[sortBy || "latest"],
+
+		include: {
+			farmer: {
+				select: {
+					user: {
+						select: {
+							name: true,
+							email: true
+						}
+					}
+				}
+			},
+			images: true,
+			category: true,
+			_count: {
+				select: {
+					reviews: true
+				}
+			},
+			reviews: true
+		}
+	})
+}
+
+// this query is on the home page for daily products - /
 export const getDailyProducts = async (address?: Address) => {
 	return await db.product.findMany({
 		where: {
