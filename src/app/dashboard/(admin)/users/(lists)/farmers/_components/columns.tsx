@@ -10,19 +10,19 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { formatDate } from "@/lib/utils"
+import { getFarmersUseCase } from "@/use-cases/farmers"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { formatDate } from "@/lib/utils"
 import { useState } from "react"
-import { getFarmersUseCase } from "@/use-cases/farmers"
 import { toast } from "sonner"
+import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 import {
 	FarmerApprovalBadge,
 	VerificationBadge
 } from "../../_components/badges"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
-import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getFarmersUseCase>>[0]
@@ -67,7 +67,10 @@ export const columns: ColumnDef<
 				name && (
 					<div>
 						<p className="w-[180px] truncate">{address[0]?.fullAddress}</p>
-						<AddressDetailsDrawerDialog name={name} address={address[0]} />
+						<AddressDetailsDrawerDialog
+							title={`${name}'s Address`}
+							address={address[0]}
+						/>
 					</div>
 				)
 			)

@@ -10,16 +10,16 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { formatDate } from "@/lib/utils"
+import { getCustomersUseCase } from "@/use-cases/users"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { formatDate } from "@/lib/utils"
 import { useState } from "react"
-import { getCustomersUseCase } from "@/use-cases/users"
 import { toast } from "sonner"
+import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 import { VerificationBadge } from "../../_components/badges"
 import { DeleteUsersDialog } from "../../_components/delete-user-dialog"
-import { AddressDetailsDrawerDialog } from "../../_components/address-details"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getCustomersUseCase>>[0]
@@ -60,10 +60,16 @@ export const columns: ColumnDef<
 		enableSorting: true,
 		cell: ({ row }) => {
 			const name = row.original.name
-			const address = row.original.customer?.address
+			const address = row.original.customer?.address[0]
+
 			return (
 				address &&
-				name && <AddressDetailsDrawerDialog name={name} address={address} />
+				name && (
+					<AddressDetailsDrawerDialog
+						title={`${name}'s Address`}
+						address={address}
+					/>
+				)
 			)
 		}
 	},

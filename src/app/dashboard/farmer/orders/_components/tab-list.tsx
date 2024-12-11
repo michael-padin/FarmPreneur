@@ -1,18 +1,17 @@
 "use client"
 
-import { useRef, useTransition } from "react"
-import { useQueryState } from "nuqs"
-import { motion } from "motion/react"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { OrderStatus } from "@prisma/client"
+import { motion } from "motion/react"
+import { useQueryState } from "nuqs"
+import { useRef, useTransition } from "react"
 import { searchParams } from "./searchParams"
 
 const orderStatusMap: Record<OrderStatus, { label: string }> = {
 	[OrderStatus.PENDING]: { label: "Pending" },
 	[OrderStatus.IN_PROGRESS]: { label: "In Progress" },
 	[OrderStatus.COMPLETED]: { label: "Completed" },
-	[OrderStatus.CANCELLED]: { label: "Cancelled" },
-	[OrderStatus.FAILED]: { label: "Failed" }
+	[OrderStatus.CANCELLED]: { label: "Cancelled" }
 }
 export function StatusTabs() {
 	const [isLoading, startTransition] = useTransition()

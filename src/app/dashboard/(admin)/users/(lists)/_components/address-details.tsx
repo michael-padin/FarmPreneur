@@ -26,7 +26,7 @@ import "mapbox-gl/dist/mapbox-gl.css"
 
 interface AddressDetailsDrawerDialogProps {
 	address: {
-		fullAddress: string
+		fullAddress?: string | null
 		longitude: number
 		latitude: number
 	}
@@ -61,7 +61,9 @@ export const AddressDetailsDrawerDialog = ({
 				</div>
 				<DialogContent className="max-w-screen-lg">
 					<DialogHeader>
-						<DialogTitle className="text-primary">{title}</DialogTitle>
+						<DialogTitle className="capitalize text-primary">
+							{title}
+						</DialogTitle>
 						<DialogDescription>{address?.fullAddress}</DialogDescription>
 					</DialogHeader>
 					<div>

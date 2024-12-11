@@ -1,4 +1,7 @@
 "use client"
+import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { FPUnitSelect } from "@/components/fg/fp-select-unit"
+import { Button } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
@@ -8,13 +11,7 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
-import { getCategoriesUseCase } from "@/use-cases/categories"
-import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { use, useTransition } from "react"
-import { showErrorToast } from "@/lib/handle-error"
-import { toast } from "sonner"
+import { Input } from "@/components/ui/input"
 import {
 	Select,
 	SelectContent,
@@ -22,42 +19,22 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { PRODUCT_STATUS } from "@/constants/product-status"
-import { ProductListingStatusBadge } from "../../../../users/(lists)/_components/badges"
-import { Address, ProductListingStatus } from "@prisma/client"
-import { Button } from "@/components/ui/button"
-import { FPUnitSelect } from "@/components/fg/fp-select-unit"
 import { Textarea } from "@/components/ui/textarea"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { PRODUCT_STATUS } from "@/constants/product-status"
 import { S3PATH } from "@/constants/s3-path"
-import { useRouter } from "next/navigation"
+import { showErrorToast } from "@/lib/handle-error"
+import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { getProductByIdUseCase } from "@/use-cases/products"
-import { UpdateProductSchema, updateProductSchema } from "../validations"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { ProductListingStatus } from "@prisma/client"
+import { useRouter } from "next/navigation"
+import { use, useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { ProductListingStatusBadge } from "../../../../users/(lists)/_components/badges"
 import { adminUpdateProduct } from "../actions"
-import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
-
-function CustomTrigger({ address }: { address: Address }) {
-	return (
-		<div className="flex items-center space-x-2">
-			{/* <MapPin className="h-4 w-4 text-muted-foreground" /> */}
-			<div className="flex-1 text-left">
-				{address ? (
-					<div className="flex flex-col">
-						<span className="truncate font-medium">{address.fullAddress}</span>
-						{address.label && (
-							<span className="text-xs text-muted-foreground">
-								{address.label}
-							</span>
-						)}
-					</div>
-				) : (
-					<span className="text-muted-foreground">Select an address</span>
-				)}
-			</div>
-		</div>
-	)
-}
+import { UpdateProductSchema, updateProductSchema } from "../validations"
 
 interface AdminEditProductFormProps {
 	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
@@ -87,19 +64,12 @@ export function AdminEditProductForm({
 			unit: product?.unit || "",
 			quantity: product?.quantity,
 			listingStatus: product?.listingStatus,
-			images: product?.images,
-			pickupLocationId: product?.pickupLocationId || ""
+			images: product?.images
 		}
 	})
-	const farmerId = form.watch("farmerId")
-	const foundFarmer = farmers?.find((farmer) => farmer.id === farmerId)
-	const pickupLocationId = form.watch("pickupLocationId")
 	const categoryId = form.watch("categoryId")
 	const foundCategory = categories?.find(
 		(category) => category.id === categoryId
-	)
-	const foundAddress = foundFarmer?.address?.find(
-		(address) => address.id === pickupLocationId
 	)
 
 	const onSubmit = async (data: UpdateProductSchema) => {
@@ -151,57 +121,6 @@ export function AdminEditProductForm({
 									Provide a detailed description of your product.
 								</FormDescription>
 
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="pickupLocationId"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Pickup Location</FormLabel>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-								>
-									<FormControl>
-										<SelectTrigger className="w-full">
-											<SelectValue placeholder="Select an address">
-												<CustomTrigger address={foundAddress!} />
-											</SelectValue>
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{foundFarmer?.address &&
-										foundFarmer?.address?.length > 0 ? (
-											foundFarmer?.address.map((address) => (
-												<SelectItem key={address.id} value={address.id}>
-													<div className="flex flex-col">
-														<span className="truncate">
-															{address.fullAddress}
-														</span>
-														{address.label && (
-															<span className="text-xs text-muted-foreground">
-																Label: {address.label}
-															</span>
-														)}
-													</div>
-												</SelectItem>
-											))
-										) : (
-											<SelectItem disabled value="#">
-												No Address
-											</SelectItem>
-										)}
-									</SelectContent>
-								</Select>
-								{pickupLocationId && (
-									<AddressDetailsDrawerDialog
-										address={foundAddress!}
-										name="Pickup"
-									/>
-								)}
 								<FormMessage />
 							</FormItem>
 						)}

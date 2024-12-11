@@ -147,7 +147,7 @@ export const columns: ColumnDef<
 			/>
 		),
 		cell: ({ cell }) => {
-			const totalPrice = cell.getValue() as Order["addressId"]
+			const totalPrice = cell.getValue() as Order["totalPrice"]
 			return (
 				<>
 					<p>{formatPHP(Number(totalPrice))}/</p>

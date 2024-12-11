@@ -10,18 +10,17 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { formatDate, formatPHP } from "@/lib/utils"
+import { getAllProductsUseCase } from "@/use-cases/products"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
-import { formatDate, formatPHP } from "@/lib/utils"
 import { useState } from "react"
 import { toast } from "sonner"
-import { AddressDetailsDrawerDialog } from "./address-details"
-import { getAllProductsUseCase } from "@/use-cases/products"
 import { ProductListingStatusBadge } from "../../../users/(lists)/_components/badges"
-import { ProductImageCell } from "./product-image-cell"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
 import { DeleteProductsDialog } from "./delete-products-dialog"
+import { ProductImageCell } from "./product-image-cell"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getAllProductsUseCase>>[0]
@@ -112,23 +111,6 @@ export const columns: ColumnDef<
 		enableSorting: true,
 		cell: ({ row }) => <p className="text-center">{row.original.quantity}</p>
 	},
-	{
-		accessorKey: "pickupLocation",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Pick Up Location" />
-		),
-		enableSorting: true,
-		cell: ({ row }) => {
-			const { title, pickupLocation } = row.original
-			return (
-				pickupLocation && (
-					<AddressDetailsDrawerDialog address={pickupLocation} title={title} />
-				)
-			)
-		},
-		size: 40
-	},
-
 	{
 		id: "orders",
 		accessorKey: "_count.orders",

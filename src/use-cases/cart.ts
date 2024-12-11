@@ -28,7 +28,17 @@ export const getCartUseCase = async (cartId: string): Promise<CartState> => {
 				unit: item.product.unit as UnitKey,
 				farmer: {
 					id: item.product.farmer!.id,
-					name: item.product.farmer!.farmName || ""
+					name: item.product.farmer!.farmName || "",
+					addresses:
+						item.product.farmer?.address.map((address) => ({
+							id: address.id,
+							fullAddress: address!.fullAddress || "",
+							longitude: address.longitude,
+							latitude: address.latitude,
+							note: address.note || ""
+						})) || [],
+
+					contactNumber: item.product.farmer?.contactNumber || ""
 				}
 			},
 			quantity: item.quantity

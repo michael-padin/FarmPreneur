@@ -12,17 +12,24 @@ import {
 	VisibilityState
 } from "@tanstack/react-table"
 
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from "@/components/ui/table"
-import { use, useCallback, useState } from "react"
 import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger
+} from "@/components/ui/collapsible"
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
 	Sheet,
 	SheetContent,
@@ -31,7 +38,17 @@ import {
 	SheetTitle,
 	SheetTrigger
 } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from "@/components/ui/table"
+import { getCommonPinningStyles } from "@/lib/data-table"
+import { getCustomersUseCase } from "@/use-cases/users"
+import { format } from "date-fns"
 import {
 	Clock,
 	Filter,
@@ -41,28 +58,10 @@ import {
 	Phone,
 	RotateCcw,
 	ShoppingBag,
-	ShoppingCart,
 	Star
 } from "lucide-react"
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { getCommonPinningStyles } from "@/lib/data-table"
-import { getCustomersUseCase } from "@/use-cases/users"
+import { use, useCallback, useState } from "react"
 import { columns } from "./columns"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger
-} from "@/components/ui/collapsible"
-import { format } from "date-fns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getCustomersUseCase>>>
@@ -370,7 +369,7 @@ export function DataTable({ data }: DataTableProps) {
 								<div className="flex items-center gap-2">
 									<MapPin className="h-4 w-4 text-muted-foreground" />
 									<span className="text-sm">
-										{customer.customer?.address?.fullAddress}
+										{customer.customer?.address?.[0].fullAddress}
 									</span>
 								</div>
 							</div>
@@ -409,7 +408,7 @@ export function DataTable({ data }: DataTableProps) {
 												</p>
 											</div>
 										</div>
-										<div className="flex items-center gap-2">
+										{/* <div className="flex items-center gap-2">
 											<ShoppingCart className="h-4 w-4 text-muted-foreground" />
 											<div className="text-sm">
 												<p className="text-muted-foreground">Cart Items</p>
@@ -417,7 +416,7 @@ export function DataTable({ data }: DataTableProps) {
 													{customer.customer?._count.cart}
 												</p>
 											</div>
-										</div>
+										</div> */}
 										<div className="flex items-center gap-2">
 											<Heart className="h-4 w-4 text-muted-foreground" />
 											<div className="text-sm">

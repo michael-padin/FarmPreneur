@@ -59,7 +59,7 @@ export default function ProductBottomNav({
 									farmer: {
 										addresses: product.farmer!.addresses,
 										id: product.farmer!.id,
-										name: product.farmer!.farmName || "",
+										name: product.farmer.name || "",
 										contactNumber: product.farmer!.contactNumber || ""
 									}
 								},
