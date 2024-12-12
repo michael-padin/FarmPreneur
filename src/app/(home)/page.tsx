@@ -16,7 +16,7 @@ export default function Home() {
 					{/* <div className="absolute  inset-0  bg-black/20 backdrop-blur-sm"></div> */}
 					<div className="container relative mx-auto h-full px-0 lg:px-4 lg:pt-[101px]">
 						<div className="flex items-center justify-center bg-primary pb-20 pt-28 lg:rounded-lg lg:py-20">
-							<div className="relative space-y-5 text-center text-white lg:space-y-10">
+							<div className="relative space-y-5 px-2 text-center text-white lg:space-y-10">
 								<h1 className="text-3xl font-bold leading-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
 									Discover the Best Local Produce
 								</h1>
