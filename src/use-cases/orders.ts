@@ -8,6 +8,7 @@ import {
 	getTotalOrders,
 	getTotalOrdersByDate
 } from "@/data-access/orders"
+import { db } from "@/lib/db"
 import { OrderStatus } from "@prisma/client"
 
 export const getOrdersUseCase = async () => {
@@ -64,6 +65,37 @@ export const getCustomerOrdersUseCase = async (filter: {
 	})
 }
 
+export const getFarmerOrderCountUseCase = async () => {
+	const session = await auth()
+	if (!session || !session.user) throw new Error("Unauthorized")
+
+	const userId = session.user.id
+	const orders = await db.order.findMany({
+		where: {
+			farmer: {
+				userId
+			}
+		},
+		select: {
+			status: true
+		}
+	})
+
+	const orderCounts = orders.reduce(
+		(counts, order) => {
+			counts[order.status] = (counts[order.status] || 0) + 1
+			return counts
+		},
+		{ PENDING: 0, COMPLETED: 0, IN_PROGRESS: 0, CANCELLED: 0 }
+	)
+
+	return {
+		pendingOrders: orderCounts.PENDING,
+		completedOrders: orderCounts.COMPLETED,
+		inProgressOrders: orderCounts.IN_PROGRESS,
+		cancelledOrders: orderCounts.CANCELLED
+	}
+}
 export const getCustomerOrderCountUseCase = async () => {
 	try {
 		const session = await auth()

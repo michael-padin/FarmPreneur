@@ -1,63 +1,42 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
 import { formatPHP } from "@/lib/utils"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
-import { Badge } from "lucide-react"
 import Image from "next/image"
 
 interface OrderItemProps {
-	order: Awaited<ReturnType<typeof getFarmerOrdersUseCase>>[0]
+	item: Awaited<ReturnType<typeof getFarmerOrdersUseCase>>[0]["items"][0]
 }
 
-export function OrderItem({ order }: OrderItemProps) {
+export function OrderItem({ item }: OrderItemProps) {
 	return (
-		<Card>
-			<CardContent className="p-4">
-				<div className="flex items-start gap-4">
+		<div className="">
+			<div key={item.id} className="flex gap-4">
+				<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
 					<Image
-						src={`${order.items[0].product.images[0].url || "/placeholder.svg"}`}
-						alt={order.items[0].product.title}
-						width={100}
-						height={100}
-						className="rounded-lg object-cover"
+						src={item.product.images[0].url}
+						alt={item.product.title}
+						fill
+						className="object-cover"
+						priority
+						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 					/>
-					<div className="flex-1 space-y-1">
-						<div className="flex items-start justify-between">
-							<div>
-								<h3 className="font-semibold">
-									{order.items[0].product.title}
-								</h3>
-								<p className="text-sm text-muted-foreground">
-									Order # {order.id.slice(0, 6)}
-								</p>
-							</div>
-							<Badge>Pending</Badge>
+				</div>
+				<div className="flex flex-1 flex-col gap-1">
+					<div className="flex items-center justify-between">
+						<h3 className="">{item.product.title}</h3>
+					</div>
+					<div className="mt-auto flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<p className="text-primary">
+								₱{formatPHP(item.product.price)}/
+								<span className="">{item.product.unit}</span>
+							</p>
 						</div>
-						<div className="flex items-center justify-between text-sm">
-							<span>
-								Quantity:{" "}
-								{`${order.quantity} /
-									${UNITS_MAP[(order.items[0].product.unit || "kg") as UnitKey].abbreviation}`}
-							</span>
-							<span className="font-semibold">
-								{formatPHP(order.items[0].product.price)}
-							</span>
-						</div>
-						<div className="text-sm text-muted-foreground">
-							Ordered by: {order.customer?.user.name || "Unknown"}
-							<br />
-							{/* Delivery Address: 123 Market St, Manila */}
-						</div>
-						<div className="flex gap-2 pt-2">
-							<Button size="sm">Accept Order</Button>
-							<Button size="sm" variant="outline">
-								Decline
-							</Button>
+						<div className="">
+							<span className="">x{item.quantity}</span>
 						</div>
 					</div>
 				</div>
-			</CardContent>
-		</Card>
+			</div>
+		</div>
 	)
 }

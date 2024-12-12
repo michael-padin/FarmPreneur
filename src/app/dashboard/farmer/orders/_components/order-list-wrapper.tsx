@@ -1,8 +1,8 @@
 import { type SearchParams } from "nuqs/server"
-import { searchParamsCache } from "./searchParams"
-import { FarmerOrderList } from "./mobile-order-list"
 import { Suspense } from "react"
+import { FarmerOrderList } from "./mobile-order-list"
 import { OrderItemSkeleton } from "./order-skeleton"
+import { searchParamsCache } from "./searchParams"
 
 type FarmerOrderListProps = {
 	searchParams: Promise<SearchParams>
@@ -20,7 +20,7 @@ export async function OrderListWrapper({ searchParams }: FarmerOrderListProps) {
 					<OrderItemSkeleton />
 				</div>
 			}
-			key={searchParamsCache.get("status") || searchParamsCache.get("search")}
+			key={searchParamsCache.get("search")}
 		>
 			<FarmerOrderList />
 		</Suspense>

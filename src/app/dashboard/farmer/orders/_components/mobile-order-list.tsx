@@ -1,7 +1,7 @@
-import { ShoppingCart } from "lucide-react"
-import { searchParamsCache } from "./searchParams"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
-import { OrderItem } from "./order-item"
+import { ShoppingCart } from "lucide-react"
+import Order from "./order"
+import { searchParamsCache } from "./searchParams"
 
 export async function FarmerOrderList() {
 	const { status, search } = searchParamsCache.all()
@@ -14,7 +14,7 @@ export async function FarmerOrderList() {
 	return (
 		<div className="space-y-2">
 			{orders && orders.length > 0 ? (
-				orders?.map((order) => <OrderItem order={order} key={order.id} />)
+				orders?.map((order) => <Order order={order} key={order.id} />)
 			) : (
 				<div className="pt-20">
 					<div className="flex h-full flex-col items-center justify-center text-muted-foreground">

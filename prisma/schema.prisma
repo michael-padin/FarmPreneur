@@ -268,20 +268,22 @@ model Image {
 
 // MARK: ORDER
 model Order {
-  id               String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  quantity         Int?
-  totalPrice       Float?
-  status           OrderStatus    @default(IN_PROGRESS)
-  pickupLocation   Address?       @relation(fields: [pickupLocationId], references: [id])
-  pickupLocationId String?        @db.ObjectId
-  farmer           Farmer         @relation(fields: [farmerId], references: [id])
-  farmerId         String         @db.ObjectId
-  customer         Customer?      @relation(fields: [customerId], references: [id])
-  customerId       String?        @db.ObjectId
-  review           ProductReview?
-  items            OrderItem[]
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  quantity           Int?
+  totalPrice         Float?
+  status             OrderStatus     @default(PENDING)
+  subStatus          SubTrackStatus? @default(AWAITING_FARMER_ACCEPTANCE)
+  pickupLocation     Address?        @relation(fields: [pickupLocationId], references: [id])
+  pickupLocationId   String?         @db.ObjectId
+  farmer             Farmer          @relation(fields: [farmerId], references: [id])
+  farmerId           String          @db.ObjectId
+  customer           Customer?       @relation(fields: [customerId], references: [id])
+  customerId         String?         @db.ObjectId
+  review             ProductReview?
+  cancellationReason String?
+  items              OrderItem[]
 
   @@index([status])
   @@index([customerId])
@@ -499,4 +501,26 @@ enum ROLE {
   FARMER
   CUSTOMER
   ADMIN
+}
+
+enum SubTrackStatus {
+  // New/Created statuses
+  AWAITING_FARMER_ACCEPTANCE
+
+  // Active/In Progress statuses
+  PREPARING_PRODUCE
+  READY_FOR_PICKUP
+
+  // Completed statuses
+  PICKED_UP
+  PAYMENT_PROCESSED
+  BUYER_CONFIRMED
+  FULLY_SETTLED
+
+  // Cancelled statuses
+  CANCELLED_BY_FARMER
+  CANCELLED_BY_BUYER
+  INSUFFICIENT_STOCK
+  PAYMENT_FAILED
+  QUALITY_ISSUES
 }

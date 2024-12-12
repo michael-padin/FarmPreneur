@@ -1,10 +1,10 @@
-import { BottomNav } from "../_components/bottom-navigation"
-import { StatusTabs } from "./_components/tab-list"
-import { type SearchParams } from "nuqs/server"
-import { FilterProducts } from "./_components/filter-products"
-import { MessageCircleMore } from "lucide-react"
-import { OrderListWrapper } from "./_components/order-list-wrapper"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { MessageCircleMore } from "lucide-react"
+import { type SearchParams } from "nuqs/server"
+import { BottomNav } from "../_components/bottom-navigation"
+import { FilterProducts } from "./_components/filter-products"
+import { OrderListWrapper } from "./_components/order-list-wrapper"
+import { StatusTabsWrapper } from "./_components/status-tabs-wrapper"
 
 type PageProps = {
 	searchParams: Promise<SearchParams>
@@ -24,7 +24,7 @@ export default function OrdersPage({ searchParams }: PageProps) {
 				</div>
 
 				<FilterProducts />
-				<StatusTabs />
+				<StatusTabsWrapper />
 			</header>
 
 			<ScrollArea className="h-[calc(100vh-160px)]">

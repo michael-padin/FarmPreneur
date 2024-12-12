@@ -181,7 +181,7 @@ export const OrderStatusBadge = ({
 				return `text-yellow-800  ${showText ? "bg-yellow-100" : "bg-yellow-200"} hover:bg-yellow-200`
 			case "APPROVED":
 				return `text-green-800 ${showText ? "bg-green-100" : "bg-green-200"} hover:bg-green-200`
-			case "REJECTED":
+			case "CANCELLED":
 				return `text-red-800 ${showText ? "bg-red-100" : "bg-red-200"} hover:bg-red-200`
 			default:
 				return "bg-gray-100 text-gray-800 hover:bg-gray-200"

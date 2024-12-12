@@ -7,7 +7,9 @@ import {
 } from "nuqs/server"
 
 export const searchParams = {
-	status: parseAsStringEnum<OrderStatus>(Object.values(OrderStatus)),
+	status: parseAsStringEnum<OrderStatus>(
+		Object.values(OrderStatus)
+	).withDefault("PENDING"),
 	search: parseAsString.withDefault("")
 }
 
