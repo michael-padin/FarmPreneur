@@ -26,6 +26,7 @@ export const FPBackButton = ({
 				onClick={() => router.back()}
 			>
 				<ArrowLeft className={cn("h-6 w-6", iconClassName)} />
+				<span className="sr-only">Go back</span>
 			</button>
 		</div>
 	)
@@ -51,6 +52,7 @@ export const FPLinkBackButton = ({
 				)}
 			>
 				<ArrowLeft className={cn("h-6 w-6", iconClassName)} />
+				<span className="sr-only">Go back</span>
 			</Link>
 		</div>
 	)

@@ -7,6 +7,7 @@ import {
 	getFarmerAddresses
 } from "@/data-access/address"
 import { getFarmerByUserId } from "@/data-access/farmers"
+import { db } from "@/lib/db"
 import { AddressSchema } from "@/validations/address"
 
 export const createFarmDetailsAddressUseCase = async (
@@ -46,4 +47,74 @@ export const getFarmerAddressesUseCase = async () => {
 		throw new Error("No farmer found!")
 	}
 	return await getFarmerAddresses(farmer.id)
+}
+
+export const getAddressById = async (id: string) => {
+	const address = await db.address.findUnique({
+		where: {
+			id: id
+		},
+		include: {
+			customer: {
+				include: {
+					user: true
+				}
+			}
+		}
+	})
+
+	if (!address) {
+		throw new Error("No address found")
+	}
+
+	return {
+		id: address.id,
+		address: {
+			latitude: address.latitude,
+			longitude: address.longitude,
+			fullAddress: address.fullAddress || "",
+			region: address.region || "",
+			country: address.country || "",
+			postalCode: address.postalCode || "",
+			street: address.street || ""
+		},
+		contactNumber: address?.contactNumber || "",
+		fullAddress: address.fullAddress || "",
+		isDefault: address.isDefault || false,
+		contactName: address?.contactName || "",
+		latitude: address.latitude || 0,
+		longitude: address.longitude || 0,
+		locationType: address.locationType || ""
+	}
+}
+
+export const getCustomerAddressListUseCase = async (customerId?: string) => {
+	const session = await auth()
+
+	let newCustomerId = session?.user.customerId
+	if (!newCustomerId) {
+		newCustomerId = customerId
+	}
+
+	const addressList = await db.address.findMany({
+		where: {
+			customerId: newCustomerId
+		}
+	})
+
+	const shapedAddressList =
+		addressList.length > 0
+			? addressList.map((address) => ({
+					id: address.id,
+					contactNumber: address.contactNumber || "",
+					fullAddress: address.fullAddress || "",
+					isDefault: address.isDefault || false,
+					contactName: address.contactName || "",
+					latitude: address.latitude || 0,
+					longitude: address.longitude || 0,
+					locationType: address.locationType || ""
+				}))
+			: []
+
+	return shapedAddressList
 }

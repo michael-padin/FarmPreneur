@@ -1,5 +1,6 @@
 "use server"
 
+import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
 import { auth } from "@/auth"
 import { getProductsSuggestions } from "@/data-access/products"
@@ -338,6 +339,7 @@ export async function searchProducts(searchTerm: string) {
 	}
 }
 
+// MARK: Customer
 // edit Customer Profile
 export async function updateCustomerProfile(
 	payload: EditCustomerProfileSchema & {
@@ -377,6 +379,126 @@ export async function updateCustomerProfile(
 
 		revalidatePath("/profile/edit")
 		return { success: true, error: null }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+
+// MARK: Address
+export async function createCustomerAddress(
+	payload: NewAddressCustomerSchema & {
+		customerId?: string
+	}
+) {
+	try {
+		const session = await auth()
+		if (!session) {
+			return { error: "Unauthorized", success: false }
+		}
+		let customerId = payload.customerId
+		if (!customerId) {
+			customerId = session.user.customerId
+		}
+
+		const createdAddress = await db.address.create({
+			data: {
+				latitude: payload.address.latitude,
+				longitude: payload.address.longitude,
+				fullAddress: payload.address.fullAddress,
+				locationType: payload.locationType,
+				contactNumber: payload.contactNumber,
+				contactName: payload.contactName,
+				region: payload.address.region,
+				country: payload.address.country,
+				postalCode: payload.address.postalCode,
+				street: payload.address.street,
+				isDefault: payload.isDefault || false,
+				customer: {
+					connect: {
+						id: customerId
+					}
+				}
+			}
+		})
+
+		return { success: true, error: null }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+export async function editCustomerAddress(
+	payload: NewAddressCustomerSchema & {
+		customerId?: string
+		addressId: string
+	}
+) {
+	try {
+		const session = await auth()
+		if (!session) {
+			return { error: "Unauthorized", success: false }
+		}
+		let customerId = payload.customerId
+		if (!customerId) {
+			customerId = session.user.customerId
+		}
+
+		if (payload.isDefault === true) {
+			await db.address.updateMany({
+				where: { customerId },
+				data: { isDefault: false }
+			})
+		}
+
+		const updatedAddress = await db.address.update({
+			where: {
+				id: payload.addressId
+			},
+			data: {
+				latitude: payload.address.latitude,
+				longitude: payload.address.longitude,
+				fullAddress: payload.address.fullAddress,
+				locationType: payload.locationType,
+				contactNumber: payload.contactNumber,
+				contactName: payload.contactName,
+				region: payload.address.region,
+				country: payload.address.country,
+				postalCode: payload.address.postalCode,
+				street: payload.address.street,
+				isDefault: payload.isDefault || false
+			}
+		})
+
+		return { success: true, error: null }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+
+export async function changeCustomerDefaultAddress(payload: {
+	customerId?: string
+	addressId: string
+}) {
+	try {
+		const session = await auth()
+		if (!session) {
+			return { error: "Unauthorized", success: false }
+		}
+		let customerId = payload.customerId
+		if (!customerId) {
+			customerId = session.user.customerId
+		}
+
+		await db.address.updateMany({
+			where: { customerId },
+			data: { isDefault: false }
+		})
+
+		await db.address.update({
+			where: { id: payload.addressId },
+			data: { isDefault: true }
+		})
+		revalidatePath("/profile/address")
+		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
 	}

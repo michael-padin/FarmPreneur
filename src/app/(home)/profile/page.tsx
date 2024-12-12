@@ -1,4 +1,4 @@
-import { Bell, ChevronRight, MapPin, Shield, User } from "lucide-react"
+import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
 import { BottomNav } from "../_components"
 import { CustomerInfo } from "./_components/customer-info"
@@ -42,7 +42,7 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link>
 								<Link
-									href="/address"
+									href="profile/address"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
@@ -51,8 +51,8 @@ export default function CustomerProfilePage() {
 									</div>
 									<ChevronRight className="h-5 w-5" />
 								</Link>
-								<Link
-									href="/notifications"
+								{/* <Link
+									href="profile/notifications"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
@@ -60,9 +60,9 @@ export default function CustomerProfilePage() {
 										<span>Notification</span>
 									</div>
 									<ChevronRight className="h-5 w-5" />
-								</Link>
+								</Link> */}
 								<Link
-									href="/security"
+									href="profile/security"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link>
 								{/* <Link
-									href="/privacy"
+									href="profile/privacy"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
@@ -82,7 +82,7 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link>
 								<Link
-									href="/help"
+									href="profile/help"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
