@@ -33,26 +33,34 @@ export const getCustomerProfileUseCase = async () => {
 					reviews: true
 				}
 			},
+
 			user: {
-				include: {
-					profilePicture: true
+				select: {
+					email: true,
+					createdAt: true,
+					profilePicture: {
+						select: {
+							url: true
+						}
+					}
 				}
 			},
 			reviews: true,
-
 			address: true
 		}
 	})
 
 	return {
-		profilePicture: customerQuery?.user.profilePicture?.url || "",
-		name: customerQuery?.user.name || "",
+		name: customerQuery?.name || "",
 		email: customerQuery?.user.email || "",
 		address: {
 			fullAddress: customerQuery?.address?.[0]?.fullAddress || "",
 			latitude: customerQuery?.address?.[0]?.latitude || 0,
 			longitude: customerQuery?.address?.[0]?.longitude || 0
 		},
+		birthDate: customerQuery?.birthDate || "",
+		gender: customerQuery?.gender,
+		profilePicture: customerQuery?.profilePicture || "",
 		contactNumber: customerQuery?.contactNumber || "",
 		orders: customerQuery?._count.orders,
 		reviews: customerQuery?._count.reviews,

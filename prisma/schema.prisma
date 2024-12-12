@@ -126,17 +126,21 @@ model Farmer {
 
 // MARK: CUSTOMER
 model Customer {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
-  contactNumber String?
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String          @unique @db.ObjectId
-  address       Address[]
-  orders        Order[]
-  cart          Cart?
-  wishlist      WishlistItem[]
-  reviews       ProductReview[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  contactNumber  String?
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String          @unique @db.ObjectId
+  address        Address[]
+  orders         Order[]
+  name           String?
+  profilePicture String?
+  cart           Cart?
+  birthDate      DateTime?
+  wishlist       WishlistItem[]
+  reviews        ProductReview[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  gender         Gender?
 
   @@map("customers")
 }
@@ -523,4 +527,10 @@ enum SubTrackStatus {
   INSUFFICIENT_STOCK
   PAYMENT_FAILED
   QUALITY_ISSUES
+}
+
+enum Gender {
+  MALE
+  OTHER
+  FEMALE
 }

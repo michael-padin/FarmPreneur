@@ -1,5 +1,6 @@
 "use server"
 
+import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
 import { auth } from "@/auth"
 import { getProductsSuggestions } from "@/data-access/products"
 import { db } from "@/lib/db"
@@ -10,6 +11,7 @@ import {
 } from "@/use-cases/farmers"
 import { OrderStatus } from "@prisma/client"
 import { revalidatePath } from "next/cache"
+import { getErrorMessage } from "./handle-error"
 
 export const getPendingFarmerCount = async () => {
 	return await getPendingFarmerCountUseCase()
@@ -333,5 +335,49 @@ export async function searchProducts(searchTerm: string) {
 	} catch (error) {
 		console.error(error)
 		return { products: [] }
+	}
+}
+
+// edit Customer Profile
+export async function updateCustomerProfile(
+	payload: EditCustomerProfileSchema & {
+		customerId?: string
+	}
+) {
+	try {
+		const session = await auth()
+		if (!session) {
+			return { error: "Unauthorized", success: false }
+		}
+		let customerId = payload.customerId
+		if (!customerId) {
+			customerId = session.user.customerId
+		}
+
+		console.log("payload :>> ", payload)
+
+		const updatedCustomer = await db.customer.update({
+			where: { id: customerId },
+			data: {
+				birthDate: payload.birthDate,
+				name: payload.fullName,
+				contactNumber: payload.contactNumber,
+				gender: payload.gender,
+				user: {
+					update: {
+						email: payload.email
+					}
+				}
+			}
+		})
+
+		if (!updatedCustomer) {
+			return { error: "Customer not found", success: false }
+		}
+
+		revalidatePath("/profile/edit")
+		return { success: true, error: null }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
 	}
 }

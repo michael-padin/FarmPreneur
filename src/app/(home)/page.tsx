@@ -1,7 +1,11 @@
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Suspense } from "react"
 import { BottomNav, Categories } from "./_components"
+import { CategoryCardSkeleton } from "./_components/category-card-skeleton"
 import { DailyDiscovery } from "./_components/daily-discovery"
 import { Features } from "./_components/features"
 import { HomeNav } from "./_components/home-nav"
+import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 
 export const experimental_ppr = true
 
@@ -13,7 +17,6 @@ export default function Home() {
 			</header>
 			<main className="bg-secondary pb-16">
 				<section className="m-auto w-full">
-					{/* <div className="absolute  inset-0  bg-black/20 backdrop-blur-sm"></div> */}
 					<div className="container relative mx-auto h-full px-0 lg:px-4 lg:pt-[101px]">
 						<div className="flex items-center justify-center bg-primary pb-20 pt-28 lg:rounded-lg lg:py-20">
 							<div className="relative space-y-5 px-2 text-center text-white lg:space-y-10">
@@ -30,9 +33,85 @@ export default function Home() {
 					</div>
 				</section>
 				<div className="mx-2">
-					<Categories />
-					<Features />
-					<DailyDiscovery />
+					<section className="mx-auto -mt-10 w-full rounded-lg px-0 py-2 lg:container lg:-mt-0 lg:px-4">
+						<div className="">
+							<div className="relative rounded-md bg-background py-2">
+								<h1 className="mb-2 px-2 font-semibold lg:text-2xl">
+									Categories
+								</h1>
+
+								<div>
+									<div className="">
+										<ScrollArea className="w-full whitespace-nowrap">
+											<ScrollBar
+												orientation="horizontal"
+												className="invisible"
+											/>
+											<div className="flex gap-2">
+												<Suspense fallback={<CategoryCardSkeleton />}>
+													<Categories />
+												</Suspense>
+											</div>
+										</ScrollArea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section className="mx-auto rounded-lg px-0 lg:container lg:px-4">
+						<div className="rounded-lg bg-background">
+							<div className="relative rounded-md bg-background py-2">
+								<h3 className="mb-2 px-2 font-semibold lg:text-2xl">
+									Featured Products
+								</h3>
+								<div>
+									<div className="">
+										<ScrollArea className="overflow-hidden">
+											<div className="flex gap-2">
+												<Suspense
+													fallback={
+														<ProductCardSkeleton
+															count={8}
+															className="inline-block h-full w-[130px] truncate border-none shadow-none first:pl-2 last:pr-2"
+														/>
+													}
+												>
+													<Features />
+												</Suspense>
+											</div>
+											<ScrollBar
+												orientation="horizontal"
+												className="invisible"
+											/>
+										</ScrollArea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section className="-mx-2 rounded-lg px-0 py-2 lg:container lg:px-4">
+						<div className="rounded-lg p-2">
+							<h3 className="mb-2 font-semibold lg:text-2xl">
+								Daily Discovery
+							</h3>
+							<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+								<Suspense
+									fallback={
+										<>
+											<ProductCardSkeleton
+												count={8}
+												className="border-none shadow-none"
+											/>
+										</>
+									}
+								>
+									<DailyDiscovery />
+								</Suspense>
+							</div>
+						</div>
+					</section>
 					<BottomNav />
 				</div>
 			</main>

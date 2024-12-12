@@ -9,8 +9,8 @@ export const experimental_ppr = true
 
 export default function CustomerProfilePage() {
 	return (
-		<>
-			<header className="w-full p-4 md:hidden">
+		<div className="h-screen space-y-2 bg-muted">
+			<header className="w-full bg-background p-4 md:hidden">
 				<div className="">
 					<div className="flex w-full items-center justify-between">
 						<div className="">
@@ -23,17 +23,17 @@ export default function CustomerProfilePage() {
 					</div>
 				</div>
 			</header>
-			<main className="h-screen">
+			<main className="bg-muted px-2">
 				<div className="">
-					<div className="rounded-lg bg-background p-4">
-						<div className="pb-8">
+					<div className="space-y-2 rounded-lg">
+						<div className="">
 							<CustomerInfo />
 						</div>
 						<div className="w-full">
-							<div className="">
+							<div className="space-y-3 rounded-lg bg-background p-4">
 								<Link
-									href="/edit-profile"
-									className="flex items-center justify-between rounded-lg py-2"
+									href="/profile/edit"
+									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<User className="h-5 w-5" />
@@ -43,7 +43,7 @@ export default function CustomerProfilePage() {
 								</Link>
 								<Link
 									href="/address"
-									className="flex items-center justify-between rounded-lg py-2"
+									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<MapPin className="h-5 w-5" />
@@ -53,7 +53,7 @@ export default function CustomerProfilePage() {
 								</Link>
 								<Link
 									href="/notifications"
-									className="flex items-center justify-between rounded-lg py-2"
+									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<Bell className="h-5 w-5" />
@@ -63,7 +63,7 @@ export default function CustomerProfilePage() {
 								</Link>
 								<Link
 									href="/security"
-									className="flex items-center justify-between rounded-lg py-2"
+									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<Shield className="h-5 w-5" />
@@ -73,7 +73,7 @@ export default function CustomerProfilePage() {
 								</Link>
 								{/* <Link
 									href="/privacy"
-									className="flex items-center justify-between rounded-lg py-2"
+									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<FileText className="h-5 w-5" />
@@ -83,7 +83,7 @@ export default function CustomerProfilePage() {
 								</Link>
 								<Link
 									href="/help"
-									className="flex items-center justify-between rounded-lg py-2"
+									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<HelpCircle className="h-5 w-5" />
@@ -91,13 +91,13 @@ export default function CustomerProfilePage() {
 									</div>
 									<ChevronRight className="h-5 w-5" />
 								</Link> */}
-								<SignOutBtn className="w-full" />
+								<SignOutBtn className="w-full p-2 hover:bg-secondary" />
 							</div>
 						</div>
 					</div>
 				</div>
 			</main>
 			<BottomNav />
-		</>
+		</div>
 	)
 }
