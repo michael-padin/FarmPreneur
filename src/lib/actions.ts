@@ -245,11 +245,48 @@ export async function placeOrder(
 	}
 }
 
-export async function changeOrderStatus(payload: {
+export async function cancelOrder(payload: {
 	orderId: string
-	status: OrderStatus
-	cancellationReason?: string
-}): Promise<{ success: boolean; error?: string }> {
+	cancellationReason: string
+}) {
+	const { orderId, cancellationReason } = payload
+
+	try {
+		const order = await db.order.findUnique({
+			where: { id: orderId },
+			include: {
+				customer: true
+			}
+		})
+
+		if (!order) {
+			return { success: false, error: "Order not found" }
+		}
+
+		await db.order.update({
+			where: { id: orderId },
+			data: {
+				status: "CANCELLED",
+				cancellationReason
+			}
+		})
+
+		revalidatePath("/dashboard/farmer/orders")
+		revalidatePath("/dashboard/orders")
+
+		return { success: true }
+	} catch (error) {
+		return { success: false, error: "Failed to update order status" }
+	}
+}
+
+export async function changeOrderStatus(
+	prevState: any,
+	payload: {
+		orderId: string
+		status: OrderStatus
+	}
+): Promise<{ success: boolean; error?: string }> {
 	const { orderId, status } = payload
 
 	try {
@@ -267,9 +304,6 @@ export async function changeOrderStatus(payload: {
 		await db.order.update({
 			where: { id: orderId },
 			data: {
-				...(status === "CANCELLED" && {
-					cancellationReason: payload.cancellationReason
-				}),
 				status
 			}
 		})

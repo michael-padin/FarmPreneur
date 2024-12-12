@@ -1,5 +1,5 @@
+import { FPBackButton } from "@/components/fp/fp-back-button"
 import { type SearchParams } from "nuqs/server"
-import { BackButton } from "./_components/back-button"
 import { FilterProducts } from "./_components/filter-products"
 import { ProductListWrapper } from "./_components/product-list-wrapper"
 import { SortTabs } from "./_components/tab-list"
@@ -17,7 +17,7 @@ export default function ProductListPage({
 			<header className="sticky top-0 z-10 w-full space-y-3 bg-background px-3 pt-3">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-2">
-						<BackButton />
+						<FPBackButton />
 						<div className="">
 							<h2 className={`text-xs font-bold ${"text-primary"}`}>
 								FarmPreneur

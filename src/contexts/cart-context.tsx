@@ -1,8 +1,16 @@
 "use client"
 
 import { groupCartItemsByFarmer } from "@/lib/utils"
-import { CartState, Product } from "@/types/cart"
-import { createContext, use, useContext, useOptimistic } from "react"
+import { CartItem, CartState, Product } from "@/types/cart"
+import {
+	createContext,
+	use,
+	useCallback,
+	useContext,
+	useMemo,
+	useOptimistic,
+	useRef
+} from "react"
 
 export interface CartContextType {
 	cart: CartState
@@ -10,6 +18,7 @@ export interface CartContextType {
 	removeItem: (itemId: string) => void
 	updateQuantity: (itemId: string, quantity: number) => void
 	clearCart: () => void
+	hasCartChanged: boolean
 }
 
 const initialState: CartState = {
@@ -21,15 +30,9 @@ const initialState: CartState = {
 }
 
 type CartAction =
-	| {
-			type: "ADD_ITEM"
-			payload: { product: Product; quantity: number }
-	  }
+	| { type: "ADD_ITEM"; payload: { product: Product; quantity: number } }
 	| { type: "REMOVE_ITEM"; payload: { itemId: string } }
-	| {
-			type: "UPDATE_QUANTITY"
-			payload: { itemId: string; quantity: number }
-	  }
+	| { type: "UPDATE_QUANTITY"; payload: { itemId: string; quantity: number } }
 	| { type: "CLEAR_CART" }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -38,38 +41,28 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 	switch (action.type) {
 		case "ADD_ITEM": {
 			const { product, quantity } = action.payload
-
 			const existingItemIndex = state.items.findIndex(
 				(item) => item.product.id === product.id
 			)
 
-			let updatedItems
+			let updatedItems: CartItem[]
 			if (existingItemIndex !== -1) {
-				// Update quantity if item already exists
 				updatedItems = state.items.map((item, index) =>
 					index === existingItemIndex
-						? {
-								...item,
-								quantity: item.quantity + quantity
-							}
+						? { ...item, quantity: item.quantity + quantity }
 						: item
 				)
-				return updateCartState({ ...state, items: updatedItems })
 			} else {
-				// Add new item to the cart
-				updatedItems = [...state.items, product]
-				return updateCartState({
-					...state,
-					items: [
-						...state.items,
-						{
-							id: `id-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-							product,
-							quantity
-						}
-					]
-				})
+				updatedItems = [
+					...state.items,
+					{
+						id: `id-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+						product,
+						quantity
+					}
+				]
 			}
+			return updateCartState({ ...state, items: updatedItems })
 		}
 		case "REMOVE_ITEM": {
 			const { itemId } = action.payload
@@ -86,19 +79,20 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 		case "CLEAR_CART": {
 			return initialState
 		}
-		default:
-			return state
 	}
 }
 
 function updateCartState(state: CartState): CartState {
-	const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0)
-	const total = state.items.reduce(
-		(sum, item) => sum + item.quantity * item.product.price,
-		0
+	const { totalItems, total, distinctProductsCount } = state.items.reduce(
+		(acc, item) => ({
+			totalItems: acc.totalItems + item.quantity,
+			total: acc.total + item.quantity * item.product.price,
+			distinctProductsCount: acc.distinctProductsCount + 1
+		}),
+		{ totalItems: 0, total: 0, distinctProductsCount: 0 }
 	)
+
 	const groupedItems = groupCartItemsByFarmer(state.items)
-	const distinctProductsCount = state.items.length
 
 	return {
 		...state,
@@ -122,40 +116,63 @@ export function CartProvider({
 		cartReducer
 	)
 
-	const addItem = (product: Product, quantity: number) => {
-		addOptimisticCart({
-			type: "ADD_ITEM",
-			payload: { product, quantity }
-		})
-	}
+	const hasCartChanged = useRef(false)
 
-	const removeItem = (itemId: string) => {
-		addOptimisticCart({ type: "REMOVE_ITEM", payload: { itemId } })
-	}
+	const addItem = useCallback(
+		(product: Product, quantity: number) => {
+			hasCartChanged.current = true
+			addOptimisticCart({
+				type: "ADD_ITEM",
+				payload: { product, quantity }
+			})
+		},
+		[addOptimisticCart]
+	)
 
-	const updateQuantity = (itemId: string, quantity: number) => {
-		addOptimisticCart({
-			type: "UPDATE_QUANTITY",
-			payload: { itemId, quantity }
-		})
-	}
+	const removeItem = useCallback(
+		(itemId: string) => {
+			hasCartChanged.current = true
+			addOptimisticCart({ type: "REMOVE_ITEM", payload: { itemId } })
+		},
+		[addOptimisticCart]
+	)
 
-	const clearCart = () => {
+	const updateQuantity = useCallback(
+		(itemId: string, quantity: number) => {
+			hasCartChanged.current = true
+			addOptimisticCart({
+				type: "UPDATE_QUANTITY",
+				payload: { itemId, quantity }
+			})
+		},
+		[addOptimisticCart]
+	)
+
+	const clearCart = useCallback(() => {
+		hasCartChanged.current = true
 		addOptimisticCart({ type: "CLEAR_CART" })
-	}
+	}, [addOptimisticCart])
+
+	const contextValue = useMemo(
+		() => ({
+			cart: optimisticCart,
+			addItem,
+			removeItem,
+			updateQuantity,
+			clearCart,
+			hasCartChanged: hasCartChanged.current
+		}),
+		[optimisticCart, addItem, removeItem, updateQuantity, clearCart]
+	)
+
+	// // Reset hasCartChanged when the cart actually updates
+	// if (optimisticCart !== prevCartRef.current) {
+	// 	prevCartRef.current = optimisticCart
+	// 	hasCartChanged.current = false
+	// }
 
 	return (
-		<CartContext.Provider
-			value={{
-				cart: optimisticCart,
-				addItem,
-				removeItem,
-				updateQuantity,
-				clearCart
-			}}
-		>
-			{children}
-		</CartContext.Provider>
+		<CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
 	)
 }
 

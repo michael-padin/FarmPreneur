@@ -20,7 +20,7 @@ export async function OrderListWrapper({ searchParams }: FarmerOrderListProps) {
 					<OrderItemSkeleton />
 				</div>
 			}
-			key={searchParamsCache.get("status") || searchParamsCache.get("search")}
+			key={searchParamsCache.get("search")}
 		>
 			<CustomerOrderList />
 		</Suspense>

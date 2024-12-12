@@ -20,7 +20,7 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { changeOrderStatus } from "@/lib/actions"
+import { cancelOrder } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { OrderStatus } from "@prisma/client"
@@ -50,9 +50,8 @@ export function CancelOrder({
 
 	const onSubmit = (data: z.infer<typeof cancelOrderSchema>) => {
 		startTransition(async () => {
-			const { error } = await changeOrderStatus({
+			const { error } = await cancelOrder({
 				orderId,
-				status: "CANCELLED",
 				cancellationReason: data.reason
 			})
 			if (error) {

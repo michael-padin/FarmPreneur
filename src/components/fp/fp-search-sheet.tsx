@@ -13,11 +13,18 @@ import {
 } from "@/components/ui/sheet"
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback"
 import { searchProducts } from "@/lib/actions"
+import { cn } from "@/lib/utils"
 import { ArrowLeft, Search } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState, useTransition } from "react"
 
-export function SearchSheet({ scrolled }: { scrolled: boolean }) {
+export function FPSearchSheet({
+	triggerClassName,
+	iconClassName
+}: {
+	triggerClassName?: string
+	iconClassName?: string
+}) {
 	const [isOpen, setIsOpen] = useState(false)
 	const [searchTerm, setSearchTerm] = useState("")
 	const [suggestions, setSuggestions] = useState<
@@ -52,10 +59,13 @@ export function SearchSheet({ scrolled }: { scrolled: boolean }) {
 		<Sheet open={isOpen} onOpenChange={setIsOpen}>
 			<SheetTrigger asChild>
 				<button
-					className={`${scrolled ? "text-primary" : "text-white"} w-full`}
+					className={cn(
+						"relative flex items-center justify-center rounded-full p-1.5",
+						triggerClassName
+					)}
 					aria-label="Open search"
 				>
-					<Search className="h-6 w-6" />
+					<Search className={cn("h-6 w-6", iconClassName)} />
 				</button>
 			</SheetTrigger>
 			<SheetContent side="top" className="min-w-full p-3">

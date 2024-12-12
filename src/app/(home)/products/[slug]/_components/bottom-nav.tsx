@@ -4,9 +4,11 @@ import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/contexts/cart-context"
 import { useQuantity } from "@/contexts/quantity-context"
 import { addToCart } from "@/lib/actions"
+import { showErrorToast } from "@/lib/handle-error"
 import { getProductBySlugUseCase } from "@/use-cases/products"
 import { MessageCircle, ShoppingCart } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
 
@@ -15,24 +17,38 @@ export default function ProductBottomNav({
 }: {
 	product: Awaited<ReturnType<typeof getProductBySlugUseCase>>
 }) {
-	const { addItem } = useCart()
-	const { quantity } = useQuantity()
+	const router = useRouter()
+	const { addItem, cart } = useCart()
+	const { quantity: inputtedQuantity } = useQuantity()
 	const [state, formAction] = useActionState(addToCart, null)
 	const actionWithProductId = formAction.bind(null, {
 		productId: product.id,
-		quantity
+		quantity: inputtedQuantity
 	})
+	const currentCartQuantity =
+		cart.items.find((item) => item.product.id === product.id)?.quantity || 0
 
-	// Show toast when state changes
 	useEffect(() => {
 		if (state) {
 			if (state.error) {
-				toast.error("Error", {
-					description: state.error || "Failed to add item to cart"
-				})
+				showErrorToast(state.error)
 			}
 		}
 	}, [state])
+
+	const handleBuyNow = () => {
+		if (product.quantity === 0) {
+			return toast.error("Sorry, This product is out of stock", {
+				dismissible: true,
+				duration: 2000,
+				closeButton: true
+			})
+		}
+
+		router.push(
+			`/checkout?productId=${product.id}&quantity=${inputtedQuantity}`
+		)
+	}
 
 	return (
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background">
@@ -49,6 +65,24 @@ export default function ProductBottomNav({
 					<Separator orientation="vertical" />
 					<form
 						action={async () => {
+							if (product.quantity === 0) {
+								return toast.error("Sorry, This product is out of stock", {
+									dismissible: true,
+									duration: 2000,
+									closeButton: true
+								})
+							}
+							if (currentCartQuantity + inputtedQuantity > product.quantity) {
+								return toast.error(
+									"You can't add more than the available stock",
+									{
+										description: `Your have ${currentCartQuantity} in your cart and you are trying to add ${inputtedQuantity} to the cart. You can only add ${product.quantity - currentCartQuantity} more.`,
+										dismissible: true,
+										duration: 2000,
+										closeButton: true
+									}
+								)
+							}
 							addItem(
 								{
 									id: product.id,
@@ -63,7 +97,7 @@ export default function ProductBottomNav({
 										contactNumber: product.farmer!.contactNumber || ""
 									}
 								},
-								quantity
+								inputtedQuantity
 							)
 							actionWithProductId()
 						}}
@@ -80,12 +114,13 @@ export default function ProductBottomNav({
 					</form>
 				</div>
 				<div className="flex h-full w-full flex-1 items-center">
-					<Button className="flex w-full" asChild size="lg">
-						<Link
-							href={`/checkout?productId=${product.id}&quantity=${quantity}`}
-						>
-							Buy Now
-						</Link>
+					<Button
+						className="flex w-full"
+						size="lg"
+						type="button"
+						onClick={handleBuyNow}
+					>
+						Buy Now
 					</Button>
 				</div>
 			</div>

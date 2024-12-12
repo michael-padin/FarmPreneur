@@ -1,44 +1,20 @@
 "use client"
+import { FPMessageCircleMore } from "@/components/fp/fp-message-circle-more"
+import { FPSearchSheet } from "@/components/fp/fp-search-sheet"
+import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { Button } from "@/components/ui/button"
-import { useCart } from "@/contexts/cart-context"
+import { useScrollDetection } from "@/hooks/use-scroll-detection"
 import { cn } from "@/lib/utils"
-import { MessageCircleMore, ShoppingCart } from "lucide-react"
 import { Session } from "next-auth"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { NavLink } from "./nav-link"
-import { SearchSheet } from "./search-sheet"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
-	const countMessages = 10
-	const {
-		cart: { distinctProductsCount }
-	} = useCart()
+	const scrolled = useScrollDetection({ threshold: 60 })
 
-	const [scrolled, setScrolled] = useState(false)
-
-	useEffect(() => {
-		const handleScroll = () => {
-			const isScrolled = window.scrollY > 60
-			if (isScrolled !== scrolled) {
-				setScrolled(isScrolled)
-			}
-		}
-
-		document.addEventListener("scroll", handleScroll, { passive: true })
-
-		return () => {
-			document.removeEventListener("scroll", handleScroll)
-		}
-	}, [scrolled])
-
-	const navButtonClasses = cn(
-		"flex items-center justify-center rounded-full p-1.5",
+	const containerClasses = cn(
 		scrolled ? "bg-transparent text-primary" : "bg-transparent text-white"
 	)
-
 	const badgeClasses = cn(
-		"absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full text-[0.6rem] font-medium text-primary-foreground",
 		scrolled ? "bg-primary text-white" : "bg-white text-primary border-primary"
 	)
 	return (
@@ -63,27 +39,20 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 				</div>
 
 				<div className="flex items-center gap-2 text-primary-foreground">
-					<SearchSheet scrolled={scrolled} />
+					<FPSearchSheet triggerClassName={containerClasses} />
 					{user ? (
 						<>
-							<NavLink
-								Icon={ShoppingCart}
-								badgeClasses={badgeClasses}
-								count={distinctProductsCount}
-								href="/cart"
-								navButtonClasses={navButtonClasses}
+							<FPShoppingCart
+								badgeClassName={badgeClasses}
+								containerClassName={containerClasses}
 							/>
-							<NavLink
-								href="/messages"
-								count={countMessages}
-								Icon={MessageCircleMore}
-								navButtonClasses={navButtonClasses}
-								badgeClasses={badgeClasses}
+							<FPMessageCircleMore
+								className={badgeClasses}
+								containerClassName={containerClasses}
 							/>
 						</>
 					) : (
 						<div className="flex items-center gap-4">
-							{/* <Search className="text-foreground" /> */}
 							<Button variant={scrolled ? "default" : "secondary"} asChild>
 								<Link href="/signup">Sign up</Link>
 							</Button>
