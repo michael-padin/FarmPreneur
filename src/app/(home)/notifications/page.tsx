@@ -32,7 +32,7 @@ export default function Page() {
 			</header>
 			<main className="w-full">
 				<div className="pb-24 pt-16">
-					<div className="px-4 pt-4">
+					<div className="pt-4">
 						<Suspense fallback={<NotificationSkeleton />}>
 							<NotificationListWrapper />
 						</Suspense>

@@ -52,7 +52,8 @@ export function CancelOrder({
 		startTransition(async () => {
 			const { error } = await cancelOrder({
 				orderId,
-				cancellationReason: data.reason
+				cancellationReason: data.reason,
+				subStatus: "CANCELLED_BY_BUYER"
 			})
 			if (error) {
 				showErrorToast(error)
@@ -64,9 +65,7 @@ export function CancelOrder({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"} size={"sm"}>
-					{"Cancel"} Order
-				</Button>
+				<Button variant={"outline"}>{"Cancel"} Order</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">

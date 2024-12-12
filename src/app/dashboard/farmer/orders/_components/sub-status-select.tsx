@@ -1,0 +1,61 @@
+"use client"
+
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue
+} from "@/components/ui/select"
+import { updateOrderSubStatus } from "@/lib/actions"
+import { SubTrackStatus } from "@prisma/client"
+import { useTransition } from "react"
+
+export function SubStatusSelect({
+	orderId,
+	currentSubStatus
+}: {
+	orderId: string
+	currentSubStatus: SubTrackStatus
+}) {
+	const [isPending, startTransition] = useTransition()
+
+	const handleValueChange = (value: string) => {
+		startTransition(async () => {
+			updateOrderSubStatus({
+				orderId,
+				status: value as "PREPARING_PRODUCE" | "READY_FOR_PICKUP" | "PICKED_UP"
+			})
+		})
+	}
+
+	return (
+		<div>
+			<Select
+				onValueChange={handleValueChange}
+				disabled={isPending}
+				defaultValue={currentSubStatus}
+			>
+				<SelectTrigger>
+					<SelectValue placeholder="Select a status" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						<SelectLabel>ActiveIn Progress</SelectLabel>
+						<SelectItem value="PREPARING_PRODUCE">Preparing Produce</SelectItem>
+						<SelectItem value="READY_FOR_PICKUP">Ready for Pickup</SelectItem>
+						<SelectItem value="PICKED_UP">Picked Up</SelectItem>
+					</SelectGroup>
+					{/* <SelectGroup>
+						<SelectLabel>Completed</SelectLabel>
+						<SelectItem value="PICKED_UP">Picked Up</SelectItem>
+					</SelectGroup> */}
+				</SelectContent>
+			</Select>
+			{/* {isPending && <p>Updating status...</p>}
+			{state && <p>{state.message}</p>} */}
+		</div>
+	)
+}

@@ -1,16 +1,20 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { changeOrderStatus } from "@/lib/actions"
+import { confirmPickedUpOrder } from "@/lib/actions"
 import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
 
-export function AcceptOrder({ orderId }: { orderId: string }) {
-	const [state, formAction, isPending] = useActionState(changeOrderStatus, null)
+export function ConfirmPickedUpOrder({ orderId }: { orderId: string }) {
+	const [state, formAction, isPending] = useActionState(
+		confirmPickedUpOrder,
+		null
+	)
 
 	const formActionsWithData = formAction.bind(null, {
 		orderId,
-		status: "IN_PROGRESS"
+		status: "COMPLETED",
+		subStatus: "BUYER_CONFIRMED"
 	})
 
 	useEffect(() => {
@@ -34,7 +38,7 @@ export function AcceptOrder({ orderId }: { orderId: string }) {
 	return (
 		<form action={formActionsWithData}>
 			<Button className="w-full" disabled={isPending}>
-				{isPending ? "Accepting..." : "Accept Order"}
+				{isPending ? "Confirming..." : "Confirm Order"}
 			</Button>
 		</form>
 	)

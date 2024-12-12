@@ -10,7 +10,8 @@ import {
 	getFarmersUseCase,
 	getPendingFarmerCountUseCase
 } from "@/use-cases/farmers"
-import { OrderStatus } from "@prisma/client"
+import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
+import { OrderStatus, SubTrackStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "./handle-error"
@@ -252,6 +253,7 @@ export async function placeOrder(
 export async function cancelOrder(payload: {
 	orderId: string
 	cancellationReason: string
+	subStatus: SubTrackStatus
 }) {
 	const { orderId, cancellationReason } = payload
 
@@ -271,7 +273,8 @@ export async function cancelOrder(payload: {
 			where: { id: orderId },
 			data: {
 				status: "CANCELLED",
-				cancellationReason
+				cancellationReason,
+				subStatus: "CANCELLED_BY_BUYER"
 			}
 		})
 
@@ -305,19 +308,57 @@ export async function changeOrderStatus(
 			return { success: false, error: "Order not found" }
 		}
 
-		await db.order.update({
+		const updatedOrder = await db.order.update({
 			where: { id: orderId },
 			data: {
-				status
+				status,
+				...(status === "IN_PROGRESS" && { subStatus: "PREPARING_PRODUCE" })
+			},
+			include: {
+				items: { include: { product: true } },
+				farmer: true,
+				customer: {
+					include: { user: true }
+				}
 			}
 		})
+
+		if (!updatedOrder) {
+			return { success: false, error: "Order not found" }
+		}
+
+		if (updatedOrder.status === "IN_PROGRESS") {
+			await createNotificationByUserIdUseCase({
+				userId: updatedOrder.customer?.user.id || "",
+				title: "Order Accepted",
+				message: `Your Order from ${updatedOrder.farmer.farmName} has been accepted.`,
+				type: "ORDER_STATUS",
+				metadata: {
+					farmer: {
+						farmerId: updatedOrder.farmer.id,
+						farmerName: updatedOrder.farmer.farmName!
+					},
+					order: {
+						orderId: order.id,
+						orderStatus: updatedOrder.status,
+						// orderTotalPrice: updatedOrder.totalPrice,
+						orderItems: updatedOrder.items.map((item) => ({
+							productId: item.product.id,
+							productName: item.product.title,
+							quantity: item.quantity,
+							price: item.price
+						}))
+					}
+				}
+			})
+		}
 
 		revalidatePath("/dashboard/farmer/orders")
 		revalidatePath("/dashboard/orders")
 
 		return { success: true }
 	} catch (error) {
-		return { success: false, error: "Failed to update order status" }
+		return { success: false, error: getErrorMessage(error) }
 	}
 }
 
@@ -544,6 +585,228 @@ export async function changeUserPassword(payload: {
 			data: { password: hashedPassword }
 		})
 
+		return { error: null, success: true }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+
+export async function updateOrderSubStatus(payload: {
+	orderId: string
+	status: SubTrackStatus
+}) {
+	try {
+		const order = await db.order.findUnique({
+			where: { id: payload.orderId },
+			include: {
+				customer: {
+					select: {
+						id: true,
+						user: {
+							select: {
+								id: true
+							}
+						}
+					}
+				},
+				farmer: true
+			}
+		})
+
+		if (!order) {
+			return { error: "Order not found", success: false }
+		}
+
+		const updatedOrder = await db.order.update({
+			where: { id: payload.orderId },
+			data: { subStatus: payload.status },
+			include: { items: { include: { product: true } } }
+		})
+
+		if (!updatedOrder) {
+			return { error: "Order not found", success: false }
+		}
+
+		if (updatedOrder.subStatus === "READY_FOR_PICKUP") {
+			await createNotificationByUserIdUseCase({
+				userId: order.customer?.user.id || "",
+				title: "Order Ready for Pickup",
+				message: `Your Order from ${order.farmer.farmName} is now ready for pickup.`,
+				type: "ORDER_STATUS",
+				metadata: {
+					farmer: {
+						farmerId: order.farmer.id,
+						farmerName: order.farmer.farmName!
+					},
+					order: {
+						orderId: order.id,
+						orderStatus: updatedOrder.status,
+						orderSubStatus: updatedOrder.subStatus,
+						// orderTotalPrice: updatedOrder.totalPrice,
+						orderItems: updatedOrder.items.map((item) => ({
+							productId: item.product.id,
+							productName: item.product.title,
+							quantity: item.quantity,
+							price: item.price
+						}))
+					}
+				}
+			})
+		} else if (updatedOrder.subStatus === "PICKED_UP") {
+			await createNotificationByUserIdUseCase({
+				userId: order.customer?.user.id || "",
+				title: "Order Picked Up",
+				message: `You have picked up your Order from ${order.farmer.farmName}. Please confirm your order.`,
+				type: "ORDER_STATUS",
+				metadata: {
+					farmer: {
+						farmerId: order.farmer.id,
+						farmerName: order.farmer.farmName!
+					},
+					order: {
+						orderId: order.id,
+						orderStatus: updatedOrder.status,
+						orderSubStatus: updatedOrder.subStatus,
+						// orderTotalPrice: updatedOrder.totalPrice,
+						orderItems: updatedOrder.items.map((item) => ({
+							productId: item.product.id,
+							productName: item.product.title,
+							quantity: item.quantity,
+							price: item.price
+						}))
+					}
+				}
+			})
+		}
+
+		revalidatePath("/dashboard/farmer/orders")
+		revalidatePath("/orders")
+		return { error: null, success: true }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+
+export async function confirmPickedUpOrder(
+	prevState: any,
+	payload: {
+		orderId: string
+		status: OrderStatus
+		subStatus: SubTrackStatus
+	}
+) {
+	const { orderId, status, subStatus } = payload
+
+	try {
+		const order = await db.order.findUnique({
+			where: { id: orderId },
+			include: {
+				customer: true
+			}
+		})
+
+		if (!order) {
+			return { error: "Order not found", success: false }
+		}
+
+		const updatedOrder = await db.order.update({
+			where: { id: orderId },
+			data: {
+				status: status,
+				subStatus: subStatus
+			},
+			include: {
+				items: { include: { product: true } },
+				farmer: {
+					include: {
+						user: {
+							select: {
+								id: true
+							}
+						}
+					}
+				},
+				customer: true
+			}
+		})
+
+		await createNotificationByUserIdUseCase({
+			userId: updatedOrder.farmer?.user.id || "",
+			title: "Order Completed",
+			message: `${updatedOrder.customer?.name} has confirmed and completed the order from you.`,
+			type: "ORDER_STATUS",
+			metadata: {
+				farmer: {
+					farmerId: updatedOrder.farmer.id,
+					farmerName: updatedOrder.farmer.farmName!
+				},
+				order: {
+					orderId: order.id,
+					orderStatus: updatedOrder.status,
+					orderSubStatus: updatedOrder.subStatus || "BUYER_CONFIRMED",
+					// orderTotalPrice: updatedOrder.totalPrice,
+					orderItems: updatedOrder.items.map((item) => ({
+						productId: item.product.id,
+						productName: item.product.title,
+						quantity: item.quantity,
+						price: item.price
+					}))
+				}
+			}
+		})
+		revalidatePath("/orders")
+		revalidatePath("/dashboard/farmer/orders")
+		return { error: null, success: true }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+
+export async function leaveReview(payload: {
+	orderId: string
+	rating: number
+	review: string
+}) {
+	const { orderId, rating, review } = payload
+
+	try {
+		// get all the product in the order items and create a new review for each product
+		const order = await db.order.findUnique({
+			where: { id: orderId },
+			include: {
+				items: {
+					include: {
+						product: {
+							select: {
+								id: true
+							}
+						}
+					}
+				}
+			}
+		})
+
+		if (!order) {
+			return { error: "Order not found", success: false }
+		}
+
+		const createdReviews = await Promise.all(
+			order.items.map(async (item) => {
+				await db.productReview.create({
+					data: {
+						rating: rating,
+						comment: review,
+						status: "PUBLISHED",
+						productId: item.product.id,
+						customerId: order.customerId,
+						orderId: order.id,
+						farmerId: order.farmerId
+					}
+				})
+			})
+		)
+
+		revalidatePath("/orders")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }

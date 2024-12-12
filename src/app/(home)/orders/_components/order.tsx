@@ -6,6 +6,8 @@ import { getCustomerOrdersUseCase } from "@/use-cases/orders"
 import { ChevronRight, MapPin } from "lucide-react"
 import { Fragment } from "react"
 import { CancelOrder } from "./cancel-order"
+import { ConfirmPickedUpOrder } from "./confirm-picked-up-order"
+import { LeaveReview } from "./leave-review"
 import { OrderItem } from "./order-item"
 import { ViewCancellation } from "./view-cancellation"
 
@@ -63,12 +65,19 @@ export default function Order({
 				</div>
 				<div className="flex items-center justify-end">
 					<div className="flex gap-2 pt-2">
-						{order.status !== "CANCELLED" && (
+						{order.status !== "CANCELLED" && order.status !== "COMPLETED" && (
 							<CancelOrder orderId={order.id} status={order.status} />
 						)}
 						{order.status === "CANCELLED" && (
-							<ViewCancellation reason={order.cancellationReason || ""} />
+							<ViewCancellation
+								reason={order.cancellationReason || ""}
+								subStatus={order.subStatus || "CANCELLED_BY_FARMER"}
+							/>
 						)}
+						{order.subStatus === "PICKED_UP" && (
+							<ConfirmPickedUpOrder orderId={order.id} />
+						)}
+						{order.status === "COMPLETED" && <LeaveReview orderId={order.id} />}
 					</div>
 				</div>
 			</CardContent>

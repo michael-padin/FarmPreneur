@@ -8,6 +8,7 @@ import { Fragment } from "react"
 import { AcceptOrder } from "./accept-order"
 import { CancelOrder } from "./cancel-order"
 import { OrderItem } from "./order-item"
+import { SubStatusSelect } from "./sub-status-select"
 import { ViewCancellation } from "./view-cancellation"
 
 export default function Order({
@@ -70,10 +71,16 @@ export default function Order({
 				</div>
 				<div className="flex items-center justify-end">
 					<div className="flex gap-2 pt-2">
-						{order.status === "PENDING" && <AcceptOrder orderId={order.id} />}
 						{order.status !== "CANCELLED" && (
 							<CancelOrder orderId={order.id} status={order.status} />
 						)}
+						{order.status === "IN_PROGRESS" && (
+							<SubStatusSelect
+								orderId={order.id}
+								currentSubStatus={order.subStatus || "PREPARING_PRODUCE"}
+							/>
+						)}
+						{order.status === "PENDING" && <AcceptOrder orderId={order.id} />}
 						{order.status === "CANCELLED" && (
 							<ViewCancellation reason={order.cancellationReason || ""} />
 						)}
