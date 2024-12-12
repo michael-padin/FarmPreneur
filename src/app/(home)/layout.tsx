@@ -21,7 +21,7 @@ export default async function Layout({
 		<NotificationProvider userId={user?.id}>
 			<CartProvider initialCartPromise={cartPromise}>
 				<UnderConstruction />
-				<>{children}</>
+				{children}
 			</CartProvider>
 		</NotificationProvider>
 	)
