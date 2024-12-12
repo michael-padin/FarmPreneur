@@ -5,7 +5,9 @@ import { formatPHP } from "@/lib/utils"
 import { getCustomerOrdersUseCase } from "@/use-cases/orders"
 import { ChevronRight, MapPin } from "lucide-react"
 import { Fragment } from "react"
+import { CancelOrder } from "./cancel-order"
 import { OrderItem } from "./order-item"
+import { ViewCancellation } from "./view-cancellation"
 
 export default function Order({
 	order
@@ -58,6 +60,16 @@ export default function Order({
 							₱{formatPHP(Number(order.totalPrice))}
 						</span>
 					</p>
+				</div>
+				<div className="flex items-center justify-end">
+					<div className="flex gap-2 pt-2">
+						{order.status !== "CANCELLED" && (
+							<CancelOrder orderId={order.id} status={order.status} />
+						)}
+						{order.status === "CANCELLED" && (
+							<ViewCancellation reason={order.cancellationReason || ""} />
+						)}
+					</div>
 				</div>
 			</CardContent>
 		</Card>

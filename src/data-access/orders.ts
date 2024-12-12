@@ -135,6 +135,7 @@ export const getFarmerOrders = async (filter: {
 			})
 		},
 		include: {
+			pickupLocation: true,
 			items: {
 				include: {
 					product: {

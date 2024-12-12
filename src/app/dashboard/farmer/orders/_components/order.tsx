@@ -1,8 +1,9 @@
+import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, MapPin } from "lucide-react"
 import { Fragment } from "react"
 import { AcceptOrder } from "./accept-order"
 import { CancelOrder } from "./cancel-order"
@@ -27,7 +28,7 @@ export default function Order({
 					</div>
 					<div className="text-xs">
 						<div className="flex gap-1">
-							{/* <MapPin className="h-5 w-5" />
+							<MapPin className="h-5 w-5" />
 							<div>
 								<span className="text-muted-foreground">
 									{order.pickupLocation?.fullAddress}
@@ -41,10 +42,13 @@ export default function Order({
 									}}
 									title="Pickup Location"
 								/>
-							</div> */}
+							</div>
 						</div>
 						{order.customer?.contactNumber && (
-							<p>Contact: {order.customer?.contactNumber}</p>
+							<div>
+								<p>Contact: </p>
+								<p>{order.customer?.contactNumber}</p>
+							</div>
 						)}
 					</div>
 				</div>
