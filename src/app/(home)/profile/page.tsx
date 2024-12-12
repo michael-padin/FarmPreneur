@@ -62,12 +62,12 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link> */}
 								<Link
-									href="profile/security"
+									href="profile/security/change-password"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
 										<Shield className="h-5 w-5" />
-										<span>Security</span>
+										<span>Change Password</span>
 									</div>
 									<ChevronRight className="h-5 w-5" />
 								</Link>

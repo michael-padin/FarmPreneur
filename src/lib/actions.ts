@@ -11,6 +11,7 @@ import {
 	getPendingFarmerCountUseCase
 } from "@/use-cases/farmers"
 import { OrderStatus } from "@prisma/client"
+import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "./handle-error"
 
@@ -498,6 +499,51 @@ export async function changeCustomerDefaultAddress(payload: {
 			data: { isDefault: true }
 		})
 		revalidatePath("/profile/address")
+		return { error: null, success: true }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
+
+export async function changeUserPassword(payload: {
+	customerId?: string
+	userId?: string
+	newPassword: string
+	currentPassword: string
+}) {
+	const { newPassword, currentPassword } = payload
+	try {
+		const session = await auth()
+		if (!session) {
+			return { error: "Unauthorized", success: false }
+		}
+
+		const userId = payload.userId || session.user.id
+
+		const user = await db.user.findUnique({
+			where: { id: userId },
+			select: {
+				id: true,
+				password: true
+			}
+		})
+
+		if (!user) {
+			return { error: "User not found", success: false }
+		}
+
+		const passwordMatch = await compare(currentPassword, user.password!)
+
+		if (!passwordMatch) {
+			return { error: "Invalid current password", success: false }
+		}
+		const hashedPassword = await hash(newPassword, 10)
+
+		await db.user.update({
+			where: { id: userId },
+			data: { password: hashedPassword }
+		})
+
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
