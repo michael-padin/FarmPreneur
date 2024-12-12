@@ -18,11 +18,12 @@ export default function Home() {
 						<div className="flex items-center justify-center bg-primary pb-20 pt-28 lg:rounded-lg lg:py-20">
 							<div className="relative space-y-5 px-2 text-center text-white lg:space-y-10">
 								<h1 className="text-3xl font-bold leading-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-									Discover the Best Local Produce
+									Discover Local Farm-Fresh Produce
 								</h1>
 								<p className="mx-auto max-w-[700px] lg:text-xl">
-									Connect directly with farmers and get the freshest,
-									highest-quality produce delivered to your door.
+									Pick up the freshest, highest-quality fruits and vegetables
+									directly from local farmers. No delivery, just pure local
+									goodness.
 								</p>
 							</div>
 						</div>
