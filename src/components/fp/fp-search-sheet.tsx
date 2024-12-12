@@ -102,7 +102,9 @@ export function FPSearchSheet({
 						</div>
 					</div>
 					<div className={`${suggestions.products?.length > 0 ? "mt-4" : ""}`}>
-						<h3 className="mb-2 text-xs font-semibold">
+						<h3
+							className={`${suggestions.products?.length > 0 ? "mb-2" : ""} text-xs font-semibold`}
+						>
 							{suggestions.products?.length > 0 ? "Results" : ""}
 						</h3>
 						{isPending ? (
