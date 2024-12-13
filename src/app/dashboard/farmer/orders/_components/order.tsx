@@ -1,9 +1,10 @@
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
+import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
-import { ChevronRight, MapPin } from "lucide-react"
+import { MapPin, PhoneCall } from "lucide-react"
 import { Fragment } from "react"
 import { AcceptOrder } from "./accept-order"
 import { CancelOrder } from "./cancel-order"
@@ -19,21 +20,29 @@ export default function Order({
 	return (
 		<Card key={order.farmer.id} className="border-none bg-background">
 			<CardContent className="w-full space-y-3 p-2">
-				<div className="">
+				<div className="rounded-lg bg-muted p-2 text-muted-foreground">
 					<div className="flex justify-between">
 						<div className="flex items-center gap-2">
-							<h2 className="font-semibold">{order.customer?.user.name}</h2>
-							<ChevronRight className="h-4 w-4" />
+							<h2 className="font-semibold text-foreground">
+								{order.customer?.user.name}
+							</h2>
+							{/* <ChevronRight className="h-4 w-4" /> */}
 						</div>
 						<OrderStatusBadge status={order.status} showText />
 					</div>
-					<div className="text-xs">
-						<div className="flex gap-1">
+					<div className="my-2 space-y-2 text-sm">
+						{order.customer?.contactNumber && (
+							<div className="flex items-center gap-2">
+								<PhoneCall className="h-4 w-4" />
+								<FPContactNumberDisplay
+									contactNumber={order.customer?.contactNumber}
+								/>
+							</div>
+						)}
+						<div className="flex items-center gap-2">
 							<MapPin className="h-5 w-5" />
 							<div>
-								<span className="text-muted-foreground">
-									{order.pickupLocation?.fullAddress}
-								</span>
+								<span className="">{order.pickupLocation?.fullAddress}</span>
 
 								<AddressDetailsDrawerDialog
 									address={{
@@ -41,16 +50,10 @@ export default function Order({
 										longitude: order.pickupLocation?.longitude || 0,
 										latitude: order.pickupLocation?.latitude || 0
 									}}
-									title="Pickup Location"
+									title={`${order.customer?.user.name}'s Location`}
 								/>
 							</div>
 						</div>
-						{order.customer?.contactNumber && (
-							<div>
-								<p>Contact: </p>
-								<p>{order.customer?.contactNumber}</p>
-							</div>
-						)}
 					</div>
 				</div>
 
@@ -71,7 +74,7 @@ export default function Order({
 				</div>
 				<div className="flex items-center justify-end">
 					<div className="flex gap-2 pt-2">
-						{order.status !== "CANCELLED" && (
+						{order.status !== "CANCELLED" && order.status !== "COMPLETED" && (
 							<CancelOrder orderId={order.id} status={order.status} />
 						)}
 						{order.status === "IN_PROGRESS" && (

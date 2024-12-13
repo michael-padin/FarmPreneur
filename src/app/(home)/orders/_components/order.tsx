@@ -1,10 +1,11 @@
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
+import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getCustomerOrdersUseCase } from "@/use-cases/orders"
-import { ChevronRight, MapPin } from "lucide-react"
+import { MapPin, PhoneCall } from "lucide-react"
 import Link from "next/link"
 import { Fragment } from "react"
 import { CancelOrder } from "./cancel-order"
@@ -20,21 +21,29 @@ export default function Order({
 	return (
 		<Card key={order.farmer.id} className="border-none bg-background">
 			<CardContent className="w-full space-y-3 p-2">
-				<div className="">
+				<div className="rounded-lg bg-muted p-2 text-muted-foreground">
 					<div className="flex justify-between">
 						<div className="flex items-center gap-2">
-							<h2 className="font-semibold">{order.farmer.farmName}</h2>
-							<ChevronRight className="h-4 w-4" />
+							<h2 className="font-semibold text-foreground">
+								{order.farmer?.farmName}
+							</h2>
+							{/* <ChevronRight className="h-4 w-4" /> */}
 						</div>
 						<OrderStatusBadge status={order.status} showText />
 					</div>
-					<div className="text-xs">
-						<div className="flex gap-1">
+					<div className="my-2 space-y-2 text-sm">
+						{order.farmer?.contactNumber && (
+							<div className="flex items-center gap-2">
+								<PhoneCall className="h-4 w-4" />
+								<FPContactNumberDisplay
+									contactNumber={order.farmer?.contactNumber}
+								/>
+							</div>
+						)}
+						<div className="flex items-center gap-2">
 							<MapPin className="h-5 w-5" />
 							<div>
-								<span className="text-muted-foreground">
-									{order.pickupLocation?.fullAddress}
-								</span>
+								<span className="">{order.pickupLocation?.fullAddress}</span>
 
 								<AddressDetailsDrawerDialog
 									address={{
@@ -42,13 +51,12 @@ export default function Order({
 										longitude: order.pickupLocation?.longitude || 0,
 										latitude: order.pickupLocation?.latitude || 0
 									}}
-									title="Pickup Location"
+									title={`${order.farmer?.farmName}'s Location`}
 								/>
 							</div>
 						</div>
 					</div>
 				</div>
-
 				<div className="w-full space-y-3">
 					{order.items.map((item, index) => (
 						<Fragment key={item.id}>
@@ -86,7 +94,7 @@ export default function Order({
 									</Link>
 								</Button>
 							)}
-						{order.status === "COMPLETED" &&
+						{/* {order.status === "COMPLETED" &&
 							order.subStatus === "BUYER_REVIEWED" && (
 								<Button
 									asChild
@@ -97,7 +105,7 @@ export default function Order({
 										View Rating
 									</Link>
 								</Button>
-							)}
+							)} */}
 					</div>
 				</div>
 			</CardContent>

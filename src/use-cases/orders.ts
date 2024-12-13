@@ -159,7 +159,13 @@ export const getCustomerOrderItemsUseCase = async (filter: {
 						},
 						farmer: {
 							select: {
-								farmName: true
+								contactNumber: true,
+								farmName: true,
+								farmImages: {
+									select: {
+										url: true
+									}
+								}
 							}
 						}
 					}
@@ -177,6 +183,9 @@ export const getCustomerOrderItemsUseCase = async (filter: {
 			image: item.product.images[0].url,
 			name: item.product.title,
 			unit: item.product.unit || "kg",
+			farmerContact: item.product.farmer?.contactNumber || "",
+
+			farmerImage: item.product.farmer?.farmImages[0].url || "",
 			farmerName: item.product.farmer?.farmName || ""
 		}))
 		return shapedOrderItems
@@ -198,13 +207,7 @@ export const getCustomerUnReviewedOrderUseCase = async (filter: {
 
 		const orderItems = await db.orderItem.findMany({
 			where: {
-				orderId: filter.orderId,
-				order: {
-					AND: [
-						{ subStatus: { not: "BUYER_REVIEWED" } },
-						{ status: "COMPLETED" }
-					]
-				}
+				orderId: filter.orderId
 			},
 			include: {
 				product: {
@@ -218,13 +221,21 @@ export const getCustomerUnReviewedOrderUseCase = async (filter: {
 						},
 						farmer: {
 							select: {
-								farmName: true
+								contactNumber: true,
+								farmName: true,
+								farmImages: {
+									select: {
+										url: true
+									}
+								}
 							}
 						}
 					}
 				}
 			}
 		})
+
+		if (!orderItems) throw new Error("Order not found")
 
 		const shapedOrderItems = orderItems.map((item) => ({
 			orderId: item.orderId,
@@ -234,6 +245,8 @@ export const getCustomerUnReviewedOrderUseCase = async (filter: {
 			image: item.product.images[0].url,
 			name: item.product.title,
 			unit: item.product.unit || "kg",
+			farmerContact: item.product.farmer?.contactNumber || "",
+			farmerImage: item.product.farmer?.farmImages?.[0].url || "",
 			farmerName: item.product.farmer?.farmName || ""
 		}))
 		return shapedOrderItems

@@ -1,5 +1,4 @@
-import Image from "next/image"
-import { MoreVertical, Eye, Pencil, Trash2, Box } from "lucide-react"
+import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import {
@@ -9,11 +8,12 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { searchParamsCache } from "./searchParams"
-import { getProductsUseCase } from "@/use-cases/products"
-import { formatDate } from "@/lib/utils"
-import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { formatDate } from "@/lib/utils"
+import { getProductsUseCase } from "@/use-cases/products"
+import { Box, Eye, MoreVertical, Pencil, Trash2 } from "lucide-react"
+import Image from "next/image"
+import { searchParamsCache } from "./searchParams"
 
 export async function FarmerProductList() {
 	const { status, search } = searchParamsCache.all()
@@ -52,10 +52,7 @@ export async function FarmerProductList() {
 										{product.description}
 									</p>
 									<div className="mt-2 flex w-full items-start justify-end">
-										<ProductListingStatusBadge
-											status={product.listingStatus}
-											showText
-										/>
+										<OrderStatusBadge status={product.listingStatus} showText />
 									</div>
 								</div>
 							</div>

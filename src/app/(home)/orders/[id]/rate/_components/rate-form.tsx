@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import {
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
+import {
 	Form,
 	FormControl,
 	FormDescription,
@@ -22,6 +28,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
+import { formatPhoneNumber } from "react-phone-number-input"
 import { toast } from "sonner"
 import { z } from "zod"
 
@@ -102,10 +109,26 @@ export function RateForm({
 		})
 	}
 
+	console.log("orderItems :>> ", orderItems)
+
 	return (
 		<div>
 			<Form {...form}>
 				<div className="relative w-full">
+					<Card className="relative mb-2 w-full border-none bg-background">
+						<CardHeader className="p-3">
+							<CardTitle className="text-primary">
+								{orderItems[0].farmerName}
+							</CardTitle>
+							<CardDescription>
+								<a
+									href={`tel:${formatPhoneNumber(orderItems[0].farmerContact)}`}
+								>
+									{formatPhoneNumber(orderItems[0].farmerContact)}
+								</a>
+							</CardDescription>
+						</CardHeader>
+					</Card>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
 						<fieldset className="space-y-2" disabled={isPending}>
 							{orderItems.map((item, index) => (
