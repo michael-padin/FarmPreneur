@@ -1,49 +1,26 @@
-import { type SubTrackStatus } from "@prisma/client"
+import { OrderStatus, OrderSubStatus } from "@prisma/client"
 
-export const subStatusMap: Record<
-	SubTrackStatus,
-	{ value: SubTrackStatus; label: string }
-> = {
-	// New/Created statuses
-	AWAITING_FARMER_ACCEPTANCE: {
-		value: "AWAITING_FARMER_ACCEPTANCE",
-		label: "Awaiting Farmer Acceptance"
-	},
-	// New/Created statuses
+export const orderStatusMap: Record<OrderStatus, { label: string }> = {
+	[OrderStatus.PENDING]: { label: "PENDING" },
+	[OrderStatus.IN_PROGRESS]: { label: "IN PROGRESS" },
+	[OrderStatus.COMPLETED]: { label: "COMPLETED" },
+	[OrderStatus.CANCELLED]: { label: "CANCELLED" }
+}
 
-	// Active/In Progress statuses
-	PREPARING_PRODUCE: {
-		value: "PREPARING_PRODUCE",
-		label: "Preparing Produce"
+export const orderSubStatusMap: Record<OrderSubStatus, { label: string }> = {
+	[OrderSubStatus.AWAITING_FARMER_ACCEPTANCE]: {
+		label: "AWAITING FARMER ACCEPTANCE"
 	},
-	READY_FOR_PICKUP: { value: "READY_FOR_PICKUP", label: "Ready for Pickup" },
-
-	// Completed statuses
-	PICKED_UP: { value: "PICKED_UP", label: "Picked Up" },
-	PAYMENT_PROCESSED: {
-		value: "PAYMENT_PROCESSED",
-		label: "Payment Processed"
-	},
-	BUYER_CONFIRMED: { value: "BUYER_CONFIRMED", label: "Buyer Confirmed" },
-	BUYER_REVIEWED: {
-		value: "BUYER_REVIEWED",
-		label: "Buyer Reviewed"
-	},
-	FULLY_SETTLED: { value: "FULLY_SETTLED", label: "Fully Settled" },
-
-	// Cancelled statuses
-	CANCELLED_BY_FARMER: {
-		value: "CANCELLED_BY_FARMER",
-		label: "Cancelled by Farmer"
-	},
-	CANCELLED_BY_BUYER: {
-		value: "CANCELLED_BY_BUYER",
-		label: "Cancelled by Buyer"
-	},
-	INSUFFICIENT_STOCK: {
-		value: "INSUFFICIENT_STOCK",
-		label: "Insufficient Stock"
-	},
-	PAYMENT_FAILED: { value: "PAYMENT_FAILED", label: "Payment Failed" },
-	QUALITY_ISSUES: { value: "QUALITY_ISSUES", label: "Quality Issues" }
+	[OrderSubStatus.PREPARING_PRODUCE]: { label: "PREPARING PRODUCE" },
+	[OrderSubStatus.READY_FOR_PICKUP]: { label: "READY FOR PICKUP" },
+	[OrderSubStatus.PICKED_UP]: { label: "PICKED UP" },
+	[OrderSubStatus.PAYMENT_PROCESSED]: { label: "PAYMENT PROCESSED" },
+	[OrderSubStatus.BUYER_CONFIRMED]: { label: "BUYER CONFIRMED" },
+	[OrderSubStatus.BUYER_REVIEWED]: { label: "BUYER REVIEWED" },
+	[OrderSubStatus.FULLY_SETTLED]: { label: "FULLY SETTLED" },
+	[OrderSubStatus.CANCELLED_BY_FARMER]: { label: "CANCELLED BY FARMER" },
+	[OrderSubStatus.CANCELLED_BY_BUYER]: { label: "CANCELLED BY BUYER" },
+	[OrderSubStatus.INSUFFICIENT_STOCK]: { label: "INSUFFICIENT STOCK" },
+	[OrderSubStatus.PAYMENT_FAILED]: { label: "PAYMENT FAILED" },
+	[OrderSubStatus.QUALITY_ISSUES]: { label: "QUALITY ISSUES" }
 }

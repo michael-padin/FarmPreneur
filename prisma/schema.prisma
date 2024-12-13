@@ -273,7 +273,7 @@ model Order {
   quantity           Int?
   totalPrice         Float?
   status             OrderStatus     @default(PENDING)
-  subStatus          SubTrackStatus? @default(AWAITING_FARMER_ACCEPTANCE)
+  subStatus          OrderSubStatus? @default(AWAITING_FARMER_ACCEPTANCE)
   pickupLocation     Address?        @relation(fields: [pickupLocationId], references: [id])
   pickupLocationId   String?         @db.ObjectId
   farmer             Farmer          @relation(fields: [farmerId], references: [id])
@@ -475,6 +475,29 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum OrderSubStatus {
+  // New/Created statuses
+  AWAITING_FARMER_ACCEPTANCE
+
+  // Active/In Progress statuses
+  PREPARING_PRODUCE
+  READY_FOR_PICKUP
+
+  // Completed statuses
+  PICKED_UP
+  PAYMENT_PROCESSED
+  BUYER_CONFIRMED
+  FULLY_SETTLED
+  BUYER_REVIEWED
+
+  // Cancelled statuses
+  CANCELLED_BY_FARMER
+  CANCELLED_BY_BUYER
+  INSUFFICIENT_STOCK
+  PAYMENT_FAILED
+  QUALITY_ISSUES
+}
+
 // MARK: ProductStatus
 enum ProductListingStatus {
   PENDING
@@ -502,29 +525,6 @@ enum ROLE {
   FARMER
   CUSTOMER
   ADMIN
-}
-
-enum SubTrackStatus {
-  // New/Created statuses
-  AWAITING_FARMER_ACCEPTANCE
-
-  // Active/In Progress statuses
-  PREPARING_PRODUCE
-  READY_FOR_PICKUP
-
-  // Completed statuses
-  PICKED_UP
-  PAYMENT_PROCESSED
-  BUYER_CONFIRMED
-  FULLY_SETTLED
-  BUYER_REVIEWED
-
-  // Cancelled statuses
-  CANCELLED_BY_FARMER
-  CANCELLED_BY_BUYER
-  INSUFFICIENT_STOCK
-  PAYMENT_FAILED
-  QUALITY_ISSUES
 }
 
 enum Gender {

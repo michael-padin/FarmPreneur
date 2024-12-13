@@ -1,9 +1,9 @@
 import {
 	NotificationType,
 	OrderStatus,
+	OrderSubStatus,
 	Notification as PrismaNotification,
-	ProductListingStatus,
-	SubTrackStatus
+	ProductListingStatus
 } from "@prisma/client"
 
 export { NotificationType }
@@ -26,7 +26,7 @@ export type NotifMetadata = {
 	order?: {
 		orderId?: string
 		orderStatus?: OrderStatus
-		orderSubStatus?: SubTrackStatus
+		orderSubStatus?: OrderSubStatus
 		orderTotalPrice?: number
 		orderItems?: {
 			productId?: string

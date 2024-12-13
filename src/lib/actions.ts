@@ -11,7 +11,7 @@ import {
 	getPendingFarmerCountUseCase
 } from "@/use-cases/farmers"
 import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
-import { OrderStatus, SubTrackStatus } from "@prisma/client"
+import { OrderStatus, OrderSubStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "./handle-error"
@@ -253,7 +253,7 @@ export async function placeOrder(
 export async function cancelOrder(payload: {
 	orderId: string
 	cancellationReason: string
-	subStatus: SubTrackStatus
+	subStatus: OrderSubStatus
 }) {
 	const { orderId, cancellationReason } = payload
 
@@ -593,7 +593,7 @@ export async function changeUserPassword(payload: {
 
 export async function updateOrderSubStatus(payload: {
 	orderId: string
-	status: SubTrackStatus
+	status: OrderSubStatus
 }) {
 	try {
 		const order = await db.order.findUnique({
@@ -692,7 +692,7 @@ export async function confirmPickedUpOrder(
 	payload: {
 		orderId: string
 		status: OrderStatus
-		subStatus: SubTrackStatus
+		subStatus: OrderSubStatus
 	}
 ) {
 	const { orderId, status, subStatus } = payload

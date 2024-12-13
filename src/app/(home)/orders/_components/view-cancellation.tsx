@@ -12,8 +12,8 @@ import {
 	DrawerTrigger
 } from "@/components/ui/drawer"
 import { Textarea } from "@/components/ui/textarea"
-import { subStatusMap } from "@/constants/order"
-import { SubTrackStatus } from "@prisma/client"
+import { orderSubStatusMap } from "@/constants/order"
+import { OrderSubStatus } from "@prisma/client"
 import { useState } from "react"
 
 export function ViewCancellation({
@@ -21,7 +21,7 @@ export function ViewCancellation({
 	subStatus
 }: {
 	reason: string
-	subStatus: SubTrackStatus
+	subStatus: OrderSubStatus
 }) {
 	const [open, setOpen] = useState(false)
 
@@ -33,7 +33,7 @@ export function ViewCancellation({
 			<DrawerContent>
 				<DrawerHeader className="text-left">
 					<DrawerTitle className="text-destructive">
-						{subStatusMap[subStatus].label}
+						{orderSubStatusMap[subStatus].label}
 					</DrawerTitle>
 					<DrawerDescription className="sr-only"></DrawerDescription>
 				</DrawerHeader>

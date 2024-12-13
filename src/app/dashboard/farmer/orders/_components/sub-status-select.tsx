@@ -10,7 +10,7 @@ import {
 	SelectValue
 } from "@/components/ui/select"
 import { updateOrderSubStatus } from "@/lib/actions"
-import { SubTrackStatus } from "@prisma/client"
+import { OrderSubStatus } from "@prisma/client"
 import { useTransition } from "react"
 
 export function SubStatusSelect({
@@ -18,7 +18,7 @@ export function SubStatusSelect({
 	currentSubStatus
 }: {
 	orderId: string
-	currentSubStatus: SubTrackStatus
+	currentSubStatus: OrderSubStatus
 }) {
 	const [isPending, startTransition] = useTransition()
 
