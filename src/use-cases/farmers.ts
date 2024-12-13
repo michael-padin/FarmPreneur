@@ -25,9 +25,9 @@ export const getFarmerOwnProfileUseCase = async () => {
 	const farmer = await getFarmerOwnProfile(session.user.id)
 	if (!farmer) throw new Error("Farmer not found!")
 
-	const averageRating =
-		farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
-			farmer.reviews.length || 0
+	const averageRating = 0
+	// farmer.products.reviews.reduce((sum, review) => sum + review.rating, 0) /
+	// 	farmer.products.reviews.length || 0
 
 	return { ...farmer, averageRating }
 }
@@ -124,11 +124,12 @@ export const getFarmerMetricsUseCase = async () => {
 			? 100
 			: 0
 
-	const averageRating =
-		farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
-			farmer.reviews.length || 0
+	const averageRating = 0
+	// farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
+	// 	farmer.reviews.length || 0
 
-	const totalReviews = farmer.reviews.length
+	// const totalReviews = farmer.reviews.length
+	const totalReviews = 0
 
 	return {
 		revenue: {
@@ -157,11 +158,12 @@ export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
 	if (!farmer) throw new Error("No farmer found!")
 
 	const totalProducts = farmer._count.products
-	const averageRating =
-		farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
-			farmer.reviews.length || 0
+	const averageRating = 0
+	// farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
+	// 	farmer.reviews.length || 0
 
-	const totalReviews = farmer.reviews.length
+	// const totalReviews = farmer.reviews.length
+	const totalReviews = 0
 	return {
 		numberOfProducts: totalProducts,
 		totalReviews,

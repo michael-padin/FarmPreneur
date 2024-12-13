@@ -12,17 +12,24 @@ import {
 	VisibilityState
 } from "@tanstack/react-table"
 
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from "@/components/ui/table"
-import { use, useCallback, useState } from "react"
 import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger
+} from "@/components/ui/collapsible"
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
 	Sheet,
 	SheetContent,
@@ -31,7 +38,17 @@ import {
 	SheetTitle,
 	SheetTrigger
 } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from "@/components/ui/table"
+import { getCommonPinningStyles } from "@/lib/data-table"
+import { getFarmersUseCase } from "@/use-cases/farmers"
+import { format } from "date-fns"
 import {
 	CheckCircle,
 	Clock,
@@ -45,26 +62,9 @@ import {
 	Star,
 	Store
 } from "lucide-react"
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { getCommonPinningStyles } from "@/lib/data-table"
-import { getFarmersUseCase } from "@/use-cases/farmers"
-import { columns } from "./columns"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger
-} from "@/components/ui/collapsible"
+import { use, useCallback, useState } from "react"
 import { FarmerApprovalBadge } from "../../_components/badges"
-import { format } from "date-fns"
+import { columns } from "./columns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getFarmersUseCase>>>
@@ -445,7 +445,9 @@ export function DataTable({ data }: DataTableProps) {
 											<div className="text-sm">
 												<p className="text-muted-foreground">Reviews</p>
 												<p className="font-medium">
-													{farmer.farmer?._count.reviews}
+													{farmer.farmer?.products
+														.map((product) => product.reviews.length)
+														.reduce((sum, count) => sum + count, 0)}
 												</p>
 											</div>
 										</div>

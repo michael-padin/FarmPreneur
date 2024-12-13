@@ -1,13 +1,14 @@
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getCustomerOrdersUseCase } from "@/use-cases/orders"
 import { ChevronRight, MapPin } from "lucide-react"
+import Link from "next/link"
 import { Fragment } from "react"
 import { CancelOrder } from "./cancel-order"
 import { ConfirmPickedUpOrder } from "./confirm-picked-up-order"
-import { LeaveReview } from "./leave-review"
 import { OrderItem } from "./order-item"
 import { ViewCancellation } from "./view-cancellation"
 
@@ -77,7 +78,26 @@ export default function Order({
 						{order.subStatus === "PICKED_UP" && (
 							<ConfirmPickedUpOrder orderId={order.id} />
 						)}
-						{order.status === "COMPLETED" && <LeaveReview orderId={order.id} />}
+						{order.status === "COMPLETED" &&
+							!["BUYER_REVIEWED"].includes(order.subStatus || "") && (
+								<Button asChild className="flex items-center">
+									<Link href={`/orders/${order.id}/rate`} prefetch>
+										Rate Order
+									</Link>
+								</Button>
+							)}
+						{order.status === "COMPLETED" &&
+							order.subStatus === "BUYER_REVIEWED" && (
+								<Button
+									asChild
+									className="flex items-center"
+									variant={"outline"}
+								>
+									<Link href={`/orders/${order.id}/rate`} prefetch>
+										View Rating
+									</Link>
+								</Button>
+							)}
 					</div>
 				</div>
 			</CardContent>

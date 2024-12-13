@@ -34,15 +34,17 @@ export const getUserById = async (id: string) => {
 						select: {
 							farmImages: true,
 							products: true,
-							orders: true,
-							reviews: true
+							orders: true
 						}
 					},
 					address: true,
 					farmImages: true,
-					products: true,
+					products: {
+						include: {
+							reviews: true
+						}
+					},
 					orders: true,
-					reviews: true,
 					verificationDocument: {
 						include: {
 							image: true

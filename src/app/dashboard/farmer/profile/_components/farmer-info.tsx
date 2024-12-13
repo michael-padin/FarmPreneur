@@ -38,7 +38,7 @@ export async function FarmerInfo() {
 						</div>
 						<div className="text-center">
 							<div className="font-semibold">
-								{abbreviateNumber(farmerInfo._count.products)}
+								{abbreviateNumber(farmerInfo.products.length)}
 							</div>
 							<div className="text-xs text-muted-foreground lg:text-sm">
 								Products

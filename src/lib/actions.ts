@@ -762,12 +762,15 @@ export async function confirmPickedUpOrder(
 	}
 }
 
-export async function leaveReview(payload: {
+export async function rateOrder(payload: {
 	orderId: string
-	rating: number
-	review: string
+	ratings: {
+		rate: number
+		review?: string
+		productId: string
+	}[]
 }) {
-	const { orderId, rating, review } = payload
+	const { orderId, ratings } = payload
 
 	try {
 		// get all the product in the order items and create a new review for each product
@@ -775,12 +778,8 @@ export async function leaveReview(payload: {
 			where: { id: orderId },
 			include: {
 				items: {
-					include: {
-						product: {
-							select: {
-								id: true
-							}
-						}
+					select: {
+						productId: true
 					}
 				}
 			}
@@ -790,21 +789,29 @@ export async function leaveReview(payload: {
 			return { error: "Order not found", success: false }
 		}
 
-		const createdReviews = await Promise.all(
-			order.items.map(async (item) => {
-				await db.productReview.create({
-					data: {
-						rating: rating,
-						comment: review,
-						status: "PUBLISHED",
-						productId: item.product.id,
-						customerId: order.customerId,
-						orderId: order.id,
-						farmerId: order.farmerId
-					}
+		await db.$transaction(async (tx) => {
+			await Promise.all(
+				ratings.map((rating) => {
+					tx.productReview.create({
+						data: {
+							rating: rating.rate,
+							comment: rating.review,
+							status: "PUBLISHED",
+							productId: rating.productId,
+							customerId: order.customerId
+						}
+					})
 				})
+			)
+
+			await tx.order.update({
+				where: { id: orderId },
+				data: {
+					status: "COMPLETED",
+					subStatus: "BUYER_REVIEWED"
+				}
 			})
-		)
+		})
 
 		revalidatePath("/orders")
 		return { error: null, success: true }

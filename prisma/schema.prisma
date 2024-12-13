@@ -117,7 +117,6 @@ model Farmer {
   address              Address[]
   orders               Order[]
   products             Product[]
-  reviews              ProductReview[]
   farmImages           Image[]
 
   @@index([applicationStatus])
@@ -225,10 +224,6 @@ model ProductReview {
   productId      String       @db.ObjectId
   customer       Customer?    @relation(fields: [customerId], references: [id])
   customerId     String?      @db.ObjectId
-  order          Order        @relation(fields: [orderId], references: [id])
-  orderId        String       @unique @db.ObjectId
-  farmer         Farmer?      @relation(fields: [farmerId], references: [id])
-  farmerId       String?      @db.ObjectId
   images         Image[]
 
   @@index([productId, status])
@@ -285,7 +280,6 @@ model Order {
   farmerId           String          @db.ObjectId
   customer           Customer?       @relation(fields: [customerId], references: [id])
   customerId         String?         @db.ObjectId
-  review             ProductReview?
   cancellationReason String?
   items              OrderItem[]
 
@@ -523,6 +517,7 @@ enum SubTrackStatus {
   PAYMENT_PROCESSED
   BUYER_CONFIRMED
   FULLY_SETTLED
+  BUYER_REVIEWED
 
   // Cancelled statuses
   CANCELLED_BY_FARMER
