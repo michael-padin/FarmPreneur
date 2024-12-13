@@ -1,11 +1,9 @@
 "use client"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback"
-import { Filter, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { useQueryState } from "nuqs"
 import { useTransition } from "react"
-import { toast } from "sonner"
 import { searchParams } from "./searchParams"
 
 export function FilterProducts() {
@@ -32,9 +30,10 @@ export function FilterProducts() {
 					defaultValue={search}
 				/>
 			</div>
-			<Button variant="outline" onClick={() => toast.info("Coming soon...")}>
+			{/* <Button variant="outline" onClick={() => toast.info("Coming soon...")}>
 				<Filter className="h-4 w-4" />
-			</Button>
+				<span className="sr-only">Filter</span>
+			</Button> */}
 		</div>
 	)
 }

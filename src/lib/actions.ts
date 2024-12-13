@@ -2,7 +2,9 @@
 
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
+import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/validations"
 import { auth } from "@/auth"
+import { getFarmerByUserId } from "@/data-access/farmers"
 import { markAllNotificationsAsRead } from "@/data-access/notifications"
 import { getProductsSuggestions } from "@/data-access/products"
 import { db } from "@/lib/db"
@@ -500,6 +502,61 @@ export async function searchProducts(searchTerm: string) {
 	} catch (error) {
 		console.error(error)
 		return { products: [] }
+	}
+}
+
+export const editProduct = async (
+	data: EditProductSchema & {
+		productId: string
+		farmerId?: string
+	}
+) => {
+	try {
+		const session = await auth()
+		if (!session) {
+			throw new Error("Unauthorized")
+		}
+		const userId = session.user.id || ""
+		const farmer = await getFarmerByUserId(userId)
+
+		if (!farmer) {
+			throw new Error("No farmer found!")
+		}
+		const updatedProduct = await db.product.update({
+			where: { id: data.productId },
+			data: {
+				title: data.title,
+				description: data.description,
+				price: data.price,
+				quantity: data.quantity,
+				category: {
+					connect: {
+						id: data.categoryId
+					}
+				},
+
+				unit: data.unit
+				// images: {
+				// 	// deleteMany: {
+				// 	// 	url: { in: imagesToDelete?.map((img) => img.url) }
+				// 	// },
+				// 	create: data.images.map((image) => ({
+				// 		type: "PRODUCT",
+				// 		url: image.url,
+				// 		filename: image.filename,
+				// 		size: image.size,
+				// 		mimeType: image.mimeType
+				// 	}))
+				// }
+			}
+		})
+
+		if (!updatedProduct) {
+			return { error: "Product not found", success: false }
+		}
+		return { error: null, success: true }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
 	}
 }
 

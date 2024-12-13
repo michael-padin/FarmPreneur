@@ -20,7 +20,7 @@ const BottomNav = () => {
 	]
 	return (
 		<nav className="fixed bottom-0 left-0 right-0 border-t bg-background md:hidden">
-			<div className="flex justify-around p-3">
+			<div className="flex justify-around p-4">
 				{navItems.map((item, index) => (
 					<Link
 						key={index}

@@ -2,14 +2,12 @@
 
 import { NotificationItem } from "@/app/_components/notification-item"
 import { useNotifications } from "@/contexts/notification-context"
-import { NotificationIcon } from "./notification-icon"
-import { Button } from "@/components/ui/button"
-import { NotificationType } from "@prisma/client"
-import Link from "next/link"
 import { Notification } from "@/types/notification"
-import { Bell } from "lucide-react"
-import { use } from "react"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
+import { NotificationType } from "@prisma/client"
+import { Bell, CircleCheckBig } from "lucide-react"
+import { use } from "react"
+import { NotificationIcon } from "./notification-icon"
 
 interface NotificationListProps {
 	notificationsPromise: Promise<
@@ -21,11 +19,7 @@ export const NotificationList = ({
 	notificationsPromise
 }: NotificationListProps) => {
 	const initialNotifications = use(notificationsPromise)
-	const { markAsRead, notifications, setNotifications } = useNotifications()
-
-	// useEffect(() => {
-	// 	setNotifications(initialNotifications)
-	// }, [initialNotifications])
+	const { markAsRead, markAllAsRead, notifications } = useNotifications()
 
 	const renderMessage = (notif: Notification) => {
 		switch (notif.type) {
@@ -75,8 +69,17 @@ export const NotificationList = ({
 	}
 
 	return (
-		<div className="">
-			{initialNotifications.length > 0 ? (
+		<div className="p-2 px-4">
+			<div className="flex justify-end">
+				<button
+					onClick={markAllAsRead}
+					className="relative flex items-center justify-center rounded-full bg-secondary p-2 text-primary"
+				>
+					<CircleCheckBig className="h-6 w-6" />
+					<span className="sr-only">Mark all as read</span>
+				</button>
+			</div>
+			{notifications.length > 0 ? (
 				notifications.map((notif) => (
 					<NotificationItem
 						key={notif.id}

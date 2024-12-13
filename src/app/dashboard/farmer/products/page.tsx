@@ -1,11 +1,11 @@
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import Link from "next/link"
 import { type SearchParams } from "nuqs/server"
 import { BottomNav } from "../_components/bottom-navigation"
-import { StatusTabs } from "./_components/tab-list"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { FilterProducts } from "./_components/filter-products"
 import { FarmerProductListWrapper } from "./_components/product-list-wrapper"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { StatusTabs } from "./_components/tab-list"
 
 type PageProps = {
 	searchParams: Promise<SearchParams>
@@ -20,9 +20,13 @@ export default function ProductsPage({ searchParams }: PageProps) {
 				{/* <header className="fixed left-0 right-0 top-0 z-50 w-full bg-background py-4 pb-0 md:hidden"> */}
 				<header className="w-full bg-background py-4 pb-0 md:hidden">
 					<div className="flex w-full items-center justify-between px-4">
-						<h1 className="text-2xl font-semibold">Products</h1>
-						<div className="flex gap-2">
-							{/* <MessageCircleMore className="stroke-primary" /> */}
+						<div className="">
+							<h2 className={`text-xs font-bold ${"text-primary"}`}>
+								FarmPreneur
+							</h2>
+							<h1 className="text-2xl font-bold">Products</h1>
+						</div>
+						<div className="flex items-center gap-3">
 							<Button asChild size="sm">
 								<Link
 									href={"/dashboard/farmer/products/create"}

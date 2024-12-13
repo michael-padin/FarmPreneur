@@ -19,7 +19,12 @@ export default function OrdersPage({ searchParams }: PageProps) {
 		<main className="w-full bg-muted">
 			<header className="w-full bg-background py-4 pb-0 md:hidden">
 				<div className="flex w-full items-center justify-between px-4">
-					<h1 className="text-2xl font-semibold">Orders</h1>
+					<div className="">
+						<h2 className={`text-xs font-bold ${"text-primary"}`}>
+							FarmPreneur
+						</h2>
+						<h1 className="text-2xl font-bold">Orders</h1>
+					</div>
 					<div className="flex gap-2">
 						<MessageCircleMore className="stroke-primary" />
 					</div>

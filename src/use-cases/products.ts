@@ -51,6 +51,31 @@ export const getProductByIdUseCase = async (id: string) => {
 	return await getProductById(id)
 }
 
+export const getProductByIdFromFarmerUseCase = async (id: string) => {
+	const foundProduct = await getProductById(id)
+
+	if (!foundProduct) throw new Error("Product not found")
+
+	return {
+		id: foundProduct.id,
+		categoryId: foundProduct.categoryId || "",
+		title: foundProduct.title,
+		description: foundProduct.description,
+		price: foundProduct.price,
+		unit: (foundProduct.unit as UnitKey) || "kg",
+		quantity: foundProduct.quantity,
+		images:
+			foundProduct.images.map((image) => ({
+				altText: image.altText || "",
+				type: "PRODUCT",
+				url: image.url,
+				filename: image.filename,
+				size: image.size,
+				mimeType: image.mimeType
+			})) || []
+	}
+}
+
 export const getAllProductsUseCase = async () => {
 	return getAllProducts()
 }

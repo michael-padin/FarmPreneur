@@ -33,7 +33,7 @@ export function StatusTabs() {
 	) as ProductListingStatus[]
 
 	return (
-		<div className="w-full pt-2">
+		<div className="w-full">
 			<div className="">
 				<ScrollArea ref={scrollAreaRef} className="w-full whitespace-nowrap">
 					<div className="relative flex">

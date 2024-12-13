@@ -5,8 +5,9 @@ import { useNotifications } from "@/contexts/notification-context"
 import { Notification } from "@/types/notification"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
 import { NotificationType } from "@prisma/client"
-import { CheckCircle } from "lucide-react"
+import { Bell, CircleCheckBig } from "lucide-react"
 import Link from "next/link"
+import { use } from "react"
 import { NotificationIcon } from "./notification-icon"
 
 interface NotificationListProps {
@@ -18,12 +19,8 @@ interface NotificationListProps {
 export const NotificationList = ({
 	notificationsPromise
 }: NotificationListProps) => {
-	const { markAsRead, markAllAsRead, notifications, setNotifications } =
-		useNotifications()
-
-	// useEffect(() => {
-	// 	setNotifications(initialNotifications)
-	// }, [initialNotifications])
+	const initialNotifications = use(notificationsPromise)
+	const { markAsRead, markAllAsRead, notifications } = useNotifications()
 
 	const renderMessage = (notif: Notification) => {
 		switch (notif.type) {
@@ -134,24 +131,36 @@ export const NotificationList = ({
 			<div className="flex justify-end">
 				<button
 					onClick={markAllAsRead}
-					className="relative flex items-center justify-center rounded-full p-1.5 text-primary"
+					className="relative flex items-center justify-center rounded-full bg-secondary p-2 text-primary"
 				>
-					<CheckCircle className="h-6 w-6" />
+					<CircleCheckBig className="h-6 w-6" />
+					<span className="sr-only">Mark all as read</span>
 				</button>
 			</div>
-			{notifications.map((notif) => (
-				<NotificationItem
-					key={notif.id}
-					{...notif}
-					markAsRead={markAsRead}
-					nodeMessage={renderMessage(notif)}
-					Icon={
-						<div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-							<NotificationIcon type={notif.type} className="h-5 w-5" />
+			{notifications.length > 0 ? (
+				notifications.map((notif) => (
+					<NotificationItem
+						key={notif.id}
+						{...notif}
+						markAsRead={markAsRead}
+						nodeMessage={renderMessage(notif)}
+						Icon={
+							<div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+								<NotificationIcon type={notif.type} className="h-5 w-5" />
+							</div>
+						}
+					/>
+				))
+			) : (
+				<div className="pt-20">
+					<div className="flex h-full flex-col items-center justify-center text-muted-foreground">
+						<div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+							<Bell className="h-8 w-8" />
 						</div>
-					}
-				/>
-			))}
+						<p className="text-sm">No notifications yet</p>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

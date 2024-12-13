@@ -1,18 +1,11 @@
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
+import { Card, CardFooter, CardHeader } from "@/components/ui/card"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
-import { formatDate } from "@/lib/utils"
 import { getProductsUseCase } from "@/use-cases/products"
-import { Box, Eye, MoreVertical, Pencil, Trash2 } from "lucide-react"
+import { Box, Edit } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { searchParamsCache } from "./searchParams"
 
 export async function FarmerProductList() {
@@ -27,7 +20,7 @@ export async function FarmerProductList() {
 			{products && products.length > 0 ? (
 				products?.map((product) => (
 					<Card key={product.id} className="border-none">
-						<CardHeader className="p-4 pb-2">
+						<CardHeader className="p-2">
 							<div className="flex items-start gap-4">
 								<Image
 									src={product.images[0]?.url || "/placeholder.svg"}
@@ -41,24 +34,22 @@ export async function FarmerProductList() {
 								<div className="min-w-0 flex-1">
 									<div className="flex items-center justify-between gap-2">
 										<h2 className="truncate font-semibold">{product.title}</h2>
-										{/* <div className="flex items-center">
-											<ProductListingStatusBadge
+										<div className="flex items-center">
+											<OrderStatusBadge
 												status={product.listingStatus}
 												showText
 											/>
-										</div> */}
+										</div>
 									</div>
-									<p className="line-clamp-2 text-sm text-muted-foreground">
+
+									<p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
 										{product.description}
 									</p>
-									<div className="mt-2 flex w-full items-start justify-end">
-										<OrderStatusBadge status={product.listingStatus} showText />
-									</div>
 								</div>
 							</div>
 						</CardHeader>
-						<CardContent className="p-4 pb-2 pt-2">
-							<div className="grid grid-cols-2 gap-2 text-sm">
+						<CardFooter className="flex items-center justify-between pt-2">
+							<div className="grid flex-1 grid-cols-2 gap-2 text-sm">
 								<div>
 									<p className="text-muted-foreground">Price</p>
 									<p className="font-medium">
@@ -74,35 +65,12 @@ export async function FarmerProductList() {
 									</p>
 								</div>
 							</div>
-						</CardContent>
-						<CardFooter className="flex items-center justify-between p-4 pt-2">
-							<div className="text-xs text-muted-foreground">
-								<p>Created: {formatDate(product.createdAt)}</p>
-								<p>Updated: {formatDate(product.createdAt)}</p>
-							</div>
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="ghost" size="sm">
-										<MoreVertical className="h-4 w-4" />
-										<span className="sr-only">Open menu</span>
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent align="end" className="w-[160px]">
-									<DropdownMenuItem>
-										<Eye className="mr-2 h-4 w-4" />
-										Preview
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<Pencil className="mr-2 h-4 w-4" />
-										Edit
-									</DropdownMenuItem>
-									<DropdownMenuSeparator />
-									<DropdownMenuItem className="text-red-600">
-										<Trash2 className="mr-2 h-4 w-4" />
-										Delete
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+							<Button variant={"outline"} size={"icon"} className="">
+								<Link href={`/dashboard/farmer/products/${product.id}/edit`}>
+									<Edit />
+									<span className="sr-only">Edit</span>
+								</Link>
+							</Button>
 						</CardFooter>
 					</Card>
 				))

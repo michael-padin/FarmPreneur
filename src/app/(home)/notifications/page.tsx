@@ -25,7 +25,6 @@ export default function Page() {
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
-						{/* <ReadAllButton /> */}
 						<NotificationsNavLinks />
 					</div>
 				</div>

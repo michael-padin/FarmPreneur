@@ -47,7 +47,7 @@ export function StatusTabs({
 	const statuses = Object.keys(orderStatusMap) as OrderStatus[]
 
 	return (
-		<div className="w-full pt-2">
+		<div className="w-full">
 			<div className="">
 				<ScrollArea ref={scrollAreaRef} className="w-full whitespace-nowrap">
 					<div className="relative flex">

@@ -21,7 +21,7 @@ export function NotificationItem({
 }: NotificationItemProps) {
 	return (
 		<div
-			className={`flex items-start gap-4 py-2 ${isRead ? "opacity-50" : ""} `}
+			className={`flex items-start gap-4 bg-background py-2 ${isRead ? "opacity-50" : ""} `}
 		>
 			{Icon}
 			<div className="flex-1 space-y-1">
