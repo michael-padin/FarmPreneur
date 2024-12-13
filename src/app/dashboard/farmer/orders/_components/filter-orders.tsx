@@ -6,7 +6,7 @@ import { useQueryState } from "nuqs"
 import { useTransition } from "react"
 import { searchParams } from "./searchParams"
 
-export function FilterProducts() {
+export function FilterOrders() {
 	const [isLoading, startTransition] = useTransition()
 
 	const [search, setSearch] = useQueryState(

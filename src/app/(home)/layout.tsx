@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getCartUseCase } from "@/use-cases/cart"
+import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
 import { redirect } from "next/navigation"
 import UnderConstruction from "./_components/under-construction"
 
@@ -17,8 +18,13 @@ export default async function Layout({
 	if (user?.role === "ADMIN") redirect("/dashboard")
 
 	const cartPromise = getCartUseCase(user?.cartId || "")
+	const initialNotificationsPromise = getNotificationsByUserIdUseCase()
+
 	return (
-		<NotificationProvider userId={user?.id}>
+		<NotificationProvider
+			initialNotificationsPromise={initialNotificationsPromise}
+			userId={user?.id}
+		>
 			<CartProvider initialCartPromise={cartPromise}>
 				<UnderConstruction />
 				{children}

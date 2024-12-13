@@ -1,9 +1,11 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MessageCircleMore } from "lucide-react"
 import { type SearchParams } from "nuqs/server"
+import { Suspense } from "react"
 import { BottomNav } from "../_components/bottom-navigation"
-import { FilterProducts } from "./_components/filter-products"
+import { FilterOrders } from "./_components/filter-orders"
 import { OrderListWrapper } from "./_components/order-list-wrapper"
+import StatusTabsSkeleton from "./_components/status-tabs-skeleton"
 import { StatusTabsWrapper } from "./_components/status-tabs-wrapper"
 
 type PageProps = {
@@ -23,8 +25,10 @@ export default function OrdersPage({ searchParams }: PageProps) {
 					</div>
 				</div>
 
-				<FilterProducts />
-				<StatusTabsWrapper />
+				<FilterOrders />
+				<Suspense fallback={<StatusTabsSkeleton />}>
+					<StatusTabsWrapper />
+				</Suspense>
 			</header>
 
 			<ScrollArea className="h-[calc(100vh-160px)]">

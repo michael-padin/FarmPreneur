@@ -267,19 +267,19 @@ model Image {
 
 // MARK: ORDER
 model Order {
-  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
   quantity           Int?
   totalPrice         Float?
-  status             OrderStatus     @default(PENDING)
-  subStatus          OrderSubStatus? @default(AWAITING_FARMER_ACCEPTANCE)
-  pickupLocation     Address?        @relation(fields: [pickupLocationId], references: [id])
-  pickupLocationId   String?         @db.ObjectId
-  farmer             Farmer          @relation(fields: [farmerId], references: [id])
-  farmerId           String          @db.ObjectId
-  customer           Customer?       @relation(fields: [customerId], references: [id])
-  customerId         String?         @db.ObjectId
+  status             OrderStatus    @default(PENDING)
+  subStatus          OrderSubStatus @default(AWAITING_FARMER_ACCEPTANCE)
+  pickupLocation     Address?       @relation(fields: [pickupLocationId], references: [id])
+  pickupLocationId   String?        @db.ObjectId
+  farmer             Farmer         @relation(fields: [farmerId], references: [id])
+  farmerId           String         @db.ObjectId
+  customer           Customer?      @relation(fields: [customerId], references: [id])
+  customerId         String?        @db.ObjectId
   cancellationReason String?
   items              OrderItem[]
 

@@ -3,6 +3,7 @@
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
 import { auth } from "@/auth"
+import { markAllNotificationsAsRead } from "@/data-access/notifications"
 import { getProductsSuggestions } from "@/data-access/products"
 import { db } from "@/lib/db"
 import { CartItem, CartState } from "@/types/cart"
@@ -11,10 +12,78 @@ import {
 	getPendingFarmerCountUseCase
 } from "@/use-cases/farmers"
 import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
-import { OrderStatus, OrderSubStatus } from "@prisma/client"
+import { NotificationType, OrderStatus, OrderSubStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "./handle-error"
+
+// MARK: NOTIFICATIONS
+export const markNotificationsAsRead = async (userId?: string) => {
+	try {
+		const session = await auth()
+
+		const finalUserId = session?.user.id || userId
+
+		if (!finalUserId) {
+			return { success: false, error: "Unauthorized" }
+		}
+
+		await markAllNotificationsAsRead(finalUserId)
+		revalidatePath("/notifications")
+		revalidatePath("/dashboard/farmer/notifications")
+		revalidatePath("/dashboard/notifications")
+
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
+}
+
+export const markNotificationAsRead = async (notificationId: string) => {
+	try {
+		await db.notification.update({
+			where: {
+				id: notificationId
+			},
+			data: {
+				isRead: true
+			}
+		})
+		revalidatePath("/notifications")
+		revalidatePath("/dashboard/farmer/notifications")
+		revalidatePath("/dashboard/notifications")
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
+}
+
+export const revalidatePathFromNotifications = async (
+	type: NotificationType
+) => {
+	switch (type) {
+		case "ORDER_STATUS":
+			revalidatePath("/dashboard/farmer/orders")
+			revalidatePath("/dashboard/farmer/orders")
+			revalidatePath("/orders")
+			break
+		case "FARMER_APPROVAL":
+			revalidatePath("/dashboard/farmer/notifications")
+			revalidatePath("/dashboard/farmer/analytics")
+			break
+		case "PRODUCT_APPROVAL":
+			revalidatePath("/dashboard/products")
+			revalidatePath("/dashboard/farmer/products")
+			break
+		case "NEW_MESSAGE":
+			revalidatePath("/messages")
+			break
+		case "NEW_PRODUCT":
+			revalidatePath("/dashboard/products")
+			revalidatePath("/dashboard/farmer/products")
+			break
+	}
+}
 
 export const getPendingFarmerCount = async () => {
 	return await getPendingFarmerCountUseCase()
@@ -185,13 +254,36 @@ export async function placeOrder(
 	try {
 		const session = await auth()
 
-		if (!session || !session.user)
+		if (!session || !session.user) {
 			return { success: false, error: "Unauthorized" }
+		}
+
 		const customerId = session.user.customerId
+		const foundCustomer = await db.customer.findUnique({
+			where: {
+				id: customerId
+			}
+		})
+
+		if (!foundCustomer) {
+			return { error: "Customer not found", success: false }
+		}
+		// Create orders and validate stock
 
 		await db.$transaction(async (tx) => {
-			// Create orders and validate stock
 			for (const group of checkoutData.groupedItems) {
+				const foundUserFarmer = await tx.user.findFirst({
+					where: {
+						farmer: {
+							id: group.farmer.id
+						}
+					}
+				})
+
+				if (!foundUserFarmer) {
+					throw new Error(`Farmer with ID ${group.farmer.id} not found`)
+				}
+
 				for (const item of group.items) {
 					// Fetch the current product stock
 					const product = await tx.product.findUnique({
@@ -212,7 +304,7 @@ export async function placeOrder(
 				}
 
 				// Create the order
-				await tx.order.create({
+				const createdOrder = await tx.order.create({
 					data: {
 						customerId,
 						farmerId: group.farmer.id,
@@ -225,7 +317,13 @@ export async function placeOrder(
 							}))
 						},
 						status: "PENDING",
+						subStatus: "AWAITING_FARMER_ACCEPTANCE",
 						pickupLocationId: group.pickupLocationId
+					},
+					include: {
+						items: {
+							include: { product: true }
+						}
 					}
 				})
 
@@ -240,6 +338,30 @@ export async function placeOrder(
 						}
 					})
 				}
+
+				await createNotificationByUserIdUseCase({
+					userId: foundUserFarmer.id || "",
+					title: "New Order Received",
+					message: `You have a new order from ${foundCustomer.name}. The order includes: ${group.items.map((item) => `${item.quantity}x ${item.product.name}`).join(", ")}.`,
+					type: "ORDER_STATUS",
+					metadata: {
+						farmer: {
+							farmerId: group.farmer.id,
+							farmerName: group.farmer.name!
+						},
+						order: {
+							orderId: createdOrder.id,
+							orderStatus: createdOrder.status,
+							orderSubStatus: createdOrder.subStatus,
+							orderItems: createdOrder.items.map((item) => ({
+								productId: item.product.id,
+								productName: item.product.title,
+								quantity: item.quantity,
+								price: item.price
+							}))
+						}
+					}
+				})
 			}
 		})
 

@@ -1,20 +1,30 @@
 "use server"
+import { auth } from "@/auth"
 import {
 	createNotificationByUserId,
 	getNotificationsByUserId,
-	markAllNotificationsAsRead,
-	markNotificationAsRead
+	markAllNotificationsAsRead
 } from "@/data-access/notifications"
 import { getAdminIds } from "@/data-access/users"
 import { pusherServer } from "@/lib/pusher"
 import { NotifMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
 
-export const getNotificationsByUserIdUseCase = async (userId: string) => {
-	if (!userId) {
+export const getNotificationsByUserIdUseCase = async (userId?: string) => {
+	const session = await auth()
+
+	const finalUserId = session?.user.id || userId
+	if (!finalUserId) {
 		return []
 	}
-	return await getNotificationsByUserId(userId)
+	const notifications = await getNotificationsByUserId(finalUserId)
+
+	const shapedNotifications = notifications.map((notification) => ({
+		...notification,
+		metadata: notification.metadata as NotifMetadata
+	}))
+
+	return shapedNotifications
 }
 
 export const createNotificationByUserIdUseCase = async (data: {
@@ -32,14 +42,6 @@ export const createNotificationByUserIdUseCase = async (data: {
 			"new-notification",
 			notification
 		)
-	} catch (e) {
-		throw e
-	}
-}
-
-export const markNotificationAsReadUseCase = async (notificationId: string) => {
-	try {
-		return await markNotificationAsRead(notificationId)
 	} catch (e) {
 		throw e
 	}

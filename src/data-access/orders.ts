@@ -217,7 +217,7 @@ export const getCustomerOrders = async (filter: {
 			})
 		},
 		orderBy: {
-			createdAt: "desc"
+			updatedAt: "desc"
 		},
 		include: {
 			items: {

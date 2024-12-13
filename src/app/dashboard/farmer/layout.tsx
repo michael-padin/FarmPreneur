@@ -2,13 +2,12 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import React from "react"
 
-import { Metadata } from "next"
 import ThemeProvider from "@/components/theme-provider"
+import { Metadata } from "next"
 
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { getUserFarmerByIdUseCase } from "@/use-cases/users"
-import { FarmerSidebar } from "./_components/sidebar"
 import { NotificationProvider } from "@/contexts/notification-context"
+import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
+import { getUserFarmerByIdUseCase } from "@/use-cases/users"
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -37,10 +36,15 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 	if (user.farmer?.applicationStatus === "PENDING") redirect("/admin-approval")
 	if (!user?.farmer) redirect("/farmer-registration")
 
+	const initialNotificationsPromise = getNotificationsByUserIdUseCase()
+
 	return (
 		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			{/* <SidebarProvider> */}
-			<NotificationProvider userId={user.id}>
+			<NotificationProvider
+				initialNotificationsPromise={initialNotificationsPromise}
+				userId={session.user.id}
+			>
 				{/* <FarmerSidebar user={session.user} /> */}
 				{children}
 			</NotificationProvider>

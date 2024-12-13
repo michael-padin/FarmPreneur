@@ -1,21 +1,26 @@
 "use client"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
+import {
+	markNotificationAsRead,
+	markNotificationsAsRead,
+	revalidatePathFromNotifications
+} from "@/lib/actions"
+import { showErrorToast } from "@/lib/handle-error"
 import { pusherClient } from "@/lib/pusher"
 import { Notification as NotificationType } from "@/types/notification"
-import {
-	getNotificationsByUserIdUseCase,
-	markAllNotificationsAsReadUseCase,
-	markNotificationAsReadUseCase
-} from "@/use-cases/notifications"
+import { NotificationType as PrismaNotificationType } from "@prisma/client"
 import { useRouter } from "next/navigation"
-import React, {
+import {
 	createContext,
 	ReactNode,
+	use,
 	useCallback,
 	useContext,
 	useEffect,
-	useState
+	useMemo,
+	useOptimistic,
+	useTransition
 } from "react"
 import { toast } from "sonner"
 
@@ -25,8 +30,39 @@ interface NotificationContextType {
 	unreadCount: number
 	markAllAsRead: () => void
 	markAsRead: (notificationId: string) => Promise<void>
-	fetchInitialNotifications: (userId: string) => Promise<void>
-	setNotifications: React.Dispatch<React.SetStateAction<NotificationType[]>>
+}
+
+// Reducer action types
+type NotificationAction =
+	| { type: "SET_INITIAL_NOTIFICATIONS"; payload: NotificationType[] }
+	| { type: "ADD_NOTIFICATION"; payload: NotificationType }
+	| { type: "MARK_ALL_READ" }
+	| { type: "MARK_SINGLE_READ"; payload: string }
+	| { type: "RESET_NOTIFICATIONS"; payload: NotificationType[] }
+
+// Reducer function
+function notificationReducer(
+	state: NotificationType[],
+	action: NotificationAction
+): NotificationType[] {
+	switch (action.type) {
+		case "SET_INITIAL_NOTIFICATIONS":
+			return action.payload
+		case "ADD_NOTIFICATION":
+			return [...state, action.payload]
+		case "MARK_ALL_READ":
+			return state.map((notification) => ({ ...notification, isRead: true }))
+		case "MARK_SINGLE_READ":
+			return state.map((notification) =>
+				notification.id === action.payload
+					? { ...notification, isRead: true }
+					: notification
+			)
+		case "RESET_NOTIFICATIONS":
+			return action.payload
+		default:
+			return state
+	}
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -35,76 +71,79 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 
 export function NotificationProvider({
 	children,
-	userId
+	userId,
+	initialNotificationsPromise
 }: {
 	children: ReactNode
 	userId?: string
+	initialNotificationsPromise: Promise<NotificationType[]>
 }) {
+	const initialNotifications = use(initialNotificationsPromise)
 	const router = useRouter()
+	const [isPending, startTransition] = useTransition()
 	const isDesktop = useMediaQuery("(min-width: 768px)")
-	const [notifications, setNotifications] = useState<NotificationType[]>([])
-	const [unreadCount, setUnreadCount] = useState(0)
 
-	// Fetch initial notifications
-	const fetchInitialNotifications = useCallback(async (userId: string) => {
-		try {
-			const initialNotifications = (await getNotificationsByUserIdUseCase(
-				userId
-			)) as NotificationType[]
-			setNotifications(initialNotifications)
-			setUnreadCount(
-				initialNotifications.filter((notification) => !notification.isRead)
-					.length
-			)
-		} catch (error) {
-			console.error("Failed to fetch initial notifications", error)
-		}
-	}, [])
+	const [optimisticNotifications, addOptimisticNotifications] = useOptimistic(
+		initialNotifications,
+		notificationReducer
+	)
+
+	const unreadCount = useMemo(
+		() =>
+			optimisticNotifications.filter((notification) => !notification.isRead)
+				.length,
+		[optimisticNotifications]
+	)
 
 	const markAllAsRead = useCallback(async () => {
-		const result = await markAllNotificationsAsReadUseCase(userId || "")
-
-		if (result) {
-			setNotifications((prevNotifications) =>
-				prevNotifications.map((notification) => ({
-					...notification,
-					isRead: true
-				}))
-			)
-
-			setUnreadCount(0)
-		}
-	}, [userId])
+		startTransition(async () => {
+			addOptimisticNotifications({ type: "MARK_ALL_READ" })
+			const { error } = await markNotificationsAsRead(userId || "")
+			if (error) {
+				showErrorToast(error)
+			}
+		})
+	}, [userId, addOptimisticNotifications])
 
 	// Mark notification as read
-	const markAsRead = useCallback(async (notificationId: string) => {
-		try {
-			const result = await markNotificationAsReadUseCase(notificationId)
+	const markAsRead = useCallback(
+		async (notificationId: string) => {
+			startTransition(async () => {
+				addOptimisticNotifications({
+					type: "MARK_SINGLE_READ",
+					payload: notificationId
+				})
+				const { error } = await markNotificationAsRead(notificationId)
 
-			if (result) {
-				setNotifications((prev) =>
-					prev.map((notification) =>
-						notification.id === notificationId
-							? { ...notification, isRead: true }
-							: notification
-					)
-				)
-				// Update unread count
-				setUnreadCount((prev) => (prev < 1 ? 0 : prev - 1))
-			}
-		} catch (error) {
-			console.error("Failed to mark notification as read", error)
-		}
-	}, [])
+				if (error) {
+					showErrorToast(error)
+				}
+			})
+		},
+		[addOptimisticNotifications]
+	)
 
-	useEffect(() => {
-		if (!userId) return
+	const handleAddOptimisticNotification = useCallback(
+		(newNotification: NotificationType) => {
+			startTransition(() => {
+				addOptimisticNotifications({
+					type: "ADD_NOTIFICATION",
+					payload: newNotification
+				})
+			})
+		},
+		[addOptimisticNotifications]
+	)
 
-		// Fetch initial notifications
-		fetchInitialNotifications(userId)
-	}, [fetchInitialNotifications, userId])
+	const handleRevalidatePaths = useCallback(
+		(notificationType: PrismaNotificationType) => {
+			startTransition(async () => {
+				await revalidatePathFromNotifications(notificationType)
+			})
+		},
+		[]
+	)
 
-	// Setup Pusher subscription
 	useEffect(() => {
 		// Subscribe to Pusher channel
 		const channel = pusherClient.subscribe(`user-${userId}-notifications`)
@@ -112,28 +151,18 @@ export function NotificationProvider({
 		const notificationSound = new Audio("/notification.mp3")
 
 		// this function will run every notification received
-		const handleNewNotification = (newNotification: NotificationType) => {
-			setNotifications((prev) => [newNotification, ...prev])
-
+		const handleNewNotification = async (newNotification: NotificationType) => {
+			handleRevalidatePaths(newNotification.type)
+			handleAddOptimisticNotification(newNotification)
 			toast(`${newNotification.title}`, {
 				description: newNotification.message,
-
 				dismissible: true,
-				position: isDesktop ? "top-right" : "bottom-right",
-				duration: 5000
+				position: isDesktop ? "top-right" : "top-right",
+				duration: 5000,
+				closeButton: true
 			})
 
 			notificationSound.play()
-			// if ("Notification" in window && Notification.permission === "granted") {
-			// 	new Notification(newNotification.title, {
-			// 		body: newNotification.message
-			// 	})
-			// }
-
-			// Increment unread count if the new notification is unread
-			if (!newNotification.isRead) {
-				setUnreadCount((prev) => prev + 1)
-			}
 		}
 
 		channel.bind("new-notification", handleNewNotification)
@@ -143,19 +172,27 @@ export function NotificationProvider({
 			pusherClient.unsubscribe(`user-${userId}-notifications`)
 			channel.unbind("new-notification", handleNewNotification)
 		}
-	}, [userId, router])
+	}, [
+		handleRevalidatePaths,
+		userId,
+		router,
+		isDesktop,
+		addOptimisticNotifications,
+		handleAddOptimisticNotification
+	])
+
+	const contextValue = useMemo(
+		() => ({
+			notifications: optimisticNotifications,
+			unreadCount,
+			markAsRead,
+			markAllAsRead
+		}),
+		[optimisticNotifications, unreadCount, markAsRead, markAllAsRead]
+	)
 
 	return (
-		<NotificationContext.Provider
-			value={{
-				notifications,
-				unreadCount,
-				setNotifications,
-				markAsRead,
-				markAllAsRead,
-				fetchInitialNotifications
-			}}
-		>
+		<NotificationContext.Provider value={contextValue}>
 			{children}
 		</NotificationContext.Provider>
 	)
