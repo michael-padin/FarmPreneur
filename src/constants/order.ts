@@ -2,13 +2,14 @@ import { type SubTrackStatus } from "@prisma/client"
 
 export const subStatusMap: Record<
 	SubTrackStatus,
-	{ value: string; label: string }
+	{ value: SubTrackStatus; label: string }
 > = {
 	// New/Created statuses
 	AWAITING_FARMER_ACCEPTANCE: {
 		value: "AWAITING_FARMER_ACCEPTANCE",
 		label: "Awaiting Farmer Acceptance"
 	},
+	// New/Created statuses
 
 	// Active/In Progress statuses
 	PREPARING_PRODUCE: {
@@ -24,6 +25,10 @@ export const subStatusMap: Record<
 		label: "Payment Processed"
 	},
 	BUYER_CONFIRMED: { value: "BUYER_CONFIRMED", label: "Buyer Confirmed" },
+	BUYER_REVIEWED: {
+		value: "BUYER_REVIEWED",
+		label: "Buyer Reviewed"
+	},
 	FULLY_SETTLED: { value: "FULLY_SETTLED", label: "Fully Settled" },
 
 	// Cancelled statuses
