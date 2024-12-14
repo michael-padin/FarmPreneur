@@ -22,7 +22,7 @@ import {
 	SelectValue
 } from "@/components/ui/select"
 import { locationTypeItems } from "@/constants/addres"
-import { createCustomerAddress } from "@/lib/actions"
+import { editCustomerAddress } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { getAddressById } from "@/use-cases/address"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -55,7 +55,10 @@ export function CustomerEditAddressForm({ address }: AddressFormProps) {
 
 	const onSubmit = (values: NewAddressCustomerSchema) => {
 		startTransition(async () => {
-			const { error } = await createCustomerAddress(values)
+			const { error } = await editCustomerAddress({
+				...values,
+				addressId: address.id
+			})
 
 			if (error) {
 				showErrorToast(error)
