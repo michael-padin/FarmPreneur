@@ -1,17 +1,17 @@
 "use server"
-import { RegisterSchema } from "./_types"
-import { hash } from "bcryptjs"
-import {
-	generateExpiration,
-	generateOTP
-} from "@/utils/generateVerificationCode"
+import { signIn } from "@/auth"
+import { getErrorMessage } from "@/lib/handle-error"
+import { sendOTPEmail } from "@/lib/nodemailer"
 import {
 	createUserWithOTPUseCase,
 	getUserByEmailUseCase
 } from "@/use-cases/users"
-import { sendOTPEmail } from "@/lib/nodemailer"
-import { getErrorMessage } from "@/lib/handle-error"
-import { signIn } from "@/auth"
+import {
+	generateExpiration,
+	generateOTP
+} from "@/utils/generateVerificationCode"
+import { hash } from "bcryptjs"
+import { RegisterSchema } from "./_types"
 
 export const register = async (data: RegisterSchema) => {
 	try {
@@ -34,7 +34,6 @@ export const register = async (data: RegisterSchema) => {
 			}
 		})
 
-		console.log(`Sending otp to ${data.email}`)
 		await sendOTPEmail(newUser.email!, otp, "FarmPreneur", newUser.name!)
 
 		await signIn("credentials", {

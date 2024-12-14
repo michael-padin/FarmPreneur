@@ -577,8 +577,6 @@ export async function updateCustomerProfile(
 			customerId = session.user.customerId
 		}
 
-		console.log("payload :>> ", payload)
-
 		const updatedCustomer = await db.customer.update({
 			where: { id: customerId },
 			data: {

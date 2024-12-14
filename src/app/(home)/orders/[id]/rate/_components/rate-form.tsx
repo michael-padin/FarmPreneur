@@ -109,8 +109,6 @@ export function RateForm({
 		})
 	}
 
-	console.log("orderItems :>> ", orderItems)
-
 	return (
 		<div>
 			<Form {...form}>

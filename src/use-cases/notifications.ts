@@ -34,7 +34,6 @@ export const createNotificationByUserIdUseCase = async (data: {
 	title: string
 	metadata?: NotifMetadata
 }) => {
-	console.log("data :>> ", data)
 	try {
 		const notification = await createNotificationByUserId(data)
 		await pusherServer.trigger(

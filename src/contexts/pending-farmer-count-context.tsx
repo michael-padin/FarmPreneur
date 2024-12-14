@@ -1,8 +1,8 @@
 "use client"
 
-import React, { createContext, useState, useEffect, useContext } from "react"
+import { getPendingFarmerCount } from "@/lib/actions"
 import { pusherClient } from "@/lib/pusher"
-import { getFarmers, getPendingFarmerCount } from "@/lib/actions"
+import React, { createContext, useContext, useEffect, useState } from "react"
 
 type PendingFarmerCountContextType = {
 	pendingFarmerCount: number
@@ -20,10 +20,7 @@ export function PendingFarmerCountProvider({
 }) {
 	const [pendingFarmerCount, setPendingFarmerCount] = useState(0)
 
-	console.log("pendingFarmerCount :>> ", pendingFarmerCount)
-
 	useEffect(() => {
-		getFarmers().then((farmers) => console.log("farmers :>> ", farmers))
 		getPendingFarmerCount().then((count) => setPendingFarmerCount(count))
 
 		const channel = pusherClient.subscribe("pending-farmers-count")

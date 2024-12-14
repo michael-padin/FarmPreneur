@@ -1,9 +1,9 @@
-import nodemailer from "nodemailer"
-import { render } from "@react-email/components"
-import { OTPEmail } from "@/components/fg/fp-otp-email"
-import { MailOptions } from "nodemailer/lib/json-transport"
-import { FPResetPasswordEmail } from "@/components/fg/fp-reset-password-email"
 import { FPApprovalEmail } from "@/components/fg/fp-approval-email"
+import { OTPEmail } from "@/components/fg/fp-otp-email"
+import { FPResetPasswordEmail } from "@/components/fg/fp-reset-password-email"
+import { render } from "@react-email/components"
+import nodemailer from "nodemailer"
+import { MailOptions } from "nodemailer/lib/json-transport"
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
@@ -29,7 +29,6 @@ export const sendEmail = async (
 
 	try {
 		await transporter.sendMail(mailOptions)
-		console.log("Email sent successfully!")
 	} catch (error) {
 		console.error("Error sending email:", error)
 		throw error // Optionally re-throw to handle it further up

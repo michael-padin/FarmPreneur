@@ -421,7 +421,6 @@ export const updateFarmerByUserId = async (
 			}
 		})
 
-		console.log("Updating farmer...")
 		const updatedFarmer =
 			data.farmer &&
 			(await tx.farmer.upsert({
@@ -456,7 +455,6 @@ export const updateFarmerByUserId = async (
 				}
 			}))
 
-		console.log("Updating farmer verification document...")
 		const updatedVerificationDocument =
 			data.farmer?.verificationDocument &&
 			data.farmer?.verificationDocument.image &&
