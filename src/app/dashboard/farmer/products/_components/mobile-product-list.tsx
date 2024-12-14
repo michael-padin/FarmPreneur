@@ -65,7 +65,7 @@ export async function FarmerProductList() {
 									</p>
 								</div>
 							</div>
-							<Button variant={"outline"} size={"icon"} className="">
+							<Button variant={"outline"} size={"icon"} className="" asChild>
 								<Link href={`/dashboard/farmer/products/${product.id}/edit`}>
 									<Edit />
 									<span className="sr-only">Edit</span>
