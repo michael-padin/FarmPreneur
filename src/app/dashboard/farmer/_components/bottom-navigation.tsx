@@ -16,7 +16,7 @@ export function BottomNav() {
 	const pathName = usePathname()
 	return (
 		<nav className="fixed bottom-0 left-0 right-0 border-t bg-background md:hidden">
-			<div className="flex justify-between p-3 py-4">
+			<div className="flex justify-between p-3 py-6">
 				{[
 					{ icon: Home, label: "Home", url: "/dashboard/farmer" },
 					{
@@ -42,19 +42,23 @@ export function BottomNav() {
 					<Link
 						key={index}
 						href={`${item.url}`}
-						className={`flex flex-col items-center gap-1 ${
+						className={`${
 							pathName === item.url ? "text-primary" : "text-muted-foreground"
 						}`}
 					>
-						<div className="relative truncate">
-							<item.icon className="h-6 w-6" />
+						<div className="relative flex flex-col items-center gap-1">
+							<div className="truncate">
+								<item.icon className="h-6 w-6" />
+							</div>
 							{item.badge && (
-								<span className="absolute -right-1 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-center text-xs font-semibold leading-none text-white">
+								<span className="absolute -top-1 right-2.5 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-center text-xs font-semibold leading-none text-white">
 									{item.badge}
 								</span>
 							)}
+							<span className="max-w-14 truncate text-[11px]">
+								{item.label}
+							</span>
 						</div>
-						<span className="max-w-14 truncate text-[11px]">{item.label}</span>
 					</Link>
 				))}
 			</div>
