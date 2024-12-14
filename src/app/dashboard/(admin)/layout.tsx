@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import React from "react"
 
-import ThemeProvider from "@/components/theme-provider"
 import { Metadata } from "next"
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
@@ -9,6 +8,7 @@ import { PendingFarmerCountProvider } from "@/contexts/pending-farmer-count-cont
 
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
+import { ThemeProvider } from "next-themes"
 import { AdminSidebar } from "../_components/admin-sidebar"
 
 export const metadata: Metadata = {
@@ -30,7 +30,12 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 
 	return (
 		<>
-			<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+			<ThemeProvider
+				attribute="class"
+				defaultTheme="light"
+				enableSystem
+				key="theme"
+			>
 				<NotificationProvider
 					initialNotificationsPromise={initialNotificationsPromise}
 					userId={session.user.id}
