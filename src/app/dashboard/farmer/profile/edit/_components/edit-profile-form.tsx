@@ -42,6 +42,7 @@ interface EditFarmerProfileFormProps {
 		farmName: string
 		gender: string
 		coverPhoto: MediaFile | null
+		farmDescription: string
 		profilePicture: MediaFile | null
 	}
 }
@@ -54,6 +55,7 @@ export default function EditFarmerProfileForm({
 	const form = useForm<EditFarmerProfileSchema>({
 		resolver: zodResolver(editFarmerProfileSchema),
 		defaultValues: {
+			farmDescription: farmerProfile.farmDescription,
 			farmerName: farmerProfile.farmName,
 			birthDate: farmerProfile.birthDate as Date,
 			email: farmerProfile.email,

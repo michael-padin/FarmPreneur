@@ -29,6 +29,7 @@ const getFarmerProfile = async (id?: string) => {
 		contactNumber: profile?.contactNumber || "",
 		farmName: profile?.farmName || "",
 		gender: profile?.gender || "",
+		farmDescription: profile?.farmDescription || "",
 		coverPhoto: profile?.coverPhoto
 			? {
 					id: Math.random().toString(36).substring(7),
