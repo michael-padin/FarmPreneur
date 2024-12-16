@@ -3,6 +3,7 @@
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
 import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/validations"
+import { EditFarmerProfileSchema } from "@/app/dashboard/farmer/profile/edit/validation"
 import { auth } from "@/auth"
 import { getFarmerByUserId } from "@/data-access/farmers"
 import { markAllNotificationsAsRead } from "@/data-access/notifications"
@@ -14,10 +15,13 @@ import {
 	getPendingFarmerCountUseCase
 } from "@/use-cases/farmers"
 import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { NotificationType, OrderStatus, OrderSubStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "./handle-error"
+import { s3Client } from "./s3-client"
 
 // MARK: NOTIFICATIONS
 export const markNotificationsAsRead = async (userId?: string) => {
@@ -602,6 +606,45 @@ export async function updateCustomerProfile(
 		return { error: getErrorMessage(error), success: false }
 	}
 }
+// MARK: Farmer
+export const updateFarmerProfile = async (
+	data: EditFarmerProfileSchema & {
+		farmerId?: string
+		newCoverPhoto?: string
+		newProfilePicture?: string
+	}
+) => {
+	try {
+		const session = await auth()
+		let farmerId = data.farmerId
+		if (!farmerId) {
+			farmerId = session?.user.farmerId
+		}
+
+		if (!farmerId) {
+			return { error: "No farmer found", success: false }
+		}
+
+		const updatedFarmer = await db.farmer.update({
+			where: { id: farmerId },
+			data: {
+				farmName: data.farmerName,
+				farmDescription: data.farmDescription,
+				coverPhoto: { set: data.newCoverPhoto },
+				profilePicture: { set: data.newProfilePicture },
+				gender: data.gender,
+				contactNumber: data.contactNumber
+			}
+		})
+		if (!updatedFarmer) {
+			return { error: "Farmer not found", success: false }
+		}
+		revalidatePath("/dashboard/farmer/profile")
+		return { success: true, error: null }
+	} catch (error) {
+		return { error: getErrorMessage(error), success: false }
+	}
+}
 
 // MARK: Address
 export async function createCustomerAddress(
@@ -995,4 +1038,49 @@ export async function rateOrder(payload: {
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
 	}
+}
+
+export async function uploadMedia(payload: {
+	userId: string
+	file: File | null
+	path: string
+}) {
+	const { userId, file, path } = payload
+	if (file) {
+		const fileName = `${path}/${userId}-${crypto.randomUUID()}-${file.name}`
+		const putObjectCommand = new PutObjectCommand({
+			Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+			Key: fileName,
+			ContentType: file.type
+		})
+
+		const uploadUrl = await getSignedUrl(s3Client, putObjectCommand, {
+			expiresIn: 60
+		})
+
+		await fetch(uploadUrl, {
+			method: "PUT",
+			body: file,
+			headers: {
+				"Content-Type": file.type
+			}
+		})
+
+		const newMediaUrl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN}/${fileName}`
+		return newMediaUrl
+	}
+}
+
+export async function deleteMedia(url: string) {
+	// Create a new URL object
+	const parsedUrl = new URL(url)
+
+	// Extract the pathname and decode it
+	const key = decodeURIComponent(parsedUrl.pathname.slice(1)) // Removes the leading slash
+
+	const deleteCommand = new DeleteObjectCommand({
+		Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+		Key: key
+	})
+	await s3Client.send(deleteCommand)
 }

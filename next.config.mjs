@@ -5,7 +5,10 @@ const nextConfig = {
 		ignoreDuringBuilds: true
 	},
 	experimental: {
-		ppr: true
+		ppr: true,
+		serverActions: {
+			bodySizeLimit: "20mb"
+		}
 	},
 	typescript: {
 		ignoreBuildErrors: true
