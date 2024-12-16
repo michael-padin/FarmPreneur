@@ -190,9 +190,9 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 			email: email
 		},
 		include: {
-			profilePicture: true,
 			customer: {
 				select: {
+					profilePicture: true,
 					id: true,
 					cart: {
 						select: { id: true }
@@ -201,7 +201,9 @@ export const getUserWithPasswordByEmail = async (email: string) => {
 			},
 			farmer: {
 				select: {
-					id: true
+					profilePicture: true,
+					id: true,
+					farmName: true
 				}
 			}
 		}

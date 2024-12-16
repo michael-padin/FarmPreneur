@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
 import { OrderStatus } from "@prisma/client"
+import { endOfMonth, startOfMonth, subMonths } from "date-fns"
 
 export const getOrders = async () => {
 	return await db.order.findMany({
@@ -52,11 +53,44 @@ export const getTotalOrdersByDate = async (date: Date) => {
 	})
 }
 
+export const getLastMonthRevenue = async () => {
+	// Get the current date
+	const currentDate = new Date()
+
+	// Get the start of the last month
+	const startOfLastMonth = startOfMonth(subMonths(currentDate, 1)) // Subtract 1 month and get the start of the month
+
+	// Get the end of the last month
+	const endOfLastMonth = endOfMonth(startOfLastMonth) // Get the end of the same month
+
+	// Query the database to get total revenue for last month
+	const {
+		_sum: { totalPrice: lastMonthRevenue = 0 }
+	} = await db.order.aggregate({
+		where: {
+			createdAt: {
+				gte: startOfLastMonth, // Start of last month
+				lte: endOfLastMonth // End of last month
+			}
+		},
+		_sum: {
+			totalPrice: true // Sum of totalPrice
+		}
+	})
+
+	return lastMonthRevenue
+}
+
 export const getTotalRevenueByDate = async (date: Date) => {
+	// Get the start and end of the month for the provided date
+	const startOfTheMonth = startOfMonth(date)
+	const endOfTheMonth = endOfMonth(date)
+
 	return await db.order.aggregate({
 		where: {
 			createdAt: {
-				gte: date
+				gte: startOfTheMonth, // From the start of the month
+				lte: endOfTheMonth // Up to the end of the month
 			}
 		},
 		_sum: {

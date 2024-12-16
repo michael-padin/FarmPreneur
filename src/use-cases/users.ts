@@ -39,7 +39,15 @@ export const getUserFarmerByIdUseCase = async (id: string) => {
 export const getUserWithPasswordByEmailUseCase = async (email: string) => {
 	const user = await getUserWithPasswordByEmail(email)
 	if (!user) throw new Error("User not found!")
-	return user
+	const profilePicture =
+		user.role === "CUSTOMER"
+			? user.customer?.profilePicture || ""
+			: user.farmer?.profilePicture || ""
+
+	return {
+		...user,
+		profilePicture
+	}
 }
 
 export const getCustomersUseCase = async () => {

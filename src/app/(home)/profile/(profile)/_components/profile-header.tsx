@@ -33,13 +33,11 @@ const getCustomerBasicInfo = async (farmerId?: string) => {
 		}
 	})
 
-	const reviews = await db.productReview.findMany({
+	await db.productReview.findMany({
 		where: {
 			customerId: customer?.id
 		}
 	})
-
-	console.log(reviews)
 
 	return {
 		createdAt: customer?.createdAt || "",

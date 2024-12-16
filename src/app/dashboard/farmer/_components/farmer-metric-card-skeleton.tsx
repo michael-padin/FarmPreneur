@@ -12,7 +12,7 @@ export function FarmerMetricCardSkeleton({
 	return (
 		<div
 			className={cn(
-				"relative overflow-hidden rounded-lg border bg-card p-4",
+				"relative overflow-hidden rounded-lg bg-card p-4",
 				className
 			)}
 		>

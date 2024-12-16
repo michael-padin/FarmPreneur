@@ -36,6 +36,7 @@ export function BottomNav() {
 					<Link
 						key={index}
 						href={`${item.url}`}
+						prefetch
 						className={`${
 							pathName === item.url ? "text-primary" : "text-muted-foreground"
 						}`}

@@ -1,10 +1,14 @@
 import { getFarmerMetricsUseCase } from "@/use-cases/farmers"
 import { FarmerMetricCard } from "./farmer-metric-card"
-import { formatPHP } from "@/lib/utils"
 
 export async function FarmerMetrics() {
 	const {
-		orders: { completedOrdersCount, pendingOrdersCount, totalOrders },
+		orders: {
+			completedOrdersCount,
+			pendingOrdersCount,
+			totalOrders,
+			inProgressOrdersCount
+		},
 		products: { categoriesCount, totalProducts },
 		revenue: { totalRevenue, revenueGrowthPercentage },
 		rating: { averageRating, totalReviews }
@@ -22,12 +26,12 @@ export async function FarmerMetrics() {
 				variant="orders"
 				title="Total Orders"
 				value={`${totalOrders}`}
-				subValue={`${pendingOrdersCount} Pending • ${completedOrdersCount} Completed`}
+				subValue={`${pendingOrdersCount} Pending • ${inProgressOrdersCount} In Progress • ${completedOrdersCount} Completed`}
 			/>
 			<FarmerMetricCard
 				title="Total Revenue"
-				value={formatPHP(totalRevenue)}
-				subValue={`${revenueGrowthPercentage > 0 ? "↑" : ""} ${revenueGrowthPercentage}% from last month`}
+				value={` ₱${totalRevenue}`}
+				subValue={`${revenueGrowthPercentage > 0 ? "↑" : ""} ${revenueGrowthPercentage.toFixed(0)}% from last month`}
 				variant="revenue"
 			/>
 			<FarmerMetricCard

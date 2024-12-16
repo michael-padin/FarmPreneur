@@ -25,10 +25,10 @@ const providers: Provider[] = [
 				const newUser = {
 					id: user.id,
 					role: user.role,
-					profilePicture: user.profilePicture?.url || "",
+					profilePicture: user.profilePicture,
 					name: user.name,
 					email: user.email,
-					picture: user.profilePicture?.url,
+					picture: user.profilePicture,
 					isEmailVerified: user.isEmailVerified,
 					emailVerified: user.emailVerified,
 					createdAt: user.createdAt,
@@ -36,7 +36,10 @@ const providers: Provider[] = [
 						customerId: user.customer?.id || "",
 						cartId: user.customer?.cart?.id || ""
 					}),
-					...(user.role === "FARMER" && { farmerId: user.farmer?.id || "" })
+					...(user.role === "FARMER" && {
+						farmerId: user.farmer?.id || "",
+						farmerName: user.farmer?.farmName || ""
+					})
 				}
 
 				return newUser

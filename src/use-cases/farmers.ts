@@ -16,7 +16,11 @@ import {
 	getTopFarmers,
 	updateFarmerByUserId
 } from "@/data-access/farmers"
-import { getTotalRevenueByDate } from "@/data-access/orders"
+import { db } from "@/lib/db"
+import {
+	calculateRevenueGrowthPercentage,
+	getMonthRangeByDate
+} from "@/lib/utils"
 
 export const getFarmerOwnProfileUseCase = async () => {
 	const session = await auth()
@@ -81,77 +85,120 @@ export const getTopFarmersUseCase = async () => {
 
 export const getFarmerMetricsUseCase = async () => {
 	const session = await auth()
-	if (!session || !session.user) throw new Error("Unauthorized")
+	if (!session?.user) throw new Error("Unauthorized")
 
 	const farmer = await getFarmerByUserId(session.user.id!)
-
 	if (!farmer) throw new Error("No farmer found!")
 
-	const totalProducts = farmer._count.products
-	const productIds =
-		(farmer.products.length > 0 &&
-			farmer.products.map((product) => product.id)) ||
-		[]
-	const categoriesCount = await getCountCategories(productIds)
+	// Extract product IDs
+	const productIds = farmer.products.map((product) => product.id)
 
-	const totalOrders = farmer._count.orders
-	const pendingOrdersCount = farmer.orders.filter(
-		(product) => product.status === "PENDING"
-	).length
-	const completedOrdersCount = farmer.orders.filter(
-		(product) => product.status === "COMPLETED"
-	).length
+	// Get categories count
+	const categoriesCount = productIds.length
+		? await getCountCategories(productIds)
+		: 0
+
+	// Calculate order status counts in one pass
+	const orderStatusCounts = farmer.orders.reduce(
+		(counts, order) => {
+			switch (order.status) {
+				case "PENDING":
+					counts.pending++
+					break
+				case "COMPLETED":
+					counts.completed++
+					break
+				case "IN_PROGRESS":
+					counts.inProgress++
+					break
+			}
+			counts.total++
+			return counts
+		},
+		{ total: 0, pending: 0, completed: 0, inProgress: 0 }
+	)
+
+	// Get average rating and review count
+	const { _avg: { rating } = {}, _count: { _all: totalReviews } = {} } =
+		await db.productReview.aggregate({
+			_avg: { rating: true },
+			_count: { _all: true },
+			where: {
+				productId: { in: productIds },
+				status: "PUBLISHED" // Ensure only published reviews are considered
+			}
+		})
 
 	const currentDate = new Date()
-	const lastMonthDate = new Date(
-		currentDate.getFullYear(),
-		currentDate.getMonth() - 1,
-		1
+	const { currentMonth, previousMonth } = getMonthRangeByDate(currentDate)
+
+	// Query for last month's revenue
+	const lastMonthRevenueResult = await db.order.aggregate({
+		where: {
+			AND: [
+				{ status: "COMPLETED" },
+				{ farmerId: farmer.id },
+				{
+					createdAt: {
+						gte: previousMonth.start,
+						lte: previousMonth.end
+					}
+				}
+			]
+		},
+		_sum: {
+			totalPrice: true
+		}
+	})
+
+	// Query for current month's revenue
+	const currentMonthRevenueResult = await db.order.aggregate({
+		where: {
+			AND: [
+				{ status: "COMPLETED" },
+				{ farmerId: farmer.id },
+				{
+					createdAt: {
+						gte: currentMonth.start,
+						lte: currentMonth.end
+					}
+				}
+			]
+		},
+		_sum: {
+			totalPrice: true
+		}
+	})
+
+	const lastMonthRevenue = lastMonthRevenueResult._sum.totalPrice || 0
+	const currentMonthRevenue = currentMonthRevenueResult._sum.totalPrice || 0
+
+	const revenueGrowthPercentage = calculateRevenueGrowthPercentage(
+		currentMonthRevenue,
+		lastMonthRevenue
 	)
-
-	const totalRevenue = farmer.orders.reduce(
-		(sum, order) => sum + order.totalPrice!,
-		0
-	)
-
-	const {
-		_sum: { totalPrice: lastMonthRevenue = 0 }
-	} = await getTotalRevenueByDate(lastMonthDate)
-
-	const revenueGrowthPercentage = lastMonthRevenue
-		? ((totalRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
-		: totalRevenue > 0
-			? 100
-			: 0
-
-	const averageRating = 0
-	// farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
-	// 	farmer.reviews.length || 0
-
-	// const totalReviews = farmer.reviews.length
-	const totalReviews = 0
 
 	return {
 		revenue: {
-			totalRevenue,
+			totalRevenue: currentMonthRevenue,
 			revenueGrowthPercentage
 		},
 		products: {
-			totalProducts,
+			totalProducts: farmer._count.products,
 			categoriesCount
 		},
 		orders: {
-			totalOrders,
-			pendingOrdersCount,
-			completedOrdersCount
+			totalOrders: orderStatusCounts.total,
+			pendingOrdersCount: orderStatusCounts.pending,
+			completedOrdersCount: orderStatusCounts.completed,
+			inProgressOrdersCount: orderStatusCounts.inProgress
 		},
 		rating: {
-			averageRating,
-			totalReviews
+			averageRating: rating || 0,
+			totalReviews: totalReviews || 0
 		}
 	}
 }
-
 export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
 	const farmer = await getFarmerById(id)
 

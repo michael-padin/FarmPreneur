@@ -19,6 +19,7 @@ declare module "next-auth" {
 			role: ROLE
 			profilePicture: string | null
 			cartId?: string
+			farmerName?: string
 			isEmailVerified: boolean
 			emailVerified: Date | null
 		} & DefaultSession["user"]

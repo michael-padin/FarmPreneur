@@ -1,3 +1,5 @@
+import { endOfMonth, startOfMonth, subMonths } from "date-fns"
+
 import { CartItem, GroupedCartItem } from "@/types/cart"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -70,4 +72,35 @@ export function groupCartItemsByFarmer(
 	)
 
 	return Object.values(grouped)
+}
+
+/**
+ * Get start and end dates for the current month and previous month
+ * relative to a given date.
+ *
+ * @param date - The reference date to calculate the month ranges.
+ */
+export const getMonthRangeByDate = (date: Date) => {
+	const startOfCurrentMonth = startOfMonth(date)
+	const endOfCurrentMonth = endOfMonth(date)
+	const startOfPreviousMonth = startOfMonth(subMonths(date, 1))
+	const endOfPreviousMonth = endOfMonth(startOfPreviousMonth)
+
+	return {
+		currentMonth: { start: startOfCurrentMonth, end: endOfCurrentMonth },
+		previousMonth: { start: startOfPreviousMonth, end: endOfPreviousMonth }
+	}
+}
+
+// Function to calculate the percentage change between current and previous month revenue
+export const calculateRevenueGrowthPercentage = (
+	currentMonthRevenue: number,
+	previousMonthRevenue: number
+) => {
+	if (previousMonthRevenue === 0) {
+		return currentMonthRevenue > 0 ? 100 : 0 // 100% growth if current revenue > 0, otherwise 0% if no revenue
+	}
+	return (
+		((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100
+	)
 }
