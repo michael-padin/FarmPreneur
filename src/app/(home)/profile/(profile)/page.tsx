@@ -1,15 +1,14 @@
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
-import { BottomNav } from "../_components"
-import { CustomerInfo } from "./_components/customer-info"
-import { ProfileNavLinks } from "./_components/nav-links"
+import { BottomNav } from "../../_components"
+import { CustomerProfileHeader } from "./_components/profile-header"
 import { SignOutBtn } from "./_components/sign-out-btn"
 
 export const experimental_ppr = true
 
 export default function CustomerProfilePage() {
 	return (
-		<div className="h-screen space-y-2 bg-muted">
+		<div className="h-screen overflow-auto bg-muted pb-[84.5px]">
 			<header className="w-full bg-background p-4 md:hidden">
 				<div className="">
 					<div className="flex w-full items-center justify-between">
@@ -19,17 +18,17 @@ export default function CustomerProfilePage() {
 							</h2>
 							<h1 className="text-2xl font-bold">Profile</h1>
 						</div>
-						<ProfileNavLinks />
+						{/* <ProfileNavLinks /> */}
 					</div>
 				</div>
 			</header>
-			<main className="bg-muted px-2">
+			<main className="bg-muted">
 				<div className="">
 					<div className="space-y-2 rounded-lg">
 						<div className="">
-							<CustomerInfo />
+							<CustomerProfileHeader />
 						</div>
-						<div className="w-full">
+						<div className="w-full px-2">
 							<div className="space-y-3 rounded-lg bg-background p-4">
 								<Link
 									href="/profile/edit"
@@ -42,7 +41,7 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link>
 								<Link
-									href="profile/address"
+									href="/profile/address"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
@@ -52,17 +51,17 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link>
 								{/* <Link
-									href="profile/notifications"
-									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
-								>
-									<div className="flex items-center gap-3">
-										<Bell className="h-5 w-5" />
-										<span>Notification</span>
-									</div>
-									<ChevronRight className="h-5 w-5" />
-								</Link> */}
+								href="profile/notifications"
+								className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
+							>
+								<div className="flex items-center gap-3">
+									<Bell className="h-5 w-5" />
+									<span>Notification</span>
+								</div>
+								<ChevronRight className="h-5 w-5" />
+							</Link> */}
 								<Link
-									href="profile/security/change-password"
+									href="/profile/security/change-password"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
 								>
 									<div className="flex items-center gap-3">
@@ -72,25 +71,25 @@ export default function CustomerProfilePage() {
 									<ChevronRight className="h-5 w-5" />
 								</Link>
 								{/* <Link
-									href="profile/privacy"
-									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
-								>
-									<div className="flex items-center gap-3">
-										<FileText className="h-5 w-5" />
-										<span>Privacy Policy</span>
-									</div>
-									<ChevronRight className="h-5 w-5" />
-								</Link>
-								<Link
-									href="profile/help"
-									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
-								>
-									<div className="flex items-center gap-3">
-										<HelpCircle className="h-5 w-5" />
-										<span>Help Center</span>
-									</div>
-									<ChevronRight className="h-5 w-5" />
-								</Link> */}
+								href="profile/privacy"
+								className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
+							>
+								<div className="flex items-center gap-3">
+									<FileText className="h-5 w-5" />
+									<span>Privacy Policy</span>
+								</div>
+								<ChevronRight className="h-5 w-5" />
+							</Link>
+							<Link
+								href="profile/help"
+								className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
+							>
+								<div className="flex items-center gap-3">
+									<HelpCircle className="h-5 w-5" />
+									<span>Help Center</span>
+								</div>
+								<ChevronRight className="h-5 w-5" />
+							</Link> */}
 								<SignOutBtn className="w-full p-2 hover:bg-secondary" />
 							</div>
 						</div>

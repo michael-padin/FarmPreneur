@@ -36,6 +36,7 @@ export const getCustomerProfileUseCase = async () => {
 
 			user: {
 				select: {
+					id: true,
 					email: true,
 					createdAt: true,
 					profilePicture: {
@@ -51,6 +52,8 @@ export const getCustomerProfileUseCase = async () => {
 	})
 
 	return {
+		bio: customerQuery?.bio || "",
+		userId: customerQuery?.user.id || "",
 		name: customerQuery?.name || "",
 		email: customerQuery?.user.email || "",
 		address: {
@@ -60,7 +63,22 @@ export const getCustomerProfileUseCase = async () => {
 		},
 		birthDate: customerQuery?.birthDate || "",
 		gender: customerQuery?.gender,
-		profilePicture: customerQuery?.profilePicture || "",
+		coverPhoto: customerQuery?.coverPhoto
+			? {
+					id: Math.random().toString(36).substring(7),
+					url: customerQuery?.coverPhoto || "",
+					type: "image" as "image" | "video",
+					file: null
+				}
+			: null,
+		profilePicture: customerQuery?.profilePicture
+			? {
+					id: Math.random().toString(36).substring(7),
+					url: customerQuery?.profilePicture || "",
+					type: "image" as "image" | "video",
+					file: null
+				}
+			: null,
 		contactNumber: customerQuery?.contactNumber || "",
 		orders: customerQuery?._count.orders,
 		reviews: customerQuery?._count.reviews,

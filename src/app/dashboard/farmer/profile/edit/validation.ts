@@ -1,13 +1,7 @@
+import { mediaFileSchema } from "@/validations/media"
 import { Gender } from "@prisma/client"
 import { isValidPhoneNumber } from "react-phone-number-input"
 import { z } from "zod"
-
-const mediaFileSchema = z.object({
-	id: z.string(),
-	file: z.instanceof(File).nullable(),
-	url: z.string(),
-	type: z.enum(["image", "video"])
-})
 
 export const editFarmerProfileSchema = z.object({
 	farmerName: z.string().min(2, "Required"),

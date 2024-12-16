@@ -1,3 +1,4 @@
+import { mediaFileSchema } from "@/validations/media"
 import { Gender } from "@prisma/client"
 import { isValidPhoneNumber } from "react-phone-number-input"
 import { z } from "zod"
@@ -9,6 +10,9 @@ export const editCustomerProfileSchema = z.object({
 	email: z.string().email({
 		message: "Please enter a valid email address."
 	}),
+	bio: z.string().optional(),
+	profilePicture: mediaFileSchema.nullable(),
+	coverPhoto: mediaFileSchema.nullable(),
 	gender: z.nativeEnum(Gender).nullable()
 })
 

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 
 import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -22,9 +23,11 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { updateCustomerProfile } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { getCustomerProfileUseCase } from "@/use-cases/customers"
+import { processMediaUpdate } from "@/utils/media"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { toast } from "sonner"
@@ -43,6 +46,9 @@ export default function EditCustomerProfileForm({
 	const form = useForm<EditCustomerProfileSchema>({
 		resolver: zodResolver(editCustomerProfileSchema),
 		defaultValues: {
+			bio: customerProfile.bio,
+			profilePicture: customerProfile.profilePicture,
+			coverPhoto: customerProfile.coverPhoto,
 			fullName: customerProfile.name,
 			birthDate: customerProfile.birthDate as Date,
 			email: customerProfile.email,
@@ -53,7 +59,24 @@ export default function EditCustomerProfileForm({
 
 	const onSubmit = (values: EditCustomerProfileSchema) => {
 		startTransition(async () => {
-			const { error } = await updateCustomerProfile(values)
+			const finalCoverPhoto = await processMediaUpdate({
+				currentFiles: customerProfile.coverPhoto,
+				newFiles: values.coverPhoto,
+				userId: customerProfile.userId,
+				path: "cover-photos"
+			})
+
+			const finalProfilePicture = await processMediaUpdate({
+				currentFiles: customerProfile.profilePicture,
+				newFiles: values.profilePicture,
+				userId: customerProfile.userId,
+				path: "profile-pictures"
+			})
+			const { error } = await updateCustomerProfile({
+				...values,
+				newCoverPhoto: finalCoverPhoto?.[0]?.url || "",
+				newProfilePicture: finalProfilePicture?.[0]?.url || ""
+			})
 			if (error) {
 				showErrorToast(error)
 			} else {
@@ -68,6 +91,46 @@ export default function EditCustomerProfileForm({
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 				<FormField
 					control={form.control}
+					name="coverPhoto"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Cover Photo</FormLabel>
+							<FormControl>
+								<FPMediaUploader
+									onChange={field.onChange}
+									maxFiles={1}
+									singleImage
+									mediaClassName="w-full aspect-video object-cover rounded-lg"
+									initialMedia={customerProfile.coverPhoto}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="profilePicture"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Profile Picture</FormLabel>
+							<FormControl>
+								<FPMediaUploader
+									className="w-auto"
+									onChange={field.onChange}
+									maxFiles={1}
+									imageClassName="h-24 w-24 rounded-full"
+									mediaClassName="w-24 h-24  rounded-full"
+									singleImage
+									initialMedia={customerProfile.profilePicture}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
 					name="fullName"
 					render={({ field }) => (
 						<FormItem>
@@ -79,6 +142,20 @@ export default function EditCustomerProfileForm({
 						</FormItem>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name="bio"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Bio</FormLabel>
+							<FormControl>
+								<Textarea placeholder="I love buying fruits" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
 				<FormField
 					control={form.control}
 					name="birthDate"
@@ -126,6 +203,7 @@ export default function EditCustomerProfileForm({
 					name="gender"
 					render={({ field }) => (
 						<FormItem>
+							<FormLabel>Gender</FormLabel>
 							<Select onValueChange={field.onChange} value={field.value!}>
 								<FormControl>
 									<SelectTrigger>

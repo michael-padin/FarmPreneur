@@ -106,6 +106,9 @@ model Farmer {
   id                   String                   @id @default(auto()) @map("_id") @db.ObjectId
   farmName             String?
   farmDescription      String?
+  gender               Gender?
+  coverPhoto           String?
+  profilePicture       String?
   applicationStatus    FarmerApplicationStatus?
   contactNumber        String?
   verificationDocument VerificationDocument?
@@ -133,6 +136,8 @@ model Customer {
   orders         Order[]
   name           String?
   profilePicture String?
+  coverPhoto     String?
+  bio            String?
   cart           Cart?
   birthDate      DateTime?
   wishlist       WishlistItem[]

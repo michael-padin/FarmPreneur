@@ -568,8 +568,10 @@ export const editProduct = async (
 // MARK: Customer
 // edit Customer Profile
 export async function updateCustomerProfile(
-	payload: EditCustomerProfileSchema & {
+	data: EditCustomerProfileSchema & {
 		customerId?: string
+		newCoverPhoto?: string
+		newProfilePicture?: string
 	}
 ) {
 	try {
@@ -577,7 +579,7 @@ export async function updateCustomerProfile(
 		if (!session) {
 			return { error: "Unauthorized", success: false }
 		}
-		let customerId = payload.customerId
+		let customerId = data.customerId
 		if (!customerId) {
 			customerId = session.user.customerId
 		}
@@ -585,13 +587,16 @@ export async function updateCustomerProfile(
 		const updatedCustomer = await db.customer.update({
 			where: { id: customerId },
 			data: {
-				birthDate: payload.birthDate,
-				name: payload.fullName,
-				contactNumber: payload.contactNumber,
-				gender: payload.gender,
+				bio: data.bio,
+				birthDate: data.birthDate,
+				name: data.fullName,
+				contactNumber: data.contactNumber,
+				gender: data.gender,
+				coverPhoto: { set: data.newCoverPhoto },
+				profilePicture: { set: data.newProfilePicture },
 				user: {
 					update: {
-						email: payload.email
+						email: data.email
 					}
 				}
 			}
@@ -601,7 +606,7 @@ export async function updateCustomerProfile(
 			return { error: "Customer not found", success: false }
 		}
 
-		revalidatePath("/profile/edit")
+		revalidatePath("/profile")
 		return { success: true, error: null }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
