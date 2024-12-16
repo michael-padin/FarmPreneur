@@ -67,7 +67,7 @@ export const adminUpdateProduct = async (
 				type: "PRODUCT_APPROVAL",
 				metadata: {
 					product: {
-						productImage: updatedProduct.images[0]?.url,
+						productImage: updatedProduct.productImages[0],
 						productId: updatedProduct.id,
 						productName: updatedProduct.title,
 						productListingStatus: updatedProduct.listingStatus

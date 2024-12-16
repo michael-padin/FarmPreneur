@@ -75,7 +75,7 @@ export default function CartListPage() {
 																</h3>
 																<DeleteItemButton
 																	itemId={item.id}
-																	optimisticUpdate={removeItem}
+																	removeItem={removeItem}
 																/>
 															</div>
 

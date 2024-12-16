@@ -22,6 +22,7 @@ interface ProductCardProps {
 	averageRating: number
 	reviews: number
 	description: string
+	sold: number
 	className?: string
 }
 
@@ -33,6 +34,7 @@ export default function ProductCard({
 	farmer,
 	averageRating,
 	unit,
+	sold,
 	description,
 	className
 }: ProductCardProps) {
@@ -50,18 +52,18 @@ export default function ProductCard({
 					/>
 				</div>
 				<div className="overflow-hidden p-2">
-					<p className="tex-sm w-full truncate underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
-						{title}
-					</p>
-					<div className="mb-1 flex items-center gap-2">
-						<div className="flex items-center">
-							<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-							<span className="ml-1 text-sm font-medium">{averageRating}</span>
+					<div className="flex justify-between gap-1">
+						<p className="w-full truncate text-sm underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
+							{title}
+						</p>
+						<div className="flex items-center gap-2 text-xs">
+							<div className="flex items-center">
+								<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+								<span className="ml-1">{averageRating}</span>
+							</div>
+							<Separator orientation="vertical" className="h-4 w-px" />
+							<span className="w-max text-muted-foreground">{sold} sold</span>
 						</div>
-						<Separator orientation="vertical" className="h-4 w-px" />
-						<span className="text-sm text-muted-foreground">
-							{reviews} Reviews
-						</span>
 					</div>
 					<div className="mt-2 flex items-center justify-between">
 						<p className="text-sm font-semibold text-primary lg:text-base">

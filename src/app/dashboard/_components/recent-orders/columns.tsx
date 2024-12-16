@@ -67,10 +67,10 @@ export const columns: ColumnDef<
 			const quantity = row.original.quantity
 			return (
 				<div className="flex items-center gap-3">
-					{product.images?.[0] && (
+					{product.productImages?.[0] && (
 						<div className="relative h-12 w-12 overflow-hidden rounded-md">
 							<Image
-								src={product.images[0].url || "/placeholder.svg"}
+								src={product.productImages[0] || "/placeholder.svg"}
 								alt={product.title}
 								fill
 								className="h-full w-full object-cover"

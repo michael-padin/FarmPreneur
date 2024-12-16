@@ -17,8 +17,9 @@ export async function DailyDiscovery() {
 						prefetch
 					>
 						<ProductCard
+							sold={product.totalSold}
 							description={product.description}
-							image={product.images[0].url || "/placeholder.svg"}
+							image={product.productImages[0] || "/placeholder.svg"}
 							title={product.title}
 							averageRating={product.averageRating}
 							reviews={product._count.reviews}

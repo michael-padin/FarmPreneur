@@ -5,9 +5,11 @@ import { useState } from "react"
 import { GridTileImage } from "./grid-tile-image"
 
 export function Gallery({
-	images
+	images,
+	title
 }: {
-	images: { src: string; altText: string }[]
+	images: string[]
+	title: string
 }) {
 	const [imageIndex, setImageIndex] = useState(0)
 	const nextImageIndex = imageIndex + 1 < images.length ? imageIndex + 1 : 0
@@ -22,8 +24,8 @@ export function Gallery({
 						className="h-full w-full object-cover"
 						fill
 						sizes="(min-width: 1024px) 66vw, 100vw"
-						alt={images[imageIndex]?.altText as string}
-						src={images[imageIndex]?.src as string}
+						alt={`${title} ${imageIndex + 1}`}
+						src={images[imageIndex]}
 						priority={true}
 					/>
 				)}
@@ -35,15 +37,15 @@ export function Gallery({
 						const isActive = index === imageIndex
 
 						return (
-							<li key={image.src} className="h-14 w-14">
+							<li key={image} className="h-14 w-14">
 								<button
 									onClick={() => setImageIndex(index)}
 									aria-label="Select product image"
 									className="h-full w-full"
 								>
 									<GridTileImage
-										alt={image.altText}
-										src={image.src}
+										alt={`${title} ${index + 1} navigator`}
+										src={image}
 										width={80}
 										height={80}
 										active={isActive}

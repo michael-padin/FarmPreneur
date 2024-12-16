@@ -322,7 +322,7 @@ export function DataTable({ data }: DataTableProps) {
 							<div className="flex gap-3">
 								<div className="relative h-16 w-16 flex-shrink-0">
 									<Image
-										src={product.images[0].url}
+										src={product.productImages[0] || "/placeholder.svg"}
 										alt={product.title}
 										layout="fill"
 										objectFit="cover"

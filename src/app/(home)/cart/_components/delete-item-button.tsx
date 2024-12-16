@@ -6,19 +6,19 @@ import { useActionState } from "react"
 
 export function DeleteItemButton({
 	itemId,
-	optimisticUpdate
+	removeItem
 }: {
 	itemId: string
-	optimisticUpdate: any
+	removeItem: (itemId: string) => void
 }) {
 	const [message, formAction] = useActionState(removeFromCart, null)
 	const actionWithCartId = formAction.bind(null, itemId)
 
 	return (
 		<form
-			action={() => {
-				optimisticUpdate()
-				actionWithCartId()
+			action={async () => {
+				removeItem(itemId)
+				await actionWithCartId()
 			}}
 		>
 			<button className="flex items-center gap-2 text-destructive">

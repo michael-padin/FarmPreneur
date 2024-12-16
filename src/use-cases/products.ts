@@ -158,11 +158,15 @@ export const getProductsOnProductListPageUseCase = async (filter: {
 	})
 
 	const shapedProducts = products.map((product) => {
+		const totalSold = product.orderItem
+			.filter((orderItem) => orderItem.order.status === "COMPLETED")
+			.reduce((sum, item) => sum + item.quantity, 0)
 		const averageRating =
 			product.reviews.reduce((sum, review) => sum + review.rating, 0) /
 				product.reviews.length || 0
 		return {
 			...product,
+			totalSold,
 			averageRating
 		}
 	})
@@ -174,11 +178,15 @@ export const getDailyProductsUseCase = async (address?: Address) => {
 	const dailyProducts = await getDailyProducts()
 
 	const products = dailyProducts.map((product) => {
+		const totalSold = product.orderItem
+			.filter((orderItem) => orderItem.order.status === "COMPLETED")
+			.reduce((sum, item) => sum + item.quantity, 0)
 		const averageRating =
 			product.reviews.reduce((sum, review) => sum + review.rating, 0) /
 				product.reviews.length || 0
 		return {
 			...product,
+			totalSold,
 			averageRating
 		}
 	})
@@ -203,6 +211,9 @@ export const getProductBySlugUseCase = async (slug: string) => {
 	const averageRating =
 		product.reviews.reduce((sum, review) => sum + review.rating, 0) /
 			product.reviews.length || 0
+	const totalSold = product.orderItem
+		.filter((orderItem) => orderItem.order.status === "COMPLETED")
+		.reduce((sum, item) => sum + item.quantity, 0)
 
 	return {
 		id: product.id,
@@ -212,11 +223,11 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		description: product.description,
 		quantity: product.quantity,
 		averageRating,
-
+		totalSold: totalSold,
 		_count: {
 			orders: product._count.orderItem
 		},
-
+		productImages: product?.productImages || [],
 		farmer: {
 			id: product.farmer?.id || "",
 			name: product.farmer?.farmName || product.farmer?.user.name || "",
@@ -229,11 +240,7 @@ export const getProductBySlugUseCase = async (slug: string) => {
 					latitude: address.latitude,
 					note: address.note || ""
 				})) || []
-		},
-		images: product.images.map((image) => ({
-			src: image.url,
-			altText: image.altText || ""
-		}))
+		}
 	}
 }
 

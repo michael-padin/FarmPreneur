@@ -176,10 +176,7 @@ export const getTopProducts = async (limit = 10) => {
 			title: true,
 			price: true,
 			unit: true,
-			images: {
-				where: { isPrimary: true },
-				select: { url: true }
-			},
+			productImages: true,
 			reviews: {
 				select: { rating: true }
 			},
@@ -250,7 +247,7 @@ export const getTopProducts = async (limit = 10) => {
 			name: product.title,
 			averageRating: averageRating.toFixed(1),
 			numberOfReviews,
-			image: product.images[0]?.url || null,
+			image: product.productImages[0] || null,
 			monthlySales,
 			price: product.price,
 			unit: product.unit,
@@ -373,6 +370,15 @@ export const getProductsOnProductListPage = async (filters: {
 					}
 				}
 			},
+			orderItem: {
+				include: {
+					order: {
+						select: {
+							status: true
+						}
+					}
+				}
+			},
 			images: true,
 			category: true,
 			_count: {
@@ -396,6 +402,12 @@ export const getDailyProducts = async (address?: Address) => {
 		},
 		take: 100,
 		include: {
+			orderItem: {
+				select: {
+					quantity: true,
+					order: { select: { status: true } }
+				}
+			},
 			farmer: {
 				include: {
 					user: {
@@ -503,6 +515,16 @@ export const getProductBySlug = async (slug: string) => {
 					farmImages: true
 				}
 			},
+			orderItem: {
+				select: {
+					quantity: true,
+					order: {
+						select: {
+							status: true
+						}
+					}
+				}
+			},
 			_count: {
 				select: {
 					orderItem: {
@@ -515,7 +537,6 @@ export const getProductBySlug = async (slug: string) => {
 				}
 			},
 			reviews: true,
-			images: true,
 			category: {
 				select: {
 					name: true

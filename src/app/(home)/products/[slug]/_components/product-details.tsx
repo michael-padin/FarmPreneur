@@ -10,10 +10,10 @@ interface ProductDetailsProps {
 		price: number
 		unit: UnitKey
 		averageRating: number
-		_count: { orders: number }
 		title: string
 		description: string
 		quantity: number
+		totalSold: number
 	}
 }
 
@@ -34,7 +34,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 					</div>
 					<Separator orientation="vertical" className="h-4 w-px" />
 					<span className="text-sm text-muted-foreground">
-						{product._count.orders} Sold
+						{product.totalSold} Sold
 					</span>
 				</div>
 			</div>

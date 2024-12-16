@@ -66,29 +66,28 @@ export default function ProductBottomNav({
 					<form
 						action={async () => {
 							if (product.quantity === 0) {
-								return toast.error("Sorry, This product is out of stock", {
+								toast.error("Sorry, This product is out of stock", {
 									dismissible: true,
 									duration: 2000,
 									closeButton: true
 								})
+								return
 							}
 							if (currentCartQuantity + inputtedQuantity > product.quantity) {
-								return toast.error(
-									"You can't add more than the available stock",
-									{
-										description: `Your have ${currentCartQuantity} in your cart and you are trying to add ${inputtedQuantity} to the cart. You can only add ${product.quantity - currentCartQuantity} more.`,
-										dismissible: true,
-										duration: 2000,
-										closeButton: true
-									}
-								)
+								toast.error("You can't add more than the available stock", {
+									description: `Your have ${currentCartQuantity} in your cart and you are trying to add ${inputtedQuantity} to the cart. You can only add ${product.quantity - currentCartQuantity} more.`,
+									dismissible: true,
+									duration: 2000,
+									closeButton: true
+								})
+								return
 							}
 							addItem(
 								{
 									id: product.id,
 									name: product.title,
 									price: product.price,
-									image: product.images[0].src,
+									image: product.productImages[0] || "/placeholder.svg",
 									unit: product.unit,
 									farmer: {
 										addresses: product.farmer!.addresses,
