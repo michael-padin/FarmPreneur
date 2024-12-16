@@ -172,7 +172,7 @@ export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
 		name: farmer.user.name,
 		contactNumber: farmer.contactNumber,
 		address: farmer.address[0].fullAddress,
-		image: farmer.farmImages[0].url,
+		profilePicture: farmer.profilePicture,
 		responseRate: 100,
 		id: farmer.id
 	}

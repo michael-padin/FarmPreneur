@@ -8,7 +8,7 @@ const formatPrice = (price: number, unit: string) => {
 	return (
 		<>
 			<span className="text-xs">₱</span>
-			{`${price.toFixed(2)}/${unit}`}
+			{`${price}/${unit}`}
 		</>
 	)
 }

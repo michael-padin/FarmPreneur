@@ -2,7 +2,7 @@
 
 import { useCart } from "@/contexts/cart-context"
 import { cn } from "@/lib/utils"
-import { MessageCircleMore, ShoppingCart } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 import { NavLink } from "../../_components/nav-link"
 
 export function OrdersNavLinks() {
@@ -28,13 +28,13 @@ export function OrdersNavLinks() {
 				navButtonClasses={navButtonClasses}
 				badgeClasses={badgeClasses}
 			/>
-			<NavLink
+			{/* <NavLink
 				href="/messages"
 				count={countMessages}
 				Icon={MessageCircleMore}
 				navButtonClasses={navButtonClasses}
 				badgeClasses={badgeClasses}
-			/>
+			/> */}
 		</div>
 	)
 }

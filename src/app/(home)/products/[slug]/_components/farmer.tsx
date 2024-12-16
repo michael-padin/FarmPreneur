@@ -1,9 +1,8 @@
-import { Button } from "@/components/ui/button"
 import { abbreviateNumber } from "@/lib/utils"
 import { getFarmerInfoInProductDetailsUseCase } from "@/use-cases/farmers"
 import { MapPin } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
+import { Visit } from "./visit"
 
 interface FarmerProps {
 	farmerId: string
@@ -16,8 +15,8 @@ export async function Farmer({ farmerId }: FarmerProps) {
 				<div className="flex items-start gap-2">
 					<div className="relative h-14 w-14 flex-shrink-0 lg:h-20 lg:w-20">
 						<Image
-							src={farmer.image || "/placeholder.svg"}
-							alt={farmer.name || "farmer"}
+							src={farmer.profilePicture || "/placeholder.svg"}
+							alt={`${farmer.name}'s profile picture`}
 							className="rounded-full"
 							fill
 							style={{ objectFit: "cover" }}
@@ -64,11 +63,7 @@ export async function Farmer({ farmerId }: FarmerProps) {
 						</div>
 					</div>
 					<div className="flex h-full items-end">
-						<Button className="" variant={"outline"} asChild size={"sm"}>
-							<Link href={`/dashboard/farmer/farmer-details/${farmer.id}`}>
-								Visit
-							</Link>
-						</Button>
+						<Visit />
 					</div>
 				</div>
 			</div>

@@ -1,13 +1,6 @@
 "use client"
 import { useNotifications } from "@/contexts/notification-context"
-import {
-	Bell,
-	Box,
-	Home,
-	MessageCircleMore,
-	ShoppingCart,
-	User
-} from "lucide-react"
+import { Bell, Box, Home, ShoppingCart, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -16,7 +9,8 @@ export function BottomNav() {
 	const pathName = usePathname()
 	return (
 		<nav className="fixed bottom-0 left-0 right-0 border-t bg-background md:hidden">
-			<div className="flex justify-between p-3 py-4">
+			<div className="flex justify-around p-3 py-4">
+				{/* <div className="flex justify-between p-3 py-4"> */}
 				{[
 					{ icon: Home, label: "Home", url: "/dashboard/farmer" },
 					{
@@ -31,12 +25,12 @@ export function BottomNav() {
 						url: "/dashboard/farmer/notifications",
 						badge: unreadCount > 0 ? unreadCount : null
 					},
-					{
-						icon: MessageCircleMore,
-						label: "Messages",
-						url: "/dashboard/farmer/messages",
-						badge: unreadCount > 0 ? unreadCount : null
-					},
+					// {
+					// 	icon: MessageCircleMore,
+					// 	label: "Messages",
+					// 	url: "/dashboard/farmer/messages",
+					// 	badge: unreadCount > 0 ? unreadCount : null
+					// },
 					{ icon: User, label: "Profile", url: "/dashboard/farmer/profile" }
 				].map((item, index) => (
 					<Link
@@ -55,7 +49,8 @@ export function BottomNav() {
 									{item.badge}
 								</span>
 							)}
-							<span className="max-w-14 truncate text-[11px]">
+							<span className="truncate text-[11px]">
+								{/* <span className="max-w-14 truncate text-[11px]"> */}
 								{item.label}
 							</span>
 						</div>

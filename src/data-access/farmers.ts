@@ -92,6 +92,7 @@ export const getFarmerById = async (id: string) => {
 			farmDescription: true,
 			userId: true,
 			createdAt: true,
+			profilePicture: true,
 			updatedAt: true,
 			address: true,
 			orders: true,

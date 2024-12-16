@@ -104,7 +104,9 @@ export function RateForm({
 				return
 			}
 
-			toast.success("Rating submitted successfully")
+			toast.success("Rating submitted successfully", {
+				position: "top-right"
+			})
 			router.back()
 		})
 	}
