@@ -6,7 +6,7 @@ export async function ProfilePicture() {
 	const user = (await auth())?.user
 
 	return (
-		<div className="relative h-16 w-16 overflow-hidden rounded-full">
+		<div className="relative h-20 w-20 overflow-hidden rounded-full">
 			<Link href={`/dashboard/farmer/profile`} prefetch>
 				<Image
 					src={user?.profilePicture || "/placeholder.svg"}

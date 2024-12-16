@@ -13,12 +13,12 @@ export default function FarmerDashboard() {
 			<div className="h-screen w-full overflow-auto bg-secondary p-4 lg:px-5">
 				<header className="pb-4">
 					<div className="flex items-center justify-between">
-						<div>
+						<div className="flex-1">
 							<h2 className={`text-xs font-bold ${"text-primary"}`}>
 								FarmPreneur
 							</h2>
 							<Greetings />
-							<p className="text-sm text-muted-foreground">
+							<p className="mt-1 text-sm text-muted-foreground">
 								Here is an overview of your farm.
 							</p>
 						</div>
