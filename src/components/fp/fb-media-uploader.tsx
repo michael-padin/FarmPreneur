@@ -71,6 +71,7 @@ export function FPMediaUploader({
 		onDrop,
 		accept,
 		maxSize,
+		multiple: singleImage ? false : maxFiles > 1,
 		maxFiles: singleImage ? 1 : maxFiles - media.length
 	})
 
