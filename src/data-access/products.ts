@@ -22,17 +22,7 @@ export const createProduct = async (
 			quantity: data.quantity,
 			categoryId: data.categoryId,
 			farmerId: data.farmerId,
-			images: {
-				createMany: {
-					data: data.images.map((image) => ({
-						type: "PRODUCT",
-						url: image.url,
-						filename: image.filename,
-						size: image.size,
-						mimeType: image.mimeType
-					}))
-				}
-			}
+			productImages: data.images.map((image) => image.url)
 		},
 		include: {
 			farmer: {
@@ -106,6 +96,11 @@ export const getProductById = async (id: string) => {
 					farmName: true,
 					id: true,
 					contactNumber: true,
+					user: {
+						select: {
+							id: true
+						}
+					},
 					address: {
 						select: {
 							id: true,

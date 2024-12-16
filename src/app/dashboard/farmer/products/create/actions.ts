@@ -1,12 +1,12 @@
 "use server"
-import { createProductUseCase } from "@/use-cases/products"
-import { createProductSchema, CreateProductSchema } from "./validations"
-import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
+import { auth } from "@/auth"
 import { getProductBySlug } from "@/data-access/products"
 import { getErrorMessage } from "@/lib/handle-error"
 import { pusherServer } from "@/lib/pusher"
+import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
 import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
-import { auth } from "@/auth"
+import { createProductUseCase } from "@/use-cases/products"
+import { createProductSchema, CreateProductSchema } from "./validations"
 
 export const createProduct = async (data: CreateProductSchema) => {
 	const parsedData = createProductSchema.safeParse(data)
@@ -48,7 +48,7 @@ export const createProduct = async (data: CreateProductSchema) => {
 				type: "PRODUCT_APPROVAL",
 				metadata: {
 					product: {
-						productImage: createdProduct.images[0]?.url,
+						productImage: createdProduct.productImages[0],
 						productId: createdProduct.id,
 						productName: createdProduct.title
 					},

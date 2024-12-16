@@ -1,4 +1,4 @@
-import { imageSchema } from "@/validations/image"
+import { mediaFileSchema } from "@/validations/media"
 import { z } from "zod"
 
 export const editProductSchema = z.object({
@@ -8,7 +8,7 @@ export const editProductSchema = z.object({
 	price: z.coerce.number().min(1, "Required"),
 	unit: z.string().min(1, "Required"),
 	quantity: z.coerce.number().min(1, "Required"),
-	images: imageSchema.array().min(1, "Required")
+	images: z.array(mediaFileSchema).min(1, "Upload at least 1 image")
 })
 
 export type EditProductSchema = z.infer<typeof editProductSchema>

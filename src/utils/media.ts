@@ -67,7 +67,7 @@ export const processMediaUpdate = async ({
 					file: file.file!, // File is guaranteed to exist at this point
 					path
 				})
-				return { ...file, url: uploadedUrl } // Include the uploaded URL
+				return { ...file, url: uploadedUrl || "" } // Include the uploaded URL
 			})
 		),
 

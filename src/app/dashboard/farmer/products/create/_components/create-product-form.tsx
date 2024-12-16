@@ -1,6 +1,6 @@
 "use client"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { FPUnitSelect } from "@/components/fg/fp-select-unit"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -20,12 +20,10 @@ import {
 	SelectValue
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { S3PATH } from "@/constants/s3-path"
 import { showErrorToast } from "@/lib/handle-error"
-import { getFarmerAddressesUseCase } from "@/use-cases/address"
 import { getCategoriesUseCase } from "@/use-cases/categories"
+import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Address } from "@prisma/client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
@@ -34,27 +32,6 @@ import { toast } from "sonner"
 import { createProduct } from "../actions"
 import { createProductSchema, CreateProductSchema } from "../validations"
 
-function CustomTrigger({ address }: { address: Address }) {
-	return (
-		<div className="flex items-center space-x-2">
-			{/* <MapPin className="h-4 w-4 text-muted-foreground" /> */}
-			<div className="flex-1 text-left">
-				{address ? (
-					<div className="flex flex-col">
-						<span className="truncate font-medium">{address.fullAddress}</span>
-						{address.label && (
-							<span className="text-xs text-muted-foreground">
-								{address.label}
-							</span>
-						)}
-					</div>
-				) : (
-					<span className="text-muted-foreground">Select an address</span>
-				)}
-			</div>
-		</div>
-	)
-}
 const defaultValues: CreateProductSchema = {
 	title: "",
 	description: "",
@@ -65,12 +42,12 @@ const defaultValues: CreateProductSchema = {
 	images: []
 }
 interface CreateProductFormProps {
+	userId: string
 	categoriesPromise: Awaited<ReturnType<typeof getCategoriesUseCase>>
-	addressesPromise: Awaited<ReturnType<typeof getFarmerAddressesUseCase>>
 }
 export function CreateProductForm({
-	categoriesPromise,
-	addressesPromise
+	userId,
+	categoriesPromise
 }: CreateProductFormProps) {
 	const router = useRouter()
 
@@ -82,12 +59,23 @@ export function CreateProductForm({
 
 	const onSubmit = async (data: CreateProductSchema) => {
 		startUpdateTransition(async () => {
-			const { error } = await createProduct(data)
+			const finalProductImages = await processMediaUpdate({
+				currentFiles: [],
+				newFiles: data.images,
+				userId: userId,
+				path: "product-images"
+			})
+			const { error } = await createProduct({
+				...data,
+				images: finalProductImages ?? []
+			})
 			if (error) {
 				showErrorToast(error)
 				return
 			}
-			toast.success("Product created successfully!")
+			toast.success("Product created successfully!", {
+				position: "top-right"
+			})
 			router.push("/dashboard/farmer/products")
 		})
 	}
@@ -138,11 +126,9 @@ export function CreateProductForm({
 							<FormItem>
 								<FormLabel>Product Image</FormLabel>
 								<FormControl>
-									<FileUpload
+									<FPMediaUploader
 										onChange={field.onChange}
-										value={field.value && field.value}
-										path={S3PATH.PRODUCTIMAGES}
-										multiple
+										initialMedia={[]}
 										maxFiles={5}
 									/>
 								</FormControl>
@@ -162,12 +148,7 @@ export function CreateProductForm({
 								<FormItem>
 									<FormLabel>Price</FormLabel>
 									<FormControl>
-										<Input
-											type="number"
-											step="0.01"
-											placeholder="Enter price"
-											{...field}
-										/>
+										<Input type="number" placeholder="Enter price" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

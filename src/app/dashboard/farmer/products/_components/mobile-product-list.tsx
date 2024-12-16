@@ -23,7 +23,7 @@ export async function FarmerProductList() {
 						<CardHeader className="p-2">
 							<div className="flex items-start gap-4">
 								<Image
-									src={product.images[0]?.url || "/placeholder.svg"}
+									src={product.productImages[0] || "/placeholder.svg"}
 									alt={product.title}
 									height={96}
 									width={96}

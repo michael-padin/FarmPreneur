@@ -539,20 +539,8 @@ export const editProduct = async (
 						id: data.categoryId
 					}
 				},
-
+				productImages: { set: data.images.map((image) => image.url) },
 				unit: data.unit
-				// images: {
-				// 	// deleteMany: {
-				// 	// 	url: { in: imagesToDelete?.map((img) => img.url) }
-				// 	// },
-				// 	create: data.images.map((image) => ({
-				// 		type: "PRODUCT",
-				// 		url: image.url,
-				// 		filename: image.filename,
-				// 		size: image.size,
-				// 		mimeType: image.mimeType
-				// 	}))
-				// }
 			}
 		})
 

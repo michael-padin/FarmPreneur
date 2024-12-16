@@ -1,6 +1,6 @@
 "use client"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { FPUnitSelect } from "@/components/fg/fp-select-unit"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -20,11 +20,11 @@ import {
 	SelectValue
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { S3PATH } from "@/constants/s3-path"
 import { editProduct } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getProductByIdFromFarmerUseCase } from "@/use-cases/products"
+import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
@@ -49,14 +49,21 @@ export function EditProductForm({ product, categories }: EditProductFormProps) {
 			unit: product.unit,
 			quantity: product.quantity,
 			categoryId: product.categoryId,
-			images: product.images
+			images: product.productImages
 		}
 	})
 
 	const onSubmit = async (data: EditProductSchema) => {
 		startUpdateTransition(async () => {
+			const finalProductImages = await processMediaUpdate({
+				currentFiles: product.productImages,
+				newFiles: data.images,
+				userId: product.userId || "",
+				path: "product-images"
+			})
 			const { error } = await editProduct({
 				...data,
+				images: finalProductImages || [],
 				productId: product.id
 			})
 			if (error) {
@@ -121,11 +128,9 @@ export function EditProductForm({ product, categories }: EditProductFormProps) {
 							<FormItem>
 								<FormLabel>Product Image</FormLabel>
 								<FormControl>
-									<FileUpload
+									<FPMediaUploader
+										initialMedia={product.productImages}
 										onChange={field.onChange}
-										value={field.value && field.value}
-										path={S3PATH.PRODUCTIMAGES}
-										multiple
 										maxFiles={5}
 									/>
 								</FormControl>

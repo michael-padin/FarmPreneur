@@ -195,6 +195,7 @@ model Product {
   title         String
   description   String
   price         Float
+  productImages String[]
   slug          String?              @unique
   unit          String?
   quantity      Int

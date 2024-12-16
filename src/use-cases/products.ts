@@ -57,6 +57,7 @@ export const getProductByIdFromFarmerUseCase = async (id: string) => {
 	if (!foundProduct) throw new Error("Product not found")
 
 	return {
+		userId: foundProduct.farmer?.user.id,
 		id: foundProduct.id,
 		categoryId: foundProduct.categoryId || "",
 		title: foundProduct.title,
@@ -64,14 +65,12 @@ export const getProductByIdFromFarmerUseCase = async (id: string) => {
 		price: foundProduct.price,
 		unit: (foundProduct.unit as UnitKey) || "kg",
 		quantity: foundProduct.quantity,
-		images:
-			foundProduct.images.map((image) => ({
-				altText: image.altText || "",
-				type: "PRODUCT",
-				url: image.url,
-				filename: image.filename,
-				size: image.size,
-				mimeType: image.mimeType
+		productImages:
+			foundProduct?.productImages.map((url) => ({
+				id: Math.random().toString(36).substring(7),
+				url: url || "",
+				type: "image" as "image" | "video",
+				file: null
 			})) || []
 	}
 }

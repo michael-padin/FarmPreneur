@@ -1,5 +1,4 @@
-import Image from "next/image"
-import { MoreVertical, Eye, Pencil, Trash2 } from "lucide-react"
+import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import {
@@ -9,10 +8,11 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { formatDate } from "@/lib/utils"
-import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { formatDate } from "@/lib/utils"
 import { getProductsUseCase } from "@/use-cases/products"
+import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react"
+import Image from "next/image"
 
 interface ProductItemProps {
 	product: Awaited<ReturnType<typeof getProductsUseCase>>[0]
@@ -24,7 +24,7 @@ export function ProductItem({ product }: ProductItemProps) {
 			<CardHeader className="p-4 pb-2">
 				<div className="flex items-start gap-4">
 					<Image
-						src={product.images[0]?.url || "/placeholder.svg"}
+						src={product.productImages[0] || "/placeholder.svg"}
 						alt={product.title}
 						className="w-auto rounded-lg"
 						priority
