@@ -349,9 +349,10 @@ export const getProductsOnProductListPage = async (filters: {
 								{
 									category: { name: { contains: search, mode: "insensitive" } }
 								}
-							]
+							],
+							listingStatus: "APPROVED"
 						}
-					: {}
+					: { listingStatus: "APPROVED" }
 			]
 		},
 		orderBy:

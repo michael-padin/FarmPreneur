@@ -14,7 +14,7 @@ export default function ProductListPage({
 }) {
 	return (
 		<>
-			<header className="sticky top-0 z-10 w-full space-y-3 bg-background px-3 pt-3">
+			<header className="fixed top-0 z-10 w-full space-y-3 overflow-auto bg-background px-3 pt-3">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-2">
 						<FPBackButton />
@@ -30,8 +30,8 @@ export default function ProductListPage({
 				<FilterProducts />
 				<SortTabs />
 			</header>
-			<main className="h-full bg-secondary">
-				<div className="p-2 pt-3">
+			<main className="h-screen overflow-auto bg-secondary">
+				<div className="p-2 pb-3 pt-[164px]">
 					<ProductListWrapper searchParams={searchParams} />
 				</div>
 			</main>
