@@ -1,4 +1,5 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Metadata } from "next"
 import { Suspense } from "react"
 import { BottomNav, Categories } from "./_components"
 import { CategoryCardSkeleton } from "./_components/category-card-skeleton"
@@ -8,6 +9,12 @@ import { HomeNav } from "./_components/home-nav"
 import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 
 export const experimental_ppr = true
+
+export const metadata: Metadata = {
+	title: "FarmPreneur",
+	description:
+		"Pick up the freshest, highest-quality fruits and vegetables directly from local farmers. No delivery, just pure local goodness."
+}
 
 export default function Home() {
 	return (
