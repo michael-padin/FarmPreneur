@@ -1,11 +1,5 @@
 import { deleteMedia, uploadMedia } from "@/lib/actions"
-
-export interface MediaFile {
-	id: string
-	url?: string // Optional, for files already uploaded
-	file?: File | null // Optional, for files to be uploaded
-	type: "image" | "video"
-}
+import { MediaFile } from "@/types/media"
 
 export const processMediaUpdate = async ({
 	currentFiles,

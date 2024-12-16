@@ -2,21 +2,15 @@
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { MediaFile } from "@/types/media"
 import { FileIcon, Plus, X } from "lucide-react"
 import Image from "next/image"
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
 
-export interface MediaFile {
-	id: string
-	file: File | null
-	url: string
-	type: "image" | "video"
-}
-
 export interface FPMediaUploaderProps {
-	initialMedia: MediaFile[]
-	onChange?: (media: MediaFile[]) => void
+	initialMedia: MediaFile[] | MediaFile | null
+	onChange?: (media: MediaFile[] | MediaFile | null) => void
 	maxFiles?: number
 	accept?: Record<string, string[]>
 	maxSize?: number
@@ -43,7 +37,14 @@ export function FPMediaUploader({
 	mediaClassName = "w-24 h-24 object-cover rounded-lg",
 	singleImage = false
 }: FPMediaUploaderProps) {
-	const [media, setMedia] = useState<MediaFile[]>(initialMedia)
+	// Normalize initialMedia to always be an array
+	const normalizedMedia = Array.isArray(initialMedia)
+		? initialMedia
+		: initialMedia
+			? [initialMedia]
+			: []
+
+	const [media, setMedia] = useState<MediaFile[]>(normalizedMedia)
 	const onDrop = useCallback(
 		(acceptedFiles: File[]) => {
 			const newMedia = acceptedFiles.map((file) => ({
@@ -56,7 +57,7 @@ export function FPMediaUploader({
 			}))
 
 			if (singleImage) {
-				onChange?.([newMedia[0]])
+				onChange?.(newMedia[0])
 				setMedia([newMedia[0]])
 			} else {
 				setMedia([...media, ...newMedia].slice(0, maxFiles))
@@ -74,6 +75,11 @@ export function FPMediaUploader({
 	})
 
 	const removeMedia = (id: string) => {
+		if (singleImage) {
+			onChange?.(null)
+			setMedia([])
+			return
+		}
 		onChange?.(media.filter((item) => item.id !== id))
 		setMedia(media.filter((item) => item.id !== id))
 	}
@@ -82,7 +88,7 @@ export function FPMediaUploader({
 		<div key={item.id} className={cn("relative rounded-lg", mediaClassName)}>
 			{item.type === "image" ? (
 				<Image
-					src={item.url}
+					src={item.url || "/placeholder.svg"}
 					alt="Uploaded image"
 					fill
 					priority
