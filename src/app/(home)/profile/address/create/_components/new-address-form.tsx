@@ -21,7 +21,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { locationTypeItems } from "@/constants/addres"
+import { Textarea } from "@/components/ui/textarea"
+import { locationLabelMap } from "@/constants/address"
 import { createCustomerAddress } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -46,8 +47,13 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 		defaultValues: {
 			contactName: "",
 			contactNumber: "+639",
-			locationType: "",
-			address: {},
+			label: "",
+			note: "",
+			address: {
+				fullAddress: "",
+				longitude: 0,
+				latitude: 0
+			},
 			isDefault: false
 		}
 	})
@@ -97,30 +103,7 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="locationType"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Address Type</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Select address type" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									{Object.entries(locationTypeItems).map(([value, label]) => (
-										<SelectItem value={value} key={value}>
-											{label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+
 				<FormField
 					control={form.control}
 					name="address"
@@ -147,6 +130,49 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 						</FormItem>
 					)}
 				/>
+
+				<FormField
+					control={form.control}
+					name="label"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Label </FormLabel>
+							<Select onValueChange={field.onChange} defaultValue="home">
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Home" className="text-muted" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{Object.entries(locationLabelMap).map(([value, label]) => (
+										<SelectItem value={value} key={value}>
+											{label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="note"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Location Note</FormLabel>
+							<FormControl>
+								<Textarea placeholder="Near the red gate" {...field} />
+							</FormControl>
+							<FormDescription>
+								Provide specific instructions or landmarks to help farmer locate
+								you
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				<FormField
 					control={form.control}
 					name="isDefault"
@@ -165,7 +191,7 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 					)}
 				/>
 				<Button type="submit" className="w-full" disabled={isPending}>
-					{isPending ? "Adding..." : "Add"}
+					{isPending ? "Updating..." : "Update"}
 				</Button>
 			</form>
 		</Form>

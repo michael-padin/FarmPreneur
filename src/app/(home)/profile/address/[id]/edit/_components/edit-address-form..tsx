@@ -21,7 +21,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { locationTypeItems } from "@/constants/addres"
+import { Textarea } from "@/components/ui/textarea"
+import { locationLabelMap } from "@/constants/address"
 import { editCustomerAddress } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { getAddressById } from "@/use-cases/address"
@@ -34,6 +35,7 @@ import {
 	NewAddressCustomerSchema,
 	newCustomerAddressSchema
 } from "../../../create/validation"
+import { DeleteAddress } from "./delete-address"
 
 interface AddressFormProps {
 	address: Awaited<ReturnType<typeof getAddressById>>
@@ -47,9 +49,10 @@ export function CustomerEditAddressForm({ address }: AddressFormProps) {
 		defaultValues: {
 			contactName: address.contactName,
 			contactNumber: address.contactNumber,
-			locationType: address.locationType,
+			label: address.label,
 			address: address.address,
-			isDefault: address.isDefault
+			isDefault: address.isDefault,
+			note: address.note
 		}
 	})
 
@@ -101,30 +104,7 @@ export function CustomerEditAddressForm({ address }: AddressFormProps) {
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="locationType"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Address Type</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Select address type" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									{Object.entries(locationTypeItems).map(([value, label]) => (
-										<SelectItem value={value} key={value}>
-											{label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+
 				<FormField
 					control={form.control}
 					name="address"
@@ -153,6 +133,48 @@ export function CustomerEditAddressForm({ address }: AddressFormProps) {
 				/>
 				<FormField
 					control={form.control}
+					name="label"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Label </FormLabel>
+							<Select onValueChange={field.onChange} defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Home" className="text-muted" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{Object.entries(locationLabelMap).map(([value, label]) => (
+										<SelectItem value={value} key={value}>
+											{label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="note"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Location Note</FormLabel>
+							<FormControl>
+								<Textarea placeholder="Near the red gate" {...field} />
+							</FormControl>
+							<FormDescription>
+								Provide specific instructions or landmarks to help farmer locate
+								you
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
 					name="isDefault"
 					render={({ field }) => (
 						<FormItem className="flex flex-row items-start space-x-3 space-y-0">
@@ -168,9 +190,12 @@ export function CustomerEditAddressForm({ address }: AddressFormProps) {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="w-full" disabled={isPending}>
-					{isPending ? "Updating..." : "Update"}
-				</Button>
+				<div className="flex gap-2">
+					<DeleteAddress id={address.id} />
+					<Button type="submit" className="w-full" disabled={isPending}>
+						{isPending ? "Updating..." : "Update"}
+					</Button>
+				</div>
 			</form>
 		</Form>
 	)

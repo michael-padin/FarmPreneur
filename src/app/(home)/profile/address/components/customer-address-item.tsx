@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { RadioGroupItem } from "@/components/ui/radio-group"
-import { LocationType, locationTypeItems } from "@/constants/addres"
+import { locationLabelMap, LocationType } from "@/constants/address"
 import { getCustomerAddressListUseCase } from "@/use-cases/address"
 import { MapPin, PenSquare } from "lucide-react"
 import Link from "next/link"
+import { formatPhoneNumber } from "react-phone-number-input"
 
 export function CustomerAddressItem({
 	address
@@ -26,18 +27,26 @@ export function CustomerAddressItem({
 						className="flex items-center text-base font-semibold"
 					>
 						<MapPin className="mr-2 h-4 w-4 text-primary" />
-						{locationTypeItems[address.locationType as LocationType]}
+						{locationLabelMap[address.label as LocationType]}
 						{address.isDefault && (
 							<span className="ml-2 text-xs text-primary">(Default)</span>
 						)}
 					</Label>
-					<p className="mt-1 text-sm text-muted-foreground">
-						{address.fullAddress}
-					</p>
-					<p className="mt-1 text-sm">{address?.contactName}</p>
-					<p className="text-sm text-muted-foreground">
-						{address.contactNumber}
-					</p>
+					<div className="space-y-2">
+						<p className="text-sm text-muted-foreground">
+							{address.fullAddress}
+						</p>
+						<div className="">
+							<p className="text-sm">{address?.contactName}</p>
+							<p className="text-sm text-muted-foreground">
+								{formatPhoneNumber(address.contactNumber)}
+							</p>
+						</div>
+						<p className="text-sm">
+							Note:{" "}
+							<span className="text-muted-foreground">{address.note}</span>
+						</p>
+					</div>
 				</div>
 				<Button variant="ghost" size="icon" className="shrink-0" asChild>
 					<Link href={`/profile/address/${address.id}/edit`}>

@@ -9,7 +9,7 @@ export const experimental_ppr = true
 
 export default function ProfileAddressesPage() {
 	return (
-		<div className="h-screen bg-secondary">
+		<div className="h-screen overflow-auto bg-secondary">
 			<header className="fixed left-0 right-0 top-0 z-50 w-full bg-background pb-0 shadow-sm">
 				<div className="flex w-full items-center gap-2 px-4 py-4">
 					<FPLinkBackButton href="/profile" />
@@ -18,7 +18,7 @@ export default function ProfileAddressesPage() {
 			</header>
 			<main>
 				<div className="w-full space-y-2 px-2 lg:px-5">
-					<div className="pt-20">
+					<div className="pb-[80.2px] pt-20">
 						<Suspense
 							fallback={
 								<div className="space-y-2">
@@ -30,7 +30,7 @@ export default function ProfileAddressesPage() {
 						</Suspense>
 					</div>
 				</div>
-				<div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
+				<div className="fixed bottom-0 left-0 right-0 bg-background p-4">
 					<Button asChild className="w-full">
 						<Link href={"/profile/address/create"}>Add New Address</Link>
 					</Button>

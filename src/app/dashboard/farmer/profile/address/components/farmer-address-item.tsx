@@ -35,10 +35,12 @@ export function FarmerAddressItem({
 						<p className="text-sm text-muted-foreground">
 							{address.fullAddress}
 						</p>
-						<p className="text-sm">{address?.contactName}</p>
-						<p className="text-sm text-muted-foreground">
-							{formatPhoneNumber(address.contactNumber)}
-						</p>
+						<div className="">
+							<p className="text-sm">{address?.contactName}</p>
+							<p className="text-sm text-muted-foreground">
+								{formatPhoneNumber(address.contactNumber)}
+							</p>
+						</div>
 						<p className="text-sm">
 							Note:{" "}
 							<span className="text-muted-foreground">{address.note}</span>

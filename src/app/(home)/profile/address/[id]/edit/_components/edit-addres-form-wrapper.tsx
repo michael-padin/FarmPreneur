@@ -11,9 +11,5 @@ export async function EditAddressFormWrapper({ params }: { params: Params }) {
 	}
 
 	const address = await getAddressById(id)
-	return (
-		<>
-			<CustomerEditAddressForm address={address} />
-		</>
-	)
+	return <CustomerEditAddressForm address={address} />
 }

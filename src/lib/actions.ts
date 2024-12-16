@@ -654,7 +654,7 @@ export const updateFarmerProfile = async (
 
 // MARK: Address
 export async function createCustomerAddress(
-	payload: NewAddressCustomerSchema & {
+	data: NewAddressCustomerSchema & {
 		customerId?: string
 	}
 ) {
@@ -663,24 +663,26 @@ export async function createCustomerAddress(
 		if (!session) {
 			return { error: "Unauthorized", success: false }
 		}
-		let customerId = payload.customerId
+		let customerId = data.customerId
 		if (!customerId) {
 			customerId = session.user.customerId
 		}
 
-		const createdAddress = await db.address.create({
+		await db.address.create({
 			data: {
-				latitude: payload.address.latitude,
-				longitude: payload.address.longitude,
-				fullAddress: payload.address.fullAddress,
-				locationType: payload.locationType,
-				contactNumber: payload.contactNumber,
-				contactName: payload.contactName,
-				region: payload.address.region,
-				country: payload.address.country,
-				postalCode: payload.address.postalCode,
-				street: payload.address.street,
-				isDefault: payload.isDefault || false,
+				label: data.label,
+				latitude: data.address.latitude,
+				longitude: data.address.longitude,
+				fullAddress: data.address.fullAddress,
+				locationType: data.label,
+				note: data.note,
+				contactNumber: data.contactNumber,
+				contactName: data.contactName,
+				region: data.address.region,
+				country: data.address.country,
+				postalCode: data.address.postalCode,
+				street: data.address.street,
+				isDefault: data.isDefault || false,
 				customer: {
 					connect: {
 						id: customerId
@@ -695,7 +697,7 @@ export async function createCustomerAddress(
 	}
 }
 export async function editCustomerAddress(
-	payload: NewAddressCustomerSchema & {
+	data: NewAddressCustomerSchema & {
 		customerId?: string
 		addressId: string
 	}
@@ -705,34 +707,35 @@ export async function editCustomerAddress(
 		if (!session) {
 			return { error: "Unauthorized", success: false }
 		}
-		let customerId = payload.customerId
+		let customerId = data.customerId
 		if (!customerId) {
 			customerId = session.user.customerId
 		}
 
-		if (payload.isDefault === true) {
+		if (data.isDefault === true) {
 			await db.address.updateMany({
 				where: { customerId },
 				data: { isDefault: false }
 			})
 		}
 
-		const updatedAddress = await db.address.update({
+		await db.address.update({
 			where: {
-				id: payload.addressId
+				id: data.addressId
 			},
 			data: {
-				latitude: payload.address.latitude,
-				longitude: payload.address.longitude,
-				fullAddress: payload.address.fullAddress,
-				locationType: payload.locationType,
-				contactNumber: payload.contactNumber,
-				contactName: payload.contactName,
-				region: payload.address.region,
-				country: payload.address.country,
-				postalCode: payload.address.postalCode,
-				street: payload.address.street,
-				isDefault: payload.isDefault || false
+				latitude: data.address.latitude,
+				longitude: data.address.longitude,
+				fullAddress: data.address.fullAddress,
+				label: data.label,
+				note: data.note,
+				contactNumber: data.contactNumber,
+				contactName: data.contactName,
+				region: data.address.region,
+				country: data.address.country,
+				postalCode: data.address.postalCode,
+				street: data.address.street,
+				isDefault: data.isDefault || false
 			}
 		})
 
@@ -815,6 +818,26 @@ export const editFarmerAddress = async (
 	}
 }
 
+export const deleteAddress = async (addressId: string) => {
+	try {
+		const session = await auth()
+		if (!session) {
+			return { error: "Unauthorized", success: false }
+		}
+
+		await db.address.delete({
+			where: {
+				id: addressId
+			}
+		})
+
+		revalidatePath("/profile/address")
+		revalidatePath("/dashboard/farmer/profile/address")
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
+}
 // MARK: CHANGE PASSWWORD
 export async function changeUserPassword(payload: {
 	customerId?: string
@@ -1061,8 +1084,8 @@ export async function rateOrder(payload: {
 
 		await db.$transaction(async (tx) => {
 			await Promise.all(
-				ratings.map((rating) => {
-					tx.productReview.create({
+				ratings.map(async (rating) => {
+					await tx.productReview.create({
 						data: {
 							rating: rating.rate,
 							comment: rating.review,

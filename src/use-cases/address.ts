@@ -79,6 +79,8 @@ export const getAddressById = async (id: string) => {
 			postalCode: address.postalCode || "",
 			street: address.street || ""
 		},
+		isDefault: address.isDefault || false,
+
 		note: address.note || "",
 		contactName: address?.contactName || "",
 		contactNumber: address?.contactNumber || ""
@@ -102,6 +104,8 @@ export const getCustomerAddressListUseCase = async (customerId?: string) => {
 	const shapedAddressList =
 		addressList.length > 0
 			? addressList.map((address) => ({
+					note: address.note || "",
+					label: address.label || "",
 					id: address.id,
 					contactNumber: address.contactNumber || "",
 					fullAddress: address.fullAddress || "",
