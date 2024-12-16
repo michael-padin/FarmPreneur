@@ -3,6 +3,7 @@
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
 import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/validations"
+import { EditFarmerAddressSchema } from "@/app/dashboard/farmer/profile/address/[id]/edit/validation"
 import { EditFarmerProfileSchema } from "@/app/dashboard/farmer/profile/edit/validation"
 import { auth } from "@/auth"
 import { getFarmerByUserId } from "@/data-access/farmers"
@@ -766,6 +767,50 @@ export async function changeCustomerDefaultAddress(payload: {
 	}
 }
 
+export const editFarmerAddress = async (
+	data: EditFarmerAddressSchema & {
+		addressId: string
+	}
+) => {
+	try {
+		const session = await auth()
+		if (!session) {
+			throw new Error("Unauthorized")
+		}
+		let farmerId = session.user.farmerId
+		if (!farmerId) {
+			farmerId = session.user.farmerId
+		}
+
+		await db.address.update({
+			where: {
+				id: data.addressId
+			},
+			data: {
+				note: data.note,
+				contactNumber: data.contactNumber,
+				contactName: data.contactName,
+				locationType: "FarmAddress",
+				label: "Farm Address",
+				isDefault: true,
+
+				latitude: data.address.latitude,
+				longitude: data.address.longitude,
+				fullAddress: data.address.fullAddress,
+				region: data.address.region,
+				country: data.address.country,
+				postalCode: data.address.postalCode,
+				street: data.address.street
+			}
+		})
+
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
+}
+
+// MARK: CHANGE PASSWWORD
 export async function changeUserPassword(payload: {
 	customerId?: string
 	userId?: string

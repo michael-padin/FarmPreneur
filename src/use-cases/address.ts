@@ -69,6 +69,7 @@ export const getAddressById = async (id: string) => {
 
 	return {
 		id: address.id,
+		label: address.label || "",
 		address: {
 			latitude: address.latitude,
 			longitude: address.longitude,
@@ -78,13 +79,9 @@ export const getAddressById = async (id: string) => {
 			postalCode: address.postalCode || "",
 			street: address.street || ""
 		},
-		contactNumber: address?.contactNumber || "",
-		fullAddress: address.fullAddress || "",
-		isDefault: address.isDefault || false,
+		note: address.note || "",
 		contactName: address?.contactName || "",
-		latitude: address.latitude || 0,
-		longitude: address.longitude || 0,
-		locationType: address.locationType || ""
+		contactNumber: address?.contactNumber || ""
 	}
 }
 
@@ -113,6 +110,56 @@ export const getCustomerAddressListUseCase = async (customerId?: string) => {
 					latitude: address.latitude || 0,
 					longitude: address.longitude || 0,
 					locationType: address.locationType || ""
+				}))
+			: []
+
+	return shapedAddressList
+}
+export const getFarmerAddressListUseCase = async (
+	farmerId?: string,
+	locationType?: string
+) => {
+	const session = await auth()
+
+	let finalFarmerId = session?.user.farmerId
+	if (!finalFarmerId) {
+		finalFarmerId = farmerId
+	}
+
+	const locationTypeFilter = locationType ? { locationType } : {}
+
+	const addressList = await db.address.findMany({
+		where: {
+			farmerId: finalFarmerId,
+			...locationTypeFilter
+		},
+		select: {
+			id: true,
+			fullAddress: true,
+			latitude: true,
+			longitude: true,
+			label: true,
+			locationType: true,
+			contactName: true,
+			contactNumber: true,
+			note: true,
+			isDefault: true
+		}
+	})
+
+	const shapedAddressList =
+		addressList.length > 0
+			? addressList.map((address) => ({
+					id: address.id || "",
+					fullAddress: address.fullAddress || "",
+					latitude: address.latitude || 0,
+					longitude: address.longitude || 0,
+					label: address.label || "",
+					locationType: address.locationType || "",
+					contactName: address.contactName || "",
+					contactNumber: address.contactNumber || "",
+					note: address.note || "",
+					isDefault: address.isDefault || false
 				}))
 			: []
 
