@@ -102,7 +102,6 @@ export function DataTable({ data }: DataTableProps) {
 		table.resetRowSelection()
 		table.resetPagination()
 	}, [table])
-	console.log("farmers:", farmers)
 	return (
 		<>
 			<div className="mb-4 flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">

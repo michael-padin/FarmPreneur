@@ -65,8 +65,6 @@ export default function EditFarmerProfileForm({
 		}
 	})
 
-	console.log("farmerProfile :>> ", form.watch())
-
 	const onSubmit = (values: EditFarmerProfileSchema) => {
 		startTransition(async () => {
 			const finalCoverPhoto = await processMediaUpdate({
