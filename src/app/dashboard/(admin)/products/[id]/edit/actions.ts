@@ -1,14 +1,14 @@
 "use server"
-import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
-import { updateProductSchema, UpdateProductSchema } from "./validations"
 import { getCategoryBySlug } from "@/data-access/categories"
-import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/handle-error"
+import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
+import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
 import {
 	getProductByIdUseCase,
 	updateProductUseCase
 } from "@/use-cases/products"
-import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
+import { revalidatePath } from "next/cache"
+import { updateProductSchema, UpdateProductSchema } from "./validations"
 
 export const adminUpdateProduct = async (
 	data: UpdateProductSchema & {
@@ -79,6 +79,7 @@ export const adminUpdateProduct = async (
 		revalidatePath("/dashboard/products")
 		return { error: null }
 	} catch (error) {
+		console.log("error :>> ", error)
 		return { error: getErrorMessage(error) }
 	}
 }

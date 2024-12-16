@@ -586,18 +586,6 @@ export const updateProduct = async (
 			include: { images: true }
 		})
 
-		const existingImageUrls = new Set(
-			existingProduct?.images.map((img) => img.url)
-		)
-		const newImageUrls = new Set(data.images.map((img) => img.url))
-
-		const imagesToDelete = existingProduct?.images.filter(
-			(img) => !newImageUrls.has(img.url)
-		)
-		const imagesToCreate = data.images.filter(
-			(img) => !existingImageUrls.has(img.url)
-		)
-
 		// Update the product
 		const updatedProduct = await tx.product.update({
 			where: { id: data.productId },
@@ -619,19 +607,7 @@ export const updateProduct = async (
 				},
 
 				slug: data.slug,
-				unit: data.unit,
-				images: {
-					deleteMany: {
-						url: { in: imagesToDelete?.map((img) => img.url) }
-					},
-					create: imagesToCreate.map((image) => ({
-						type: "PRODUCT",
-						url: image.url,
-						filename: image.filename,
-						size: image.size,
-						mimeType: image.mimeType
-					}))
-				}
+				unit: data.unit
 			},
 			include: {
 				images: true,
