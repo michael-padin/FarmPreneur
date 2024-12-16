@@ -175,7 +175,11 @@ export function FarmerEditAddressForm({ address }: AddressFormProps) {
 						</FormItem>
 					)}
 				/> */}
-				<Button type="submit" className="w-full" disabled={isPending}>
+				<Button
+					type="submit"
+					className="w-full"
+					disabled={isPending || !form.formState.isDirty}
+				>
 					{isPending ? "Updating..." : "Update"}
 				</Button>
 			</form>
