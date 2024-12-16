@@ -16,7 +16,7 @@ export function BottomNav() {
 	const pathName = usePathname()
 	return (
 		<nav className="fixed bottom-0 left-0 right-0 border-t bg-background md:hidden">
-			<div className="flex justify-between p-3 py-6">
+			<div className="flex justify-between p-3 py-4">
 				{[
 					{ icon: Home, label: "Home", url: "/dashboard/farmer" },
 					{
