@@ -70,7 +70,7 @@ export const revalidatePathFromNotifications = async (
 ) => {
 	switch (type) {
 		case "ORDER_STATUS":
-			revalidatePath("/dashboard/farmer/orders")
+			revalidatePath("/dashboard/orders")
 			revalidatePath("/dashboard/farmer/orders")
 			revalidatePath("/orders")
 			break
