@@ -22,7 +22,7 @@ export function ViewCancellation({ reason }: { reason: string }) {
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant={"outline"} size={"sm"}>
-					View Cancellation Reason
+					Reason
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>

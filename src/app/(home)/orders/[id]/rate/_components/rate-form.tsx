@@ -1,12 +1,10 @@
 "use client"
 
+import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
 import { Button } from "@/components/ui/button"
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
 	Form,
 	FormControl,
@@ -21,21 +19,23 @@ import { Textarea } from "@/components/ui/textarea"
 import { rateOrder } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { formatPHP } from "@/lib/utils"
-import { getCustomerOrderItemsUseCase } from "@/use-cases/orders"
+import { getCustomerUnReviewedOrderUseCase } from "@/use-cases/orders"
+import { processMediaUpdate } from "@/utils/media"
+import { mediaFileSchema } from "@/validations/media"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Star } from "lucide-react"
+import { MapPin, PhoneCall, Star } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
-import { formatPhoneNumber } from "react-phone-number-input"
 import { toast } from "sonner"
 import { z } from "zod"
 
 const ratingSchema = z.object({
 	review: z.string().optional(),
 	rate: z.number().min(1, { message: "Please select a rating" }).max(5),
-	productId: z.string()
+	productId: z.string(),
+	images: z.array(mediaFileSchema).optional()
 })
 
 const ratingsSchema = z.object({
@@ -43,10 +43,12 @@ const ratingsSchema = z.object({
 })
 export function RateForm({
 	orderId,
-	orderItems
+	userId,
+	order
 }: {
-	orderItems: Awaited<ReturnType<typeof getCustomerOrderItemsUseCase>>
+	order: Awaited<ReturnType<typeof getCustomerUnReviewedOrderUseCase>>
 	orderId: string
+	userId: string
 }) {
 	const [hoveredRatings, setHoveredRatings] = useState<{
 		[key: string]: number
@@ -57,7 +59,7 @@ export function RateForm({
 	const form = useForm<z.infer<typeof ratingsSchema>>({
 		resolver: zodResolver(ratingsSchema),
 		defaultValues: {
-			ratings: orderItems.map((item) => ({
+			ratings: order.items.map((item) => ({
 				productId: item.productId
 			}))
 		}
@@ -95,9 +97,28 @@ export function RateForm({
 	}
 	const onSubmit = (data: z.infer<typeof ratingsSchema>) => {
 		startTransition(async () => {
+			const newRatings = await Promise.all(
+				data.ratings.map(async (rating) => {
+					const finalReviewImages = await processMediaUpdate({
+						currentFiles: [],
+						newFiles: rating.images ?? [],
+						userId: userId,
+						path: "review-images"
+					})
+
+					return {
+						...rating,
+						images:
+							finalReviewImages.length > 0
+								? finalReviewImages.map((file) => file.url)
+								: []
+					}
+				})
+			)
+
 			const { error } = await rateOrder({
 				orderId,
-				ratings: data.ratings
+				ratings: newRatings
 			})
 			if (error) {
 				showErrorToast(error)
@@ -115,29 +136,63 @@ export function RateForm({
 		<div>
 			<Form {...form}>
 				<div className="relative w-full">
-					<Card className="relative mb-2 w-full border-none bg-background">
-						<CardHeader className="p-3">
-							<CardTitle className="text-primary">
-								{orderItems[0].farmerName}
-							</CardTitle>
-							<CardDescription>
-								<a
-									href={`tel:${formatPhoneNumber(orderItems[0].farmerContact)}`}
-								>
-									{formatPhoneNumber(orderItems[0].farmerContact)}
-								</a>
-							</CardDescription>
-						</CardHeader>
+					<Card>
+						<CardContent className="p-2">
+							<div className="rounded-lg text-muted-foreground">
+								<div className="flex justify-between">
+									<div className="flex items-center gap-2">
+										<Image
+											src={order.farmer.profilePicture || "/placeholder.svg"}
+											alt={`${order.farmer.farmName}'s Profile picture`}
+											width={30}
+											height={30}
+											className="rounded-full"
+										/>
+										<h2 className="font-semibold text-foreground">
+											{order.farmer.farmName}
+										</h2>
+										{/* <ChevronRight className="h-4 w-4" /> */}
+									</div>
+								</div>
+								<div className="my-2 space-y-2 text-sm">
+									{order.farmer.contactNumber && (
+										<div className="flex items-center gap-2">
+											<PhoneCall className="h-4 w-4" />
+											<FPContactNumberDisplay
+												contactNumber={order.farmer.contactNumber}
+											/>
+										</div>
+									)}
+									<div className="flex items-center gap-2">
+										<MapPin className="h-5 w-5" />
+										<div>
+											<span className="">
+												{order.farmer.address?.fullAddress}
+											</span>
+
+											<AddressDetailsDrawerDialog
+												address={{
+													fullAddress: order.farmer.address?.fullAddress || "",
+													longitude: order.farmer.address?.longitude || 0,
+													latitude: order.farmer.address?.latitude || 0
+												}}
+												title={`${order.farmer.farmName}'s Location`}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</CardContent>
 					</Card>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<fieldset className="space-y-2" disabled={isPending}>
-							{orderItems.map((item, index) => (
+						<fieldset className="mt-2 space-y-2" disabled={isPending}>
+							{order.items.map((item, index) => (
 								<div
 									key={item.productId}
 									className="space-y-4 rounded-lg bg-background p-2"
 								>
 									<div key={item.productId} className="flex gap-4">
-										<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+										<div className="relative h-16 w-16 overflow-hidden rounded-lg border">
 											<Image
 												src={item.image}
 												alt={item.name}
@@ -200,6 +255,25 @@ export function RateForm({
 											</FormItem>
 										)}
 									/>
+
+									<FormField
+										control={form.control}
+										name={`ratings.${index}.images`}
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Review Image</FormLabel>
+												<FormControl>
+													<FPMediaUploader
+														onChange={field.onChange}
+														initialMedia={[]}
+														maxFiles={5}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
 									<FormField
 										control={form.control}
 										name={`ratings.${index}.review`}

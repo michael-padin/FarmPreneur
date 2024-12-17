@@ -100,9 +100,9 @@ export function FPMediaUploader({
 				/>
 			) : (
 				<div
-					className={`flex items-center justify-center bg-gray-100 ${mediaClassName}`}
+					className={`flex items-center justify-center bg-muted ${mediaClassName}`}
 				>
-					<FileIcon className="h-8 w-8 text-gray-400" />
+					<FileIcon className="h-8 w-8 bg-muted-foreground" />
 				</div>
 			)}
 			<Button
@@ -120,12 +120,14 @@ export function FPMediaUploader({
 	const renderDropZone = () => (
 		<div
 			{...getRootProps()}
-			className={`flex cursor-pointer items-center justify-center bg-gray-100 ${mediaClassName} ${
-				isDragActive ? "border-2 border-dashed border-blue-500 bg-blue-50" : ""
+			className={`flex cursor-pointer items-center justify-center border-2 border-dashed ${mediaClassName} ${
+				isDragActive
+					? "border-2 border-dashed border-primary bg-green-50 text-primary"
+					: "text-muted-foreground"
 			}`}
 		>
 			<input {...getInputProps()} />
-			<Plus className="h-8 w-8 text-gray-400" />
+			<Plus className="h-8 w-8" />
 			<span className="sr-only">{dropzoneText}</span>
 		</div>
 	)

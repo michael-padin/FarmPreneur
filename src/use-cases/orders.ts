@@ -159,6 +159,7 @@ export const getCustomerOrderItemsUseCase = async (filter: {
 						},
 						farmer: {
 							select: {
+								profilePicture: true,
 								contactNumber: true,
 								farmName: true,
 								farmImages: {
@@ -184,8 +185,7 @@ export const getCustomerOrderItemsUseCase = async (filter: {
 			name: item.product.title,
 			unit: item.product.unit || "kg",
 			farmerContact: item.product.farmer?.contactNumber || "",
-
-			farmerImage: item.product.farmer?.farmImages[0].url || "",
+			profilePicture: item.product.farmer?.profilePicture || "",
 			farmerName: item.product.farmer?.farmName || ""
 		}))
 		return shapedOrderItems
@@ -205,29 +205,35 @@ export const getCustomerUnReviewedOrderUseCase = async (filter: {
 
 		if (!customerId) throw new Error("Customer not found")
 
-		const orderItems = await db.orderItem.findMany({
+		const order = await db.order.findFirst({
 			where: {
-				orderId: filter.orderId
+				id: filter.orderId
 			},
 			include: {
-				product: {
+				items: {
 					select: {
-						unit: true,
-						title: true,
-						images: {
+						product: {
 							select: {
-								url: true
+								id: true,
+								price: true,
+								unit: true,
+								title: true,
+								quantity: true,
+								productImages: true
 							}
-						},
-						farmer: {
+						}
+					}
+				},
+				farmer: {
+					select: {
+						farmName: true,
+						contactNumber: true,
+						profilePicture: true,
+						address: {
 							select: {
-								contactNumber: true,
-								farmName: true,
-								farmImages: {
-									select: {
-										url: true
-									}
-								}
+								fullAddress: true,
+								latitude: true,
+								longitude: true
 							}
 						}
 					}
@@ -235,21 +241,30 @@ export const getCustomerUnReviewedOrderUseCase = async (filter: {
 			}
 		})
 
-		if (!orderItems) throw new Error("Order not found")
+		if (!order) throw new Error("Order not found")
 
-		const shapedOrderItems = orderItems.map((item) => ({
-			orderId: item.orderId,
-			productId: item.productId,
-			quantity: item.quantity,
-			price: item.price,
-			image: item.product.images[0].url,
+		const shapedOrderItems = order.items.map((item) => ({
+			productId: item.product.id,
+			quantity: item.product.price,
+			price: item.product.price,
+			image: item.product.productImages[0],
 			name: item.product.title,
-			unit: item.product.unit || "kg",
-			farmerContact: item.product.farmer?.contactNumber || "",
-			farmerImage: item.product.farmer?.farmImages?.[0].url || "",
-			farmerName: item.product.farmer?.farmName || ""
+			unit: item.product.unit || "kg"
 		}))
-		return shapedOrderItems
+		return {
+			orderId: filter.orderId,
+			items: shapedOrderItems,
+			farmer: {
+				contactNumber: order.farmer?.contactNumber || "",
+				profilePicture: order.farmer?.profilePicture || "",
+				farmName: order.farmer?.farmName || "",
+				address: {
+					fullAddress: order.farmer.address[0].fullAddress || "",
+					longitude: order.farmer.address[0].longitude,
+					latitude: order.farmer.address[0].latitude
+				}
+			}
+		}
 	} catch (error) {
 		console.error(error)
 		throw error

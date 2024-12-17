@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { getCustomerUnReviewedOrderUseCase } from "@/use-cases/orders"
 import { RateForm } from "./rate-form"
 
@@ -5,13 +6,14 @@ type Params = Promise<{ id: string }>
 export const experimental_ppr = true
 export async function RateFormWrapper({ params }: { params: Params }) {
 	const id = (await params).id
-	const orderItems = await getCustomerUnReviewedOrderUseCase({
+	const userId = (await auth())?.user.id || ""
+	const order = await getCustomerUnReviewedOrderUseCase({
 		orderId: id
 	})
 
-	if (!orderItems.length) {
-		return <div>No items in order</div>
+	if (!order) {
+		return <div>No order found</div>
 	}
 
-	return <RateForm orderItems={orderItems} orderId={id} />
+	return <RateForm order={order} orderId={id} userId={userId} />
 }

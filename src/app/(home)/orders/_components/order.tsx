@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getCustomerOrdersUseCase } from "@/use-cases/orders"
 import { MapPin, PhoneCall } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { Fragment } from "react"
 import { CancelOrder } from "./cancel-order"
@@ -24,6 +25,13 @@ export default function Order({
 				<div className="rounded-lg bg-muted p-2 text-muted-foreground">
 					<div className="flex justify-between">
 						<div className="flex items-center gap-2">
+							<Image
+								src={order.farmer?.profilePicture || "/placeholder.svg"}
+								alt={`${order.farmer?.farmName}'s Profile picture`}
+								width={30}
+								height={30}
+								className="rounded-full"
+							/>
 							<h2 className="font-semibold text-foreground">
 								{order.farmer?.farmName}
 							</h2>
@@ -94,18 +102,19 @@ export default function Order({
 									</Link>
 								</Button>
 							)}
-						{/* {order.status === "COMPLETED" &&
+						{order.status === "COMPLETED" &&
 							order.subStatus === "BUYER_REVIEWED" && (
 								<Button
-									asChild
+									// asChild
+									// onClick={() => toast.info("Coming soon...")}
 									className="flex items-center"
 									variant={"outline"}
 								>
-									<Link href={`/orders/${order.id}/rate`} prefetch>
-										View Rating
-									</Link>
+									{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
+									View Rating
+									{/* </Link> */}
 								</Button>
-							)} */}
+							)}
 					</div>
 				</div>
 			</CardContent>

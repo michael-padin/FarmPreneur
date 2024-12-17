@@ -28,7 +28,7 @@ export function ViewCancellation({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"}>View Cancellation Reason</Button>
+				<Button variant={"outline"}>Reason</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">

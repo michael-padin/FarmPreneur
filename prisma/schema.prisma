@@ -230,7 +230,7 @@ model ProductReview {
   productId      String       @db.ObjectId
   customer       Customer?    @relation(fields: [customerId], references: [id])
   customerId     String?      @db.ObjectId
-  images         Image[]
+  images         String[]
 
   @@index([productId, status])
   @@index([createdAt])
@@ -258,7 +258,6 @@ model Image {
   reviewId             String?               @db.ObjectId
   productId            String?               @db.ObjectId
   product              Product?              @relation(fields: [productId], references: [id])
-  review               ProductReview?        @relation(fields: [reviewId], references: [id])
   user                 User?
   VerificationDocument VerificationDocument?
   category             Category?

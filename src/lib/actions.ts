@@ -1052,6 +1052,7 @@ export async function rateOrder(payload: {
 	ratings: {
 		rate: number
 		review?: string
+		images: string[]
 		productId: string
 	}[]
 }) {
@@ -1079,6 +1080,7 @@ export async function rateOrder(payload: {
 				ratings.map(async (rating) => {
 					await tx.productReview.create({
 						data: {
+							images: rating.images,
 							rating: rating.rate,
 							comment: rating.review,
 							status: "PUBLISHED",

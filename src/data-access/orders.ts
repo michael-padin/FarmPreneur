@@ -293,6 +293,7 @@ export const getCustomerOrders = async (filter: {
 			},
 			farmer: {
 				select: {
+					profilePicture: true,
 					contactNumber: true,
 					farmName: true,
 					id: true

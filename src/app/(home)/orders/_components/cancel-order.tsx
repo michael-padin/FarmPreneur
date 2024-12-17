@@ -65,7 +65,7 @@ export function CancelOrder({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"}>{"Cancel"} Order</Button>
+				<Button variant={"outline"}>Cancel</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
@@ -87,7 +87,6 @@ export function CancelOrder({
 												<Textarea
 													placeholder="Your cancellation reason"
 													{...field}
-													autoFocus
 												/>
 											</FormControl>
 											<FormMessage />
@@ -99,13 +98,7 @@ export function CancelOrder({
 									disabled={isPending}
 									variant={"outline"}
 								>
-									{status === "PENDING"
-										? isPending
-											? "declining..."
-											: "Decline Order"
-										: isPending
-											? "Cancelling..."
-											: "Cancel Order"}
+									{status === "PENDING" ? "Submitting..." : "Submit"}
 								</Button>
 							</fieldset>
 						</form>
