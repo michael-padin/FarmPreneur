@@ -71,7 +71,7 @@ export function CustomerEditAddressForm({ address }: AddressFormProps) {
 			toast.success("Address updated successfully", {
 				position: "top-right"
 			})
-			router.push("/profile/address")
+			router.back()
 		})
 	}
 

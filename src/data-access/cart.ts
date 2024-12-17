@@ -11,6 +11,7 @@ export const getCartById = async (id: string) => {
 							images: true,
 							farmer: {
 								select: {
+									profilePicture: true,
 									farmName: true,
 									id: true,
 									contactNumber: true,

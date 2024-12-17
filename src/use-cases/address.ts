@@ -86,6 +86,44 @@ export const getAddressById = async (id: string) => {
 		contactNumber: address?.contactNumber || ""
 	}
 }
+export const getDefaultAddressByCustomerId = async (customerId?: string) => {
+	const session = await auth()
+
+	let newCustomerId = session?.user.customerId
+	if (!newCustomerId) {
+		newCustomerId = customerId
+	}
+
+	const address = await db.address.findFirst({
+		where: {
+			AND: [{ customerId: newCustomerId }, { isDefault: true }]
+		},
+		include: {
+			customer: {
+				include: {
+					user: true
+				}
+			}
+		}
+	})
+
+	if (!address) {
+		return null
+	}
+
+	return {
+		note: address.note || "",
+		label: address.label || "",
+		id: address.id,
+		contactNumber: address.contactNumber || "",
+		fullAddress: address.fullAddress || "",
+		isDefault: address.isDefault || false,
+		contactName: address.contactName || "",
+		latitude: address.latitude || 0,
+		longitude: address.longitude || 0,
+		locationType: address.locationType || ""
+	}
+}
 
 export const getCustomerAddressListUseCase = async (customerId?: string) => {
 	const session = await auth()

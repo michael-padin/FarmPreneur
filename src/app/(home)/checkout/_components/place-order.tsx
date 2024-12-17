@@ -44,15 +44,16 @@ export function PlaceOrder({
 	return (
 		<form
 			action={() => {
-				if (validateCheckout?.()) {
-					formActionsWithData()
+				if (!validateCheckout?.()) {
+					toast.error("Please add contact information", {
+						closeButton: true,
+						duration: 2000,
+						position: "top-right"
+					})
 					return
 				}
-				toast.error("Please select a pickup location", {
-					closeButton: true,
-					duration: 2000,
-					position: "top-right"
-				})
+				formActionsWithData()
+				return
 			}}
 		>
 			<Button className="w-full" size="lg" disabled={isPending}>

@@ -32,8 +32,8 @@ export function DeleteAddress({ id }: { id: string }) {
 			toast.success("Address deleted successfully", {
 				position: "top-right"
 			})
-			router.push("/profile/address")
 			setIsOpen(false)
+			router.back()
 		})
 	}
 

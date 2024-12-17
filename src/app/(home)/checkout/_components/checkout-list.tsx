@@ -1,26 +1,29 @@
 "use client"
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
+import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from "@/components/ui/select"
+import { locationLabelMap, LocationType } from "@/constants/address"
 import { formatPHP } from "@/lib/utils"
 import { CartState } from "@/types/cart"
-import { ChevronRight } from "lucide-react"
+import { getDefaultAddressByCustomerId } from "@/use-cases/address"
+import { MapPin } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { Fragment, useState } from "react"
+import { formatPhoneNumber } from "react-phone-number-input"
 import { PlaceOrder } from "./place-order"
 
 export default function CartCheckOutList({
-	checkoutData
+	checkoutData,
+	defaultCustomerAddress
 }: {
 	checkoutData: CartState
+	defaultCustomerAddress: Awaited<
+		ReturnType<typeof getDefaultAddressByCustomerId>
+	>
 }) {
 	const [newCheckoutData, setNewCheckoutData] =
 		useState<CartState>(checkoutData)
@@ -28,17 +31,21 @@ export default function CartCheckOutList({
 	const [pickupLocationId, setPickupLocationId] = useState<string>("")
 
 	const validateCheckout = () => {
-		const newErrors = {} as Record<number, boolean>
+		// const newErrors = {} as Record<number, boolean>
 
-		newCheckoutData.groupedItems.forEach((group, index) => {
-			if (!group.pickupLocationId) {
-				newErrors[index] = true
-			}
-		})
+		// newCheckoutData.groupedItems.forEach((group, index) => {
+		// 	if (!group.pickupLocationId) {
+		// 		newErrors[index] = true
+		// 	}
+		// })
 
-		setErrors(newErrors)
+		// setErrors(newErrors)
 
-		if (Object.keys(newErrors).length > 0) {
+		// if (Object.keys(newErrors).length > 0) {
+		// 	return false
+		// }
+
+		if (!defaultCustomerAddress) {
 			return false
 		}
 
@@ -48,23 +55,114 @@ export default function CartCheckOutList({
 	return (
 		<>
 			<ScrollArea className="flex-1 p-2">
-				<div className="space-y-4 lg:container">
+				<div className="space-y-2 lg:container">
+					<Card className="border-none bg-background">
+						<CardContent className="w-full space-y-2 p-2">
+							{defaultCustomerAddress ? (
+								<div className="flex justify-between">
+									<div className="flex flex-grow">
+										<MapPin className="mr-2 mt-1 h-4 w-4 text-primary" />
+										<div className="">
+											<Label
+												htmlFor={`address-${defaultCustomerAddress.id}`}
+												className="flex items-center text-base font-semibold"
+											>
+												{
+													locationLabelMap[
+														defaultCustomerAddress.label as LocationType
+													]
+												}
+											</Label>
+											<div className="space-y-2">
+												<p className="text-sm text-muted-foreground">
+													{defaultCustomerAddress.fullAddress}
+												</p>
+												<div className="">
+													<p className="text-sm">
+														{defaultCustomerAddress?.contactName}
+													</p>
+													<p className="text-sm text-muted-foreground">
+														{formatPhoneNumber(
+															defaultCustomerAddress.contactNumber as string
+														)}
+													</p>
+												</div>
+												{/* <p className="text-sm">
+												Note:{" "}
+												<span className="text-muted-foreground">
+													{defaultCustomerAddress.note}
+												</span>
+											</p> */}
+											</div>
+										</div>
+									</div>
+									<Link href={`/profile/address`} className="text-primary">
+										<span className="">Edit</span>
+									</Link>
+								</div>
+							) : (
+								<Button variant={"outline"} asChild className="w-full">
+									<Link href="/profile/address?from=cart" prefetch>
+										Add contact info
+									</Link>
+								</Button>
+							)}
+						</CardContent>
+					</Card>
 					{checkoutData?.groupedItems?.map((group, index) => (
 						<Card key={group.farmer.id} className="border-none bg-background">
-							<CardContent className="w-full space-y-2 p-4">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<h2 className="text-lg font-semibold">
-											{group.farmer.name}
-										</h2>
-										<ChevronRight className="h-4 w-4" />
+							<CardContent className="w-full space-y-2 p-2">
+								<div className="rounded-lg bg-muted p-2 text-muted-foreground">
+									<div className="flex justify-between">
+										<div className="flex items-center gap-2">
+											<Image
+												src={group.farmer?.profilePicture || "/placeholder.svg"}
+												alt={group.farmer?.name}
+												width={30}
+												height={30}
+												className="rounded-full"
+											/>
+											<h2 className="font-semibold text-foreground">
+												{group.farmer?.name}
+											</h2>
+											{/* <ChevronRight className="h-4 w-4" /> */}
+										</div>
+									</div>
+									<div className="my-2 space-y-2 text-sm">
+										<div className="flex gap-2">
+											<MapPin className="mt-1 h-4 w-4 text-primary" />
+											<div>
+												<span className="">
+													{group?.farmer.addresses[0]?.fullAddress}
+												</span>
+
+												<AddressDetailsDrawerDialog
+													address={{
+														fullAddress:
+															group?.farmer.addresses[0]?.fullAddress,
+														longitude:
+															group?.farmer.addresses[0]?.longitude || 0,
+														latitude: group?.farmer.addresses[0]?.latitude || 0
+													}}
+													title={`${group.farmer?.name}'s Farm Location`}
+												/>
+											</div>
+										</div>
+										{group.farmer?.contactNumber && (
+											<div className="flex items-center gap-2">
+												<div className="h-4 w-4 text-primary" />
+												<FPContactNumberDisplay
+													contactNumber={group.farmer?.contactNumber}
+												/>
+											</div>
+										)}
 									</div>
 								</div>
 								<div className="mb-2 flex items-center justify-between text-sm">
 									<div className="w-full">
 										<div className="flex justify-between">
 											<div className="w-full">
-												<Select
+												{/* <Select
 													onValueChange={(value) => {
 														setNewCheckoutData((prev) => {
 															return {
@@ -131,7 +229,7 @@ export default function CartCheckOutList({
 															</SelectItem>
 														)}
 													</SelectContent>
-												</Select>
+												</Select> */}
 												{pickupLocationId && (
 													<AddressDetailsDrawerDialog
 														address={

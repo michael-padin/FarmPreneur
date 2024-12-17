@@ -81,7 +81,7 @@ export default function EditCustomerProfileForm({
 				showErrorToast(error)
 			} else {
 				toast.success("Profile updated successfully")
-				router.push("/profile")
+				router.back()
 			}
 		})
 	}

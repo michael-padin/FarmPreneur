@@ -679,6 +679,8 @@ export async function createCustomerAddress(
 			}
 		})
 
+		revalidatePath("/profile/address")
+		revalidatePath("/checkout")
 		return { success: true, error: null }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
@@ -726,7 +728,8 @@ export async function editCustomerAddress(
 				isDefault: data.isDefault || false
 			}
 		})
-
+		revalidatePath("/profile/address")
+		revalidatePath("/checkout")
 		return { success: true, error: null }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
@@ -820,6 +823,7 @@ export const deleteAddress = async (addressId: string) => {
 		})
 
 		revalidatePath("/profile/address")
+		revalidatePath("/checkout")
 		revalidatePath("/dashboard/farmer/profile/address")
 		return { success: true, error: null }
 	} catch (error) {

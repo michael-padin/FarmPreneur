@@ -93,6 +93,7 @@ export const getProductById = async (id: string) => {
 		include: {
 			farmer: {
 				select: {
+					profilePicture: true,
 					farmName: true,
 					id: true,
 					contactNumber: true,

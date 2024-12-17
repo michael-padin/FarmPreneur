@@ -70,7 +70,7 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 			toast.success("Address added successfully", {
 				position: "top-right"
 			})
-			router.push("/profile/address")
+			router.back()
 		})
 	}
 
@@ -137,7 +137,7 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Label </FormLabel>
-							<Select onValueChange={field.onChange} defaultValue="home">
+							<Select onValueChange={field.onChange} value={field.value}>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder="Home" className="text-muted" />

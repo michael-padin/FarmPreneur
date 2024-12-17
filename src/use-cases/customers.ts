@@ -133,6 +133,7 @@ export const getCheckoutDataUseCase = async (
 					image: product.images[0].url,
 					unit: product.unit as UnitKey,
 					farmer: {
+						profilePicture: product.farmer!.profilePicture || "",
 						id: product.farmer!.id,
 						name: product.farmer!.farmName || "",
 						contactNumber: product.farmer!.contactNumber || "",
@@ -191,6 +192,7 @@ export const getCheckoutDataUseCase = async (
 			image: item.product.images[0].url,
 			unit: item.product.unit as UnitKey,
 			farmer: {
+				profilePicture: item.product.farmer!.profilePicture || "",
 				id: item.product.farmer!.id,
 				name: item.product.farmer!.farmName || "",
 				contactNumber: item.product.farmer!.contactNumber || "",

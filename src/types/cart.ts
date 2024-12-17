@@ -10,6 +10,7 @@ export interface Product {
 export interface Farmer {
 	id: string
 	name: string
+	profilePicture?: string
 	contactNumber: string
 	addresses: Address[]
 }
