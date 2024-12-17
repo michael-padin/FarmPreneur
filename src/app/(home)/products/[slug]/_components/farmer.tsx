@@ -1,8 +1,9 @@
+import { Button } from "@/components/ui/button"
 import { abbreviateNumber } from "@/lib/utils"
 import { getFarmerInfoInProductDetailsUseCase } from "@/use-cases/farmers"
 import { MapPin } from "lucide-react"
 import Image from "next/image"
-import { Visit } from "./visit"
+import Link from "next/link"
 
 interface FarmerProps {
 	farmerId: string
@@ -63,7 +64,10 @@ export async function Farmer({ farmerId }: FarmerProps) {
 						</div>
 					</div>
 					<div className="flex h-full items-end">
-						<Visit />
+						<Button className="" variant={"outline"} size={"sm"} asChild>
+							{/* <Button className="" variant={"outline"} asChild size={"sm"}> */}
+							<Link href={`/farmers/${farmer.id}`}>Visit</Link>
+						</Button>
 					</div>
 				</div>
 			</div>

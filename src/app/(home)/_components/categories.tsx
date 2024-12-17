@@ -12,7 +12,7 @@ export default async function Categories() {
 					<Link
 						key={category.id}
 						className="inline-block h-full w-full first:pl-2 last:pr-2"
-						href={`/products/categories/${category.slug}`}
+						href={`/products?search=${category.name}`}
 					>
 						<CategoryCard
 							description={category.description || ""}

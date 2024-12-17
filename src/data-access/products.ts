@@ -390,6 +390,91 @@ export const getProductsOnProductListPage = async (filters: {
 		}
 	})
 }
+// this query is on the product list page - /products
+export const getFarmerProductLists = async (filters: {
+	search?: string
+	sortBy?: ProductSort
+	farmerId?: string
+}) => {
+	const {
+		farmerId,
+		search,
+		// category,
+		// rating,
+		// minPrice,
+		// maxPrice,
+		sortBy
+		// page = 1,
+		// limit = 20
+	} = filters
+
+	// Define sorting logic
+	const sortOptions: Record<string, any> = {
+		relevance: [
+			{ title: "desc" } // Boost popular products
+			// { title: { contains: search || "", mode: "insensitive" } }, // Partial match on title
+			// { description: { contains: search || "", mode: "insensitive" } } // Partial match on description
+		],
+		latest: { createdAt: "desc" },
+		topSales: { sales: "desc" },
+		priceLowToHigh: { price: "asc" },
+		priceHighToLow: { price: "desc" }
+	}
+
+	return await db.product.findMany({
+		where: {
+			AND: [
+				search
+					? {
+							OR: [
+								{ title: { contains: search, mode: "insensitive" } },
+								{ description: { contains: search, mode: "insensitive" } },
+								{
+									category: { name: { contains: search, mode: "insensitive" } }
+								}
+							],
+							...(farmerId ? { farmerId } : {}),
+							listingStatus: "APPROVED"
+						}
+					: { listingStatus: "APPROVED", ...(farmerId ? { farmerId } : {}) }
+			]
+		},
+		orderBy:
+			sortBy === "relevance"
+				? sortOptions.relevance
+				: sortOptions[sortBy || "latest"],
+
+		include: {
+			farmer: {
+				select: {
+					user: {
+						select: {
+							name: true,
+							email: true
+						}
+					}
+				}
+			},
+			orderItem: {
+				include: {
+					order: {
+						select: {
+							status: true
+						}
+					}
+				}
+			},
+			images: true,
+			category: true,
+			_count: {
+				select: {
+					reviews: true
+				}
+			},
+			reviews: true
+		}
+	})
+}
 
 // this query is on the home page for daily products - /
 export const getDailyProducts = async (address?: Address) => {
