@@ -23,6 +23,7 @@ import {
 	getTotalProductsByDate,
 	updateProduct
 } from "@/data-access/products"
+import { db } from "@/lib/db"
 import { Address, ProductListingStatus } from "@prisma/client"
 
 export const createProductUseCase = async (
@@ -223,6 +224,46 @@ export const createProductFromAdminUseCase = async (
 	return await createProductFromAdmin(data)
 }
 
+export const getProductReviews = async (productId: string) => {
+	const average = await db.productReview.aggregate({
+		where: {
+			productId
+		},
+		_avg: {
+			rating: true
+		},
+		_count: {
+			_all: true
+		}
+	})
+	const reviews = await db.productReview.findMany({
+		where: {
+			productId
+		},
+		include: {
+			customer: {
+				select: {
+					name: true,
+					profilePicture: true,
+					user: {
+						select: {
+							name: true
+						}
+					}
+				}
+			}
+		},
+		orderBy: {
+			createdAt: "desc"
+		}
+	})
+
+	return {
+		averageRating: average._avg.rating,
+		totalReviews: average._count._all,
+		reviews: reviews
+	}
+}
 export const getProductBySlugUseCase = async (slug: string) => {
 	if (!slug) throw new Error("No slug provided")
 

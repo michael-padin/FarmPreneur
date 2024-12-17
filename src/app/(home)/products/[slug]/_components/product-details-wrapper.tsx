@@ -1,10 +1,14 @@
 import { QuantityProvider } from "@/contexts/quantity-context"
-import { getProductBySlugUseCase } from "@/use-cases/products"
+import {
+	getProductBySlugUseCase,
+	getProductReviews
+} from "@/use-cases/products"
 import { notFound } from "next/navigation"
 import ProductBottomNav from "./bottom-nav"
 import { Farmer } from "./farmer"
 import { Gallery } from "./gallery"
 import { ProductDetails } from "./product-details"
+import Reviews from "./reviews"
 
 type Params = Promise<{ slug: string }>
 
@@ -16,6 +20,8 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 		notFound()
 	}
 	const product = await getProductBySlugUseCase(slug)
+
+	const reviews = await getProductReviews(product.id)
 
 	if (!product) {
 		notFound()
@@ -33,6 +39,9 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 				</div>
 				<div className="bg-background p-4">
 					<Farmer farmerId={product.farmer.id} />
+				</div>
+				<div className="bg-background p-4">
+					<Reviews reviews={reviews} />
 				</div>
 			</div>
 			<ProductBottomNav product={product} />

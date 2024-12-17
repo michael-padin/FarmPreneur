@@ -16,7 +16,7 @@ export default async function Categories() {
 					>
 						<CategoryCard
 							description={category.description || ""}
-							imageUrl={category.image?.url || "/placeholder.svg"}
+							imageUrl={category.image || "/placeholder.svg"}
 							title={category.name}
 						/>
 					</Link>
