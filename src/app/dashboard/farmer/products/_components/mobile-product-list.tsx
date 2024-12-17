@@ -1,4 +1,4 @@
-import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
+import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader } from "@/components/ui/card"
 import { UnitKey, UNITS_MAP } from "@/constants/unit"
@@ -35,7 +35,7 @@ export async function FarmerProductList() {
 									<div className="flex items-center justify-between gap-2">
 										<h2 className="truncate font-semibold">{product.title}</h2>
 										<div className="flex items-center">
-											<OrderStatusBadge
+											<ProductListingStatusBadge
 												status={product.listingStatus}
 												showText
 											/>
