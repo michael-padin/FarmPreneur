@@ -12,6 +12,8 @@ import {
 	VisibilityState
 } from "@tanstack/react-table"
 
+import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
+import { Input } from "@/components/ui/input"
 import {
 	Table,
 	TableBody,
@@ -21,10 +23,19 @@ import {
 	TableRow
 } from "@/components/ui/table"
 import { use, useCallback, useState } from "react"
-import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
-import { Input } from "@/components/ui/input"
 
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { getCommonPinningStyles } from "@/lib/data-table"
+import { getCategoriesUseCase } from "@/use-cases/categories"
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import {
 	Calendar,
 	ChevronRight,
@@ -33,19 +44,8 @@ import {
 	Package,
 	RotateCcw
 } from "lucide-react"
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { getCommonPinningStyles } from "@/lib/data-table"
-import { columns } from "./columns"
-import { getCategoriesUseCase } from "@/use-cases/categories"
-import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
-import { Badge } from "@/components/ui/badge"
+import { columns } from "./columns"
 // import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 
@@ -339,11 +339,10 @@ export function DataTable({ data }: DataTableProps) {
 							<div className="flex items-center gap-3 bg-muted p-3">
 								<div className="relative h-16 w-16 flex-shrink-0">
 									<Image
-										src={category.image!.url!}
+										src={category.image || "/placeholder.svg"}
 										alt={category.name}
-										layout="fill"
-										objectFit="cover"
-										className="rounded-md"
+										fill
+										className="rounded-md object-cover"
 									/>
 								</div>
 								<div className="min-w-0 flex-1">

@@ -9,7 +9,7 @@ export const processMediaUpdate = async ({
 }: {
 	currentFiles: MediaFile[] | MediaFile | null
 	newFiles: MediaFile[] | MediaFile | null
-	userId: string
+	userId?: string
 	path: string
 }) => {
 	// Ensure `currentFiles` and `newFiles` are arrays, defaulting to empty arrays if null
@@ -63,7 +63,6 @@ export const processMediaUpdate = async ({
 		Promise.all(
 			filesToUpload.map(async (file) => {
 				const uploadedUrl = await uploadMedia({
-					userId,
 					file: file.file!, // File is guaranteed to exist at this point
 					path
 				})

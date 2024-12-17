@@ -48,7 +48,29 @@ export const createProductUseCase = async (
 }
 
 export const getProductByIdUseCase = async (id: string) => {
-	return await getProductById(id)
+	const foundProduct = await getProductById(id)
+
+	if (!foundProduct) throw new Error("Product not found")
+
+	return {
+		id: foundProduct.id,
+		categoryId: foundProduct.categoryId || "",
+		title: foundProduct.title,
+		slug: foundProduct.slug || "",
+		description: foundProduct.description,
+		farmerId: foundProduct.farmerId || "",
+		listingStatus: foundProduct.listingStatus,
+		price: foundProduct.price,
+		unit: (foundProduct.unit as UnitKey) || "kg",
+		quantity: foundProduct.quantity,
+		productImages:
+			foundProduct?.productImages.map((url) => ({
+				id: Math.random().toString(36).substring(7),
+				url: url || "",
+				type: "image" as "image" | "video",
+				file: null
+			})) || []
+	}
 }
 
 export const getProductByIdFromFarmerUseCase = async (id: string) => {

@@ -1,6 +1,6 @@
 "use client"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 import { FPUnitSelect } from "@/components/fg/fp-select-unit"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -21,11 +21,11 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { PRODUCT_STATUS } from "@/constants/product-status"
-import { S3PATH } from "@/constants/s3-path"
 import { showErrorToast } from "@/lib/handle-error"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { getProductByIdUseCase } from "@/use-cases/products"
+import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ProductListingStatus } from "@prisma/client"
 import { useRouter } from "next/navigation"
@@ -64,7 +64,7 @@ export function AdminEditProductForm({
 			unit: product?.unit || "",
 			quantity: product?.quantity,
 			listingStatus: product?.listingStatus,
-			images: product?.images
+			images: product?.productImages.length > 0 ? product?.productImages : []
 		}
 	})
 	const categoryId = form.watch("categoryId")
@@ -74,9 +74,15 @@ export function AdminEditProductForm({
 
 	const onSubmit = async (data: UpdateProductSchema) => {
 		startUpdateTransition(async () => {
+			const finalProductImages = await processMediaUpdate({
+				currentFiles: product?.productImages,
+				newFiles: data.images,
+				path: "product-images"
+			})
 			const { error } = await adminUpdateProduct({
 				...data,
-				productId: product?.id || ""
+				productId: product?.id || "",
+				images: finalProductImages
 			})
 			if (error) {
 				showErrorToast(error)
@@ -291,12 +297,10 @@ export function AdminEditProductForm({
 							<FormItem>
 								<FormLabel>Product Image</FormLabel>
 								<FormControl>
-									<FileUpload
+									<FPMediaUploader
 										onChange={field.onChange}
-										value={field.value && field.value}
-										path={S3PATH.PRODUCTIMAGES}
-										multiple
 										maxFiles={5}
+										initialMedia={product?.productImages || []}
 									/>
 								</FormControl>
 								<FormDescription>

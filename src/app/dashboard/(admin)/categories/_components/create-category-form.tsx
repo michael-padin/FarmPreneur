@@ -1,3 +1,5 @@
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { Button } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
@@ -6,19 +8,17 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
-import { createCategorySchema, CreateCategorySchema } from "../validation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
-import { S3PATH } from "@/constants/s3-path"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { useTransition } from "react"
 import { showErrorToast } from "@/lib/handle-error"
+import { processMediaUpdate } from "@/utils/media"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
+import { useTransition } from "react"
+import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { createCategory } from "../actions"
+import { createCategorySchema, CreateCategorySchema } from "../validation"
 
 interface CreateCategoryFormProps {
 	setOpen?: React.Dispatch<React.SetStateAction<boolean>>
@@ -32,17 +32,22 @@ export function CreateCategoryForm({ setOpen }: CreateCategoryFormProps) {
 			name: "",
 			description: "",
 			image: {
-				url: "",
-				filename: "",
-				size: 0,
-				mimeType: ""
+				url: ""
 			}
 		}
 	})
 
 	const onSubmit = (data: CreateCategorySchema) => {
 		startTransition(async () => {
-			const { error } = await createCategory(data)
+			const finalCategoryImage = await processMediaUpdate({
+				currentFiles: [],
+				newFiles: data.image,
+				path: "categories"
+			})
+			const { error } = await createCategory({
+				...data,
+				image: finalCategoryImage[0]
+			})
 
 			if (error) {
 				showErrorToast(error)
@@ -91,11 +96,7 @@ export function CreateCategoryForm({ setOpen }: CreateCategoryFormProps) {
 							<FormItem>
 								<FormLabel>Category Image</FormLabel>
 								<FormControl>
-									<FileUpload
-										path={S3PATH.CATEGORIES}
-										{...field}
-										value={field.value}
-									/>
+									<FPMediaUploader {...field} initialMedia={[]} singleImage />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

@@ -112,7 +112,6 @@ export const getProductById = async (id: string) => {
 					}
 				}
 			},
-			images: true,
 			category: true
 		}
 	})
@@ -597,12 +596,6 @@ export const updateProduct = async (
 	data: UpdateProductSchema & { productId: string; slug: string }
 ) => {
 	return await db.$transaction(async (tx) => {
-		// First, fetch the existing product with its images
-		const existingProduct = await tx.product.findUnique({
-			where: { id: data.productId },
-			include: { images: true }
-		})
-
 		// Update the product
 		const updatedProduct = await tx.product.update({
 			where: { id: data.productId },
@@ -611,6 +604,7 @@ export const updateProduct = async (
 				description: data.description,
 				price: data.price,
 				quantity: data.quantity,
+				productImages: { set: data.images.map((image) => image.url) },
 				listingStatus: data.listingStatus,
 				farmer: {
 					connect: {

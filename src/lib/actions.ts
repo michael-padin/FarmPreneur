@@ -1132,13 +1132,13 @@ export async function rateOrder(payload: {
 }
 
 export async function uploadMedia(payload: {
-	userId: string
+	userId?: string
 	file: File | null
 	path: string
 }) {
 	const { userId, file, path } = payload
 	if (file) {
-		const fileName = `${path}/${userId}-${crypto.randomUUID()}-${file.name}`
+		const fileName = `${path}/${crypto.randomUUID()}-${file.name}`
 		const putObjectCommand = new PutObjectCommand({
 			Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
 			Key: fileName,

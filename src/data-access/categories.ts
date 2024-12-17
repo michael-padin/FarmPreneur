@@ -8,8 +8,7 @@ export const getCategories = async () => {
 				select: {
 					products: true
 				}
-			},
-			image: true
+			}
 		}
 	})
 }
@@ -22,15 +21,7 @@ export const createCategory = async (
 			name: data.name,
 			description: data.description,
 			slug: data.slug,
-			image: {
-				create: {
-					url: data.image.url,
-					filename: data.image.filename,
-					size: data.image.size,
-					mimeType: data.image.mimeType,
-					type: "CATEGORY"
-				}
-			}
+			image: data.image?.url
 		}
 	})
 }
@@ -66,14 +57,7 @@ export const updateCategoryById = async (
 		data: {
 			name: data.name,
 			description: data.description,
-			image: {
-				update: {
-					url: data.image.url,
-					filename: data.image.filename,
-					size: data.image.size,
-					mimeType: data.image.mimeType
-				}
-			}
+			image: data.image?.url
 		}
 	})
 }

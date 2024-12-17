@@ -16,7 +16,7 @@ export function CategoryImageCell({ image }: CategoryImageCellProps) {
 				className="relative overflow-hidden rounded-lg"
 			>
 				<Image
-					src={image}
+					src={image || "/placeholder.svg"}
 					alt={"Category Image"}
 					className="object-cover"
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

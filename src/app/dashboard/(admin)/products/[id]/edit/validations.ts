@@ -1,4 +1,4 @@
-import { imageSchema } from "@/validations/image"
+import { mediaFileSchema } from "@/validations/media"
 import { ProductListingStatus } from "@prisma/client"
 import { z } from "zod"
 
@@ -10,7 +10,7 @@ export const updateProductSchema = z.object({
 	price: z.coerce.number().min(1, "Required"),
 	unit: z.string().min(1, "Required"),
 	quantity: z.coerce.number().min(1, "Required"),
-	images: imageSchema.array().min(1, "Required"),
+	images: mediaFileSchema.array().min(1, "Required"),
 	listingStatus: z.nativeEnum(ProductListingStatus)
 })
 

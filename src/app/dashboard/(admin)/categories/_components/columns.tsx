@@ -10,12 +10,12 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { formatDate } from "@/lib/utils"
+import { getCategoriesUseCase } from "@/use-cases/categories"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
-import { formatDate } from "@/lib/utils"
 import { useState } from "react"
 import { toast } from "sonner"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { CategoryImageCell } from "./category-image-cell"
 import { DeleteCategoriesDialog } from "./delete-categories-dialog"
 import { UpdateCategoryDialog } from "./update-category-dialog"
@@ -25,7 +25,7 @@ export const columns: ColumnDef<
 >[] = [
 	{
 		id: "image",
-		accessorKey: "image.url",
+		accessorKey: "image",
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Image" />
 		),

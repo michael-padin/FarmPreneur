@@ -1,5 +1,4 @@
 "use client"
-import React from "react"
 import {
 	Dialog,
 	DialogContent,
@@ -7,7 +6,6 @@ import {
 	DialogHeader,
 	DialogTitle
 } from "@/components/ui/dialog"
-import { useMediaQuery } from "@/hooks/use-media-query"
 import {
 	Drawer,
 	DrawerClose,
@@ -17,6 +15,8 @@ import {
 	DrawerHeader,
 	DrawerTitle
 } from "@/components/ui/drawer"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import React from "react"
 
 import {
 	Form,
@@ -27,20 +27,20 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 
-import { createCategorySchema, CreateCategorySchema } from "../validation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Input } from "@/components/ui/input"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
-import { S3PATH } from "@/constants/s3-path"
-import { Textarea } from "@/components/ui/textarea"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
 import { Button } from "@/components/ui/button"
-import { useTransition } from "react"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast } from "@/lib/handle-error"
-import { Loader2 } from "lucide-react"
-import { toast } from "sonner"
 import { getCategoriesUseCase } from "@/use-cases/categories"
+import { processMediaUpdate } from "@/utils/media"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2 } from "lucide-react"
+import { useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { updateCategory } from "../actions"
+import { createCategorySchema, CreateCategorySchema } from "../validation"
 
 interface UpdateCategoryDialogProps {
 	category: Awaited<ReturnType<typeof getCategoriesUseCase>>[0]
@@ -64,8 +64,8 @@ export function UpdateCategoryDialog({
 					onOpenAutoFocus={(e) => e.preventDefault()}
 				>
 					<DialogHeader>
-						<DialogTitle>Create Category</DialogTitle>
-						<DialogDescription>create a new category</DialogDescription>
+						<DialogTitle>Update Category</DialogTitle>
+						<DialogDescription>Update existing category</DialogDescription>
 					</DialogHeader>
 					<CreateCategoryForm
 						setOpen={setShowUpdateDialog}
@@ -81,8 +81,8 @@ export function UpdateCategoryDialog({
 			{/* <DrawerTrigger asChild>Edit</DrawerTrigger> */}
 			<DrawerContent>
 				<DrawerHeader className="text-left">
-					<DrawerTitle>Create Category</DrawerTitle>
-					<DrawerDescription>create a new category</DrawerDescription>
+					<DrawerTitle>Update Category</DrawerTitle>
+					<DrawerDescription>Update existing category</DrawerDescription>
 				</DrawerHeader>
 				<CreateCategoryForm setOpen={setShowUpdateDialog} category={category} />
 				<DrawerFooter className="pt-2">
@@ -110,20 +110,35 @@ export function CreateCategoryForm({
 		defaultValues: {
 			name: category.name || "",
 			description: category.description || "",
-			image: {
-				url: category.image?.url,
-				filename: category.image?.filename || "",
-				size: category.image?.size || 0,
-				mimeType: category.image?.mimeType || ""
-			}
+			image: category.image
+				? {
+						id: Math.random().toString(36).substring(7),
+						url: category.image || "",
+						type: "image" as "image" | "video",
+						file: null
+					}
+				: null
 		}
 	})
 
 	const onSubmit = (data: CreateCategorySchema) => {
 		startTransition(async () => {
+			const finalCategoryImage = await processMediaUpdate({
+				currentFiles: category.image
+					? {
+							id: Math.random().toString(36).substring(7),
+							url: category.image || "",
+							type: "image" as "image" | "video",
+							file: null
+						}
+					: null,
+				newFiles: data.image,
+				path: "categories"
+			})
 			const { error } = await updateCategory({
 				...data,
-				categoryId: category.id
+				categoryId: category.id,
+				image: finalCategoryImage[0]
 			})
 
 			if (error) {
@@ -173,11 +188,7 @@ export function CreateCategoryForm({
 							<FormItem>
 								<FormLabel>Category Image</FormLabel>
 								<FormControl>
-									<FileUpload
-										path={S3PATH.CATEGORIES}
-										{...field}
-										value={field.value}
-									/>
+									<FPMediaUploader {...field} initialMedia={[]} singleImage />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
