@@ -154,7 +154,7 @@ export function NotificationProvider({
 		const handleNewNotification = async (newNotification: NotificationType) => {
 			handleRevalidatePaths(newNotification.type)
 			handleAddOptimisticNotification(newNotification)
-			toast(`${newNotification.title}`, {
+			toast.info(`${newNotification.title}`, {
 				description: newNotification.message,
 				dismissible: true,
 				position: isDesktop ? "top-right" : "top-right",

@@ -1,3 +1,4 @@
+import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
 import { BottomNav } from "../../_components"
@@ -18,7 +19,7 @@ export default function CustomerProfilePage() {
 							</h2>
 							<h1 className="text-2xl font-bold">Profile</h1>
 						</div>
-						{/* <ProfileNavLinks /> */}
+						<FPShoppingCart containerClassName="text-primary" />
 					</div>
 				</div>
 			</header>
