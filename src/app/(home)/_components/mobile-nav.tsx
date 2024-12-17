@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useScrollDetection } from "@/hooks/use-scroll-detection"
 import { cn } from "@/lib/utils"
 import { Session } from "next-auth"
+import Image from "next/image"
 import Link from "next/link"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
@@ -25,11 +26,20 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 		>
 			<div className="flex items-center justify-between gap-4 lg:container">
 				<div className="flex items-center gap-2">
-					<div
+					{/* <div
 						className={`flex min-h-10 min-w-10 items-center justify-center rounded-lg bg-background font-bold text-primary ${scrolled ? "bg-primary text-white" : ""}`}
 					>
 						<h1>FP</h1>
-					</div>
+					</div> */}
+					<Image
+						className="rounded-lg object-cover"
+						src={"/web-app-manifest-512x512.png"}
+						alt={"FarmerPreneur Logo"}
+						width={40}
+						height={40}
+						priority
+						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+					/>
 					<h1
 						className={`font-bold ${scrolled ? "text-primary" : "text-primary-foreground"}`}
 					>

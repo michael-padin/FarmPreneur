@@ -25,7 +25,7 @@ export default function Home() {
 			<main className="bg-secondary pb-16">
 				<section className="m-auto w-full">
 					<div className="container relative mx-auto h-full px-0 lg:px-4 lg:pt-[101px]">
-						<div className="flex items-center justify-center bg-primary pb-20 pt-28 lg:rounded-lg lg:py-20">
+						<div className="flex items-center justify-center bg-primary pb-20 pt-24 lg:rounded-lg lg:py-20">
 							<div className="relative space-y-5 px-2 text-center text-white lg:space-y-10">
 								<h1 className="text-3xl font-bold leading-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
 									Discover Local Farm-Fresh Produce
@@ -40,7 +40,7 @@ export default function Home() {
 					</div>
 				</section>
 				<div className="mx-2">
-					<section className="mx-auto -mt-10 w-full rounded-lg px-0 py-2 lg:container lg:-mt-0 lg:px-4">
+					<section className="mx-auto -mt-14 w-full rounded-lg px-0 py-2 lg:container lg:-mt-0 lg:px-4">
 						<div className="">
 							<div className="relative rounded-md bg-background py-2">
 								<h1 className="mb-2 px-2 font-semibold lg:text-2xl">

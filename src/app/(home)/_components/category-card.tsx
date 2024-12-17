@@ -20,12 +20,13 @@ export function CategoryCard({
 						src={imageUrl}
 						alt={title}
 						fill
+						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 						priority
 						className="h-full w-full object-cover"
 					/>
 				</div>
 				<div className="px-1 pt-2">
-					<h3 className="truncate text-sm">{title}</h3>
+					<h3 className="truncate text-xs">{title}</h3>
 					{/* <p className="line-clamp-2 text-sm text-muted-foreground">
 						{description}
 					</p> */}

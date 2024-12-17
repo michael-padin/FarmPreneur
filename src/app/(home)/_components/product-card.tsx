@@ -56,19 +56,19 @@ export default function ProductCard({
 						<p className="w-full truncate text-sm underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
 							{title}
 						</p>
-						<div className="flex items-center gap-2 text-xs">
-							<div className="flex items-center">
-								<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-								<span className="ml-1">{averageRating}</span>
-							</div>
-							<Separator orientation="vertical" className="h-4 w-px" />
-							<span className="w-max text-muted-foreground">{sold} sold</span>
-						</div>
 					</div>
 					<div className="mt-2 flex items-center justify-between">
-						<p className="text-sm font-semibold text-primary lg:text-base">
+						<p className="items-center text-sm font-semibold text-primary lg:text-base">
 							{formatPrice(price, unit)}
 						</p>
+						<div className="flex items-center gap-1 text-xs">
+							<div className="flex items-center">
+								<Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+								<span className="ml-px">{averageRating}</span>
+							</div>
+							<Separator orientation="vertical" className="h-3 w-px" />
+							<span className="w-max text-muted-foreground">{sold} sold</span>
+						</div>
 					</div>
 				</div>
 			</CardContent>
