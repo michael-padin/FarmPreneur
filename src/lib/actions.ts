@@ -990,8 +990,7 @@ export async function updateOrderSubStatus(payload: {
 			})
 		}
 
-		revalidatePath("/dashboard/farmer/orders")
-		revalidatePath("/orders")
+		revalidatePath("/dashboard/farmer/orders?status=IN_PROGRESS")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
@@ -1065,8 +1064,7 @@ export async function confirmPickedUpOrder(
 				}
 			}
 		})
-		revalidatePath("/orders")
-		revalidatePath("/dashboard/farmer/orders")
+		revalidatePath("/orders?status=IN_PROGRESS")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
@@ -1126,7 +1124,7 @@ export async function rateOrder(payload: {
 			})
 		})
 
-		revalidatePath("/orders")
+		revalidatePath("/orders?status=COMPLETED")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
