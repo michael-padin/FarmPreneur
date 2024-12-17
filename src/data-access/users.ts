@@ -316,7 +316,8 @@ export const createUserWithOTP = async (
 			if (createdUser.role === "CUSTOMER") {
 				const createCustomer = await tx.customer.create({
 					data: {
-						userId: createdUser.id
+						userId: createdUser.id,
+						name: createdUser.name
 					},
 					select: { id: true }
 				})

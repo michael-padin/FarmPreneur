@@ -102,11 +102,11 @@ export function CancelOrder({
 								>
 									{status === "PENDING"
 										? isPending
-											? "declining..."
+											? "Declining..."
 											: "Decline"
 										: isPending
-											? "Cancelling..."
-											: "Cancel"}
+											? "Submitting..."
+											: "Submit"}
 								</Button>
 							</fieldset>
 						</form>

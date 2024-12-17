@@ -31,24 +31,24 @@ export default function Order({
 						<OrderStatusBadge status={order.status} showText />
 					</div>
 					<div className="my-2 space-y-2 text-sm">
-						{order.customer?.contactNumber && (
+						{order.customerContact?.contactNumber && (
 							<div className="flex items-center gap-2">
 								<PhoneCall className="h-4 w-4" />
 								<FPContactNumberDisplay
-									contactNumber={order.customer?.contactNumber}
+									contactNumber={order.customerContact?.contactNumber || ""}
 								/>
 							</div>
 						)}
 						<div className="flex items-center gap-2">
 							<MapPin className="h-5 w-5" />
 							<div>
-								<span className="">{order.pickupLocation?.fullAddress}</span>
+								<span className="">{order.customerContact?.fullAddress}</span>
 
 								<AddressDetailsDrawerDialog
 									address={{
-										fullAddress: order.pickupLocation?.fullAddress || "",
-										longitude: order.pickupLocation?.longitude || 0,
-										latitude: order.pickupLocation?.latitude || 0
+										fullAddress: order.customerContact?.fullAddress || "",
+										longitude: order.customerContact?.longitude || 0,
+										latitude: order.customerContact?.latitude || 0
 									}}
 									title={`${order.customer?.user.name}'s Location`}
 								/>
@@ -85,7 +85,10 @@ export default function Order({
 						)}
 						{order.status === "PENDING" && <AcceptOrder orderId={order.id} />}
 						{order.status === "CANCELLED" && (
-							<ViewCancellation reason={order.cancellationReason || ""} />
+							<ViewCancellation
+								reason={order.cancellationReason || ""}
+								subStatus={order.subStatus || "CANCELLED_BY_FARMER"}
+							/>
 						)}
 					</div>
 				</div>

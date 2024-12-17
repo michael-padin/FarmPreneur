@@ -25,7 +25,7 @@ export default function FarmerDashboard() {
 						<ProfilePicture />
 					</div>
 				</header>
-				<div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
+				<div className="grid gap-2 pb-[76.5px] md:grid-cols-2 lg:grid-cols-4">
 					<Suspense
 						fallback={
 							<>

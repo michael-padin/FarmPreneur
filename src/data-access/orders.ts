@@ -169,6 +169,16 @@ export const getFarmerOrders = async (filter: {
 			})
 		},
 		include: {
+			customerContact: {
+				select: {
+					contactName: true,
+					contactNumber: true,
+					note: true,
+					longitude: true,
+					latitude: true,
+					fullAddress: true
+				}
+			},
 			pickupLocation: true,
 			items: {
 				include: {
@@ -183,6 +193,16 @@ export const getFarmerOrders = async (filter: {
 						select: {
 							name: true
 						}
+					},
+					address: {
+						select: {
+							fullAddress: true,
+							longitude: true,
+							latitude: true,
+							street: true,
+							contactName: true,
+							contactNumber: true
+						}
 					}
 				}
 			},
@@ -195,6 +215,9 @@ export const getFarmerOrders = async (filter: {
 					}
 				}
 			}
+		},
+		orderBy: {
+			updatedAt: "desc"
 		}
 	})
 }
@@ -271,14 +294,7 @@ export const getCustomerOrders = async (filter: {
 					}
 				}
 			},
-			pickupLocation: {
-				select: {
-					fullAddress: true,
-					latitude: true,
-					longitude: true,
-					note: true
-				}
-			},
+
 			customer: {
 				select: {
 					address: {
@@ -293,6 +309,14 @@ export const getCustomerOrders = async (filter: {
 			},
 			farmer: {
 				select: {
+					address: {
+						select: {
+							fullAddress: true,
+							longitude: true,
+							latitude: true,
+							street: true
+						}
+					},
 					profilePicture: true,
 					contactNumber: true,
 					farmName: true,

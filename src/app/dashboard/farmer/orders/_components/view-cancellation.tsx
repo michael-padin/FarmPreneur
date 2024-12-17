@@ -1,6 +1,5 @@
 "use client"
 
-import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Button } from "@/components/ui/button"
 import {
 	Drawer,
@@ -13,9 +12,17 @@ import {
 	DrawerTrigger
 } from "@/components/ui/drawer"
 import { Textarea } from "@/components/ui/textarea"
+import { orderSubStatusMap } from "@/constants/order"
+import { OrderSubStatus } from "@prisma/client"
 import { useState } from "react"
 
-export function ViewCancellation({ reason }: { reason: string }) {
+export function ViewCancellation({
+	reason,
+	subStatus
+}: {
+	reason: string
+	subStatus: OrderSubStatus
+}) {
 	const [open, setOpen] = useState(false)
 
 	return (
@@ -28,7 +35,7 @@ export function ViewCancellation({ reason }: { reason: string }) {
 			<DrawerContent>
 				<DrawerHeader className="text-left">
 					<DrawerTitle className="text-destructive">
-						<OrderStatusBadge status={"CANCELLED"} showText />
+						{orderSubStatusMap[subStatus].label}
 					</DrawerTitle>
 					<DrawerDescription className="sr-only"></DrawerDescription>
 				</DrawerHeader>

@@ -51,13 +51,15 @@ export default function Order({
 						<div className="flex items-center gap-2">
 							<MapPin className="h-5 w-5" />
 							<div>
-								<span className="">{order.pickupLocation?.fullAddress}</span>
+								<span className="">
+									{order.farmer?.address[0]?.fullAddress}
+								</span>
 
 								<AddressDetailsDrawerDialog
 									address={{
-										fullAddress: order.pickupLocation?.fullAddress || "",
-										longitude: order.pickupLocation?.longitude || 0,
-										latitude: order.pickupLocation?.latitude || 0
+										fullAddress: order.farmer?.address[0]?.fullAddress || "",
+										longitude: order.farmer?.address[0]?.longitude || 0,
+										latitude: order.farmer?.address[0]?.latitude || 0
 									}}
 									title={`${order.farmer?.farmName}'s Location`}
 								/>

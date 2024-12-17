@@ -254,10 +254,11 @@ export async function removeFromCart(
 export async function placeOrder(
 	prevState: any,
 	payload: {
+		customerContactId: string
 		checkoutData: CartState
 	}
 ): Promise<{ success: boolean; error?: string }> {
-	const { checkoutData } = payload
+	const { checkoutData, customerContactId } = payload
 	try {
 		const session = await auth()
 
@@ -310,6 +311,30 @@ export async function placeOrder(
 					}
 				}
 
+				const foundCustomerContact = await tx.address.findFirst({
+					where: {
+						id: customerContactId
+					}
+				})
+
+				const createdOrderCustomerContact = await tx.address.create({
+					data: {
+						contactName: foundCustomerContact?.contactName || "",
+						contactNumber: foundCustomerContact?.contactNumber || "",
+						fullAddress: foundCustomerContact?.fullAddress || "",
+						latitude: foundCustomerContact?.latitude || 0,
+						longitude: foundCustomerContact?.longitude || 0,
+						country: foundCustomerContact?.country || "",
+						region: foundCustomerContact?.region || "",
+						label: "Customer Contact",
+						note: foundCustomerContact?.note || "",
+						street: foundCustomerContact?.street || "",
+						locationType: "CustomerContact",
+						postalCode: foundCustomerContact?.postalCode || "",
+						isDefault: false
+					}
+				})
+
 				// Create the order
 				const createdOrder = await tx.order.create({
 					data: {
@@ -323,6 +348,7 @@ export async function placeOrder(
 								price: item.product.price
 							}))
 						},
+						customerContactId: createdOrderCustomerContact.id,
 						status: "PENDING",
 						subStatus: "AWAITING_FARMER_ACCEPTANCE",
 						pickupLocationId: group.pickupLocationId
@@ -403,7 +429,7 @@ export async function cancelOrder(payload: {
 			data: {
 				status: "CANCELLED",
 				cancellationReason,
-				subStatus: "CANCELLED_BY_BUYER"
+				subStatus: payload.subStatus
 			}
 		})
 

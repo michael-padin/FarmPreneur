@@ -300,6 +300,7 @@ export default function CartCheckOutList({
 							</div>
 						</div>
 						<PlaceOrder
+							customerContactId={defaultCustomerAddress?.id || ""}
 							checkoutData={newCheckoutData}
 							validateCheckout={validateCheckout}
 						/>

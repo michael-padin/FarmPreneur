@@ -8,9 +8,11 @@ import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
 
 export function PlaceOrder({
+	customerContactId,
 	checkoutData,
 	validateCheckout
 }: {
+	customerContactId: string
 	checkoutData: CartState
 	validateCheckout?: () => boolean
 }) {
@@ -18,7 +20,8 @@ export function PlaceOrder({
 	const [state, formAction, isPending] = useActionState(placeOrder, null)
 
 	const formActionsWithData = formAction.bind(null, {
-		checkoutData
+		checkoutData,
+		customerContactId
 	})
 
 	useEffect(() => {

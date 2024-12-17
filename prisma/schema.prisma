@@ -279,7 +279,9 @@ model Order {
   totalPrice         Float?
   status             OrderStatus    @default(PENDING)
   subStatus          OrderSubStatus @default(AWAITING_FARMER_ACCEPTANCE)
-  pickupLocation     Address?       @relation(fields: [pickupLocationId], references: [id])
+  customerContact    Address?       @relation("CustomerContact", fields: [customerContactId], references: [id])
+  customerContactId  String?        @db.ObjectId
+  pickupLocation     Address?       @relation("PickupLocation", fields: [pickupLocationId], references: [id])
   pickupLocationId   String?        @db.ObjectId
   farmer             Farmer         @relation(fields: [farmerId], references: [id])
   farmerId           String         @db.ObjectId
@@ -399,11 +401,12 @@ model Address {
   longitude     Float
   note          String?
   locationType  String?
-  order         Order[]
   farmer        Farmer?   @relation(fields: [farmerId], references: [id])
   customer      Customer? @relation(fields: [customerId], references: [id])
   farmerId      String?   @db.ObjectId
   customerId    String?   @db.ObjectId
+  order         Order[]   @relation("CustomerContact")
+  Order         Order[]   @relation("PickupLocation")
 
   @@index([country, region])
   @@index([latitude, longitude])

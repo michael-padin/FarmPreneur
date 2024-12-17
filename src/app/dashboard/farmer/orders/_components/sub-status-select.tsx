@@ -24,7 +24,7 @@ export function SubStatusSelect({
 
 	const handleValueChange = (value: string) => {
 		startTransition(async () => {
-			updateOrderSubStatus({
+			await updateOrderSubStatus({
 				orderId,
 				status: value as "PREPARING_PRODUCE" | "READY_FOR_PICKUP" | "PICKED_UP"
 			})
@@ -43,15 +43,14 @@ export function SubStatusSelect({
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel>ActiveIn Progress</SelectLabel>
+						<SelectLabel>Active/In Progress</SelectLabel>
 						<SelectItem value="PREPARING_PRODUCE">Preparing Produce</SelectItem>
 						<SelectItem value="READY_FOR_PICKUP">Ready for Pickup</SelectItem>
-						<SelectItem value="PICKED_UP">Picked Up</SelectItem>
 					</SelectGroup>
-					{/* <SelectGroup>
+					<SelectGroup>
 						<SelectLabel>Completed</SelectLabel>
 						<SelectItem value="PICKED_UP">Picked Up</SelectItem>
-					</SelectGroup> */}
+					</SelectGroup>
 				</SelectContent>
 			</Select>
 			{/* {isPending && <p>Updating status...</p>}

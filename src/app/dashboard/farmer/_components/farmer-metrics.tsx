@@ -33,10 +33,8 @@ export async function FarmerMetrics() {
 						</CardTitle>
 						<Box className="h-5 w-5 text-primary" />
 					</CardHeader>
-					<CardContent className="p-3">
-						<div className="text-3xl font-bold text-foreground">
-							{totalProducts}
-						</div>
+					<CardContent className="p-3 pt-0">
+						<div className="text-3xl font-bold">{totalProducts}</div>
 						<p className="mt-1 text-sm text-muted-foreground">
 							{categoriesCount} categories
 						</p>
@@ -51,10 +49,8 @@ export async function FarmerMetrics() {
 						</CardTitle>
 						<ShoppingCart className="h-5 w-5 text-primary" />
 					</CardHeader>
-					<CardContent className="p-3">
-						<div className="text-3xl font-bold text-foreground">
-							{totalOrders}
-						</div>
+					<CardContent className="p-3 pt-0">
+						<div className="text-3xl font-bold">{totalOrders}</div>
 						<div className="mt-1 flex gap-2 text-sm text-muted-foreground">
 							<span>{pendingOrdersCount} Pending</span>
 							<span>•</span>
@@ -73,10 +69,8 @@ export async function FarmerMetrics() {
 						</CardTitle>
 						<PhilippinePeso className="h-5 w-5 text-primary" />
 					</CardHeader>
-					<CardContent className="p-3">
-						<div className="text-3xl font-bold text-foreground">
-							₱{totalRevenue}
-						</div>
+					<CardContent className="p-3 pt-0">
+						<div className="text-3xl font-bold">₱{totalRevenue}</div>
 						{revenueGrowthPercentage > 0 ? (
 							<p className="mt-1 flex items-center gap-1 text-sm text-primary">
 								<ArrowUp className="h-5 w-5" />
@@ -99,10 +93,8 @@ export async function FarmerMetrics() {
 						</CardTitle>
 						<Star className="h-5 w-5 text-primary" />
 					</CardHeader>
-					<CardContent className="p-3">
-						<div className="text-3xl font-bold text-foreground">
-							{averageRating} / 5.0
-						</div>
+					<CardContent className="p-3 pt-0">
+						<div className="text-3xl font-bold">{averageRating} / 5.0</div>
 						<p className="mt-1 text-sm text-muted-foreground">
 							Based on {totalReviews} reviews
 						</p>
