@@ -1,5 +1,16 @@
 "use client"
 
+import { FPSignOutButton } from "@/components/fg/fp-signout-button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 import {
 	Sidebar,
 	SidebarContent,
@@ -18,28 +29,17 @@ import {
 	SidebarRail,
 	useSidebar
 } from "@/components/ui/sidebar"
-import { usePathname } from "next/navigation"
-import Link from "next/link"
+import { SidebarItem } from "@/constants/navItems"
 import {
 	BadgeCheck,
 	Bell,
 	ChevronsUpDown,
-	Command,
 	TestTubeDiagonal
 } from "lucide-react"
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Session } from "next-auth"
-import { FPSignOutButton } from "@/components/fg/fp-signout-button"
-import { SidebarItem } from "@/constants/navItems"
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 interface DashboardSidebarProps {
 	user: Session["user"] | undefined
@@ -63,9 +63,15 @@ export function DashboardSidebar({ user, items }: DashboardSidebarProps) {
 							asChild
 						>
 							<a href="#">
-								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-									<Command className="size-4" />
-								</div>
+								<Image
+									className="rounded-lg border object-cover"
+									src={"/web-app-manifest-512x512.png"}
+									alt={"FarmerPreneur Logo"}
+									width={40}
+									height={40}
+									priority
+									sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+								/>
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-semibold">FarmPreneur</span>
 									<span className="truncate text-xs">{user?.name}</span>

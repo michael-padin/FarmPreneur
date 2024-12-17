@@ -81,8 +81,8 @@ export const columns: ColumnDef<
 						<span className="font-medium">{product.title}</span>
 						<div className="flex items-center gap-1 text-sm text-gray-500">
 							<Package className="h-3 w-3" />
-							<span>
-								{quantity} {product.unit}
+							<span className="w-max">
+								{product.quantity} {product.unit}
 							</span>
 						</div>
 					</div>
