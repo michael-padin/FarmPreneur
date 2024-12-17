@@ -1,15 +1,15 @@
 "use server"
 import { getErrorMessage } from "@/lib/handle-error"
-import { editUserSchema, EditUserSchema } from "./validations"
+import { sendApprovalEmail } from "@/lib/nodemailer"
+import { pusherServer } from "@/lib/pusher"
 import { updateCustomerByUserIdUseCase } from "@/use-cases/customers"
 import {
 	getFarmerByUserIdUseCase,
 	getPendingFarmerCountUseCase,
 	updateFarmerByUserIdUseCase
 } from "@/use-cases/farmers"
-import { pusherServer } from "@/lib/pusher"
 import { updateAdminUserUseCase } from "@/use-cases/users"
-import { sendApprovalEmail } from "@/lib/nodemailer"
+import { editUserSchema, EditUserSchema } from "./validations"
 
 export const updateCustomer = async (
 	data: EditUserSchema & {
@@ -38,13 +38,7 @@ export const updateFarmer = async (
 		userId: string
 	}
 ) => {
-	const validatedFields = editUserSchema.safeParse(data)
-
-	if (!validatedFields.success) {
-		return {
-			error: "Invalid fields"
-		}
-	}
+	console.log("data :>> ", data)
 	try {
 		/**
 		 * @

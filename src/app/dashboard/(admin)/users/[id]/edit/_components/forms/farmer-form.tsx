@@ -1,4 +1,15 @@
 "use client"
+import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
+import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
+import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger
+} from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button"
 import {
 	Card,
 	CardContent,
@@ -15,30 +26,7 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
-import { getUserByIdUseCase } from "@/use-cases/users"
-import UserFormItems from "./user-form-items"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { BackButton } from "@/components/fg/back-button"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger
-} from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { editUserSchema, EditUserSchema } from "../../validations"
-import { showErrorToast } from "@/lib/handle-error"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { useTransition } from "react"
-import { updateFarmer } from "../../actions"
 import { Input } from "@/components/ui/input"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
-import { S3PATH } from "@/constants/s3-path"
-import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
 import {
 	Select,
 	SelectContent,
@@ -46,9 +34,19 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { FarmerApprovalBadge } from "../../../../(lists)/_components/badges"
+import { showErrorToast } from "@/lib/handle-error"
+import { getUserByIdUseCase } from "@/use-cases/users"
+import { processMediaUpdate } from "@/utils/media"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
-import { AddressSchema } from "@/validations/address"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { FarmerApprovalBadge } from "../../../../(lists)/_components/badges"
+import { updateFarmer } from "../../actions"
+import { editUserSchema, EditUserSchema } from "../../validations"
+import UserFormItems from "./user-form-items"
 
 interface FarmerFormProps {
 	user: Awaited<ReturnType<typeof getUserByIdUseCase>>
@@ -67,16 +65,82 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 			password: "",
 			isEmailVerified: user?.isEmailVerified || false,
 			farmer: {
-				...((user?.farmer as EditUserSchema["farmer"]) || null),
-				address: { ...(user.farmer?.address[0] as AddressSchema) }
+				applicationStatus: user!.farmer!.applicationStatus!,
+				address: {
+					country: user.farmer!.address[0].country || "",
+					fullAddress: user.farmer!.address[0].fullAddress || "",
+					latitude: user.farmer!.address[0].latitude || 0,
+					longitude: user.farmer!.address[0].longitude || 0,
+					postalCode: user.farmer!.address[0].postalCode || "",
+					region: user.farmer!.address[0].region || "",
+					street: user.farmer!.address[0].street || ""
+				},
+				birthDate: user.farmer!.birthDate || new Date(),
+				contactNumber: user.farmer!.contactNumber || "",
+				farmDescription: user.farmer!.farmDescription || "",
+				farmImages:
+					user.farmer!.farmImages.length > 0
+						? user.farmer!.farmImages.map((image) => ({
+								id: Math.random().toString(36).substring(7),
+								url: image,
+								type: "image" as "image" | "video",
+								file: null
+							}))
+						: [],
+				farmName: user.farmer!.farmName || "",
+				verificationDocument: {
+					image: user.farmer!.verificationDocument!.image
+						? {
+								id: Math.random().toString(36).substring(7),
+								url: user.farmer!.verificationDocument?.image || "",
+								type: "image" as "image" | "video",
+								file: null
+							}
+						: null,
+					type: user.farmer!.verificationDocument?.type || "VOTER_ID"
+				}
 			}
 		}
 	})
 
 	const onSubmit = async (data: EditUserSchema) => {
 		startTransition(async () => {
+			const finalVerificationDocument = await processMediaUpdate({
+				currentFiles: user.farmer!.verificationDocument!.image
+					? {
+							id: Math.random().toString(36).substring(7),
+							url: user.farmer!.verificationDocument?.image || "",
+							type: "image" as "image" | "video",
+							file: null
+						}
+					: null,
+				newFiles: data.farmer!.verificationDocument.image,
+				userId: user?.id || "",
+				path: "verification-documents"
+			})
+			const finalFarmImages = await processMediaUpdate({
+				currentFiles:
+					user.farmer!.farmImages.length > 0
+						? user.farmer!.farmImages.map((image) => ({
+								id: Math.random().toString(36).substring(7),
+								url: image,
+								type: "image" as "image" | "video",
+								file: null
+							}))
+						: [],
+				newFiles: data.farmer!.farmImages,
+				userId: user?.id || "",
+				path: "farm-images"
+			})
 			const { error } = await updateFarmer({
 				...data,
+				farmer: {
+					...data.farmer!,
+					verificationDocument: {
+						...data.farmer!.verificationDocument,
+						image: finalVerificationDocument[0]
+					}
+				},
 				userId: user!.id
 			})
 
@@ -85,7 +149,9 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 				return
 			}
 
-			toast.success("Farmer updated successfully!")
+			toast.success("Farmer updated successfully!", {
+				position: "top-right"
+			})
 			router.refresh()
 			router.push("/dashboard/users/farmers")
 		})
@@ -151,11 +217,7 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								<FormItem>
 									<FormLabel>Contact Number</FormLabel>
 									<FormControl>
-										<FGSinglePhoneINput
-											placeholder="+639343434343"
-											{...field}
-											value={field.value ? field.value : ""}
-										/>
+										<FGSinglePhoneINput {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -216,11 +278,20 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								<FormItem>
 									<FormLabel>Farm Images</FormLabel>
 									<FormControl>
-										<FileUpload
+										<FPMediaUploader
 											{...field}
-											path={S3PATH.FARMIMAGES}
-											multiple
-											maxFiles={5}
+											onChange={field.onChange}
+											singleImage
+											initialMedia={
+												user.farmer!.farmImages.length > 0
+													? user.farmer!.farmImages.map((image) => ({
+															id: Math.random().toString(36).substring(7),
+															url: image,
+															type: "image" as "image" | "video",
+															file: null
+														}))
+													: []
+											}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -234,7 +305,22 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								<FormItem>
 									<FormLabel>Verification Document</FormLabel>
 									<FormControl>
-										<FileUpload {...field} path={S3PATH.DOCUMENTS} />
+										<FPMediaUploader
+											{...field}
+											onChange={field.onChange}
+											singleImage
+											initialMedia={
+												user.farmer!.verificationDocument!.image
+													? {
+															id: Math.random().toString(36).substring(7),
+															url:
+																user.farmer!.verificationDocument?.image || "",
+															type: "image" as "image" | "video",
+															file: null
+														}
+													: []
+											}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

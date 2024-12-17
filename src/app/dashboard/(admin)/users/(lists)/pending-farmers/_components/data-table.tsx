@@ -12,17 +12,26 @@ import {
 	VisibilityState
 } from "@tanstack/react-table"
 
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from "@/components/ui/table"
-import { use, useCallback, useState } from "react"
 import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from "@/components/ui/dialog"
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
 	Sheet,
 	SheetContent,
@@ -31,7 +40,17 @@ import {
 	SheetTitle,
 	SheetTrigger
 } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from "@/components/ui/table"
+import { getCommonPinningStyles } from "@/lib/data-table"
+import { getPendingFarmersUseCase } from "@/use-cases/farmers"
+import { format } from "date-fns"
 import {
 	Calendar,
 	CheckCircle,
@@ -46,29 +65,10 @@ import {
 	ThumbsDown,
 	ThumbsUp
 } from "lucide-react"
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { getCommonPinningStyles } from "@/lib/data-table"
-import { columns } from "./columns"
-import { getPendingFarmersUseCase } from "@/use-cases/farmers"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger
-} from "@/components/ui/dialog"
 import Image from "next/image"
+import { use, useCallback, useState } from "react"
 import { FarmerApprovalBadge } from "../../_components/badges"
-import { format } from "date-fns"
+import { columns } from "./columns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getPendingFarmersUseCase>>>
@@ -437,7 +437,7 @@ export function DataTable({ data }: DataTableProps) {
 											</DialogHeader>
 											<div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
 												<Image
-													src={farmer.verificationDocument!.image!.url!}
+													src={farmer.verificationDocument!.image!}
 													alt="Verification document"
 													fill
 													className="object-cover"
@@ -448,7 +448,7 @@ export function DataTable({ data }: DataTableProps) {
 								</div>
 								<div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted">
 									<Image
-										src={farmer.verificationDocument!.image!.url!}
+										src={farmer.verificationDocument!.image!}
 										alt="Verification document thumbnail"
 										fill
 										className="object-cover"

@@ -7,15 +7,7 @@ export const createVerificationDocument = async (
 	return await db.verificationDocument.create({
 		data: {
 			type: data.documentVerification.type,
-			image: {
-				create: {
-					url: data.documentVerification.image.url,
-					filename: data.documentVerification.image.filename,
-					size: data.documentVerification.image.size,
-					mimeType: data.documentVerification.image.mimeType,
-					type: "VERIFICATION"
-				}
-			},
+			image: data.documentVerification.image.url,
 			farmer: {
 				connect: {
 					id: data.farmerId

@@ -32,8 +32,12 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			const images = row.original.images
-			return images && <ProductImageCell images={images} />
+			const images = row.original.productImages
+			return (
+				images && (
+					<ProductImageCell images={images} altText={row.original.title} />
+				)
+			)
 		}
 	},
 	{

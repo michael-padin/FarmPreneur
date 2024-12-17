@@ -1,11 +1,10 @@
 import { Lightbox } from "@/components/fg/fp-light-box"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Image as PrismaImage } from "@prisma/client"
 import Image from "next/image"
 import { useState } from "react"
 
 interface CategoryImageCellProps {
-	image: PrismaImage
+	image: string
 }
 export function CategoryImageCell({ image }: CategoryImageCellProps) {
 	const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -17,8 +16,8 @@ export function CategoryImageCell({ image }: CategoryImageCellProps) {
 				className="relative overflow-hidden rounded-lg"
 			>
 				<Image
-					src={image.url}
-					alt={image.filename}
+					src={image}
+					alt={"Category Image"}
 					className="object-cover"
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					fill

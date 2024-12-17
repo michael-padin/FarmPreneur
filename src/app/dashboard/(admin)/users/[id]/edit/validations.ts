@@ -1,7 +1,8 @@
 import { addressSchema } from "@/validations/address"
-import { imageSchema } from "@/validations/image"
+import { mediaFileSchema } from "@/validations/media"
 import { verificationDocumentSchema } from "@/validations/verification-document"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
+// import { isValidPhoneNumber } from "react-phone-number-input"
 import { z } from "zod"
 
 export const editCustomerSchema = z.object({
@@ -11,13 +12,14 @@ export const editCustomerSchema = z.object({
 
 export const editFarmerSchema = z.object({
 	birthDate: z.date(),
-	contactNumber: z.string().min(10),
+	contactNumber: z.string(),
+
 	farmName: z.string().min(2),
 	farmDescription: z.string().min(2),
 	applicationStatus: z.nativeEnum(FarmerApplicationStatus),
 	address: addressSchema,
 	verificationDocument: verificationDocumentSchema,
-	farmImages: imageSchema.array()
+	farmImages: mediaFileSchema.array().min(1, "Required")
 })
 
 export const editUserSchema = z.object({

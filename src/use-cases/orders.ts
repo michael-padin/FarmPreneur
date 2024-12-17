@@ -162,11 +162,7 @@ export const getCustomerOrderItemsUseCase = async (filter: {
 								profilePicture: true,
 								contactNumber: true,
 								farmName: true,
-								farmImages: {
-									select: {
-										url: true
-									}
-								}
+								farmImages: true
 							}
 						}
 					}

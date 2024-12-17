@@ -81,8 +81,7 @@ export const getAllProducts = async () => {
 						}
 					}
 				}
-			},
-			images: true
+			}
 		}
 	})
 }

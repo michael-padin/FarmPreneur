@@ -2,12 +2,11 @@
 
 import { Lightbox } from "@/components/fg/fp-light-box"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Image as PrismaImage } from "@prisma/client"
 import Image from "next/image"
 import { useState } from "react"
 
 interface VerificationDocumentCellProps {
-	image: PrismaImage
+	image: string
 }
 
 export const VerificationDocumentCell = ({
@@ -22,8 +21,8 @@ export const VerificationDocumentCell = ({
 				className="relative"
 			>
 				<Image
-					src={image.url}
-					alt={image.filename}
+					src={image}
+					alt={"Farmer Verification Document"}
 					className="object-cover"
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					fill

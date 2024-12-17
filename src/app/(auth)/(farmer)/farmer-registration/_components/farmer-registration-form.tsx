@@ -1,7 +1,4 @@
 "use client"
-import { useTransition } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -13,23 +10,26 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTransition } from "react"
+import { useForm } from "react-hook-form"
 
 import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
 
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { showErrorToast } from "@/lib/handle-error"
-import { farmRegistrationSchema, FarmRegistrationSchema } from "../types"
-import { getUserFarmerByIdUseCase } from "@/use-cases/users"
-import { upsertFarmerAction } from "../actions"
 import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
 import { Separator } from "@/components/ui/separator"
+import { showErrorToast } from "@/lib/handle-error"
+import { getUserFarmerByIdUseCase } from "@/use-cases/users"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { upsertFarmerAction } from "../actions"
+import { farmRegistrationSchema, FarmRegistrationSchema } from "../types"
 
-import { CardTitle } from "@/components/ui/card"
-import { FPDocumentSelect } from "@/components/fg/fp-document-select"
 import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
+import { FPDocumentSelect } from "@/components/fg/fp-document-select"
+import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { CardTitle } from "@/components/ui/card"
+import { processMediaUpdate } from "@/utils/media"
 
 interface FarmRegistrationFormProps {
 	user: Awaited<ReturnType<typeof getUserFarmerByIdUseCase>>
@@ -55,15 +55,13 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 				name: user?.name || "",
 				email: user?.email || ""
 			},
-			farmName: user?.farmer?.farmName || "",
-			farmDescription: user?.farmer?.farmDescription || "",
 			farmImages: [],
 			documentVerification: {
 				type: user?.farmer?.verificationDocument?.type || "VOTER_ID",
 				image: {
-					url: user?.farmer?.verificationDocument?.image?.url,
-					filename: user?.farmer?.verificationDocument?.image?.filename,
-					size: user?.farmer?.verificationDocument?.image?.size
+					url: user?.farmer?.verificationDocument?.image || "",
+					type: "image" as "image" | "video",
+					file: null
 				}
 			},
 			birthDate: user?.farmer?.birthDate || undefined
@@ -72,9 +70,44 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 
 	const onSubmit = async (data: FarmRegistrationSchema) => {
 		startTransition(async () => {
+			const finalVerificationDocument = await processMediaUpdate({
+				currentFiles: user?.farmer?.verificationDocument?.image
+					? [
+							{
+								id: Math.random().toString(36).substring(7),
+								url: user?.farmer?.verificationDocument?.image || "",
+								type: "image" as "image" | "video",
+								file: null
+							}
+						]
+					: [],
+				newFiles: data.documentVerification.image,
+				userId: user?.id || "",
+				path: "verification-documents"
+			})
+			const finalFarmImages = await processMediaUpdate({
+				currentFiles:
+					user?.farmer?.farmImages && user?.farmer?.farmImages?.length > 0
+						? user?.farmer?.farmImages.map((image) => ({
+								id: Math.random().toString(36).substring(7),
+								url: image,
+								type: "image" as "image" | "video",
+								file: null
+							}))
+						: [],
+				newFiles: data.farmImages,
+				userId: user?.id || "",
+				path: "farm-images"
+			})
+
 			const { error } = await upsertFarmerAction({
 				...data,
-				userId: user!.id
+				userId: user!.id,
+				documentVerification: {
+					...data.documentVerification,
+					image: finalVerificationDocument[0] || null
+				},
+				farmImages: finalFarmImages
 			})
 			if (error) {
 				showErrorToast(error)
@@ -155,6 +188,33 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 
 					<FormField
 						control={form.control}
+						name="farmName"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Farm Name</FormLabel>
+								<FormControl>
+									<Input placeholder="" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="farmDescription"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Farm Description</FormLabel>
+								<FormControl>
+									<Input placeholder="" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
 						name="address"
 						render={({ field }) => (
 							<FormItem>
@@ -173,7 +233,8 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 									/>
 								</FormControl>
 								<FormDescription>
-									Enter your exact farm address or pickup location
+									Enter your farm address accurately, as it will be used as the
+									pickup location for customers.{" "}
 								</FormDescription>
 								<FormMessage />
 							</FormItem>
@@ -182,43 +243,16 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 
 					<FormField
 						control={form.control}
-						name="farmName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Farm Name</FormLabel>
-								<FormControl>
-									<Input placeholder="Green Acres Farm" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="farmDescription"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Farm Description</FormLabel>
-								<FormControl>
-									<Textarea placeholder="Describe your farm" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
 						name="farmImages"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Farm Images</FormLabel>
 								<FormControl>
-									<FileUpload
+									<FPMediaUploader
 										{...field}
-										multiple
-										path={`farm-images`}
+										initialMedia={[]}
 										maxFiles={5}
+										onChange={field.onChange}
 									/>
 								</FormControl>
 								<FormDescription>
@@ -228,26 +262,6 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 							</FormItem>
 						)}
 					/>
-
-					{/* <FormField
-						control={form.control}
-						name="products"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Farm Products</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="Tomatoes, Lettuce, Carrots..."
-										{...field}
-									/>
-								</FormControl>
-								<FormDescription>
-									Enter products separated by commas
-								</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/> */}
 
 					<Separator className="my-8" />
 					<CardTitle>Document Verification</CardTitle>
@@ -270,7 +284,13 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 								<FormItem>
 									<FormLabel>Verification Document</FormLabel>
 									<FormControl>
-										<FileUpload {...field} path={`document-verification`} />
+										<FPMediaUploader
+											{...field}
+											initialMedia={[]}
+											onChange={field.onChange}
+											singleImage
+											maxFiles={1}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

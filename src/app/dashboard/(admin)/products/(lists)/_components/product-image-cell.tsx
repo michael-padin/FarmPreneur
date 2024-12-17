@@ -1,13 +1,13 @@
 import { Lightbox } from "@/components/fg/fp-light-box"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Image as PrismaImage } from "@prisma/client"
 import Image from "next/image"
 import { useState } from "react"
 
 interface ProductImageCellProps {
-	images: PrismaImage[]
+	images: string[]
+	altText: string
 }
-export function ProductImageCell({ images }: ProductImageCellProps) {
+export function ProductImageCell({ images, altText }: ProductImageCellProps) {
 	const [lightboxOpen, setLightboxOpen] = useState(false)
 	return (
 		<div className="flex w-full justify-center space-x-2">
@@ -17,8 +17,8 @@ export function ProductImageCell({ images }: ProductImageCellProps) {
 				className="relative overflow-hidden rounded-lg"
 			>
 				<Image
-					src={images[0]?.url || "/placeholder.svg"}
-					alt={images[0]?.filename || ""}
+					src={images[0] || "/placeholder.svg"}
+					alt={altText || "Product image"}
 					className="object-cover"
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					fill

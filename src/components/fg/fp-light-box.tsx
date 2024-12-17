@@ -1,19 +1,19 @@
 "use client"
 
-import * as React from "react"
-import Image from "next/image"
+import { Button } from "@/components/ui/button"
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
 	DialogHeader
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { X, ChevronLeft, ChevronRight, Trash, Info } from "lucide-react"
 import { DialogTitle } from "@radix-ui/react-dialog"
+import { ChevronLeft, ChevronRight, Info, Trash, X } from "lucide-react"
+import Image from "next/image"
+import * as React from "react"
 
 interface LightboxProps {
-	images: { url: string; filename: string; size: number }[]
+	images: string[]
 	currentIndex: number
 	onClose?: () => void
 	onDelete?: (index: number) => void
@@ -41,8 +41,8 @@ export function Lightbox({
 			<DialogContent className="h-full max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg p-0">
 				<div className="relative flex h-full w-full items-center justify-center">
 					<Image
-						src={currentImage.url}
-						alt={currentImage.filename}
+						src={currentImage}
+						alt={"Lightbox image"}
 						fill
 						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 						objectFit="contain"
@@ -73,14 +73,14 @@ export function Lightbox({
 							<X className="h-4 w-4" />
 						</Button>
 					</div>
-					{showInfo && (
+					{/* {showInfo && (
 						<div className="absolute bottom-4 left-4 right-4 rounded-md bg-background/80 p-2">
 							<p className="text-sm font-medium">{currentImage.filename}</p>
 							<p className="text-xs text-muted-foreground">
 								{(currentImage.size / 1024 / 1024).toFixed(2)} MB
 							</p>
 						</div>
-					)}
+					)} */}
 					{currentIndex > 0 && (
 						<Button
 							variant="outline"

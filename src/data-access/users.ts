@@ -32,24 +32,18 @@ export const getUserById = async (id: string) => {
 				include: {
 					_count: {
 						select: {
-							farmImages: true,
 							products: true,
 							orders: true
 						}
 					},
 					address: true,
-					farmImages: true,
 					products: {
 						include: {
 							reviews: true
 						}
 					},
 					orders: true,
-					verificationDocument: {
-						include: {
-							image: true
-						}
-					}
+					verificationDocument: true
 				}
 			}
 		}
@@ -81,12 +75,14 @@ export const createUserFarmerById = async (
 			}
 		})
 
+		console.log("data :>> ", data)
+
 		const farmer = await tx.farmer.create({
 			data: {
 				userId: data.userId,
 				applicationStatus: "PENDING",
 				contactNumber: data.contactNumber,
-				birthDate: new Date(data.birthDate),
+				birthDate: data.birthDate,
 				address: {
 					create: {
 						fullAddress: data.address.fullAddress || "",
@@ -98,20 +94,11 @@ export const createUserFarmerById = async (
 						longitude: data.address.longitude || 0
 					}
 				},
-				farmName: data.farmName,
-				farmDescription: data.farmDescription,
+				farmImages: data.farmImages.map((image) => image.url),
 				verificationDocument: {
 					create: {
 						type: data.documentVerification.type,
-						image: {
-							create: {
-								url: data.documentVerification.image.url,
-								filename: data.documentVerification.image.filename,
-								size: data.documentVerification.image.size,
-								mimeType: data.documentVerification.image.mimeType,
-								type: "VERIFICATION"
-							}
-						}
+						image: data.documentVerification.image.url
 					}
 				}
 			},
@@ -124,16 +111,6 @@ export const createUserFarmerById = async (
 			}
 		})
 
-		await tx.image.createMany({
-			data: data.farmImages.map((image) => ({
-				url: image.url,
-				filename: image.filename,
-				size: image.size,
-				mimeType: image.mimeType,
-				type: "FARM",
-				farmerId: farmer.id
-			}))
-		})
 		return {
 			...farmer
 		}
@@ -153,11 +130,7 @@ export const getUserFarmerById = async (id: string) => {
 			name: true,
 			farmer: {
 				include: {
-					verificationDocument: {
-						include: {
-							image: true
-						}
-					},
+					verificationDocument: true,
 					address: true
 				}
 			}

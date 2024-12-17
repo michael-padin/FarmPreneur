@@ -1,10 +1,8 @@
 "use server"
-import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { auth } from "@/auth"
 import { getCountCategories } from "@/data-access/categories"
 import {
-	createFarmerByUserId,
 	getApprovedFarmers,
 	getFarmerApprovalStatusByUserId,
 	getFarmerById,
@@ -67,12 +65,6 @@ export const getFarmerByUserIdUseCase = async (id: string) => {
 	const farmer = await getFarmerByUserId(id)
 	if (!farmer) throw new Error("Farmer not found!")
 	return farmer
-}
-
-export const createFarmerByUserIdUseCase = async (
-	data: FarmRegistrationSchema & { userId: string }
-) => {
-	return await createFarmerByUserId(data)
 }
 
 export const getTopFarmersUseCase = async () => {

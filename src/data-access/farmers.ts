@@ -1,4 +1,3 @@
-import { FarmRegistrationSchema } from "@/app/(auth)/(farmer)/farmer-registration/types"
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
 
@@ -11,7 +10,6 @@ export const getFarmerOwnProfile = async (userId: string) => {
 			_count: {
 				select: {
 					address: true,
-					farmImages: true,
 					orders: true
 				}
 			},
@@ -26,8 +24,7 @@ export const getFarmerOwnProfile = async (userId: string) => {
 					reviews: true
 				}
 			},
-			address: true,
-			farmImages: true
+			address: true
 		}
 	})
 }
@@ -151,17 +148,12 @@ export const getFarmers = async () => {
 					_count: {
 						select: {
 							orders: true,
-							farmImages: true,
 							products: true
 						}
 					},
 					products: { include: { reviews: true } },
 					address: true,
-					verificationDocument: {
-						include: {
-							image: true
-						}
-					}
+					verificationDocument: true
 				}
 			}
 		},
@@ -192,11 +184,7 @@ export const getPendingFarmers = async () => {
 			},
 			address: true,
 			orders: true,
-			verificationDocument: {
-				include: {
-					image: true
-				}
-			}
+			verificationDocument: true
 		},
 		orderBy: {
 			createdAt: "desc"
@@ -270,9 +258,7 @@ export const getTopFarmers = async (limit = 10) => {
 		select: {
 			id: true,
 			farmName: true,
-			farmImages: {
-				select: { url: true }
-			},
+			profilePicture: true,
 			user: {
 				select: {
 					name: true,
@@ -354,12 +340,13 @@ export const getTopFarmers = async (limit = 10) => {
 			weights.responseRate * normalizedResponseRate
 
 		return {
+			profilePicture: farmer.profilePicture,
 			id: farmer.id,
 			name: farmer.user.name || farmer.farmName,
 			averageRating: averageRating.toFixed(1),
 			totalSales,
 			responseRate: (responseRate * 100).toFixed(1) + "%",
-			image: farmer.user.profilePicture?.url || farmer.farmImages?.[0]?.url,
+			image: farmer.user.profilePicture,
 			address: farmer.address?.[0]?.fullAddress,
 			finalScore: Number(finalScore.toFixed(3)),
 			numberOfProducts,
@@ -385,22 +372,6 @@ export const getTopFarmers = async (limit = 10) => {
 	return rankedFarmers
 		.sort((a, b) => b.finalScore - a.finalScore)
 		.slice(0, limit)
-}
-
-// MARK: MUTATIONS
-export const createFarmerByUserId = async (
-	data: FarmRegistrationSchema & { userId: string }
-) => {
-	return await db.farmer.create({
-		data: {
-			applicationStatus: "PENDING",
-			userId: data.userId,
-			contactNumber: data.contactNumber,
-			birthDate: new Date(data.birthDate),
-			farmName: data.farmName,
-			farmDescription: data.farmDescription
-		}
-	})
 }
 
 export const updateFarmerByUserId = async (
@@ -444,13 +415,15 @@ export const updateFarmerByUserId = async (
 					applicationStatus: data?.farmer?.applicationStatus
 					// address: {
 					// 	update: {
-					// 		latitude: data.farmer.address.latitude,
-					// 		longitude: data.farmer.address.longitude,
-					// 		fullAddress: data.farmer.address.fullAddress,
-					// 		street: data.farmer.address.street,
-					// 		region: data.farmer.address.region,
-					// 		country: data.farmer.address.country,
-					// 		postalCode: data.farmer.address.postalCode
+					// 		data: {
+					// 			latitude: data!.farmer!.address!.latitude,
+					// 			longitude: data!.farmer!.address!.longitude,
+					// 			fullAddress: data!.farmer!.address!.fullAddress || "",
+					// 			street: data!.farmer!.address!.street || "",
+					// 			region: data!.farmer!.address!.region || "",
+					// 			country: data!.farmer!.address!.country || "",
+					// 			postalCode: data!.farmer!.address!.postalCode || ""
+					// 		}
 					// 	}
 					// }
 				}
@@ -465,25 +438,11 @@ export const updateFarmerByUserId = async (
 				},
 				create: {
 					type: data.farmer.verificationDocument.type,
-					image: {
-						create: {
-							url: data.farmer.verificationDocument.image.url,
-							filename: data.farmer.verificationDocument.image.filename,
-							size: data.farmer.verificationDocument.image.size,
-							mimeType: data.farmer.verificationDocument.image.mimeType,
-							type: "VERIFICATION"
-						}
-					}
+					image: data.farmer.verificationDocument.image.url
 				},
 				update: {
-					image: {
-						update: {
-							url: data.farmer.verificationDocument.image.url,
-							filename: data.farmer.verificationDocument.image.filename,
-							size: data.farmer.verificationDocument.image.size,
-							mimeType: data.farmer.verificationDocument.image.mimeType
-						}
-					}
+					image: data.farmer.verificationDocument.image.url,
+					type: data.farmer.verificationDocument.type
 				}
 			}))
 		return {

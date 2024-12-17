@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation"
-import { FarmRegistrationForm } from "./_components/farmer-registration-form"
+import { auth } from "@/auth"
+import { BackButtonLogout } from "@/components/fg/back-button"
 import {
 	Card,
 	CardContent,
@@ -7,11 +7,11 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { getUserFarmerByIdUseCase } from "@/use-cases/users"
+import { redirect } from "next/navigation"
 import { AuthLeftSection } from "../../_components/auth-left-section"
 import { AuthRightSection } from "../../_components/auth-right-section"
-import { auth } from "@/auth"
-import { getUserFarmerByIdUseCase } from "@/use-cases/users"
-import { BackButtonLogout } from "@/components/fg/back-button"
+import { FarmRegistrationForm } from "./_components/farmer-registration-form"
 
 export default async function Page() {
 	const session = await auth()
@@ -35,9 +35,14 @@ export default async function Page() {
 					<BackButtonLogout />
 					<Card className="lg:border-0 lg:shadow-none">
 						<CardHeader>
-							<CardTitle>Setup Farm Information</CardTitle>
+							<CardTitle>Provide Farm Information</CardTitle>
 							<CardDescription>
-								Setup your farm information and start selling now!
+								<span className="text-lg text-destructive">* </span>
+								Please ensure that all information provided is accurate and
+								complete. This information will be used to verify your identity
+								and eligibility as a farmer. Inaccurate or incomplete
+								submissions may result in delays or rejection of your
+								application
 							</CardDescription>
 						</CardHeader>
 						<CardContent>

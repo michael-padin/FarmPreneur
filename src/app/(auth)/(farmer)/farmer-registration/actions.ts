@@ -1,21 +1,15 @@
 "use server"
 import { getErrorMessage } from "@/lib/handle-error"
-import { farmRegistrationSchema, FarmRegistrationSchema } from "./types"
-import { createUserFarmerByIdUseCase } from "@/use-cases/users"
 import { pusherServer } from "@/lib/pusher"
 import { getPendingFarmerCountUseCase } from "@/use-cases/farmers"
 import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
+import { createUserFarmerByIdUseCase } from "@/use-cases/users"
+import { FarmRegistrationSchema } from "./types"
 
 export const upsertFarmerAction = async (
 	data: FarmRegistrationSchema & { userId: string }
 ) => {
 	try {
-		const validatedFields = farmRegistrationSchema.safeParse(data)
-
-		if (!validatedFields.success) {
-			return { error: "Invalid fields" }
-		}
-
 		const createdFarmer = await createUserFarmerByIdUseCase({
 			...data
 		})
