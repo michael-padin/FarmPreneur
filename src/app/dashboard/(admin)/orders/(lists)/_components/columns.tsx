@@ -64,7 +64,6 @@ export const columns: ColumnDef<
 		),
 		cell: ({ row }) => {
 			const product = row.original.items[0].product
-			const quantity = row.original.quantity
 			return (
 				<div className="flex items-center gap-3">
 					{product.productImages?.[0] && (
@@ -81,8 +80,8 @@ export const columns: ColumnDef<
 						<span className="font-medium">{product.title}</span>
 						<div className="flex items-center gap-1 text-sm text-gray-500">
 							<Package className="h-3 w-3" />
-							<span>
-								{quantity} {product.unit}
+							<span className="w-max">
+								{product.quantity} {product.unit}
 							</span>
 						</div>
 					</div>
@@ -154,7 +153,7 @@ export const columns: ColumnDef<
 			const totalPrice = cell.getValue() as Order["totalPrice"]
 			return (
 				<>
-					<p>{formatPHP(totalPrice!)}/</p>
+					<p>₱{formatPHP(totalPrice!)}</p>
 				</>
 			)
 		},
@@ -170,7 +169,7 @@ export const columns: ColumnDef<
 		cell: ({ cell }) => {
 			const status = cell.getValue() as OrderStatus
 
-			return <OrderStatusBadge status={status} />
+			return <OrderStatusBadge status={status} showText />
 		}
 	},
 

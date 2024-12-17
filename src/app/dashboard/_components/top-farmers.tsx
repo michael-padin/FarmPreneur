@@ -75,14 +75,14 @@ export async function TopFarmers() {
 											Products
 										</div>
 									</div>
-									<div className="text-center">
+									{/* <div className="text-center">
 										<div className="font-semibold text-primary">
 											{farm.responseRate}
 										</div>
 										<div className="text-xs text-muted-foreground lg:text-sm">
 											Response
 										</div>
-									</div>
+									</div> */}
 									<div className="text-center">
 										<div className="font-semibold text-primary">
 											{abbreviateNumber(farm.totalSales)}

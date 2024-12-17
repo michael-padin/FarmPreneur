@@ -75,8 +75,6 @@ export const createUserFarmerById = async (
 			}
 		})
 
-		console.log("data :>> ", data)
-
 		const farmer = await tx.farmer.create({
 			data: {
 				userId: data.userId,

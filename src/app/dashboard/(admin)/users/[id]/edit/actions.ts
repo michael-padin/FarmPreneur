@@ -38,7 +38,6 @@ export const updateFarmer = async (
 		userId: string
 	}
 ) => {
-	console.log("data :>> ", data)
 	try {
 		/**
 		 * @

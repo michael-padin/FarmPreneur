@@ -364,9 +364,11 @@ export function DataTable({ data }: DataTableProps) {
 									>
 										{farmer.farmer?.applicationStatus}
 									</Badge> */}
-									<FarmerApprovalBadge
-										status={farmer!.farmer!.applicationStatus!}
-									/>
+									{farmer.farmer && farmer.farmer.applicationStatus ? (
+										<FarmerApprovalBadge
+											status={farmer.farmer.applicationStatus}
+										/>
+									) : null}
 
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
@@ -456,11 +458,13 @@ export function DataTable({ data }: DataTableProps) {
 											<Clock className="h-4 w-4 text-muted-foreground" />
 											<span className="text-muted-foreground">Created:</span>
 											<span>
-												{/* {farmer.farmer!.createdAt.toDateString()} */}
-												{format(
-													new Date(farmer.farmer!.createdAt),
-													"MMM d yyyy"
-												)}
+												{/* {farmer.farmer!.createdAt.toDateString()} */}\
+												{farmer.farmer?.createdAt
+													? format(
+															new Date(farmer.farmer?.createdAt || ""),
+															"MMM d yyyy"
+														)
+													: ""}
 											</span>
 										</div>
 										<div className="flex items-center gap-2">
@@ -468,10 +472,12 @@ export function DataTable({ data }: DataTableProps) {
 											<span className="text-muted-foreground">Updated:</span>
 											<span>
 												{/* {farmer.farmer!.createdAt.toDateString()} */}
-												{format(
-													new Date(farmer.farmer!.updatedAt),
-													"MMM d yyyy"
-												)}
+												{farmer.farmer?.updatedAt
+													? format(
+															new Date(farmer.farmer?.updatedAt || ""),
+															"MMM d yyyy"
+														)
+													: ""}
 											</span>
 										</div>
 									</div>

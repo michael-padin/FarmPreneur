@@ -60,7 +60,9 @@ export const columns: ColumnDef<
 		enableSorting: true,
 		cell: ({ row }) => {
 			const product = row.original
-			return <ProductListingStatusBadge status={product.listingStatus} />
+			return (
+				<ProductListingStatusBadge status={product.listingStatus} showText />
+			)
 		}
 	},
 	{

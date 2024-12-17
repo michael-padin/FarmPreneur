@@ -150,7 +150,7 @@ export const columns: ColumnDef<
 			const totalPrice = cell.getValue() as Order["totalPrice"]
 			return (
 				<>
-					<p>{formatPHP(Number(totalPrice))}/</p>
+					<p>₱{formatPHP(Number(totalPrice))}</p>
 				</>
 			)
 		},
@@ -166,7 +166,7 @@ export const columns: ColumnDef<
 		cell: ({ cell }) => {
 			const status = cell.getValue() as OrderStatus
 
-			return <OrderStatusBadge status={status} />
+			return <OrderStatusBadge status={status} showText />
 		}
 	},
 
