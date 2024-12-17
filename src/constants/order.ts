@@ -1,10 +1,10 @@
 import { OrderStatus, OrderSubStatus } from "@prisma/client"
 
-export const orderStatusMap: Record<OrderStatus, { label: string }> = {
-	[OrderStatus.PENDING]: { label: "PENDING" },
-	[OrderStatus.IN_PROGRESS]: { label: "IN PROGRESS" },
-	[OrderStatus.COMPLETED]: { label: "COMPLETED" },
-	[OrderStatus.CANCELLED]: { label: "CANCELLED" }
+export const orderStatusMap: Record<OrderStatus, string> = {
+	[OrderStatus.PENDING]: "PENDING",
+	[OrderStatus.IN_PROGRESS]: "IN PROGRESS",
+	[OrderStatus.COMPLETED]: "COMPLETED",
+	[OrderStatus.CANCELLED]: "CANCELLED"
 }
 
 export const orderSubStatusMap: Record<OrderSubStatus, { label: string }> = {

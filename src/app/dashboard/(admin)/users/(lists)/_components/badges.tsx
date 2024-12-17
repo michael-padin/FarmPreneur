@@ -1,5 +1,6 @@
 "use client"
 import { Badge, BadgeProps } from "@/components/ui/badge"
+import { orderStatusMap } from "@/constants/order"
 import { cn } from "@/lib/utils"
 import {
 	FarmerApplicationStatus,
@@ -165,7 +166,7 @@ export const ProductListingStatusBadge = ({
 }
 
 interface OrderStatusBadgeProps {
-	status: OrderStatus | ProductListingStatus
+	status: OrderStatus
 	className?: string
 	showText?: boolean
 }
@@ -175,14 +176,12 @@ export const OrderStatusBadge = ({
 	className,
 	showText
 }: OrderStatusBadgeProps) => {
-	const getStatusStyles = (status: ProductListingStatus | OrderStatus) => {
+	const getStatusStyles = (status: OrderStatus) => {
 		switch (status) {
 			case "PENDING":
 				return `text-yellow-600  ${showText ? "bg-yellow-100" : "bg-yellow-200"} hover:bg-yellow-200`
 			case "IN_PROGRESS":
-				return `text-yellow-600  ${showText ? "bg-yellow-100" : "bg-yellow-200"} hover:bg-yellow-200`
-			case "APPROVED":
-				return `text-green-600 ${showText ? "bg-green-100" : "bg-green-200"} hover:bg-green-200`
+				return `text-blue-600  ${showText ? "bg-blue-100" : "bg-blue-200"} hover:bg-blue-200`
 			case "COMPLETED":
 				return `text-green-600 ${showText ? "bg-green-100" : "bg-green-200"} hover:bg-green-200`
 			case "CANCELLED":
@@ -194,7 +193,7 @@ export const OrderStatusBadge = ({
 
 	return (
 		<Badge className={cn(getStatusStyles(status), className)}>
-			{showText && status.charAt(0).toUpperCase() + status.slice(1)}
+			{showText && orderStatusMap[status]}
 		</Badge>
 	)
 }
