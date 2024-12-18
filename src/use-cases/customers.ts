@@ -130,7 +130,7 @@ export const getCheckoutDataUseCase = async (
 					id: product.id,
 					name: product.title,
 					price: product.price,
-					image: product.images[0].url,
+					image: product.productImages[0],
 					unit: product.unit as UnitKey,
 					farmer: {
 						profilePicture: product.farmer!.profilePicture || "",
