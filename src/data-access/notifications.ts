@@ -13,17 +13,6 @@ export const getNotificationsByUserId = async (userId: string) => {
 	})
 }
 
-export const markNotificationAsRead = async (notificationId: string) => {
-	return await db.notification.update({
-		where: {
-			id: notificationId
-		},
-		data: {
-			isRead: true
-		}
-	})
-}
-
 // MARK: MUTATIONS
 export const createNotificationByUserId = async (data: {
 	userId: string

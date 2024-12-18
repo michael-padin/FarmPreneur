@@ -18,7 +18,6 @@ import {
 	getProducts,
 	getProductsOnProductListPage,
 	getTopProducts,
-	getTopSellingProducts,
 	getTotalProducts,
 	getTotalProductsByDate,
 	updateProduct
@@ -134,14 +133,6 @@ export const getTotalProductsUseCase = async (userId?: string) => {
 export const getProductReviewStatsUseCase = async () => {
 	try {
 		return await getProductReviewStats()
-	} catch (error) {
-		throw error
-	}
-}
-
-export const getTopSellingProductsUseCase = async (limit = 10) => {
-	try {
-		return await getTopSellingProducts(limit)
 	} catch (error) {
 		throw error
 	}

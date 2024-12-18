@@ -337,13 +337,6 @@ export const updateUser = async (data: UpdateUserTypes & { id: string }) => {
 	})
 }
 
-export const deleteUserById = async (id: string) => {
-	return await db.user.delete({
-		where: {
-			id: id
-		}
-	})
-}
 export const deleteUsersById = async (ids: string[]) => {
 	return await db.$transaction([
 		db.user.deleteMany({ where: { id: { in: ids } } })

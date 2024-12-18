@@ -5,7 +5,6 @@ import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validati
 import {
 	createUserFarmerById,
 	createUserWithOTP,
-	deleteUserById,
 	deleteUsersById,
 	getCustomers,
 	getTotalUsers,
@@ -113,9 +112,6 @@ export const updateUserUseCase = async (
 	return await updateUser(data)
 }
 
-export const deleteUserByIdUseCase = async (id: string) => {
-	return await deleteUserById(id)
-}
 export const deleteUsersByIdUseCase = async (ids: string[]) => {
 	return await deleteUsersById(ids)
 }

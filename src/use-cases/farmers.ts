@@ -7,7 +7,6 @@ import {
 	getFarmerApprovalStatusByUserId,
 	getFarmerById,
 	getFarmerByUserId,
-	getFarmerOwnProfile,
 	getFarmers,
 	getPendingFarmerCount,
 	getPendingFarmers,
@@ -19,20 +18,6 @@ import {
 	calculateRevenueGrowthPercentage,
 	getMonthRangeByDate
 } from "@/lib/utils"
-
-export const getFarmerOwnProfileUseCase = async () => {
-	const session = await auth()
-
-	if (!session || !session.user.id) throw new Error("Unauthorized!")
-	const farmer = await getFarmerOwnProfile(session.user.id)
-	if (!farmer) throw new Error("Farmer not found!")
-
-	const averageRating = 0
-	// farmer.products.reviews.reduce((sum, review) => sum + review.rating, 0) /
-	// 	farmer.products.reviews.length || 0
-
-	return { ...farmer, averageRating }
-}
 
 export const getPendingFarmerCountUseCase = async () => {
 	return await getPendingFarmerCount()
@@ -55,10 +40,6 @@ export const getPendingFarmersUseCase = async () => {
 
 export const getFarmerApprovalStatusByUserIdUseCase = async (id: string) => {
 	return await getFarmerApprovalStatusByUserId(id)
-}
-
-export const getUserFarmerByIdUseCase = async (id: string) => {
-	return await getFarmerByUserId(id)
 }
 
 export const getFarmerByUserIdUseCase = async (id: string) => {

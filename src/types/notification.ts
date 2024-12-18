@@ -41,7 +41,7 @@ export interface Notification extends PrismaNotification {
 	metadata: NotifMetadata
 }
 
-export const notificationLabels: Record<NotificationType, string> = {
+export const notificationTypeMap: Record<NotificationType, string> = {
 	FARMER_APPROVAL: "Farmer Approval",
 	PRODUCT_APPROVAL: "Product Approval",
 	NEW_PRODUCT: "New Product",
@@ -51,7 +51,7 @@ export const notificationLabels: Record<NotificationType, string> = {
 	SYSTEM_ALERT: "System Alert",
 	VERIFICATION: "Verification"
 }
-export const notificationOptions = Object.entries(notificationLabels).map(
+export const notificationOptions = Object.entries(notificationTypeMap).map(
 	([value, label]) => ({
 		label,
 		value

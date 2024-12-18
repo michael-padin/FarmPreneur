@@ -131,65 +131,6 @@ export const getRecentOrdersUseCase = async () => {
 	}
 }
 
-export const getCustomerOrderItemsUseCase = async (filter: {
-	orderId?: string
-	unrated?: boolean
-}) => {
-	try {
-		const session = await auth()
-		if (!session || !session.user) throw new Error("Unauthorized")
-
-		const customerId = session.user.customerId || ""
-
-		if (!customerId) throw new Error("Customer not found")
-
-		const orderItems = await db.orderItem.findMany({
-			where: {
-				orderId: filter.orderId
-			},
-			include: {
-				product: {
-					select: {
-						unit: true,
-						title: true,
-						images: {
-							select: {
-								url: true
-							}
-						},
-						farmer: {
-							select: {
-								profilePicture: true,
-								contactNumber: true,
-								farmName: true,
-								farmImages: true
-							}
-						}
-					}
-				}
-			}
-		})
-
-		if (!orderItems) throw new Error("Order not found")
-
-		const shapedOrderItems = orderItems.map((item) => ({
-			orderId: item.orderId,
-			productId: item.productId,
-			quantity: item.quantity,
-			price: item.price,
-			image: item.product.images[0].url,
-			name: item.product.title,
-			unit: item.product.unit || "kg",
-			farmerContact: item.product.farmer?.contactNumber || "",
-			profilePicture: item.product.farmer?.profilePicture || "",
-			farmerName: item.product.farmer?.farmName || ""
-		}))
-		return shapedOrderItems
-	} catch (error) {
-		console.error(error)
-		throw new Error("Failed to get order items")
-	}
-}
 export const getCustomerUnReviewedOrderUseCase = async (filter: {
 	orderId?: string
 }) => {

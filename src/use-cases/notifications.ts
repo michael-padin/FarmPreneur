@@ -2,8 +2,7 @@
 import { auth } from "@/auth"
 import {
 	createNotificationByUserId,
-	getNotificationsByUserId,
-	markAllNotificationsAsRead
+	getNotificationsByUserId
 } from "@/data-access/notifications"
 import { getAdminIds } from "@/data-access/users"
 import { pusherServer } from "@/lib/pusher"
@@ -76,14 +75,6 @@ export const createNotificationsForAdminsUseCase = async (data: {
 				)
 			})
 		)
-	} catch (e) {
-		throw e
-	}
-}
-
-export const markAllNotificationsAsReadUseCase = async (userId: string) => {
-	try {
-		return await markAllNotificationsAsRead(userId)
 	} catch (e) {
 		throw e
 	}

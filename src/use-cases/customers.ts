@@ -4,7 +4,6 @@ import { UnitKey } from "@/constants/unit"
 import { getCartById } from "@/data-access/cart"
 import {
 	getCustomerById,
-	getCustomers,
 	updateCustomerByUserId
 } from "@/data-access/customers"
 import { getProductById } from "@/data-access/products"
@@ -81,19 +80,7 @@ export const getCustomerProfileUseCase = async () => {
 	}
 }
 
-export const getCustomersUseCase = async () => {
-	return await getCustomers()
-}
-
 export const updateCustomerByUserIdUseCase = async (
-	data: EditUserSchema & {
-		userId: string
-	}
-) => {
-	return await updateCustomerByUserId(data)
-}
-
-export const createCustomerUseCase = async (
 	data: EditUserSchema & {
 		userId: string
 	}

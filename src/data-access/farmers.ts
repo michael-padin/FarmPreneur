@@ -1,29 +1,6 @@
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
 
-export const getFarmerOwnProfile = async (userId: string) => {
-	return await db.farmer.findUnique({
-		where: {
-			userId: userId
-		},
-		include: {
-			_count: {
-				select: {
-					address: true,
-					orders: true
-				}
-			},
-
-			products: {
-				include: {
-					reviews: true
-				}
-			},
-			address: true
-		}
-	})
-}
-
 export const getFarmerByUserId = async (userId: string) => {
 	return await db.farmer.findUnique({
 		where: {
@@ -226,24 +203,6 @@ export const getApprovedFarmers = async () => {
 				}
 			},
 			address: true
-		}
-	})
-}
-export const getTopPerformingFarmers = async (limit = 5) => {
-	return await db.farmer.findMany({
-		take: limit,
-		orderBy: {
-			orders: {
-				_count: "desc"
-			}
-		},
-		include: {
-			_count: {
-				select: { orders: true }
-			},
-			user: {
-				select: { name: true }
-			}
 		}
 	})
 }

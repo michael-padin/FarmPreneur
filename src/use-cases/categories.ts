@@ -3,7 +3,6 @@ import {
 	createCategory,
 	deleteCategoriesById,
 	getCategories,
-	getCategoryBySlug,
 	updateCategoryById
 } from "@/data-access/categories"
 
@@ -15,10 +14,6 @@ export const createCategoryUseCase = async (
 	data: CreateCategorySchema & { slug: string }
 ) => {
 	await createCategory(data)
-}
-
-export const getCategoryBySlugUseCase = async (slug: string) => {
-	return getCategoryBySlug(slug)
 }
 
 export const deleteCategoriesByIdUseCase = async (ids: string[]) => {

@@ -1,6 +1,5 @@
 import { ProductSort } from "@/app/(home)/products/(list)/searchParams"
 import { UpdateProductSchema } from "@/app/dashboard/(admin)/products/[id]/edit/validations"
-import { CreateProductSchema } from "@/app/dashboard/(admin)/products/create/validations"
 import { CreateProductSchema as CreateProductSchemaFarmer } from "@/app/dashboard/farmer/products/create/validations"
 import { db } from "@/lib/db"
 import { Address, ProductListingStatus } from "@prisma/client"
@@ -124,25 +123,6 @@ export const getProductReviewStats = async () => {
 		},
 		_count: {
 			_all: true
-		}
-	})
-}
-export const getTopSellingProducts = async (limit = 10) => {
-	return await db.product.findMany({
-		take: limit,
-
-		include: {
-			_count: {
-				select: {
-					orderItem: {
-						where: {
-							order: {
-								status: "COMPLETED"
-							}
-						}
-					}
-				}
-			}
 		}
 	})
 }
@@ -625,46 +605,6 @@ export const getProductBySlug = async (slug: string) => {
 			category: {
 				select: {
 					name: true
-				}
-			}
-		}
-	})
-}
-
-// MARK: MUTATIONS
-
-export const createProductFromAdmin = async (
-	data: CreateProductSchema & { slug: string }
-) => {
-	await db.product.create({
-		data: {
-			title: data.title,
-			description: data.description,
-			price: data.price,
-			quantity: data.quantity,
-			listingStatus: "PENDING",
-			farmer: {
-				connect: {
-					id: data.farmerId
-				}
-			},
-			category: {
-				connect: {
-					id: data.categoryId
-				}
-			},
-
-			slug: data.slug,
-			unit: data.unit,
-			images: {
-				createMany: {
-					data: data.images.map((image) => ({
-						type: "PRODUCT",
-						url: image.url,
-						filename: image.filename,
-						size: image.size,
-						mimeType: image.mimeType
-					}))
 				}
 			}
 		}
