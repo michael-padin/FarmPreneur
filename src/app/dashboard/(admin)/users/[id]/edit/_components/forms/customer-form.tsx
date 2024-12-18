@@ -1,5 +1,14 @@
 "use client"
 
+import { FPAddressPicker } from "@/components/fp/fp-address-picker"
+import { FPPhoneInput } from "@/components/fp/fp-phone-input"
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger
+} from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button"
 import {
 	Card,
 	CardContent,
@@ -16,25 +25,15 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
+import { showErrorToast } from "@/lib/handle-error"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { editUserSchema, EditUserSchema } from "../../validations"
-import { BackButton } from "@/components/fg/back-button"
-import { Button } from "@/components/ui/button"
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
+import { useRouter } from "next/navigation"
 import { useTransition } from "react"
-import { showErrorToast } from "@/lib/handle-error"
+import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { updateCustomer } from "../../actions"
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger
-} from "@/components/ui/accordion"
-import { useRouter } from "next/navigation"
+import { editUserSchema, EditUserSchema } from "../../validations"
 import UserFormItems from "./user-form-items"
 
 interface CustomerFormProps {
@@ -96,7 +95,7 @@ export default function CustomerForm({ user }: CustomerFormProps) {
 									<FormItem>
 										<FormLabel>Contact Number</FormLabel>
 										<FormControl>
-											<FGSinglePhoneINput
+											<FPPhoneInput
 												placeholder="1234567890"
 												{...field}
 												value={field.value ? field.value : ""}
@@ -113,7 +112,7 @@ export default function CustomerForm({ user }: CustomerFormProps) {
 									<FormItem>
 										<FormLabel>Address</FormLabel>
 										<FormControl>
-											<AddressLocationPicker
+											<FPAddressPicker
 												defaultCenter={{
 													lat: field?.value?.latitude || 40.7128,
 													lng: field?.value?.longitude || -74.006

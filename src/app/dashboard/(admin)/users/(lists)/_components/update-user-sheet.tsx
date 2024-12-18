@@ -1,52 +1,7 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+import { UpdateTaskSheetProps } from "../types"
 
-import { Button } from "@/components/ui/button"
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage
-} from "@/components/ui/form"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from "@/components/ui/select"
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle
-} from "@/components/ui/sheet"
-
-import { FarmerApplicationStatus, ROLE } from "@prisma/client"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-
-import { useEffect, useTransition } from "react"
-import {
-	UpdateTaskSheetProps,
-	UpdateUserTypes,
-	updateUserSchema
-} from "../types"
-import { Icons } from "@/components/icons"
-import { updateUser } from "../actions"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
-
-import { RoleBadge } from "./badges"
-import MapboxLocationPicker from "@/components/fg/fg-map-box-location-picker"
 export function UpdateUserSheet({ user, ...props }: UpdateTaskSheetProps) {
 	// const [isUpdatePending, startUpdateTransition] = useTransition()
 	// const form = useForm<UpdateUserTypes>({

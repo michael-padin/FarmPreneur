@@ -1,5 +1,6 @@
 "use client"
 
+import { signOutAction } from "@/actions/auth"
 import { cn } from "@/lib/utils"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
@@ -55,5 +56,30 @@ export const FPLinkBackButton = ({
 				<span className="sr-only">Go back</span>
 			</Link>
 		</div>
+	)
+}
+export const FPBackButtonLogout = ({
+	className,
+	containerClassName,
+	iconClassName
+}: {
+	iconClassName?: string
+	className?: string
+	containerClassName?: string
+}) => {
+	return (
+		<form action={signOutAction}>
+			<div className={containerClassName}>
+				<button
+					className={cn(
+						"relative flex items-center justify-center rounded-full p-1.5",
+						className
+					)}
+				>
+					<ArrowLeft className={cn("h-6 w-6", iconClassName)} />
+					<span className="sr-only">Go back</span>
+				</button>
+			</div>
+		</form>
 	)
 }

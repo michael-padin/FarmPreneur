@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPDatePickerWithDropdown } from "@/components/fp/date-picker/fp-date-picker-with-dropdown"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
+import { FPPhoneInput } from "@/components/fp/fp-phone-input"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -192,7 +192,7 @@ export default function EditCustomerProfileForm({
 						<FormItem>
 							<FormLabel>Contact Number</FormLabel>
 							<FormControl>
-								<FGSinglePhoneINput {...field} />
+								<FPPhoneInput {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>

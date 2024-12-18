@@ -1,8 +1,8 @@
 "use client"
 
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
 import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {

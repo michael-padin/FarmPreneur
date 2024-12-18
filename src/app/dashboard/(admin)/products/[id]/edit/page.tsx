@@ -1,19 +1,18 @@
 import { DashboardHeader } from "@/app/_components/header"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
+import { getProductByIdUseCase } from "@/use-cases/products"
 import { Suspense } from "react"
 import { EditUserSkeleton } from "../../../users/[id]/edit/_components/edit-user-skeleton"
-import { getProductByIdUseCase } from "@/use-cases/products"
 import { AdminEditProductForm } from "./_components/edit-product-form"
-import { BackButton, BreadcrumbResponsive } from "@/components/fg/back-button"
 
 const getProduct = async (id: string) => {
 	return await getProductByIdUseCase(id)
@@ -42,7 +41,7 @@ export default async function AdminEditProductPage(props: { params: Params }) {
 		<>
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<BreadcrumbResponsive items={breadcrumbItems} />
+				<FPBreadcrumbResponsive items={breadcrumbItems} />
 				<Card className="mx-auto max-w-screen-md">
 					<CardHeader className="p-4 lg:p-6">
 						<CardTitle>Edit Product</CardTitle>

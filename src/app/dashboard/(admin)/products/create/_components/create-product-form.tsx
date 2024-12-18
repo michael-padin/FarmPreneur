@@ -1,6 +1,6 @@
 "use client"
 import { FileUpload } from "@/components/fg/fp-s3-file-upload"
-import { FPUnitSelect } from "@/components/fg/fp-select-unit"
+import { FPSelect } from "@/components/fp/fp-select"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -22,6 +22,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { PRODUCT_STATUS } from "@/constants/product-status"
 import { S3PATH } from "@/constants/s3-path"
+import { units } from "@/constants/unit"
 import { showErrorToast } from "@/lib/handle-error"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
@@ -140,8 +141,11 @@ export function CreateProductForm({
 							name="unit"
 							render={({ field }) => (
 								<FormItem>
-									<FPUnitSelect {...field} />
-									<FormDescription>Available quantity.</FormDescription>
+									<FPSelect
+										{...field}
+										items={units}
+										placeholder="Select unit"
+									/>
 									<FormMessage />
 								</FormItem>
 							)}

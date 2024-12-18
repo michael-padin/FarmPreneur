@@ -9,17 +9,17 @@ import { Command, CommandGroup, CommandItem } from "@/components/ui/command"
 
 type Options = Record<"value" | "label", string>
 
-interface SSMultiSeleectProps {
+interface FPMultiSelectProps {
 	options: Options[]
 	onChange: (options: Options[]) => void
 	placeholder?: string
 }
 
-export function SSMultiSeleect({
+export function FPMultiSelect({
 	options,
 	onChange,
 	placeholder
-}: SSMultiSeleectProps) {
+}: FPMultiSelectProps) {
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	const [open, setOpen] = React.useState(false)
 	const [selected, setSelected] = React.useState<Options[]>([options[4]])
@@ -55,9 +55,7 @@ export function SSMultiSeleect({
 		[]
 	)
 
-	const selectables = options.filter(
-		(framework) => !selected.includes(framework)
-	)
+	const selectables = options.filter((item) => !selected.includes(item))
 
 	return (
 		<Command
@@ -66,22 +64,22 @@ export function SSMultiSeleect({
 		>
 			<div className="group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
 				<div className="flex flex-wrap gap-1">
-					{selected.map((framework) => {
+					{selected.map((item) => {
 						return (
-							<Badge key={framework.value} variant="secondary">
-								{framework.label}
+							<Badge key={item.value} variant="secondary">
+								{item.label}
 								<button
 									className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
-											handleUnselect(framework)
+											handleUnselect(item)
 										}
 									}}
 									onMouseDown={(e) => {
 										e.preventDefault()
 										e.stopPropagation()
 									}}
-									onClick={() => handleUnselect(framework)}
+									onClick={() => handleUnselect(item)}
 								>
 									<X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
 								</button>
@@ -104,21 +102,21 @@ export function SSMultiSeleect({
 				{open && selectables.length > 0 ? (
 					<div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
 						<CommandGroup className="h-[200px] overflow-auto">
-							{selectables.map((framework) => {
+							{selectables.map((item) => {
 								return (
 									<CommandItem
-										key={framework.value}
+										key={item.value}
 										onMouseDown={(e) => {
 											e.preventDefault()
 											e.stopPropagation()
 										}}
 										onSelect={(value) => {
 											setInputValue("")
-											setSelected((prev) => [...prev, framework])
+											setSelected((prev) => [...prev, item])
 										}}
 										className={"cursor-pointer"}
 									>
-										{framework.label}
+										{item.label}
 									</CommandItem>
 								)
 							})}

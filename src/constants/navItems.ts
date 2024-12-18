@@ -5,9 +5,7 @@ import {
 	LucideProps,
 	MessageCircleCode,
 	Package,
-	ShoppingCart,
-	UserCheck,
-	Users
+	UserCheck
 } from "lucide-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 

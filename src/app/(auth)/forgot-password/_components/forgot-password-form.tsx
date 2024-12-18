@@ -1,9 +1,5 @@
 "use client"
 
-import Link from "next/link"
-import { useTransition } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
 	Form,
@@ -14,14 +10,18 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
+import { useTransition } from "react"
+import { useForm } from "react-hook-form"
 
+import { FPSubmitButton } from "@/components/fp/fp-submit-btn"
+import { showErrorToast } from "@/lib/handle-error"
+import { cn } from "@/lib/utils"
 import { ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
-import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
-import { ForgotPasswordSchema, ForgotPasswordType } from "../types"
 import { sendPasswordResetEmail } from "../actions"
-import { cn } from "@/lib/utils"
-import { showErrorToast } from "@/lib/handle-error"
+import { ForgotPasswordSchema, ForgotPasswordType } from "../types"
 
 export default function ForgotPasswordForm() {
 	const [isPending, startTransition] = useTransition()
@@ -80,11 +80,13 @@ export default function ForgotPasswordForm() {
 								Resend
 							</Button>
 						</div>
-						<FGSubmitBtn
-							text="Send reset password email"
-							disabled={isPending || !form.formState.isDirty}
-							className="w-full"
-						/>
+						<Button asChild>
+							<FPSubmitButton
+								text="Send reset password email"
+								disabled={isPending || !form.formState.isDirty}
+								className="w-full"
+							/>
+						</Button>
 						<Link
 							href="/login"
 							className={cn(buttonVariants({ variant: "secondary" }), "w-full")}

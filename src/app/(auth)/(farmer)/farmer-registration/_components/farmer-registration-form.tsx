@@ -14,9 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
+import { FPPhoneInput } from "@/components/fp/fp-phone-input"
 import { Separator } from "@/components/ui/separator"
 import { showErrorToast } from "@/lib/handle-error"
 import { getUserFarmerByIdUseCase } from "@/use-cases/users"
@@ -25,10 +23,12 @@ import { toast } from "sonner"
 import { upsertFarmerAction } from "../actions"
 import { farmRegistrationSchema, FarmRegistrationSchema } from "../types"
 
-import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
-import { FPDocumentSelect } from "@/components/fg/fp-document-select"
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPDatePickerWithDropdown } from "@/components/fp/date-picker/fp-date-picker-with-dropdown"
+import { FPAddressPicker } from "@/components/fp/fp-address-picker"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
+import { FPSelect } from "@/components/fp/fp-select"
 import { CardTitle } from "@/components/ui/card"
+import { verificationDocumentTypes } from "@/constants/verification-document"
 import { processMediaUpdate } from "@/utils/media"
 
 interface FarmRegistrationFormProps {
@@ -179,7 +179,7 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 							<FormItem>
 								<FormLabel>Contact Number</FormLabel>
 								<FormControl>
-									<FGSinglePhoneINput {...field} />
+									<FPPhoneInput {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -220,7 +220,7 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 							<FormItem>
 								<FormLabel>Address</FormLabel>
 								<FormControl>
-									<AddressLocationPicker
+									<FPAddressPicker
 										onAddressSelect={(address) => {
 											field.onChange(address)
 										}}
@@ -271,7 +271,7 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 							name="documentVerification.type"
 							render={({ field }) => (
 								<FormItem>
-									<FPDocumentSelect {...field} />
+									<FPSelect {...field} items={verificationDocumentTypes} />
 									<FormMessage />
 								</FormItem>
 							)}

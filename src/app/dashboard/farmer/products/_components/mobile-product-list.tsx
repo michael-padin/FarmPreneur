@@ -1,7 +1,7 @@
 import { ProductListingStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader } from "@/components/ui/card"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { UnitKey, unitMap } from "@/constants/unit"
 import { getProductsUseCase } from "@/use-cases/products"
 import { Box, Edit } from "lucide-react"
 import Image from "next/image"
@@ -54,14 +54,14 @@ export async function FarmerProductList() {
 									<p className="text-muted-foreground">Price</p>
 									<p className="font-medium">
 										₱{product.price.toFixed(2)}/
-										{UNITS_MAP[(product.unit || "kg") as UnitKey].abbreviation}
+										{unitMap[(product.unit || "kg") as UnitKey]}
 									</p>
 								</div>
 								<div>
 									<p className="text-muted-foreground">Stock</p>
 									<p className="font-medium">
 										{product.quantity}{" "}
-										{UNITS_MAP[(product.unit || "kg") as UnitKey].abbreviation}
+										{unitMap[(product.unit || "kg") as UnitKey]}
 									</p>
 								</div>
 							</div>

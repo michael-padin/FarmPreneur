@@ -1,6 +1,6 @@
 "use client"
 
-import { FPSignOutButton } from "@/components/fg/fp-signout-button"
+import { FPSignOutButton } from "@/components/fp/fp-signout-button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
 	DropdownMenu,

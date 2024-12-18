@@ -1,6 +1,6 @@
 "use client"
-import { FPUnitSelect } from "@/components/fg/fp-select-unit"
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
+import { FPSelect } from "@/components/fp/fp-select"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { PRODUCT_STATUS } from "@/constants/product-status"
+import { units } from "@/constants/unit"
 import { showErrorToast } from "@/lib/handle-error"
 import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
@@ -156,8 +157,12 @@ export function AdminEditProductForm({
 							name="unit"
 							render={({ field }) => (
 								<FormItem>
-									<FPUnitSelect {...field} />
-									<FormDescription>Available quantity.</FormDescription>
+									<FormLabel>Unit</FormLabel>
+									<FPSelect
+										{...field}
+										placeholder="Select unit"
+										items={units}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}

@@ -1,3 +1,7 @@
+import { DashboardHeader } from "@/app/_components/header"
+import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
 	Card,
 	CardContent,
@@ -5,17 +9,13 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { Suspense } from "react"
-import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
-import { Metadata } from "next"
-import { DataTable } from "./_components/data-table"
-import { getAllProductsUseCase } from "@/use-cases/products"
-import { DashboardHeader } from "@/app/_components/header"
-import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
+import { getAllProductsUseCase } from "@/use-cases/products"
 import { Plus } from "lucide-react"
+import { Metadata } from "next"
+import Link from "next/link"
+import { Suspense } from "react"
+import { DataTable } from "./_components/data-table"
 
 export const experimental_ppr = true
 
@@ -32,7 +32,7 @@ export default function Page() {
 		<>
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
+				<FPBreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
 						<div className="flex items-center justify-between">

@@ -1,4 +1,4 @@
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { Button } from "@/components/ui/button"
 import {
 	Form,

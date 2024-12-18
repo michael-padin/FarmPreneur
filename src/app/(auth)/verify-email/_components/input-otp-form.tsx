@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { FPSubmitButton } from "@/components/fp/fp-submit-btn"
+import { Button } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
@@ -16,19 +18,17 @@ import {
 	InputOTPGroup,
 	InputOTPSlot
 } from "@/components/ui/input-otp"
-import { useCallback, useEffect, useState, useTransition } from "react"
-import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
-import { redirect } from "next/navigation"
-import { resendCode, verifyCode } from "../actions"
-import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { VerificationFormSchema, VerificationType } from "../types"
-import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
-import { Session } from "next-auth"
-import { isOtpExpired } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { showErrorToast } from "@/lib/handle-error"
+import { isOtpExpired } from "@/lib/utils"
+import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
+import { Loader2 } from "lucide-react"
+import { Session } from "next-auth"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
+import { useCallback, useEffect, useState, useTransition } from "react"
+import { toast } from "sonner"
+import { resendCode, verifyCode } from "../actions"
+import { VerificationFormSchema, VerificationType } from "../types"
 interface InputOTPFormProps {
 	user: Session["user"]
 	otp?: Awaited<ReturnType<typeof getEmailOtpExpirationByUserIdUseCase>>
@@ -166,12 +166,14 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 						)}
 					/>
 					<div className="space-y-2">
-						<FGSubmitBtn
-							disabled={!form.formState.isDirty}
-							text="Verify"
-							isLoading={isPending}
-							className="w-full"
-						/>
+						<Button asChild>
+							<FPSubmitButton
+								disabled={!form.formState.isDirty}
+								text="Verify"
+								isLoading={isPending}
+								className="w-full"
+							/>
+						</Button>
 						<Button
 							variant="secondary"
 							className="w-full"

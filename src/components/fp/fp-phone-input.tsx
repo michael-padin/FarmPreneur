@@ -6,7 +6,7 @@ import { Input, InputProps } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 
-type PhoneInputProps = Omit<
+type FPPhoneInputProps = Omit<
 	React.InputHTMLAttributes<HTMLInputElement>,
 	"onChange" | "value"
 > &
@@ -14,32 +14,33 @@ type PhoneInputProps = Omit<
 		onChange?: (value: RPNInput.Value) => void
 	}
 
-const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
-	React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
-		({ className, onChange, ...props }, ref) => {
-			return (
-				<RPNInput.default
-					ref={ref}
-					className={cn("flex", className)}
-					flagComponent={FlagComponent}
-					countrySelectComponent={CountrySelect}
-					inputComponent={InputComponent}
-					/**
-					 * Handles the onChange event.
-					 *
-					 * react-phone-number-input might trigger the onChange event as undefined
-					 * when a valid phone number is not entered. To prevent this,
-					 * the value is coerced to an empty string.
-					 *
-					 * @param {E164Number | undefined} value - The entered value
-					 */
-					onChange={(value) => onChange?.(value!)}
-					{...props}
-				/>
-			)
-		}
-	)
-PhoneInput.displayName = "PhoneInput"
+const FPPhoneInput: React.ForwardRefExoticComponent<FPPhoneInputProps> =
+	React.forwardRef<
+		React.ElementRef<typeof RPNInput.default>,
+		FPPhoneInputProps
+	>(({ className, onChange, ...props }, ref) => {
+		return (
+			<RPNInput.default
+				ref={ref}
+				className={cn("flex", className)}
+				flagComponent={FlagComponent}
+				countrySelectComponent={CountrySelect}
+				inputComponent={InputComponent}
+				/**
+				 * Handles the onChange event.
+				 *
+				 * react-phone-number-input might trigger the onChange event as undefined
+				 * when a valid phone number is not entered. To prevent this,
+				 * the value is coerced to an empty string.
+				 *
+				 * @param {E164Number | undefined} value - The entered value
+				 */
+				onChange={(value) => onChange?.(value!)}
+				{...props}
+			/>
+		)
+	})
+FPPhoneInput.displayName = "FPPhoneInput"
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 	({ className, ...props }, ref) => (
@@ -83,4 +84,4 @@ const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
 }
 FlagComponent.displayName = "FlagComponent"
 
-export { PhoneInput as FGSinglePhoneINput }
+export { FPPhoneInput }

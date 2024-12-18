@@ -8,7 +8,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { UnitKey, unitMap } from "@/constants/unit"
 import { formatDate } from "@/lib/utils"
 import { getProductsUseCase } from "@/use-cases/products"
 import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react"
@@ -53,14 +53,13 @@ export function ProductItem({ product }: ProductItemProps) {
 						<p className="text-muted-foreground">Price</p>
 						<p className="font-medium">
 							₱{product.price.toFixed(2)}/
-							{UNITS_MAP[(product.unit || "kg") as UnitKey].abbreviation}
+							{unitMap[(product.unit || "kg") as UnitKey]}
 						</p>
 					</div>
 					<div>
 						<p className="text-muted-foreground">Stock</p>
 						<p className="font-medium">
-							{product.quantity}{" "}
-							{UNITS_MAP[(product.unit || "kg") as UnitKey].abbreviation}
+							{product.quantity} {unitMap[(product.unit || "kg") as UnitKey]}
 						</p>
 					</div>
 				</div>

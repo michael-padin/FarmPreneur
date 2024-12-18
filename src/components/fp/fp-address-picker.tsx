@@ -1,9 +1,7 @@
 "use client"
 
-import React, { useState, useRef, useCallback, useMemo, useEffect } from "react"
-import { Input } from "@/components/ui/input"
+import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { Button } from "@/components/ui/button"
-import { MapPin, Crosshair, Loader2 } from "lucide-react"
 import {
 	Command,
 	CommandEmpty,
@@ -11,13 +9,18 @@ import {
 	CommandItem,
 	CommandList
 } from "@/components/ui/command"
-import "mapbox-gl/dist/mapbox-gl.css"
-import { Feature, FeatureCollection } from "@/types"
+import { Input } from "@/components/ui/input"
 import { useClickOutside } from "@/hooks/use-click-outside-ref"
-import { Address } from "@/app/dashboard/(admin)/users/(lists)/types"
 import { useMapbox } from "@/hooks/use-mapbox"
-import { ClassValue } from "clsx"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { getErrorMessage } from "@/lib/handle-error"
+import { Feature, FeatureCollection } from "@/types"
+import { DialogClose } from "@radix-ui/react-dialog"
+import { ClassValue } from "clsx"
+import { Crosshair, Loader2, MapPin } from "lucide-react"
+import "mapbox-gl/dist/mapbox-gl.css"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { toast } from "sonner"
 import {
 	Dialog,
 	DialogContent,
@@ -37,9 +40,6 @@ import {
 	DrawerTitle,
 	DrawerTrigger
 } from "../ui/drawer"
-import { DialogClose } from "@radix-ui/react-dialog"
-import { toast } from "sonner"
-import { getErrorMessage } from "@/lib/handle-error"
 
 interface LatLng {
 	lat: number
@@ -51,7 +51,7 @@ const DEFAULT_CENTER: LatLng = {
 	lat: 40.7128 // New York City coordinates
 }
 
-interface AddressLocationPickerProps {
+interface FPAddressPickerProps {
 	onAddressSelect?: (address: Address) => void
 	defaultValue?: string
 	defaultCenter?: LatLng
@@ -72,14 +72,14 @@ const defaultAddress: Address = {
 	longitude: 0
 }
 
-export default function AddressLocationPicker({
+export function FPAddressPicker({
 	onAddressSelect,
 	defaultValue = "",
 	defaultCenter = DEFAULT_CENTER,
 	defaultZoom,
 	showMap = false,
 	dialogTriggerText = "Choose on map"
-}: AddressLocationPickerProps) {
+}: FPAddressPickerProps) {
 	const [openDialog, setOpenDialog] = useState(false)
 
 	const [inputValue, setInputValue] = useState(defaultValue)

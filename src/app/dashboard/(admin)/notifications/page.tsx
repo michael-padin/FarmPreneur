@@ -1,6 +1,6 @@
-import { Metadata } from "next"
 import { DashboardHeader } from "@/app/_components/header"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
+import { Metadata } from "next"
 import { NotificationList } from "./_components/notification-list"
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function Page() {
 		<>
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
+				<FPBreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<NotificationList />
 			</div>
 		</>

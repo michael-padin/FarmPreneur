@@ -1,4 +1,3 @@
-import React from "react"
 import {
 	Body,
 	Button,
@@ -7,7 +6,6 @@ import {
 	Heading,
 	Hr,
 	Html,
-	Img,
 	Link,
 	Preview,
 	Section,

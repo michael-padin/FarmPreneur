@@ -1,62 +1,10 @@
-import Image from "next/image"
-import { Star, ShoppingCart } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { getTopProductsUseCase } from "@/use-cases/products"
+import { Star } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import React from "react"
-import {
-	getTopProductsUseCase,
-	getTopSellingProductsUseCase
-} from "@/use-cases/products"
-
-const products = [
-	{
-		id: 1,
-		name: "JISULIFE Handheld Fan Pro1 Mini Fan Rechargeable",
-		image: "/placeholder.svg?height=200&width=200",
-		rating: 4.9,
-		reviews: "18.2K",
-		monthlySales: 18217,
-		price: 2299,
-		discount: 43,
-		rank: 1
-	},
-	{
-		id: 2,
-		name: "T10 Portable Mini Fan USB Rechargeable Turbo Fan",
-		image: "/placeholder.svg?height=200&width=200",
-		rating: 4.6,
-		reviews: "1.4K",
-		monthlySales: 16210,
-		price: 63,
-		discount: 57,
-		rank: 2
-	},
-	{
-		id: 3,
-		name: "T10 Portable Turbo Mini Fan USB Rechargeable",
-		image: "/placeholder.svg?height=200&width=200",
-		rating: 4.6,
-		reviews: "3.6K",
-		monthlySales: 14632,
-		price: 63,
-		discount: 77,
-		rank: 3
-	},
-	{
-		id: 4,
-		name: "Rechargeable Folding Fan N15 N221 T100 Fruit USB",
-		image: "/placeholder.svg?height=200&width=200",
-		rating: 4.5,
-		reviews: "4.7K",
-		monthlySales: 11087,
-		price: 60,
-		discount: 54,
-		rank: 4
-	}
-]
 
 export default async function TopFarmProducts() {
 	const products = await getTopProductsUseCase()

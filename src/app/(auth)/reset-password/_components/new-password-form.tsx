@@ -1,8 +1,8 @@
 "use client"
 
-import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
 import { FPPasswordInput } from "@/components/fp/fp-password-input"
-import { buttonVariants } from "@/components/ui/button"
+import { FPSubmitButton } from "@/components/fp/fp-submit-btn"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
@@ -86,12 +86,14 @@ export default function NewPasswordForm({ token }: { token: string }) {
 						)}
 					/>
 					<div className="space-y-2">
-						<FGSubmitBtn
-							disabled={!form.formState.isDirty}
-							text="Reset password"
-							className="w-full"
-							isLoading={isPending}
-						/>
+						<Button asChild>
+							<FPSubmitButton
+								disabled={!form.formState.isDirty}
+								text="Reset password"
+								className="w-full"
+								isLoading={isPending}
+							/>
+						</Button>
 						<Link
 							href="/login"
 							className={cn(buttonVariants({ variant: "secondary" }), "w-full")}

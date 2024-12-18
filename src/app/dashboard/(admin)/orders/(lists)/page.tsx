@@ -1,6 +1,6 @@
 import { DashboardHeader } from "@/app/_components/header"
 import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
 import {
 	Card,
 	CardContent,
@@ -26,7 +26,7 @@ export default async function Page() {
 		<div className="">
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
+				<FPBreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
 						<div className="flex items-center justify-between">

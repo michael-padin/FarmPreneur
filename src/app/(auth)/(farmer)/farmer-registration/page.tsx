@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { BackButtonLogout } from "@/components/fg/back-button"
+import { FPBackButtonLogout } from "@/components/fp/fp-back-button"
 import {
 	Card,
 	CardContent,
@@ -32,7 +32,7 @@ export default async function Page() {
 		<>
 			<AuthLeftSection>
 				<div className="space-y-2">
-					<BackButtonLogout />
+					<FPBackButtonLogout />
 					<Card className="lg:border-0 lg:shadow-none">
 						<CardHeader>
 							<CardTitle>Provide Farm Information</CardTitle>

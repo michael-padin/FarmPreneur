@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { UnitKey, unitMap } from "@/constants/unit"
 import { formatPHP } from "@/lib/utils"
 import { Star } from "lucide-react"
 import { QuantitySelector } from "./quantity-selector"
@@ -23,7 +23,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 			<div className="flex items-center justify-between gap-4">
 				<div className="text-2xl font-semibold text-primary">
 					<span className="text-xs">₱</span>
-					{formatPHP(product.price)}/{UNITS_MAP[product.unit].abbreviation}
+					{formatPHP(product.price)}/{unitMap[product.unit]}
 				</div>
 				<div className="mb-1 flex items-center gap-2">
 					<div className="flex items-center">
@@ -45,7 +45,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 					<ProductInfoItem label="Description" value={product.description} />
 					<ProductInfoItem
 						label="Stock"
-						value={`${product.quantity} ${UNITS_MAP[product.unit].abbreviation}`}
+						value={`${product.quantity} ${unitMap[product.unit]}`}
 					/>
 
 					<QuantitySelector />

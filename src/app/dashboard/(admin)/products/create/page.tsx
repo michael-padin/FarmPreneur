@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/app/_components/header"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
 import {
 	Card,
 	CardContent,
@@ -11,7 +12,6 @@ import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { Suspense } from "react"
 import { EditUserSkeleton } from "../../users/[id]/edit/_components/edit-user-skeleton"
 import { CreateProductForm } from "./_components/create-product-form"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
 
 const getCategories = async () => {
 	return await getCategoriesUseCase()
@@ -31,7 +31,7 @@ export default async function AdminCreateProductPage() {
 		<>
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<BreadcrumbResponsive items={breadcrumbItems} />
+				<FPBreadcrumbResponsive items={breadcrumbItems} />
 				<Card className="mx-auto max-w-screen-md">
 					<CardHeader className="p-4 lg:p-6">
 						<CardTitle>Add New Product</CardTitle>

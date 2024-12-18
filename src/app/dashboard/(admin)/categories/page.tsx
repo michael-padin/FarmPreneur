@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/app/_components/header"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
 import {
 	Card,
 	CardContent,
@@ -6,12 +7,11 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { getCategoriesUseCase } from "@/use-cases/categories"
 import { Suspense } from "react"
 import { DataTableSkeleton } from "../../_components/data-table-skeleton"
 import { AddCategoryDialog } from "./_components/add-category-dialog"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { DataTable } from "./_components/data-table"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
 
 export const experimental_ppr = true
 
@@ -26,7 +26,7 @@ export default function CategoriesPage() {
 		<div>
 			<DashboardHeader />
 			<div className="space-y-4 px-4 py-5 lg:px-5">
-				<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
+				<FPBreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={2} />
 				<Card className="">
 					<CardHeader className="p-4 lg:p-6">
 						<div className="flex items-center justify-between">

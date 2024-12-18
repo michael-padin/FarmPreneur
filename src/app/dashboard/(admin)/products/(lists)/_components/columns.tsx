@@ -10,7 +10,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { UnitKey, UNITS_MAP } from "@/constants/unit"
+import { UnitKey, unitMap } from "@/constants/unit"
 import { formatDate, formatPHP } from "@/lib/utils"
 import { getAllProductsUseCase } from "@/use-cases/products"
 import { ColumnDef } from "@tanstack/react-table"
@@ -89,8 +89,7 @@ export const columns: ColumnDef<
 		cell: ({ row }) => {
 			return (
 				<p>
-					{formatPHP(row.original.price)}/
-					{UNITS_MAP[row.original.unit as UnitKey].abbreviation}
+					{formatPHP(row.original.price)}/{row.original.unit}
 				</p>
 			)
 		}
@@ -102,11 +101,7 @@ export const columns: ColumnDef<
 		),
 		enableSorting: true,
 		cell: ({ row }) => {
-			return (
-				row.original.unit && (
-					<p>{UNITS_MAP[row.original.unit as UnitKey].name}</p>
-				)
-			)
+			return row.original.unit && <p>{unitMap[row.original.unit as UnitKey]}</p>
 		}
 	},
 	{

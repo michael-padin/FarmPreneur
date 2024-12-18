@@ -1,5 +1,4 @@
 import { auth } from "@/auth"
-import DesktopNav from "./desktop-nav"
 import { MobileNav } from "./mobile-nav"
 
 export async function HomeNav() {
@@ -8,7 +7,6 @@ export async function HomeNav() {
 	return (
 		<>
 			<MobileNav user={session?.user} />
-			<DesktopNav />
 		</>
 	)
 }

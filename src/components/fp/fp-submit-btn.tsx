@@ -1,19 +1,19 @@
 import { Loader2 } from "lucide-react"
-import { Button } from "../ui/button"
 
-interface FGSubmitBtnProps extends React.ComponentProps<typeof Button> {
+interface FGSubmitBtnProps
+	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	text: string
 	isLoading?: boolean
 }
 
-export const FGSubmitBtn = ({
+export const FPSubmitButton = ({
 	text,
 	isLoading,
 	...props
 }: FGSubmitBtnProps) => {
 	return (
-		<Button {...props}>
+		<button {...props}>
 			{isLoading ? <Loader2 className="animate-spin" /> : text}
-		</Button>
+		</button>
 	)
 }

@@ -1,4 +1,4 @@
-import { BackButton } from "@/components/fg/back-button"
+import { FPBackButton } from "@/components/fp/fp-back-button"
 import {
 	Card,
 	CardContent,
@@ -15,7 +15,7 @@ export default async function verifyPage() {
 		<>
 			<AuthLeftSection>
 				<div className="">
-					<BackButton />
+					<FPBackButton />
 					<Card className="lg:max-w-[453.6px] lg:border-0 lg:shadow-none">
 						<CardHeader>
 							<CardTitle>Forgot your password?</CardTitle>

@@ -1,7 +1,7 @@
 "use client"
 
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
+import { FPAddressPicker } from "@/components/fp/fp-address-picker"
+import { FPPhoneInput } from "@/components/fp/fp-phone-input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -97,7 +97,7 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 						<FormItem>
 							<FormLabel>Contact Number</FormLabel>
 							<FormControl>
-								<FGSinglePhoneINput {...field} />
+								<FPPhoneInput {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -111,7 +111,7 @@ export function CustomerNewAddressForm({}: AddressFormProps) {
 						<FormItem>
 							<FormLabel>Address</FormLabel>
 							<FormControl>
-								<AddressLocationPicker
+								<FPAddressPicker
 									onAddressSelect={(address) => {
 										field.onChange(address)
 									}}

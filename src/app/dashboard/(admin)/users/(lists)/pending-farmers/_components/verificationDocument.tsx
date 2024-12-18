@@ -1,6 +1,6 @@
 "use client"
 
-import { Lightbox } from "@/components/fg/fp-light-box"
+import { Lightbox } from "@/components/fp/fp-light-box"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Image from "next/image"
 import { useState } from "react"

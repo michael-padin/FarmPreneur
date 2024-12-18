@@ -1,17 +1,3 @@
-"use client"
-import * as React from "react"
-import Link from "next/link"
-
-import { useMediaQuery } from "@/hooks/use-media-query"
-import {
-	Breadcrumb,
-	BreadcrumbEllipsis,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator
-} from "@/components/ui/breadcrumb"
 import {
 	Drawer,
 	DrawerClose,
@@ -29,83 +15,20 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 
-import { ArrowLeft } from "lucide-react"
+import {
+	Breadcrumb,
+	BreadcrumbEllipsis,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator
+} from "@/components/ui/breadcrumb"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import Link from "next/link"
+import { Fragment, useState } from "react"
 import { Button } from "../ui/button"
-import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { signOutAction } from "@/actions/auth"
 
-type BackButtonProps = React.ComponentProps<typeof Button> & {
-	fallbackRoute?: string
-}
-
-export const BackButton = ({ fallbackRoute, ...props }: BackButtonProps) => {
-	const router = useRouter()
-
-	const handleClick = () => {
-		if (fallbackRoute) {
-			router.push(fallbackRoute)
-		} else {
-			router.back()
-		}
-	}
-
-	return (
-		<Button
-			onClick={handleClick}
-			variant="ghost"
-			asChild
-			className={cn("", props.className)}
-			{...props}
-		>
-			<ArrowLeft className="h-4 w-4" />
-		</Button>
-	)
-}
-
-export const HeaderBackButton = ({
-	fallbackRoute,
-	...props
-}: BackButtonProps) => {
-	const router = useRouter()
-
-	const handleClick = () => {
-		if (fallbackRoute) {
-			router.push(fallbackRoute)
-		} else {
-			router.back()
-		}
-	}
-
-	return (
-		<button
-			onClick={handleClick}
-			className={cn("flex", props.className)}
-			{...props}
-		>
-			<ArrowLeft />
-		</button>
-	)
-}
-
-export const BackButtonLogout = (
-	props: React.ComponentProps<typeof Button>
-) => {
-	return (
-		<form action={signOutAction}>
-			<Button
-				variant="ghost"
-				size="icon"
-				className={cn("", props.className)}
-				{...props}
-			>
-				<ArrowLeft />
-			</Button>
-		</form>
-	)
-}
-
-// MARK: BREADCRUMB
 const ITEMS_TO_DISPLAY = 3
 
 export interface BreadcrumbResponsiveProps {
@@ -116,11 +39,11 @@ export interface BreadcrumbResponsiveProps {
 	itemsToDisplay?: number
 }
 
-export function BreadcrumbResponsive({
+export function FPBreadcrumbResponsive({
 	items,
 	itemsToDisplay = ITEMS_TO_DISPLAY
 }: BreadcrumbResponsiveProps) {
-	const [open, setOpen] = React.useState(false)
+	const [open, setOpen] = useState(false)
 	const isDesktop = useMediaQuery("(min-width: 768px)")
 
 	return (
@@ -189,7 +112,7 @@ export function BreadcrumbResponsive({
 					</>
 				)}
 				{items.slice(-itemsToDisplay + 1).map((item, index) => (
-					<React.Fragment key={index}>
+					<Fragment key={index}>
 						{item.href ? (
 							<>
 								<BreadcrumbItem>
@@ -209,7 +132,7 @@ export function BreadcrumbResponsive({
 								</BreadcrumbPage>
 							</BreadcrumbItem>
 						)}
-					</React.Fragment>
+					</Fragment>
 				))}
 			</BreadcrumbList>
 		</Breadcrumb>

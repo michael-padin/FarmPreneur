@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { FPSignOutButton } from "@/components/fg/fp-signout-button"
+import { FPSignOutButton } from "@/components/fp/fp-signout-button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {

@@ -18,28 +18,26 @@ export enum UnitKey {
 	HA = "ha"
 }
 
-// Define a map to associate each key with its properties
-export const UNITS_MAP: Record<
-	UnitKey,
-	{ name: string; abbreviation: string }
-> = {
-	[UnitKey.KG]: { name: "Kilogram", abbreviation: "kg" },
-	[UnitKey.LB]: { name: "Pound", abbreviation: "lb" },
-	[UnitKey.G]: { name: "Gram", abbreviation: "g" },
-	[UnitKey.OZ]: { name: "Ounce", abbreviation: "oz" },
-	[UnitKey.T]: { name: "Metric Ton", abbreviation: "t" },
-	[UnitKey.BU]: { name: "Bushel", abbreviation: "bu" },
-	[UnitKey.PC]: { name: "Piece", abbreviation: "pc" },
-	[UnitKey.DOZ]: { name: "Dozen", abbreviation: "doz" },
-	[UnitKey.L]: { name: "Liter", abbreviation: "L" },
-	[UnitKey.GAL]: { name: "Gallon", abbreviation: "gal" },
-	[UnitKey.BUNCH]: { name: "Bunch", abbreviation: "bunch" },
-	[UnitKey.CRATE]: { name: "Crate", abbreviation: "crate" },
-	[UnitKey.BOX]: { name: "Box", abbreviation: "box" },
-	[UnitKey.BAG]: { name: "Bag", abbreviation: "bag" },
-	[UnitKey.AC]: { name: "Acre", abbreviation: "ac" },
-	[UnitKey.HA]: { name: "Hectare", abbreviation: "ha" }
+export const unitMap: Record<UnitKey, string> = {
+	[UnitKey.KG]: "Kilogram",
+	[UnitKey.LB]: "Pound",
+	[UnitKey.G]: "Gram",
+	[UnitKey.OZ]: "Ounce",
+	[UnitKey.T]: "Metric Ton",
+	[UnitKey.BU]: "Bushel",
+	[UnitKey.PC]: "Piece",
+	[UnitKey.DOZ]: "Dozen",
+	[UnitKey.L]: "Liter",
+	[UnitKey.GAL]: "Gallon",
+	[UnitKey.BUNCH]: "Bunch",
+	[UnitKey.CRATE]: "Crate",
+	[UnitKey.BOX]: "Box",
+	[UnitKey.BAG]: "Bag",
+	[UnitKey.AC]: "Acre",
+	[UnitKey.HA]: "Hectare"
 }
 
-// Usage example
-export const unitDetails = UNITS_MAP[UnitKey.KG] // { name: "Kilogram", abbreviation: "kg" }
+export const units = Object.entries(unitMap).map(([key, value]) => ({
+	label: `${value} (${key})`,
+	value: key
+}))

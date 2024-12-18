@@ -1,8 +1,8 @@
 "use client"
-import { FPDatePickerWithDropdown } from "@/components/fg/date-picker/fp-date-picker-with-dropdown"
-import AddressLocationPicker from "@/components/fg/fg-map-box-location-picker"
-import { FGSinglePhoneINput } from "@/components/fg/fg-single-phone-input"
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPDatePickerWithDropdown } from "@/components/fp/date-picker/fp-date-picker-with-dropdown"
+import { FPAddressPicker } from "@/components/fp/fp-address-picker"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
+import { FPPhoneInput } from "@/components/fp/fp-phone-input"
 import {
 	Accordion,
 	AccordionContent,
@@ -217,7 +217,7 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								<FormItem>
 									<FormLabel>Contact Number</FormLabel>
 									<FormControl>
-										<FGSinglePhoneINput {...field} />
+										<FPPhoneInput {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -230,7 +230,7 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								<FormItem>
 									<FormLabel>Address</FormLabel>
 									<FormControl>
-										<AddressLocationPicker
+										<FPAddressPicker
 											defaultCenter={{
 												lat: field?.value?.latitude || 40.7128,
 												lng: field?.value?.longitude || -74.006

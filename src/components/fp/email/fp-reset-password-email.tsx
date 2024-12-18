@@ -8,10 +8,9 @@ import {
 	Html,
 	Preview,
 	Section,
-	Text,
-	Tailwind
+	Tailwind,
+	Text
 } from "@react-email/components"
-import * as React from "react"
 
 interface ResetPasswordEmailProps {
 	name: string

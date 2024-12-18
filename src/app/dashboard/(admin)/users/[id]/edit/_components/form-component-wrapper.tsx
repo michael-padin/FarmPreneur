@@ -1,11 +1,11 @@
 "use client"
+import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
 import { getUserByIdUseCase } from "@/use-cases/users"
+import { ROLE } from "@prisma/client"
 import { use } from "react"
+import AdminForm from "./forms/admin-form"
 import CustomerForm from "./forms/customer-form"
 import FarmerForm from "./forms/farmer-form"
-import AdminForm from "./forms/admin-form"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
-import { ROLE } from "@prisma/client"
 
 interface FormComponentWrapperProps {
 	promiseUser: Promise<Awaited<ReturnType<typeof getUserByIdUseCase>>>
@@ -46,7 +46,7 @@ export function FormComponentWrapper({
 
 	return (
 		<>
-			<BreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={3} />
+			<FPBreadcrumbResponsive items={breadcrumbItems} itemsToDisplay={3} />
 			<div className="mx-auto max-w-screen-md">
 				<FormComponent user={user} />
 			</div>

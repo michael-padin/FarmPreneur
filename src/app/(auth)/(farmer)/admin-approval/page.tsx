@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import { FPBackButtonLogout } from "@/components/fp/fp-back-button"
 import {
 	Card,
 	CardContent,
@@ -7,10 +8,9 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { getFarmerApprovalStatusByUserIdUseCase } from "@/use-cases/farmers"
 import { CheckCircle, Clock, Loader2 } from "lucide-react"
 import { redirect } from "next/navigation"
-import { BackButtonLogout } from "@/components/fg/back-button"
-import { getFarmerApprovalStatusByUserIdUseCase } from "@/use-cases/farmers"
 import { AuthLeftSection } from "../../_components/auth-left-section"
 import { AuthRightSection } from "../../_components/auth-right-section"
 
@@ -30,7 +30,7 @@ export default async function AdminApprovalPage() {
 		<>
 			<AuthLeftSection>
 				<div>
-					<BackButtonLogout />
+					<FPBackButtonLogout />
 					<Card className="w-full max-w-md overflow-hidden">
 						<CardHeader className="relative z-10 pb-0 text-center">
 							<div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-primary/10">

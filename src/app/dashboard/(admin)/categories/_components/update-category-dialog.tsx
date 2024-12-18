@@ -27,7 +27,7 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 
-import { FPMediaUploader } from "@/components/fp/fb-media-uploader"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
