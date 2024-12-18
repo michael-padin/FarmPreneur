@@ -1,5 +1,4 @@
-import { UseFormReturn } from "react-hook-form"
-import { EditUserSchema } from "../../validations"
+import { FPPasswordInput } from "@/components/fp/fp-password-input"
 import {
 	FormControl,
 	FormDescription,
@@ -8,6 +7,7 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
 	Select,
 	SelectContent,
@@ -15,11 +15,11 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { ROLE } from "@prisma/client"
-import { RoleBadge } from "../../../../(lists)/_components/badges"
-import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { FGPasswordInput } from "@/components/fg/fg-password-input"
+import { ROLE } from "@prisma/client"
+import { UseFormReturn } from "react-hook-form"
+import { RoleBadge } from "../../../../(lists)/_components/badges"
+import { EditUserSchema } from "../../validations"
 
 interface UserFormItemsProps {
 	form: UseFormReturn<EditUserSchema>
@@ -106,7 +106,7 @@ export default function UserFormItems({ form }: UserFormItemsProps) {
 					<FormItem>
 						<FormLabel>Password</FormLabel>
 						<FormControl>
-							<FGPasswordInput {...field} value={field.value || ""} />
+							<FPPasswordInput {...field} value={field.value || ""} />
 						</FormControl>
 						<FormDescription>
 							Leave blank to keep the current password

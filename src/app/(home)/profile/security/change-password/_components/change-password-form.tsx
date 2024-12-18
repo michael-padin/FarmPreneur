@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 
-import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -15,6 +14,7 @@ import {
 	FormMessage
 } from "@/components/ui/form"
 
+import { FPPasswordInput } from "@/components/fp/fp-password-input"
 import { changeUserPassword } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { useRouter } from "next/navigation"
@@ -55,7 +55,7 @@ const ChangePasswordForm = () => {
 							<FormItem>
 								<FormLabel>Current Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -69,7 +69,7 @@ const ChangePasswordForm = () => {
 							<FormItem>
 								<FormLabel>New Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -82,7 +82,7 @@ const ChangePasswordForm = () => {
 							<FormItem>
 								<FormLabel>Confirm New Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

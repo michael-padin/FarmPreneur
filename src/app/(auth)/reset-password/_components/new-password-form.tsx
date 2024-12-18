@@ -1,8 +1,8 @@
 "use client"
 
-import { useTransition } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
+import { FPPasswordInput } from "@/components/fp/fp-password-input"
+import { buttonVariants } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
@@ -11,18 +11,18 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form"
-import { FGPasswordInput } from "@/components/fg/fg-password-input"
-import { NewPasswordFormSchema, NewPasswordFormType } from "../types"
-import { createNewPassword } from "../actions"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { FGSubmitBtn } from "@/components/fg/fp-submit-btn"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { showErrorToast } from "@/lib/handle-error"
+import { cn } from "@/lib/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { createNewPassword } from "../actions"
+import { NewPasswordFormSchema, NewPasswordFormType } from "../types"
 
 export default function NewPasswordForm({ token }: { token: string }) {
 	const [isPending, startTransition] = useTransition()
@@ -62,7 +62,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
 							<FormItem>
 								<FormLabel>New Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

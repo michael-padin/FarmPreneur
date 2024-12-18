@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input, InputProps } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-const FGPasswordInput = forwardRef<HTMLInputElement, InputProps>(
+const FPPasswordInput = forwardRef<HTMLInputElement, InputProps>(
 	({ className, ...props }, ref) => {
 		const [showPassword, setShowPassword] = useState(false)
 		const disabled =
@@ -52,6 +52,6 @@ const FGPasswordInput = forwardRef<HTMLInputElement, InputProps>(
 		)
 	}
 )
-FGPasswordInput.displayName = "SSPasswordInput"
+FPPasswordInput.displayName = "SSPasswordInput"
 
-export { FGPasswordInput }
+export { FPPasswordInput }

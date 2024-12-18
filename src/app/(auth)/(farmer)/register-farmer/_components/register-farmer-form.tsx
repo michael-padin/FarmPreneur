@@ -2,10 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import React, { useTransition } from "react"
+import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 
-import { FGPasswordInput } from "@/components/fg/fg-password-input"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -18,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { registerFarmer } from "../action"
 
+import { FPPasswordInput } from "@/components/fp/fp-password-input"
 import { showErrorToast } from "@/lib/handle-error"
 import { registerSchema, RegisterSchema } from "@/validations/user"
 
@@ -105,7 +105,7 @@ const RegisterFarmerForm = () => {
 							<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -118,7 +118,7 @@ const RegisterFarmerForm = () => {
 							<FormItem>
 								<FormLabel>Confirm Password</FormLabel>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

@@ -2,9 +2,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
-import React, { useTransition } from "react"
+import { useTransition } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,13 +16,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { LoginSchema, LoginType } from "../_types"
-import { signInWithCredentials } from "../action"
-import { FGPasswordInput } from "@/components/fg/fg-password-input"
-import { resendCode } from "../../verify-email/actions"
+import { FPPasswordInput } from "@/components/fp/fp-password-input"
+import { showErrorToast } from "@/lib/handle-error"
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 import { useRouter } from "next/navigation"
-import { showErrorToast } from "@/lib/handle-error"
+import { LoginSchema, LoginType } from "../_types"
+import { signInWithCredentials } from "../action"
 
 const LoginForm = () => {
 	const router = useRouter()
@@ -86,7 +84,7 @@ const LoginForm = () => {
 									</Link>
 								</div>
 								<FormControl>
-									<FGPasswordInput {...field} autoComplete="new-password" />
+									<FPPasswordInput {...field} autoComplete="new-password" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

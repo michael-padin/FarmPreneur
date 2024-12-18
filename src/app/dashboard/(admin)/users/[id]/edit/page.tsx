@@ -1,8 +1,7 @@
-import { getUserByIdUseCase } from "@/use-cases/users"
 import { auth } from "@/auth"
+import { getUserByIdUseCase } from "@/use-cases/users"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
-import { BackButton } from "@/components/fg/back-button"
 import { EditUserSkeleton } from "./_components/edit-user-skeleton"
 import { FormComponentWrapper } from "./_components/form-component-wrapper"
 

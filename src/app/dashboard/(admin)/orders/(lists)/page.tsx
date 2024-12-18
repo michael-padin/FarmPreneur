@@ -1,3 +1,6 @@
+import { DashboardHeader } from "@/app/_components/header"
+import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
+import { BreadcrumbResponsive } from "@/components/fg/back-button"
 import {
 	Card,
 	CardContent,
@@ -5,13 +8,9 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { Suspense } from "react"
-import { Metadata } from "next"
-import { DashboardHeader } from "@/app/_components/header"
-import OrderUI6 from "./_components/order-ui-6"
 import { getOrdersUseCase } from "@/use-cases/orders"
-import { BreadcrumbResponsive } from "@/components/fg/back-button"
-import { DataTableSkeleton } from "@/app/dashboard/_components/data-table-skeleton"
+import { Metadata } from "next"
+import { Suspense } from "react"
 import { DataTable } from "./_components/data-table"
 
 export const metadata: Metadata = {

@@ -1,7 +1,4 @@
-import Link from "next/link"
-import ForgotPasswordForm from "./_components/forgot-password-form"
-import Image from "next/image"
-import { AuthLeftSection } from "../_components/auth-left-section"
+import { BackButton } from "@/components/fg/back-button"
 import {
 	Card,
 	CardContent,
@@ -9,8 +6,9 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { AuthLeftSection } from "../_components/auth-left-section"
 import { AuthRightSection } from "../_components/auth-right-section"
-import { BackButton } from "@/components/fg/back-button"
+import ForgotPasswordForm from "./_components/forgot-password-form"
 
 export default async function verifyPage() {
 	return (
