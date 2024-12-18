@@ -1,11 +1,11 @@
 import {
 	AlertTriangle,
 	ArrowRight,
+	Box,
 	Check,
 	ChevronLeft,
 	ChevronRight,
 	CircuitBoardIcon,
-	Command,
 	CreditCard,
 	File,
 	FileText,
@@ -13,6 +13,7 @@ import {
 	Image,
 	Laptop,
 	LayoutDashboardIcon,
+	Leaf,
 	Loader2,
 	LogIn,
 	LucideIcon,
@@ -21,27 +22,26 @@ import {
 	MoreVertical,
 	Pizza,
 	Plus,
+	Save,
 	Settings,
+	ShoppingCart,
+	Star,
 	SunMedium,
 	Trash,
+	Truck,
 	Twitter,
 	User,
 	User2Icon,
 	UserX2Icon,
-	X,
-	Leaf,
-	ShoppingCart,
-	Save,
-	Truck,
-	Box,
-	Star
+	X
 } from "lucide-react"
+import FarmPreneurLogo from "./logo.svg"
 
 export type Icon = LucideIcon
 
 export const Icons = {
 	dashboard: LayoutDashboardIcon,
-	logo: Command,
+	logo: ({ ...props }: LucideProps) => <FarmPreneurLogo {...props} />,
 	login: LogIn,
 	close: X,
 	profile: User2Icon,
