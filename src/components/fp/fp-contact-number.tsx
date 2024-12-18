@@ -1,6 +1,5 @@
 "use client"
-import * as React from "react"
-import { formatPhoneNumber } from "react-phone-number-input"
+import { formatPhoneNumberIntl } from "react-phone-number-input"
 
 export const FPContactNumberDisplay = ({
 	contactNumber
@@ -8,8 +7,6 @@ export const FPContactNumberDisplay = ({
 	contactNumber: string
 }) => {
 	return (
-		<a href={`tel:${formatPhoneNumber(contactNumber)}   }`}>
-			{formatPhoneNumber(contactNumber)}
-		</a>
+		<a href={`tel:${contactNumber}`}>{formatPhoneNumberIntl(contactNumber)}</a>
 	)
 }

@@ -9,7 +9,11 @@ const DesktopNav = () => {
 					className="flex items-center gap-2 text-3xl font-black text-[#404145]"
 					href="/"
 				>
-					<img src="/logo.svg" alt="" className="h-[50px] w-[50px]" />
+					<img
+						src="/web-app-manifest-512x512.png"
+						alt=""
+						className="h-[50px] w-[50px]"
+					/>
 					Farm2go
 				</Link>
 				<Navbar />

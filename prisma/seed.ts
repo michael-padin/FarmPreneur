@@ -29,6 +29,14 @@ const customers = [
 	}
 ]
 
+const address = {
+	locationType: "FARM_ADDRESS",
+	fullAddress: "Argao Cebu",
+	latitude: 12.1,
+	longitude: 21.2,
+	isDefault: true
+}
+
 const farmers = [
 	{
 		applicationStatus: "APPROVED",
@@ -43,13 +51,6 @@ const farmers = [
 		verificationDocument: {
 			image: "/valid-id/drivers-license.jpg",
 			type: "DRIVER_LICENSE"
-		},
-		address: {
-			locationType: "FARM_ADDRESS",
-			fullAddress: "Argao Cebu",
-			latitude: 12.1,
-			longitude: 21.2,
-			isDefault: true
 		}
 	}
 ]
@@ -190,9 +191,9 @@ async function seed() {
 								userId: createdUser.id,
 								address: {
 									create: {
-										latitude: farmer.address.latitude,
-										longitude: farmer.address.longitude,
-										fullAddress: farmer.address.fullAddress,
+										latitude: address.latitude,
+										longitude: address.longitude,
+										fullAddress: address.fullAddress,
 										locationType: "FARM"
 									}
 								},
@@ -243,7 +244,19 @@ async function seed() {
 								contactNumber: customer.contactNumber,
 								coverPhoto: customer.coverPhoto,
 								profilePicture: customer.profilePicture,
-								name: customer.name
+								name: customer.name,
+								address: {
+									create: {
+										latitude: address.latitude,
+										longitude: address.longitude,
+										fullAddress: address.fullAddress,
+										locationType: "CUSTOMER_ADDRESS",
+										label: "home",
+										note: "Near CTU Argao",
+										contactName: "Customer",
+										contactNumber: customer.contactNumber
+									}
+								}
 							}
 						})
 

@@ -13,7 +13,6 @@ import { MapPin } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Fragment, useState } from "react"
-import { formatPhoneNumber } from "react-phone-number-input"
 import { PlaceOrder } from "./place-order"
 
 export default function CartCheckOutList({
@@ -81,11 +80,15 @@ export default function CartCheckOutList({
 													<p className="text-sm">
 														{defaultCustomerAddress?.contactName}
 													</p>
-													<p className="text-sm text-muted-foreground">
-														{formatPhoneNumber(
-															defaultCustomerAddress.contactNumber as string
-														)}
-													</p>
+													{defaultCustomerAddress.contactNumber && (
+														<p className="text-sm text-muted-foreground">
+															<FPContactNumberDisplay
+																contactNumber={
+																	defaultCustomerAddress.contactNumber
+																}
+															/>
+														</p>
+													)}
 												</div>
 												{/* <p className="text-sm">
 												Note:{" "}
