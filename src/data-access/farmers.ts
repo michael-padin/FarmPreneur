@@ -13,11 +13,6 @@ export const getFarmerOwnProfile = async (userId: string) => {
 					orders: true
 				}
 			},
-			user: {
-				include: {
-					profilePicture: true
-				}
-			},
 
 			products: {
 				include: {
@@ -261,8 +256,7 @@ export const getTopFarmers = async (limit = 10) => {
 			profilePicture: true,
 			user: {
 				select: {
-					name: true,
-					profilePicture: { select: { url: true } }
+					name: true
 				}
 			},
 			products: { select: { reviews: true, id: true } }, // Number of products
@@ -346,7 +340,6 @@ export const getTopFarmers = async (limit = 10) => {
 			averageRating: averageRating.toFixed(1),
 			totalSales,
 			responseRate: (responseRate * 100).toFixed(1) + "%",
-			image: farmer.user.profilePicture,
 			address: farmer.address?.[0]?.fullAddress,
 			finalScore: Number(finalScore.toFixed(3)),
 			numberOfProducts,

@@ -5,10 +5,10 @@ import { Edit } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-const getCustomerBasicInfo = async (farmerId?: string) => {
+const getCustomerBasicInfo = async (customerId?: string) => {
 	const customer = await db.customer.findUnique({
 		where: {
-			id: farmerId
+			id: customerId
 		},
 		include: {
 			_count: {
@@ -22,12 +22,7 @@ const getCustomerBasicInfo = async (farmerId?: string) => {
 			user: {
 				select: {
 					email: true,
-					createdAt: true,
-					profilePicture: {
-						select: {
-							url: true
-						}
-					}
+					createdAt: true
 				}
 			}
 		}

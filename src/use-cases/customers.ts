@@ -38,12 +38,7 @@ export const getCustomerProfileUseCase = async () => {
 				select: {
 					id: true,
 					email: true,
-					createdAt: true,
-					profilePicture: {
-						select: {
-							url: true
-						}
-					}
+					createdAt: true
 				}
 			},
 			reviews: true,
