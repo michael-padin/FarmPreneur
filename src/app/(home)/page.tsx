@@ -12,8 +12,10 @@ export const experimental_ppr = true
 
 export const metadata: Metadata = {
 	title: "FarmPreneur",
-	description:
-		"Pick up the freshest, highest-quality fruits and vegetables directly from local farmers. No delivery, just pure local goodness."
+	openGraph: {
+		type: "website"
+	},
+	description: "A Marketplace for farm produce from farmers near you"
 }
 
 export default function Home() {
