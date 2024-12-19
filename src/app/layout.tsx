@@ -13,7 +13,7 @@ const inter = Poppins({
 	weight: ["300", "400", "500", "600", "700", "800", "900"]
 })
 
-import ogImage from "../opengraph-image.png"
+import ogImage from "./opengraph-image.png"
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 	? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
