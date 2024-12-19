@@ -12,9 +12,9 @@ type Params = Promise<{ slug: string }>
 export async function generateMetadata({
 	params
 }: {
-	params: { productSlug: string }
+	params: { slug: string }
 }): Promise<Metadata> {
-	const product = await getProductBySlugUseCase(params.productSlug)
+	const product = await getProductBySlugUseCase(params.slug)
 	const title = `${product.title} | FarmPreneur`
 	const description = `Buy fresh ${product.title} from ${product.farmer}. ${product.description}`
 
