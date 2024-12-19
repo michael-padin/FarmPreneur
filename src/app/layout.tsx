@@ -22,8 +22,8 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
 	title: {
-		default: "FarmPreneur | Local Farmers Marketplace",
-		template: "%s | FarmPreneur"
+		default: "FarmPreneur - Local Farmers Marketplace",
+		template: "FarmPreneur - %s"
 	},
 	description:
 		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",

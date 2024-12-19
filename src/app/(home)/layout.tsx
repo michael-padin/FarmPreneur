@@ -15,14 +15,14 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 export const experimental_ppr = true
 
 export const metadata: Metadata = {
-	title: "Fresh Local Produce Marketplace",
+	title: "Local Farmers Marketplace",
 	description:
 		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
 	openGraph: {
 		type: "website",
 		url: baseUrl,
 		description:
-			"Fresh produce from local farmers, available for pickup. Support your local agriculture with FarmPreneur.",
+			"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
 		siteName: "FarmPreneur",
 		images: [
 			{
