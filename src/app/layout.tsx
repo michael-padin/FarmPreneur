@@ -25,6 +25,14 @@ export const metadata: Metadata = {
 		default: "FarmPreneur - Local Farmers Marketplace",
 		template: "FarmPreneur - %s"
 	},
+	verification: {
+		google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
+		yandex: "yandex",
+		yahoo: "yahoo",
+		other: {
+			me: ["padinmichael201@gmail.com"]
+		}
+	},
 	description:
 		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
 	keywords: [
