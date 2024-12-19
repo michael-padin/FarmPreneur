@@ -12,7 +12,7 @@ export async function Features() {
 					<Link
 						href={`/products/${product.slug}`}
 						key={index}
-						className="inline-block h-full w-full truncate first:pl-2 last:pr-2"
+						className="inline-block h-full min-w-[155px] truncate first:ml-2 last:mr-2"
 						prefetch
 					>
 						<ProductCard

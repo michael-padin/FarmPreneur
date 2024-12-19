@@ -99,7 +99,7 @@ export default function Home() {
 													fallback={
 														<ProductCardSkeleton
 															count={8}
-															className="inline-block h-full w-[130px] truncate border-none shadow-none first:pl-2 last:pr-2"
+															className="inline-block h-full w-[150px] truncate border-none shadow-none first:pl-2 last:pr-2"
 														/>
 													}
 												>

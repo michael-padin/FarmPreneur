@@ -64,7 +64,9 @@ export default function ProductCard({
 						<div className="flex items-center gap-1 text-xs">
 							<div className="flex items-center">
 								<Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-								<span className="ml-px">{averageRating}</span>
+								<span className="ml-px">
+									{averageRating ? averageRating.toFixed(1) : 0}
+								</span>
 							</div>
 							<Separator orientation="vertical" className="h-3 w-px" />
 							<span className="w-max text-muted-foreground">{sold} sold</span>

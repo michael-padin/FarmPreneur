@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 		template: "%s | FarmPreneur"
 	},
 	description:
-		"Fresh produce from local farmers, available for pickup. Support your local agriculture with FarmPreneur.",
+		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
 	keywords: [
 		"local produce",
 		"farmers market",
@@ -32,6 +32,10 @@ export const metadata: Metadata = {
 		"farm to table",
 		"sustainable agriculture"
 	],
+	robots: {
+		index: true,
+		follow: true
+	},
 	authors: [{ name: "FarmPreneur Team" }],
 	creator: "FarmPreneur",
 	publisher: "FarmPreneur",
