@@ -1,5 +1,0 @@
-export { default as BottomNav } from "./bottom-nav"
-export { default as CartButton } from "./cart-button"
-export { default as Categories } from "./categories"
-export { default as DesktopNav } from "./desktop-nav"
-export { default as ProductCard } from "./product-card"

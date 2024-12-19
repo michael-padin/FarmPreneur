@@ -1,5 +1,5 @@
+import { FPBackButton } from "@/components/fp/fp-back-button"
 import { Suspense } from "react"
-import { BackButton } from "./_components/back-button"
 import CartCheckOutListSkeleton from "./_components/checkout-list-skeleton"
 import { CheckoutWrapper } from "./_components/checkout-wrapper"
 
@@ -19,7 +19,7 @@ const PickupCheckoutPage = ({
 				<div className="flex h-14 items-center p-2 lg:container">
 					<div className="flex flex-1 items-center justify-between">
 						<div className="flex items-center gap-2">
-							<BackButton />
+							<FPBackButton />
 							<h1 className="text-xl font-semibold">Checkout</h1>
 						</div>
 					</div>

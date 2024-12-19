@@ -1,4 +1,4 @@
-import { ProductCard } from "@/app/(home)/_components"
+import ProductCard from "@/app/(home)/_components/product-card"
 import { ProductSort } from "@/app/(home)/products/(list)/searchParams"
 import { getFarmerProductLists } from "@/data-access/products"
 import { Box } from "lucide-react"

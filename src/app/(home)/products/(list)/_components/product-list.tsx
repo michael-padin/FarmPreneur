@@ -1,4 +1,4 @@
-import { ProductCard } from "@/app/(home)/_components"
+import ProductCard from "@/app/(home)/_components/product-card"
 import { getProductsOnProductListPageUseCase } from "@/use-cases/products"
 import { Box } from "lucide-react"
 import Link from "next/link"

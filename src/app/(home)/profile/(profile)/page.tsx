@@ -1,7 +1,7 @@
 import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
-import { BottomNav } from "../../_components"
+import BottomNav from "../../_components/bottom-nav"
 import { CustomerProfileHeader } from "./_components/profile-header"
 import { SignOutBtn } from "./_components/sign-out-btn"
 

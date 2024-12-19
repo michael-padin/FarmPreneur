@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
-import { BottomNav } from "../_components"
+import BottomNav from "../_components/bottom-nav"
 import { NotificationListWrapper } from "./_components/notification-list-wrapper"
 import { NotificationSkeleton } from "./_components/notification-skeleton"
 import { NotificationsNavLinks } from "./nav-links"

@@ -1,4 +1,4 @@
-import { BottomNav } from "../../_components"
+import BottomNav from "../../_components/bottom-nav"
 import { FarmerProducts } from "./_components/farmer-products"
 import { NavWrapper } from "./_components/nav-wrapper"
 import { FarmerProfile } from "./_components/profile-header"

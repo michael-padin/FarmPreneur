@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { type SearchParams } from "nuqs/server"
 import { Suspense } from "react"
-import { BottomNav } from "../_components"
+import BottomNav from "../_components/bottom-nav"
 import { FilterProducts } from "./_components/filter-products"
 import { OrdersNavLinks } from "./_components/nav-links"
 import { OrderListWrapper } from "./_components/order-list-wrapper"
