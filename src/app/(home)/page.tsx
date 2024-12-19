@@ -12,11 +12,10 @@ import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 export const experimental_ppr = true
 
 export const metadata: Metadata = {
-	title: "FarmPreneur",
-	openGraph: {
-		type: "website"
-	},
-	description: "A Marketplace for farm produce from farmers near you"
+	title: "FarmPreneur | Fresh Local Produce Marketplace",
+	description:
+		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
+	openGraph: {}
 }
 
 export default function Home() {

@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css"
 import "./globals.css"
 
 import { Toaster } from "@/components/ui/sonner"
-import { ensureStartsWith } from "@/lib/utils"
+import { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import { Providers } from "./providers"
 
@@ -13,38 +13,60 @@ const inter = Poppins({
 	weight: ["300", "400", "500", "600", "700", "800", "900"]
 })
 
-const { TWITTER_CREATOR, TWITTER_SITE, SITE_NAME } = process.env
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 	? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
 	: "http://localhost:3000"
 
-const twitterCreator = TWITTER_CREATOR
-	? ensureStartsWith(TWITTER_CREATOR, "@")
-	: undefined
-const twitterSite = TWITTER_SITE
-	? ensureStartsWith(TWITTER_SITE, "https://")
-	: undefined
-
-export const metadata = {
+export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
 	title: {
-		default: SITE_NAME!,
-		template: `%s | ${SITE_NAME}`
+		default: "FarmPreneur | Local Farmers Marketplace",
+		template: "%s | FarmPreneur"
 	},
-	robots: {
-		follow: true,
-		index: true
+	description:
+		"Fresh produce from local farmers, available for pickup. Support your local agriculture with FarmPreneur.",
+	keywords: [
+		"local produce",
+		"farmers market",
+		"fresh vegetables",
+		"farm to table",
+		"sustainable agriculture"
+	],
+	authors: [{ name: "FarmPreneur Team" }],
+	creator: "FarmPreneur",
+	publisher: "FarmPreneur",
+	formatDetection: {
+		email: false,
+		address: false,
+		telephone: false
 	},
-	...(twitterCreator &&
-		twitterSite && {
-			twitter: {
-				card: "summary_large_image",
-				creator: twitterCreator,
-				site: twitterSite
+	openGraph: {
+		type: "website",
+		url: baseUrl,
+		siteName: "FarmPreneur",
+		images: [
+			{
+				url: `/image.png`,
+				width: 1200,
+				height: 630,
+				alt: "FarmPreneur - Local Farmers Marketplace"
 			}
-		})
-}
+		]
+	},
+	twitter: {
+		card: "summary_large_image",
+		site: "@farmpreneur",
+		creator: "@farmpreneur"
+	},
 
+	alternates: {
+		canonical: baseUrl,
+		languages: {
+			"en-US": baseUrl,
+			"es-ES": `${baseUrl}/es`
+		}
+	}
+}
 export default async function RootLayout({
 	children
 }: Readonly<{

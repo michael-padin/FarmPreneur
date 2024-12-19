@@ -26,25 +26,50 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 	if (!product) {
 		notFound()
 	}
+
+	const articleStructuredData = {
+		"@context": "https://schema.org",
+		"@type": "Product",
+		name: product.title,
+		description: product.description,
+		image: product.productImages[0],
+		offers: {
+			"@type": "Offer",
+			priceCurrency: "PHP",
+			price: product.price,
+			seller: {
+				"@type": "Organization",
+				name: product.farmer
+			}
+		}
+	}
 	return (
-		<QuantityProvider stock={product.quantity}>
-			<div className="space-y-4 pb-20">
-				<div className="lg:gap-12b grid items-start lg:container md:grid-cols-2 lg:mx-auto lg:px-4">
-					<div className="grid gap-4">
-						<div className="bg-background">
-							<Gallery images={product.productImages} title={product.title} />
+		<>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{
+					__html: JSON.stringify(articleStructuredData)
+				}}
+			/>
+			<QuantityProvider stock={product.quantity}>
+				<div className="space-y-4 pb-20">
+					<div className="lg:gap-12b grid items-start lg:container md:grid-cols-2 lg:mx-auto lg:px-4">
+						<div className="grid gap-4">
+							<div className="bg-background">
+								<Gallery images={product.productImages} title={product.title} />
+							</div>
 						</div>
+						<ProductDetails product={product} />
 					</div>
-					<ProductDetails product={product} />
+					<div className="bg-background p-4">
+						<Farmer farmerId={product.farmer.id} />
+					</div>
+					<div className="bg-background p-4">
+						<Reviews reviews={reviews} />
+					</div>
 				</div>
-				<div className="bg-background p-4">
-					<Farmer farmerId={product.farmer.id} />
-				</div>
-				<div className="bg-background p-4">
-					<Reviews reviews={reviews} />
-				</div>
-			</div>
-			<ProductBottomNav product={product} />
-		</QuantityProvider>
+				<ProductBottomNav product={product} />
+			</QuantityProvider>
+		</>
 	)
 }
