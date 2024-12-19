@@ -33,7 +33,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
 				{
 					name: "Poppins",
 					data: await fetch(
-						new URL("./fonts/Inter-Bold.ttf", import.meta.url)
+						new URL("../../../../fonts/Inter-Bold.ttf", import.meta.url)
 					).then((res) => res.arrayBuffer()),
 					style: "normal",
 					weight: 700
