@@ -1,5 +1,4 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Metadata } from "next"
 import { Suspense } from "react"
 import BottomNav from "./_components/bottom-nav"
 import Categories from "./_components/categories"
@@ -8,32 +7,6 @@ import { DailyDiscovery } from "./_components/daily-discovery"
 import { Features } from "./_components/features"
 import { HomeNav } from "./_components/home-nav"
 import { ProductCardSkeleton } from "./_components/product-card-skeleton"
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-	? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
-	: "http://localhost:3000"
-export const experimental_ppr = true
-
-export const metadata: Metadata = {
-	title: "Fresh Local Produce Marketplace",
-	description:
-		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
-	openGraph: {
-		type: "website",
-		url: baseUrl,
-		description:
-			"Fresh produce from local farmers, available for pickup. Support your local agriculture with FarmPreneur.",
-		siteName: "FarmPreneur",
-		images: [
-			{
-				url: `/image.png`,
-				width: 1200,
-				height: 630,
-				alt: "FarmPreneur - Local Farmers Marketplace"
-			}
-		]
-	}
-}
 
 export default function Home() {
 	return (

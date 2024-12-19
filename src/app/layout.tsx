@@ -13,6 +13,8 @@ const inter = Poppins({
 	weight: ["300", "400", "500", "600", "700", "800", "900"]
 })
 
+import ogImage from "../opengraph-image.png"
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 	? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
 	: "http://localhost:3000"
@@ -50,9 +52,9 @@ export const metadata: Metadata = {
 		siteName: "FarmPreneur",
 		images: [
 			{
-				url: `/image.png`,
-				width: 1200,
-				height: 630,
+				url: ogImage.src,
+				width: ogImage.width,
+				height: ogImage.height,
 				alt: "FarmPreneur - Local Farmers Marketplace"
 			}
 		]

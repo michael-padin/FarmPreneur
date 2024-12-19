@@ -17,7 +17,7 @@ export async function generateMetadata({
 	const slug = (await params).slug
 	const product = await getProductBySlugUseCase(slug)
 	const title = `${product.title} | FarmPreneur`
-	const description = `Buy fresh ${product.title} from ${product.farmer}. ${product.description}`
+	const description = `Buy fresh ${product.title} from ${product.farmer.name}. ${product.description}`
 
 	return {
 		title,
