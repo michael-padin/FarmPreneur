@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og"
 
-export const runtime = "edge"
-
 export default async function Image() {
 	const { title } = {
 		...{
@@ -9,16 +7,10 @@ export default async function Image() {
 		}
 	}
 
-	const logoSrc = await fetch(
-		new URL("../components/logo.svg", import.meta.url)
-	).then((res) => res.arrayBuffer())
-
 	return new ImageResponse(
 		(
 			<div tw="flex h-full w-full flex-col items-center justify-center bg-black">
-				<div tw="flex flex-none items-center justify-center border border-neutral-700 h-[160px] w-[160px] rounded-3xl">
-					<img src={logoSrc} height="100" />
-				</div>
+				<div tw="flex flex-none items-center justify-center border border-neutral-700 h-[160px] w-[160px] rounded-3xl"></div>
 				<p tw="mt-12 text-6xl font-bold text-white">{title}</p>
 			</div>
 		),
