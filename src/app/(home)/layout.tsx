@@ -16,6 +16,14 @@ export const experimental_ppr = true
 
 export const metadata: Metadata = {
 	title: "Local Farmers Marketplace",
+	verification: {
+		google: "google",
+		yandex: "yandex",
+		yahoo: "yahoo",
+		other: {
+			me: ["padinmichael201@gmail.com"]
+		}
+	},
 	description:
 		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
 	openGraph: {
