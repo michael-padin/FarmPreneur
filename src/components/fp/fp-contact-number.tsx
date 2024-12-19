@@ -1,3 +1,4 @@
+"use client"
 import { formatPhoneNumberIntl } from "react-phone-number-input"
 
 export const FPContactNumberDisplay = ({

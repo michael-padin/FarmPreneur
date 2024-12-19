@@ -39,8 +39,8 @@ export const getTotalOrdersUseCase = async () => {
 }
 
 export const getFarmerOrdersUseCase = async (filter: {
-	status: OrderStatus | null
-	search: string | null
+	status?: OrderStatus | null
+	search?: string | null
 }) => {
 	const session = await auth()
 	if (!session || !session.user) throw new Error("Unauthorized")
@@ -49,8 +49,8 @@ export const getFarmerOrdersUseCase = async (filter: {
 }
 
 export const getCustomerOrdersUseCase = async (filter: {
-	status: OrderStatus | null
-	search: string | null
+	status?: OrderStatus | null
+	search?: string | null
 }) => {
 	const session = await auth()
 	if (!session || !session.user) throw new Error("Unauthorized")

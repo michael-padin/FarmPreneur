@@ -92,8 +92,8 @@ export const getRecentOrders = async () => {
 }
 
 export const getFarmerOrders = async (filter: {
-	status: OrderStatus | null
-	search: string | null
+	status?: OrderStatus | null
+	search?: string | null
 	userId: string
 }) => {
 	return await db.order.findMany({
