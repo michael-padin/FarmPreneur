@@ -5,7 +5,6 @@ import { getCartUseCase } from "@/use-cases/cart"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-import UnderConstruction from "./_components/under-construction"
 
 import ogImage from "../opengraph-image.png"
 
@@ -55,7 +54,7 @@ export default async function Layout({
 			userId={user?.id}
 		>
 			<CartProvider initialCartPromise={cartPromise}>
-				<UnderConstruction />
+				{/* <UnderConstruction /> */}
 				{children}
 			</CartProvider>
 		</NotificationProvider>

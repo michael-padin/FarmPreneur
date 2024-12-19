@@ -7,7 +7,7 @@ import Image from "next/image"
 const formatPrice = (price: number, unit: string) => {
 	return (
 		<>
-			<span className="text-xs">₱</span>
+			<span className="text-xs lg:text-base">₱</span>
 			{`${price}/${unit}`}
 		</>
 	)
@@ -51,17 +51,17 @@ export default function ProductCard({
 						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 					/>
 				</div>
-				<div className="overflow-hidden p-2">
+				<div className="overflow-hidden p-2 lg:p-4">
 					<div className="flex justify-between gap-1">
-						<p className="w-full truncate text-sm underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-base">
+						<p className="w-full truncate text-sm underline-offset-2 transition duration-300 ease-in-out group-hover:underline lg:text-lg">
 							{title}
 						</p>
 					</div>
 					<div className="mt-2 flex items-center justify-between">
-						<p className="items-center text-sm font-semibold text-primary lg:text-base">
+						<p className="items-center text-sm font-semibold text-primary lg:text-lg">
 							{formatPrice(price, unit)}
 						</p>
-						<div className="flex items-center gap-1 text-xs">
+						<div className="flex items-center gap-1 text-xs lg:text-base">
 							<div className="flex items-center">
 								<Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
 								<span className="ml-px">

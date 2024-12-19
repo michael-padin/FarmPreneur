@@ -26,7 +26,6 @@ export async function DailyDiscovery() {
 							price={product.price}
 							farmer={product.farmer?.user.name || ""}
 							unit={product.unit || "kg"}
-							className="border-none shadow-none"
 						/>
 					</Link>
 				))

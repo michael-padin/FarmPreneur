@@ -13,9 +13,9 @@ export function CategoryCard({
 	imageUrl
 }: CategoryCardProps) {
 	return (
-		<Card className="border-none">
-			<CardContent className="w-24 p-0">
-				<div className="relative h-20 overflow-hidden rounded-lg">
+		<Card className="group border-none">
+			<CardContent className="h-32 w-full p-0 lg:w-full">
+				<div className="relative h-20 overflow-hidden rounded-lg lg:h-32">
 					<Image
 						src={imageUrl}
 						alt={title}
@@ -26,7 +26,9 @@ export function CategoryCard({
 					/>
 				</div>
 				<div className="px-1 pt-2">
-					<h3 className="truncate text-xs">{title}</h3>
+					<h3 className="truncate text-xs group-hover:underline lg:text-lg">
+						{title}
+					</h3>
 					{/* <p className="line-clamp-2 text-sm text-muted-foreground">
 						{description}
 					</p> */}
