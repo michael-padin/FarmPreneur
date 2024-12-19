@@ -1,5 +1,5 @@
 "use client"
-import { FileUpload } from "@/components/fg/fp-s3-file-upload"
+import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { FPSelect } from "@/components/fp/fp-select"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { PRODUCT_STATUS } from "@/constants/product-status"
-import { S3PATH } from "@/constants/s3-path"
 import { units } from "@/constants/unit"
 import { showErrorToast } from "@/lib/handle-error"
 import { getCategoriesUseCase } from "@/use-cases/categories"
@@ -283,12 +282,10 @@ export function CreateProductForm({
 							<FormItem>
 								<FormLabel>Product Image</FormLabel>
 								<FormControl>
-									<FileUpload
-										onChange={field.onChange}
-										value={field.value && field.value}
-										path={S3PATH.PRODUCTIMAGES}
-										multiple
+									<FPMediaUploader
+										initialMedia={[]}
 										maxFiles={5}
+										onChange={field.onChange}
 									/>
 								</FormControl>
 								<FormDescription>
