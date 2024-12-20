@@ -1,7 +1,7 @@
 "use client"
+import { FPStarRating } from "@/components/fp/fp-star-rating"
 import { getProductReviews } from "@/use-cases/products"
 import { formatDistanceToNow } from "date-fns"
-import { Star } from "lucide-react"
 import Image from "next/image"
 
 interface ReviewCardProps {
@@ -47,16 +47,7 @@ export function ReviewCard({
 			</div>
 
 			<div className="mb-2 flex gap-1">
-				{Array.from({ length: 5 }).map((_, i) => (
-					<Star
-						key={i}
-						className={`h-4 w-4 ${
-							i < review.rating
-								? "fill-yellow-500 stroke-yellow-500 text-yellow-500"
-								: "fill-transparent text-muted-foreground"
-						}`}
-					/>
-				))}
+				<FPStarRating rating={review.rating} />
 			</div>
 
 			{/* {review.product.variant && (

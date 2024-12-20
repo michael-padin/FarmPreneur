@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
 	title: {
 		default: "FarmPreneur - Local Farmers Marketplace",
-		template: "FarmPreneur - %s"
+		template: "%s - FarmPreneur"
 	},
 	robots: {
 		follow: true,

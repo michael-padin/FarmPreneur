@@ -67,7 +67,7 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 						<div className="bg-background p-4 md:rounded-md">
 							<Farmer farmerId={product.farmer.id} />
 						</div>
-						<div className="bg-background p-4 md:rounded-md">
+						<div className="bg-background p-4 md:rounded-md" id="reviews">
 							<Reviews reviews={reviews} />
 						</div>
 					</div>

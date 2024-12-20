@@ -13,7 +13,7 @@ export default function FarmerProductsPage({ params }: { params: Params }) {
 			<header className="">
 				<NavWrapper />
 			</header>
-			<main className="bg-muted">
+			<main className="bg-muted lg:container">
 				<div className="pt-16">
 					<div className="space-y-2 rounded-lg">
 						<div className="">

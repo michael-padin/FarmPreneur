@@ -66,7 +66,7 @@ export async function FarmerProfile({ params }: { params: Params }) {
 	const farmerInfo = await getFarmerBasicInfo(farmerId)
 	return (
 		<>
-			<div className="relative aspect-video w-full">
+			<div className="relative aspect-video w-full lg:h-40">
 				<Image
 					src={farmerInfo.coverPhoto || "/placeholder.svg"}
 					alt="Cover photo"

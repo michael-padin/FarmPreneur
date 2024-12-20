@@ -15,22 +15,24 @@ export default function ProductListPage({
 	return (
 		<>
 			<header className="fixed top-0 z-10 w-full space-y-3 overflow-auto bg-background px-3 pt-3">
-				<div className="flex w-full items-center justify-between">
-					<div className="flex items-center gap-2">
-						<FPBackButton />
-						<div className="">
-							<h2 className={`text-xs font-bold ${"text-primary"}`}>
-								FarmPreneur
-							</h2>
-							<h1 className="text-2xl font-semibold">Products</h1>
+				<div className="lg:container">
+					<div className="flex w-full items-center justify-between">
+						<div className="flex items-center gap-2">
+							<FPBackButton />
+							<div className="">
+								<h2 className={`text-xs font-bold ${"text-primary"}`}>
+									FarmPreneur
+								</h2>
+								<h1 className="text-2xl font-semibold">Products</h1>
+							</div>
 						</div>
+						<TopNav />
 					</div>
-					<TopNav />
+					<FilterProducts />
+					<SortTabs />
 				</div>
-				<FilterProducts />
-				<SortTabs />
 			</header>
-			<main className="h-screen overflow-auto bg-secondary">
+			<main className="h-screen overflow-auto bg-secondary lg:container">
 				<div className="p-2 pb-3 pt-[164px]">
 					<ProductListWrapper searchParams={searchParams} />
 				</div>
