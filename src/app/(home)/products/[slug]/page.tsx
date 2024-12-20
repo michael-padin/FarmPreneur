@@ -22,6 +22,10 @@ export async function generateMetadata({
 	return {
 		title,
 		description,
+		robots: {
+			follow: true,
+			index: true
+		},
 		openGraph: {
 			title,
 			description,

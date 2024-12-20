@@ -25,6 +25,10 @@ export const metadata: Metadata = {
 		default: "FarmPreneur - Local Farmers Marketplace",
 		template: "FarmPreneur - %s"
 	},
+	robots: {
+		follow: true,
+		index: true
+	},
 	verification: {
 		google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
 		yandex: "yandex",
