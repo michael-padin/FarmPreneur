@@ -40,12 +40,13 @@ export const metadata: Metadata = {
 		"farmers market",
 		"fresh vegetables",
 		"farm to table",
+		"farmer marketplace",
+		"local farmers",
+		"sustainable agriculture",
+		"farmers market",
+		"fresh produce",
 		"sustainable agriculture"
 	],
-	robots: {
-		index: true,
-		follow: true
-	},
 	authors: [{ name: "FarmPreneur Team" }],
 	creator: "FarmPreneur",
 	publisher: "FarmPreneur",

@@ -17,42 +17,44 @@ export function QuantitySelector() {
 	}
 
 	return (
-		<div className="flex items-center gap-4">
-			<div>
-				<Label className="text-base" htmlFor="quantity">
-					Quantity
-				</Label>
-				<div className="flex flex-col gap-2">
-					<div className="flex items-center gap-2">
-						<div className="flex w-[100px] items-center justify-between gap-2 rounded-full bg-muted px-3 py-1">
-							<Button
-								className="h-4 w-4 text-gray-500 hover:bg-transparent dark:text-gray-400"
-								size="icon"
-								variant="ghost"
-								onClick={decreaseQuantity}
-							>
-								<MinusIcon className="h-4 w-4" />
-								<span className="sr-only">Decrease quantity</span>
-							</Button>
-							<span className="text-base font-medium">{quantity}</span>
-							<Button
-								className="h-4 w-4 text-gray-500 hover:bg-transparent dark:text-gray-400"
-								size="icon"
-								variant="ghost"
-								onClick={increaseQuantity}
-							>
-								<PlusIcon className="h-4 w-4" />
-								<span className="sr-only">Increase quantity</span>
-							</Button>
+		<div>
+			<div className="flex items-center gap-4">
+				<div className="flex items-center gap-4">
+					<Label className="text-base" htmlFor="quantity">
+						Quantity
+					</Label>
+					<div className="flex flex-col gap-2">
+						<div className="flex items-center gap-2">
+							<div className="flex w-[100px] items-center justify-between gap-2 rounded-lg bg-muted px-3 py-1">
+								<Button
+									className="h-4 w-4 text-gray-500 hover:bg-transparent dark:text-gray-400"
+									size="icon"
+									variant="ghost"
+									onClick={decreaseQuantity}
+								>
+									<MinusIcon className="h-4 w-4" />
+									<span className="sr-only">Decrease quantity</span>
+								</Button>
+								<span className="text-base font-medium">{quantity}</span>
+								<Button
+									className="h-4 w-4 text-gray-500 hover:bg-transparent dark:text-gray-400"
+									size="icon"
+									variant="ghost"
+									onClick={increaseQuantity}
+								>
+									<PlusIcon className="h-4 w-4" />
+									<span className="sr-only">Increase quantity</span>
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
-				{stock === quantity && (
-					<p className="mb-2 text-sm text-red-500">
-						You&apos;ve selected the maximum available stock.
-					</p>
-				)}
 			</div>
+			{stock === quantity && (
+				<p className="mb-2 text-sm text-red-500">
+					You&apos;ve selected the maximum available stock.
+				</p>
+			)}
 		</div>
 	)
 }

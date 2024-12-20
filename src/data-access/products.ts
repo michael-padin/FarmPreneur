@@ -604,7 +604,9 @@ export const getProductBySlug = async (slug: string) => {
 			reviews: true,
 			category: {
 				select: {
-					name: true
+					name: true,
+					id: true,
+					slug: true
 				}
 			}
 		}

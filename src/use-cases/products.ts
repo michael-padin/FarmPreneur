@@ -262,6 +262,8 @@ export const getProductBySlugUseCase = async (slug: string) => {
 
 	if (!product) throw new Error("Product not found")
 
+	const reviews = await getProductReviews(product.id)
+
 	const averageRating =
 		product.reviews.reduce((sum, review) => sum + review.rating, 0) /
 			product.reviews.length || 0
@@ -270,11 +272,17 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		.reduce((sum, item) => sum + item.quantity, 0)
 
 	return {
+		reviews: reviews,
 		id: product.id,
 		price: product.price,
 		unit: product.unit as UnitKey,
 		title: product.title,
 		description: product.description,
+		category: {
+			id: product.category?.id || "",
+			name: product.category?.name || "",
+			slug: product.category?.slug || ""
+		},
 		quantity: product.quantity,
 		averageRating,
 		totalSold: totalSold,

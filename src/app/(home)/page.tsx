@@ -1,3 +1,8 @@
+import JsonLd from "@/components/json-ld"
+import {
+	generateHomeJsonLd,
+	generateOrganizationJsonLd
+} from "@/lib/structured-data"
 import { Suspense } from "react"
 import BottomNav from "./_components/bottom-nav"
 import Categories from "./_components/categories"
@@ -9,14 +14,17 @@ import { HomeNav } from "./_components/home-nav"
 import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 
 export default function Home() {
+	const websiteJsonLd = generateHomeJsonLd()
+	const organizationJsonLd = generateOrganizationJsonLd()
 	return (
 		<>
+			<JsonLd data={[websiteJsonLd, organizationJsonLd]} />
 			<header>
 				<HomeNav />
 			</header>
 			<main className="bg-background pb-20">
 				<section className="m-auto h-full w-full bg-primary lg:flex lg:h-[70vh] lg:items-center">
-					<div className="relative mx-auto h-full px-0 max-sm:container lg:p-0 lg:px-0 lg:pt-0">
+					<div className="relative mx-auto h-full px-0 lg:p-0 lg:px-0 lg:pt-0">
 						<div className="flex items-center justify-center pb-20 pt-24 lg:h-full lg:rounded-lg lg:pb-0 lg:pt-0">
 							<div className="relative space-y-5 px-2 text-center text-white lg:space-y-10">
 								<h1 className="text-3xl font-bold leading-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">

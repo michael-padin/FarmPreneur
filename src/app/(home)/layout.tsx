@@ -3,36 +3,9 @@ import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getCartUseCase } from "@/use-cases/cart"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
-import { Metadata } from "next"
 import { redirect } from "next/navigation"
 
-import ogImage from "../opengraph-image.png"
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-	? process.env.NEXT_PUBLIC_BASE_URL
-	: "http://localhost:3000"
 export const experimental_ppr = true
-
-export const metadata: Metadata = {
-	title: "Local Farmers Marketplace",
-	description:
-		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
-	openGraph: {
-		type: "website",
-		url: baseUrl,
-		description:
-			"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
-		siteName: "FarmPreneur",
-		images: [
-			{
-				url: ogImage.src,
-				width: ogImage.width,
-				height: ogImage.height,
-				alt: "FarmPreneur - Local Farmers Marketplace"
-			}
-		]
-	}
-}
 
 export default async function Layout({
 	children

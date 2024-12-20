@@ -22,15 +22,11 @@ export async function generateMetadata({
 	return {
 		title,
 		description,
-		robots: {
-			index: true
-		},
 		openGraph: {
 			title,
 			description,
 			type: "website",
 			images: [
-				"/placeholder.svg",
 				{
 					url: product.productImages[0],
 					width: 800,

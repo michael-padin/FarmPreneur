@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function ProductDetailsWrapperSkeleton() {
 	return (
-		<div className="space-y-4 pb-20">
+		<div className="space-y-4 pb-20 lg:container">
 			<div className="grid items-start lg:container md:grid-cols-2 lg:mx-auto lg:px-4">
 				<div className="grid gap-4">
 					<div className="bg-background">
