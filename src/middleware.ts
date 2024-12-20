@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
 import NextAuth from "next-auth"
+import { NextResponse } from "next/server"
 import authConfig from "./auth.config"
 import {
 	apiAuthPrefix,
@@ -54,5 +54,7 @@ export default auth(async function middleware(req) {
 // Supports both a single string value or an array of matchers
 // @ref https://clerk.com/docs/references/nextjs/auth-middleware#usage
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"]
+	matcher: [
+		"/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"
+	]
 }
