@@ -27,7 +27,11 @@ export const metadata: Metadata = {
 	},
 	robots: {
 		follow: true,
-		index: true
+		index: true,
+		googleBot: {
+			index: true,
+			follow: true
+		}
 	},
 	verification: {
 		google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
