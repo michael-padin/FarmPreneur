@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next"
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-	? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
+	? process.env.NEXT_PUBLIC_BASE_URL
 	: "http://localhost:3000"
 
 export default function robots(): MetadataRoute.Robots {
@@ -13,7 +13,6 @@ export default function robots(): MetadataRoute.Robots {
 				disallow: "/dashboard/"
 			}
 		],
-		sitemap: `${baseUrl}/sitemap.xml`,
-		host: baseUrl
+		sitemap: `${baseUrl}/sitemap.xml`
 	}
 }
