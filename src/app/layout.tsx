@@ -34,12 +34,7 @@ export const metadata: Metadata = {
 		}
 	},
 	verification: {
-		google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
-		yandex: "yandex",
-		yahoo: "yahoo",
-		other: {
-			me: ["padinmichael201@gmail.com"]
-		}
+		google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION
 	},
 	description:
 		"Discover and purchase fresh, locally-grown produce from farmers in your area. Support local agriculture with FarmPreneur.",
@@ -53,6 +48,7 @@ export const metadata: Metadata = {
 		"sustainable agriculture",
 		"farmers market",
 		"fresh produce",
+		"local farmer marketplace",
 		"sustainable agriculture"
 	],
 	authors: [{ name: "FarmPreneur Team" }],
