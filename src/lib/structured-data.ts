@@ -13,42 +13,110 @@ export function generateProductJsonLd(
 		name: product.title,
 		description: product.description,
 		image: product.productImages,
+		sku: "",
+		mpn: "",
+		gtin: "",
 		offers: {
 			"@type": "Offer",
 			price: product.price,
 			priceCurrency: "PHP",
+			url: `${baseUrl}/products/${product.slug}`,
 			availability:
 				product.quantity > 0
 					? "https://schema.org/InStock"
 					: "https://schema.org/OutOfStock",
+			itemCondition: "https://schema.org/NewCondition",
 			seller: {
 				"@type": "Organization",
-				name: product.farmer.name
+				name: product.farmer.name,
+				seller: {
+					"@type": "Organization",
+					name: product.farmer.name,
+					url: `${baseUrl}/farmers/${product.farmer.id}`
+				}
 			}
 		},
 		brand: {
 			"@type": "Brand",
-			name: "FarmPreneur"
+			name: "FarmPreneur",
+			url: `${baseUrl}`,
+			logo: `${baseUrl}/logo.svg`
 		},
 		category: product.category.name,
-		aggregateRating: {
-			"@type": "AggregateRating",
-			ratingValue: product.reviews.averageRating,
-			reviewCount: product.reviews.totalReviews
+		breadcrumb: {
+			"@type": "BreadcrumbList",
+			itemListElement: [
+				{
+					"@type": "ListItem",
+					position: 1,
+					item: {
+						"@id": `${baseUrl}`,
+						name: "Home"
+					}
+				},
+				{
+					"@type": "ListItem",
+					position: 2,
+					item: {
+						"@id": `${baseUrl}/categories/${product.category.slug}`,
+						name: product.category.name
+					}
+				},
+				{
+					"@type": "ListItem",
+					position: 3,
+					item: {
+						"@id": `${baseUrl}/products/${product.slug}`,
+						name: product.title
+					}
+				}
+			]
 		},
+
+		// Enhanced aggregate rating
+		aggregateRating:
+			product.reviews.totalReviews > 0
+				? {
+						"@type": "AggregateRating",
+						ratingValue: product.reviews.averageRating,
+						reviewCount: product.reviews.totalReviews,
+						bestRating: 5,
+						worstRating: 1
+					}
+				: undefined,
 		review: product.reviews.reviews.map((review) => ({
 			"@type": "Review",
 			reviewRating: {
 				"@type": "Rating",
-				ratingValue: review.rating
+				ratingValue: review.rating,
+				bestRating: 5,
+				worstRating: 1
 			},
 			author: {
 				"@type": "Person",
-				name: review.customer?.name || "Customer"
+				name: review.customer?.name || "Anonymous Customer"
 			},
 			reviewBody: review.comment,
-			datePublished: review.createdAt
-		}))
+			datePublished: review.createdAt,
+			publisher: {
+				"@type": "Organization",
+				name: "FarmPreneur"
+			}
+		})), // Add additional product metadata
+		additionalProperty: [
+			{
+				"@type": "PropertyValue",
+				name: "Farm Location",
+				value: product.farmer.addresses[0].fullAddress || undefined
+			},
+			{
+				"@type": "PropertyValue",
+				name: "Farming Method",
+				value: "Organic Farming"
+			}
+		].filter((prop) => prop.value !== undefined),
+		datePublished: product.createdAt,
+		dateModified: product.updatedAt
 	}
 }
 

@@ -270,8 +270,11 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		.reduce((sum, item) => sum + item.quantity, 0)
 
 	return {
+		createdAt: product.createdAt,
+		updatedAt: product.updatedAt,
 		reviews: reviews,
 		id: product.id,
+		slug: product.slug,
 		price: product.price,
 		unit: product.unit as UnitKey,
 		title: product.title,
