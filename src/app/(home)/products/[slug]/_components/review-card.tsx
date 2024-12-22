@@ -25,8 +25,7 @@ export function ReviewCard({
 							alt={`Reviewer's profile picture`}
 							width={32}
 							height={32}
-							className="rounded-full object-cover"
-							sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+							className="aspect-square h-auto w-auto rounded-full object-cover"
 						/>
 					) : (
 						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">

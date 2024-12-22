@@ -21,6 +21,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { NotificationType, OrderStatus, OrderSubStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
+import { verifyCustomerSession } from "./dal"
 import { getErrorMessage } from "./handle-error"
 import { s3Client } from "./s3-client"
 
@@ -110,35 +111,9 @@ export async function addToCart(
 ): Promise<{ success: boolean; cartItem?: CartItem; error?: string }> {
 	const { productId, quantity } = payload
 
-	const session = await auth()
-
-	if (!session || !session.user.customerId) {
-		return { success: false, error: "You must be logged in to add to cart" }
-	}
-
-	const cartId = session.user.cartId
+	const { cartId } = await verifyCustomerSession()
 
 	try {
-		const product = await db.product.findUnique({
-			where: { id: productId },
-			include: {
-				cartItems: {
-					include: { cart: true }
-				}
-			}
-		})
-
-		const currentQuantity = product?.cartItems.find(
-			(cartItem) => cartItem.productId === productId
-		)?.quantity
-
-		if (currentQuantity && currentQuantity + quantity > product.quantity) {
-			return {
-				success: false,
-				error: "You can't add more than the available stock"
-			}
-		}
-
 		const cart = await db.cart.findUnique({
 			where: {
 				id: cartId
@@ -171,6 +146,26 @@ export async function addToCart(
 			await db.cartItem.create({
 				data: { quantity, productId: payload.productId, cartId }
 			})
+		}
+
+		const product = await db.product.findUnique({
+			where: { id: productId },
+			include: {
+				cartItems: {
+					include: { cart: true }
+				}
+			}
+		})
+
+		const currentQuantity = product?.cartItems.find(
+			(cartItem) => cartItem.productId === productId
+		)?.quantity
+
+		if (currentQuantity && currentQuantity + quantity > product.quantity) {
+			return {
+				success: false,
+				error: "You can't add more than the available stock"
+			}
 		}
 
 		revalidatePath("/")

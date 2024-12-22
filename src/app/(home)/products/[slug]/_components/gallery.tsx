@@ -21,12 +21,12 @@ export function Gallery({
 			<div className="relative aspect-square max-h-[550px] w-full overflow-hidden lg:rounded-lg">
 				{images[imageIndex] && (
 					<Image
-						className="h-full w-full object-cover"
+						className="h-auto w-auto object-cover"
 						fill
 						sizes="(min-width: 1024px) 66vw, 100vw"
 						alt={`${title} ${imageIndex + 1}`}
 						src={images[imageIndex]}
-						priority={true}
+						priority
 					/>
 				)}
 			</div>
@@ -41,7 +41,7 @@ export function Gallery({
 								<button
 									onClick={() => setImageIndex(index)}
 									aria-label="Select product image"
-									className="h-full w-full"
+									className="h-auto w-auto"
 								>
 									<GridTileImage
 										alt={`${title} ${index + 1} navigator`}

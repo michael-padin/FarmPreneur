@@ -1,12 +1,14 @@
 "use server"
 
+import { auth } from "@/auth"
 import { UnitKey } from "@/constants/unit"
 import { getCartById } from "@/data-access/cart"
 import { groupCartItemsByFarmer } from "@/lib/utils"
 import { CartState } from "@/types/cart"
 
-export const getCartUseCase = async (cartId: string): Promise<CartState> => {
-	if (!cartId) {
+export const getCartUseCase = async (id?: string): Promise<CartState> => {
+	const finalCartId = (await auth())?.user?.cartId || id
+	if (!finalCartId) {
 		return {
 			items: [],
 			groupedItems: [],
@@ -16,7 +18,7 @@ export const getCartUseCase = async (cartId: string): Promise<CartState> => {
 		}
 	}
 
-	const cart = await getCartById(cartId)
+	const cart = await getCartById(finalCartId)
 	const reshapedCart = cart!.items.map((item) => {
 		return {
 			id: item.id,

@@ -5,7 +5,7 @@ const nextConfig = {
 		ignoreDuringBuilds: true
 	},
 	experimental: {
-		ppr: true,
+		ppr: "incremental",
 		serverActions: {
 			bodySizeLimit: "20mb"
 		}

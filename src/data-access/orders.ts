@@ -1,7 +1,10 @@
+import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
 import { OrderStatus } from "@prisma/client"
 
 export const getOrders = async () => {
+	const user = await verifySession()
+
 	return await db.order.findMany({
 		orderBy: {
 			createdAt: "desc"

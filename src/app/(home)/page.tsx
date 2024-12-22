@@ -13,16 +13,18 @@ import { FeaturedProductsCarouselSkeleton } from "./_components/featured-product
 import { HomeNav } from "./_components/home-nav"
 import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 
+export const experimental_ppr = true
+
 export default function Home() {
 	const websiteJsonLd = generateHomeJsonLd()
 	const organizationJsonLd = generateOrganizationJsonLd()
 	return (
 		<>
-			<JsonLd data={[websiteJsonLd, organizationJsonLd]} />
 			<header>
 				<HomeNav />
 			</header>
 			<main className="bg-background pb-20">
+				<JsonLd data={[websiteJsonLd, organizationJsonLd]} />
 				<section className="m-auto h-full w-full bg-primary lg:flex lg:h-[70vh] lg:items-center">
 					<div className="relative mx-auto h-full px-0 lg:p-0 lg:px-0 lg:pt-0">
 						<div className="flex items-center justify-center pb-20 pt-24 lg:h-full lg:rounded-lg lg:pb-0 lg:pt-0">

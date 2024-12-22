@@ -1,3 +1,4 @@
+import { db } from "@/lib/db"
 import { getProductBySlugUseCase } from "@/use-cases/products"
 import { Metadata } from "next"
 import { Suspense } from "react"
@@ -6,6 +7,13 @@ import { ProductDetailsWrapper } from "./_components/product-details-wrapper"
 import { TopNav } from "./_components/top-nav"
 
 export const experimental_ppr = true
+
+export async function generateStaticParams() {
+	const products = await db.product.findMany({ select: { id: true } })
+	return products.map((product) => ({
+		id: String(product.id)
+	}))
+}
 
 type Params = Promise<{ slug: string }>
 
@@ -57,11 +65,15 @@ export async function generateMetadata({
 
 export default function Page(props: { params: Params }) {
 	return (
-		<main className="relative bg-muted">
-			<TopNav />
-			<Suspense fallback={<ProductDetailsWrapperSkeleton />}>
-				<ProductDetailsWrapper params={props.params} />
-			</Suspense>
-		</main>
+		<>
+			<header>
+				<TopNav />
+			</header>
+			<main className="relative bg-muted">
+				<Suspense fallback={<ProductDetailsWrapperSkeleton />}>
+					<ProductDetailsWrapper params={props.params} />
+				</Suspense>
+			</main>
+		</>
 	)
 }

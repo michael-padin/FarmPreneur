@@ -145,32 +145,36 @@ export function NotificationProvider({
 	)
 
 	useEffect(() => {
-		// Subscribe to Pusher channel
-		const channel = pusherClient.subscribe(`user-${userId}-notifications`)
+		if (userId) {
+			// Subscribe to Pusher channel
+			const channel = pusherClient.subscribe(`user-${userId}-notifications`)
 
-		const notificationSound = new Audio("/notification.mp3")
+			const notificationSound = new Audio("/notification.mp3")
 
-		// this function will run every notification received
-		const handleNewNotification = async (newNotification: NotificationType) => {
-			handleRevalidatePaths(newNotification.type)
-			handleAddOptimisticNotification(newNotification)
-			toast.info(`${newNotification.title}`, {
-				description: newNotification.message,
-				dismissible: true,
-				position: isDesktop ? "top-right" : "top-right",
-				duration: 5000,
-				closeButton: true
-			})
+			// this function will run every notification received
+			const handleNewNotification = async (
+				newNotification: NotificationType
+			) => {
+				handleRevalidatePaths(newNotification.type)
+				handleAddOptimisticNotification(newNotification)
+				toast.info(`${newNotification.title}`, {
+					description: newNotification.message,
+					dismissible: true,
+					position: isDesktop ? "top-right" : "top-right",
+					duration: 5000,
+					closeButton: true
+				})
 
-			notificationSound.play()
-		}
+				notificationSound.play()
+			}
 
-		channel.bind("new-notification", handleNewNotification)
+			channel.bind("new-notification", handleNewNotification)
 
-		// Cleanup subscription
-		return () => {
-			pusherClient.unsubscribe(`user-${userId}-notifications`)
-			channel.unbind("new-notification", handleNewNotification)
+			// Cleanup subscription
+			return () => {
+				pusherClient.unsubscribe(`user-${userId}-notifications`)
+				channel.unbind("new-notification", handleNewNotification)
+			}
 		}
 	}, [
 		handleRevalidatePaths,

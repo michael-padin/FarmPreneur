@@ -256,8 +256,6 @@ export const getProductReviews = async (productId: string) => {
 	}
 }
 export const getProductBySlugUseCase = async (slug: string) => {
-	if (!slug) throw new Error("No slug provided")
-
 	const product = await getProductBySlug(slug)
 
 	if (!product) throw new Error("Product not found")

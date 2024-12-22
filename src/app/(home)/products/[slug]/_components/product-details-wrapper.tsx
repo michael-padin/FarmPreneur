@@ -6,11 +6,19 @@ import {
 	getProductReviews
 } from "@/use-cases/products"
 import { notFound } from "next/navigation"
+import { cache } from "react"
 import ProductBottomNav from "./bottom-nav"
 import { Farmer } from "./farmer"
 import { Gallery } from "./gallery"
 import { ProductDetails } from "./product-details"
 import Reviews from "./reviews"
+
+export const getProduct = cache(async (slug: string) => {
+	const post = getProductBySlugUseCase(slug)
+
+	if (!post) notFound()
+	return post
+})
 
 type Params = Promise<{ slug: string }>
 
@@ -21,7 +29,7 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 	if (!slug) {
 		notFound()
 	}
-	const product = await getProductBySlugUseCase(slug)
+	const product = await getProduct(slug)
 
 	const reviews = await getProductReviews(product.id)
 

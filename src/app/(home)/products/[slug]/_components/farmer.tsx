@@ -19,6 +19,7 @@ export async function Farmer({ farmerId }: FarmerProps) {
 							src={farmer.profilePicture || "/placeholder.svg"}
 							alt={`${farmer.name}'s profile picture`}
 							className="rounded-full"
+							sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 							fill
 							style={{ objectFit: "cover" }}
 						/>

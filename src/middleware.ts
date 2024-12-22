@@ -1,12 +1,7 @@
 import NextAuth from "next-auth"
 import { NextResponse } from "next/server"
 import authConfig from "./auth.config"
-import {
-	apiAuthPrefix,
-	authRoutes,
-	DEFAULT_LOGIN_REDIRECT,
-	protectedRoutes
-} from "./routes"
+import { authRoutes, DEFAULT_LOGIN_REDIRECT, protectedRoutes } from "./routes"
 
 const { auth } = NextAuth(authConfig)
 export default auth(async function middleware(req) {
@@ -14,11 +9,6 @@ export default auth(async function middleware(req) {
 	const { pathname } = nextUrl
 	const isLoggedIn = !!req.auth
 	const user = req.auth?.user
-
-	// 1. API routes should be handled first and returned immediately
-	if (pathname.startsWith(apiAuthPrefix)) {
-		return
-	}
 
 	// 2. Check for auth routes
 	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
@@ -48,7 +38,6 @@ export default auth(async function middleware(req) {
 		}
 	}
 
-	// 4. For all other routes, allow access
 	return
 })
 // Supports both a single string value or an array of matchers

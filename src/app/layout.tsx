@@ -25,14 +25,6 @@ export const metadata: Metadata = {
 		default: "FarmPreneur - Local Farmers Marketplace",
 		template: "%s - FarmPreneur"
 	},
-	robots: {
-		follow: true,
-		index: true,
-		googleBot: {
-			index: true,
-			follow: true
-		}
-	},
 	verification: {
 		google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION
 	},
@@ -92,7 +84,7 @@ export default async function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en">
 			<meta name="apple-mobile-web-app-title" content="Farmpreneur" />
 			<body className={inter.className}>
 				<NuqsAdapter>

@@ -3,9 +3,6 @@ import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getCartUseCase } from "@/use-cases/cart"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
-import { redirect } from "next/navigation"
-
-export const experimental_ppr = true
 
 export default async function Layout({
 	children
@@ -13,18 +10,15 @@ export default async function Layout({
 	children: React.ReactNode
 }) {
 	const session = await auth()
-	const user = session?.user
+	const userId = session?.user?.id
 
-	if (user?.role === "FARMER") redirect("/dashboard/farmer")
-	if (user?.role === "ADMIN") redirect("/dashboard")
-
-	const cartPromise = getCartUseCase(user?.cartId || "")
+	const cartPromise = getCartUseCase()
 	const initialNotificationsPromise = getNotificationsByUserIdUseCase()
 
 	return (
 		<NotificationProvider
 			initialNotificationsPromise={initialNotificationsPromise}
-			userId={user?.id}
+			userId={userId}
 		>
 			<CartProvider initialCartPromise={cartPromise}>
 				{/* <UnderConstruction /> */}
