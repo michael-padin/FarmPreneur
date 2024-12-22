@@ -19,6 +19,7 @@ export function generateProductJsonLd(
 		offers: {
 			"@type": "Offer",
 			price: product.price,
+			priceValidUntil: new Date().setFullYear(new Date().getFullYear() + 1), // Price valid for 1 year
 			priceCurrency: "PHP",
 			url: `${baseUrl}/products/${product.slug}`,
 			availability:
