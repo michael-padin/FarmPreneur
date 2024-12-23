@@ -1,7 +1,9 @@
 "use client"
 import { FPStarRating } from "@/components/fp/fp-star-rating"
+import { Button } from "@/components/ui/button"
 import { getProductReviews } from "@/use-cases/products"
 import { formatDistanceToNow } from "date-fns"
+import { ThumbsUp } from "lucide-react"
 import Image from "next/image"
 
 interface ReviewCardProps {
@@ -32,17 +34,18 @@ export function ReviewCard({
 							{review.customerId?.charAt(0)}
 						</div>
 					)}
-					<span className="font-medium">
+					<h3 className="font-medium">
 						{review.customer?.name || review.customer?.user.name}
-					</span>
+					</h3>
 				</div>
-				{/* <Button
+				<Button
 					variant="ghost"
 					onClick={() => onHelpfulClick?.(review.id)}
 					className="text-muted-foreground"
 				>
+					<ThumbsUp />
 					Helpful ({helpfulCount})
-				</Button> */}
+				</Button>
 			</div>
 
 			<div className="mb-2 flex gap-1">

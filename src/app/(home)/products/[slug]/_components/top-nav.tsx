@@ -54,11 +54,11 @@ export function TopNav() {
 							priority
 							sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 						/>
-						<h1
+						<p
 							className={`font-bold ${scrolled ? "text-primary" : "text-primary-foreground"}`}
 						>
 							FarmPreneur
-						</h1>
+						</p>
 					</div>
 					<div className="">
 						<div className="flex items-center gap-4">

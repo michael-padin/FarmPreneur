@@ -1,4 +1,5 @@
 import { FPBackButton } from "@/components/fp/fp-back-button"
+import { Metadata } from "next"
 import { type SearchParams } from "nuqs/server"
 import { FilterProducts } from "./_components/filter-products"
 import { ProductListWrapper } from "./_components/product-list-wrapper"
@@ -6,6 +7,18 @@ import { SortTabs } from "./_components/tab-list"
 import { TopNav } from "./_components/top-nav"
 
 export const experimental_ppr = true
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+	? process.env.NEXT_PUBLIC_BASE_URL
+	: "http://localhost:3000"
+
+export const metadata: Metadata = {
+	title: "Products",
+	description: "Buy fresh produce from local farmers.",
+	alternates: {
+		canonical: `${baseUrl}/products`
+	}
+}
 
 export default function ProductListPage({
 	searchParams

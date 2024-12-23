@@ -2,11 +2,14 @@ import { db } from "@/lib/db"
 import { getProductBySlugUseCase } from "@/use-cases/products"
 import { Metadata } from "next"
 import { Suspense } from "react"
-import ProductDetailsWrapperSkeleton from "./_components/product-details-skeleton"
+import ProductSkeleton from "./_components/product-details-skeleton"
 import { ProductDetailsWrapper } from "./_components/product-details-wrapper"
 import { TopNav } from "./_components/top-nav"
 
 export const experimental_ppr = true
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+	? process.env.NEXT_PUBLIC_BASE_URL
+	: "http://localhost:3000"
 
 export async function generateStaticParams() {
 	const products = await db.product.findMany({ select: { id: true } })
@@ -30,6 +33,9 @@ export async function generateMetadata({
 	return {
 		title,
 		description,
+		alternates: {
+			canonical: `${baseUrl}/products/${slug}`
+		},
 		robots: {
 			follow: true,
 			index: true
@@ -70,7 +76,7 @@ export default function Page(props: { params: Params }) {
 				<TopNav />
 			</header>
 			<main className="relative bg-muted">
-				<Suspense fallback={<ProductDetailsWrapperSkeleton />}>
+				<Suspense fallback={<ProductSkeleton />}>
 					<ProductDetailsWrapper params={props.params} />
 				</Suspense>
 			</main>

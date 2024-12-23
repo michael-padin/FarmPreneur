@@ -45,7 +45,7 @@ export default function Home() {
 					<section className="mx-auto rounded-lg px-0 lg:container lg:mt-12 lg:px-4">
 						<div className="">
 							<div className="relative rounded-md bg-background py-2">
-								<h1 className="mb-2 font-semibold lg:text-2xl">Categories</h1>
+								<h2 className="mb-2 font-semibold lg:text-2xl">Categories</h2>
 
 								<div>
 									<div className="">
@@ -63,9 +63,9 @@ export default function Home() {
 					<section className="mx-auto rounded-lg px-0 lg:container lg:px-4">
 						<div className="rounded-lg bg-background">
 							<div className="relative rounded-md bg-background py-2">
-								<h3 className="mb-2 font-semibold lg:text-2xl">
+								<h2 className="mb-2 font-semibold lg:text-2xl">
 									Featured Products
-								</h3>
+								</h2>
 								<div>
 									<div className="">
 										<div className="">
@@ -81,9 +81,9 @@ export default function Home() {
 
 					<section className="rounded-lg px-0 py-2 lg:container lg:px-4">
 						<div className="rounded-lg">
-							<h3 className="mb-2 font-semibold lg:text-2xl">
+							<h2 className="mb-2 font-semibold lg:text-2xl">
 								Daily Discovery
-							</h3>
+							</h2>
 							<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:grid-cols-5">
 								<Suspense
 									fallback={

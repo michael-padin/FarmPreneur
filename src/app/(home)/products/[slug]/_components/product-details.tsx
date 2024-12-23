@@ -34,10 +34,10 @@ export function ProductDetails({
 				</div>
 			</Link>
 			<div className="!mt-4 flex items-center justify-between gap-4">
-				<div className="h-full w-full rounded-lg bg-primary/10 p-2 text-2xl font-semibold text-primary lg:p-4">
+				<h2 className="h-full w-full rounded-lg bg-primary/10 p-2 text-2xl font-semibold text-primary lg:p-4">
 					<span className="font-normal">₱</span>
 					{formatPHP(product.price)}/{unitMap[product.unit]}
-				</div>
+				</h2>
 			</div>
 
 			<div className="grid gap-4">

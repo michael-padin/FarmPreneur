@@ -13,11 +13,13 @@ const Reviews = ({
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-1 text-xl">
 					<Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />
-					<span className="font-bold">
-						{reviews.averageRating?.toFixed(1)}
-						<span className="font-normal">({reviews.totalReviews})</span>
-					</span>
-					Ratings
+					<h2>
+						<span className="font-bold">
+							{reviews.averageRating?.toFixed(1)}
+							<span className="font-normal">({reviews.totalReviews})</span>
+						</span>
+						Ratings
+					</h2>
 				</div>
 				{/* <button className="text-primary">View All</button> */}
 			</div>
