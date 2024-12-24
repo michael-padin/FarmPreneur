@@ -39,7 +39,7 @@ import { Loader2 } from "lucide-react"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { updateCategory } from "../actions"
+import { updateCategoryAction } from "../actions"
 import { createCategorySchema, CreateCategorySchema } from "../validation"
 
 interface UpdateCategoryDialogProps {
@@ -135,7 +135,7 @@ export function CreateCategoryForm({
 				newFiles: data.image,
 				path: "categories"
 			})
-			const { error } = await updateCategory({
+			const { error } = await updateCategoryAction({
 				...data,
 				categoryId: category.id,
 				image: finalCategoryImage[0]

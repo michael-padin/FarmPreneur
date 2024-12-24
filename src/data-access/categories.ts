@@ -45,15 +45,19 @@ export const getCategoryBySlug = async (slug: string) => {
 	})
 }
 
-export const deleteCategoriesById = async (ids: string[]) => {
+export const deleteCategories = async (ids: string[]) => {
+	await verifyAdminSession()
+
 	return await db.$transaction([
 		db.category.deleteMany({ where: { id: { in: ids } } })
 	])
 }
 
-export const updateCategoryById = async (
+export const updateCategory = async (
 	data: CreateCategorySchema & { categoryId: string }
 ) => {
+	await verifyAdminSession()
+
 	return await db.category.update({
 		where: { id: data.categoryId },
 		data: {
