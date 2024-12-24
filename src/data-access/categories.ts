@@ -1,4 +1,5 @@
 import { CreateCategorySchema } from "@/app/dashboard/(admin)/categories/validation"
+import { verifyAdminSession } from "@/lib/dal"
 import { db } from "@/lib/db"
 
 export const getCategories = async () => {
@@ -16,6 +17,7 @@ export const getCategories = async () => {
 export const createCategory = async (
 	data: CreateCategorySchema & { slug: string }
 ) => {
+	await verifyAdminSession()
 	return await db.category.create({
 		data: {
 			name: data.name,

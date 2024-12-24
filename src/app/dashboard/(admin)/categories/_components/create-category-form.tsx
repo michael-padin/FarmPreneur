@@ -17,7 +17,7 @@ import { Loader2 } from "lucide-react"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { createCategory } from "../actions"
+import { createCategoryAction } from "../actions"
 import { createCategorySchema, CreateCategorySchema } from "../validation"
 
 interface CreateCategoryFormProps {
@@ -44,7 +44,7 @@ export function CreateCategoryForm({ setOpen }: CreateCategoryFormProps) {
 				newFiles: data.image,
 				path: "categories"
 			})
-			const { error } = await createCategory({
+			const { error } = await createCategoryAction({
 				...data,
 				image: finalCategoryImage[0]
 			})

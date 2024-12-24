@@ -1,16 +1,15 @@
 "use server"
+import { createCategory, getCategoryBySlug } from "@/data-access/categories"
 import { getErrorMessage } from "@/lib/handle-error"
-import { createCategorySchema, CreateCategorySchema } from "./validation"
+import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
 import {
-	createCategoryUseCase,
 	deleteCategoriesByIdUseCase,
 	updateCategoryByIdUseCase
 } from "@/use-cases/categories"
-import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
-import { getCategoryBySlug } from "@/data-access/categories"
 import { revalidatePath } from "next/cache"
+import { createCategorySchema, CreateCategorySchema } from "./validation"
 
-export const createCategory = async (data: CreateCategorySchema) => {
+export const createCategoryAction = async (data: CreateCategorySchema) => {
 	const validatedFields = createCategorySchema.safeParse(data)
 
 	if (!validatedFields.success) return { error: "Invalid 	fields!" }
@@ -28,7 +27,7 @@ export const createCategory = async (data: CreateCategorySchema) => {
 			counter++
 			uniqueSlug = `${slug}-${counter}`
 		}
-		await createCategoryUseCase({
+		await createCategory({
 			...data,
 			slug: uniqueSlug
 		})
