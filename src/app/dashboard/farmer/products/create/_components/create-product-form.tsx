@@ -160,6 +160,7 @@ export function CreateProductForm({
 							name="unit"
 							render={({ field }) => (
 								<FormItem>
+									<FormLabel>Unit</FormLabel>
 									<FPSelect
 										{...field}
 										items={units}
