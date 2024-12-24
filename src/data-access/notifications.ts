@@ -1,3 +1,4 @@
+import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
 import { NotifMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
@@ -9,6 +10,17 @@ export const getNotificationsByUserId = async (userId: string) => {
 		},
 		orderBy: {
 			createdAt: "desc"
+		}
+	})
+}
+
+export const getTotalUnreadNotifications = async () => {
+	const { userId } = await verifySession()
+
+	return await db.notification.count({
+		where: {
+			userId: userId,
+			isRead: false
 		}
 	})
 }

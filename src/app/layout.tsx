@@ -3,6 +3,7 @@ import "slick-carousel/slick/slick-theme.css"
 import "slick-carousel/slick/slick.css"
 import "./globals.css"
 
+import { InstallPrompt } from "@/components/push-notification-manager"
 import { Toaster } from "@/components/ui/sonner"
 import { Metadata } from "next"
 import { Poppins } from "next/font/google"
@@ -90,6 +91,7 @@ export default async function RootLayout({
 				<NuqsAdapter>
 					<Providers>{children}</Providers>
 					<Toaster richColors className={inter.className} />
+					<InstallPrompt />
 				</NuqsAdapter>
 				{/* <LoadTimeTracker /> */}
 			</body>
