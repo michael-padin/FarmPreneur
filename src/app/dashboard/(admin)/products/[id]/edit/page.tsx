@@ -7,7 +7,7 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getCategories } from "@/data-access/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { getProductByIdUseCase } from "@/use-cases/products"
 import { Suspense } from "react"
@@ -18,9 +18,6 @@ const getProduct = async (id: string) => {
 	return await getProductByIdUseCase(id)
 }
 
-const getCategories = async () => {
-	return await getCategoriesUseCase()
-}
 const getApprovedFarmers = async () => {
 	return await getApprovedFarmersUseCase()
 }

@@ -2,13 +2,8 @@ import { CreateCategorySchema } from "@/app/dashboard/(admin)/categories/validat
 import {
 	createCategory,
 	deleteCategoriesById,
-	getCategories,
 	updateCategoryById
 } from "@/data-access/categories"
-
-export const getCategoriesUseCase = async () => {
-	return await getCategories()
-}
 
 export const createCategoryUseCase = async (
 	data: CreateCategorySchema & { slug: string }

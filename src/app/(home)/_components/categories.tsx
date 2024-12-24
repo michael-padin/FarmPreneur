@@ -5,12 +5,12 @@ import {
 	CarouselNext,
 	CarouselPrevious
 } from "@/components/ui/carousel"
-import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getCategories } from "@/data-access/categories"
 import Link from "next/link"
 import { CategoryCard } from "./category-card"
 
 export default async function Categories() {
-	const categories = await getCategoriesUseCase()
+	const categories = await getCategories()
 
 	return (
 		<>

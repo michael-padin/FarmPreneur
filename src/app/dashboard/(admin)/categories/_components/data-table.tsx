@@ -34,7 +34,6 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import {
 	Calendar,
@@ -47,10 +46,11 @@ import {
 import Image from "next/image"
 import { columns } from "./columns"
 // import { Calendar } from "@/components/ui/calendar"
+import { getCategories } from "@/data-access/categories"
 import { format } from "date-fns"
 
 interface DataTableProps {
-	data: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
+	data: Promise<Awaited<ReturnType<typeof getCategories>>>
 }
 
 export function DataTable({ data }: DataTableProps) {

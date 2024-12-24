@@ -7,15 +7,12 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getCategories } from "@/data-access/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { Suspense } from "react"
 import { EditUserSkeleton } from "../../users/[id]/edit/_components/edit-user-skeleton"
 import { CreateProductForm } from "./_components/create-product-form"
 
-const getCategories = async () => {
-	return await getCategoriesUseCase()
-}
 const getApprovedFarmers = async () => {
 	return await getApprovedFarmersUseCase()
 }

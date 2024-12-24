@@ -21,9 +21,9 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { units } from "@/constants/unit"
+import { getCategories } from "@/data-access/categories"
 import { editProduct } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getProductByIdFromFarmerUseCase } from "@/use-cases/products"
 import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -34,7 +34,7 @@ import { toast } from "sonner"
 import { editProductSchema, EditProductSchema } from "../validations"
 
 interface EditProductFormProps {
-	categories: Awaited<ReturnType<typeof getCategoriesUseCase>>
+	categories: Awaited<ReturnType<typeof getCategories>>
 	product: Awaited<ReturnType<typeof getProductByIdFromFarmerUseCase>>
 }
 export function EditProductForm({ product, categories }: EditProductFormProps) {

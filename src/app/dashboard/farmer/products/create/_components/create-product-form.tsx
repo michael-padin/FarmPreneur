@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { units } from "@/constants/unit"
+import { getCategories } from "@/data-access/categories"
 import { showErrorToast } from "@/lib/handle-error"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
@@ -44,11 +44,11 @@ const defaultValues: CreateProductSchema = {
 }
 interface CreateProductFormProps {
 	userId: string
-	categoriesPromise: Awaited<ReturnType<typeof getCategoriesUseCase>>
+	categories: Awaited<ReturnType<typeof getCategories>>
 }
 export function CreateProductForm({
 	userId,
-	categoriesPromise
+	categories
 }: CreateProductFormProps) {
 	const router = useRouter()
 
@@ -202,8 +202,8 @@ export function CreateProductForm({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{categoriesPromise.length > 0 ? (
-											categoriesPromise.map((category) => (
+										{categories.length > 0 ? (
+											categories.map((category) => (
 												<SelectItem key={category.id} value={category.id}>
 													{category.name}
 												</SelectItem>

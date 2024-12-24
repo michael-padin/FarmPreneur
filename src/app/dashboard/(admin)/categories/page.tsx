@@ -7,7 +7,7 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getCategories } from "@/data-access/categories"
 import { Suspense } from "react"
 import { DataTableSkeleton } from "../../_components/data-table-skeleton"
 import { AddCategoryDialog } from "./_components/add-category-dialog"
@@ -16,7 +16,7 @@ import { DataTable } from "./_components/data-table"
 export const experimental_ppr = true
 
 export default function CategoriesPage() {
-	const categoriesPromise = getCategoriesUseCase()
+	const categoriesPromise = getCategories()
 
 	const breadcrumbItems = [
 		{ href: "/dashboard", label: "Dashboard" },

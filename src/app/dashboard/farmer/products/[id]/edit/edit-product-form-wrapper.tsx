@@ -1,4 +1,4 @@
-import { getCategoriesUseCase } from "@/use-cases/categories"
+import { getCategories } from "@/data-access/categories"
 import { getProductByIdFromFarmerUseCase } from "@/use-cases/products"
 import { EditProductForm } from "./_components/edit-product-form"
 
@@ -6,7 +6,7 @@ type Params = Promise<{ id: string }>
 export async function EditProductFormWrapper({ params }: { params: Params }) {
 	const id = (await params).id
 	const [categories, product] = await Promise.all([
-		getCategoriesUseCase(),
+		getCategories(),
 		getProductByIdFromFarmerUseCase(id)
 	])
 

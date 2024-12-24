@@ -31,8 +31,8 @@ import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { getCategories } from "@/data-access/categories"
 import { showErrorToast } from "@/lib/handle-error"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
@@ -43,7 +43,7 @@ import { updateCategory } from "../actions"
 import { createCategorySchema, CreateCategorySchema } from "../validation"
 
 interface UpdateCategoryDialogProps {
-	category: Awaited<ReturnType<typeof getCategoriesUseCase>>[0]
+	category: Awaited<ReturnType<typeof getCategories>>[0]
 	showUpdateDialog: boolean
 	setShowUpdateDialog?: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -97,7 +97,7 @@ export function UpdateCategoryDialog({
 
 interface CreateCategoryFormProps {
 	setOpen?: React.Dispatch<React.SetStateAction<boolean>>
-	category: Awaited<ReturnType<typeof getCategoriesUseCase>>[0]
+	category: Awaited<ReturnType<typeof getCategories>>[0]
 }
 
 export function CreateCategoryForm({

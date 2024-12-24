@@ -22,8 +22,8 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { PRODUCT_STATUS } from "@/constants/product-status"
 import { units } from "@/constants/unit"
+import { getCategories } from "@/data-access/categories"
 import { showErrorToast } from "@/lib/handle-error"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { getProductByIdUseCase } from "@/use-cases/products"
 import { processMediaUpdate } from "@/utils/media"
@@ -38,7 +38,7 @@ import { adminUpdateProduct } from "../actions"
 import { UpdateProductSchema, updateProductSchema } from "../validations"
 
 interface AdminEditProductFormProps {
-	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
+	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategories>>>
 	approvedFarmersPromise: Promise<
 		Awaited<ReturnType<typeof getApprovedFarmersUseCase>>
 	>

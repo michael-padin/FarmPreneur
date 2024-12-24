@@ -22,8 +22,8 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { PRODUCT_STATUS } from "@/constants/product-status"
 import { units } from "@/constants/unit"
+import { getCategories } from "@/data-access/categories"
 import { showErrorToast } from "@/lib/handle-error"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { getApprovedFarmersUseCase } from "@/use-cases/farmers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ProductListingStatus } from "@prisma/client"
@@ -47,7 +47,7 @@ const defaultValues: CreateProductSchema = {
 	images: []
 }
 interface CreateProductFormProps {
-	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategoriesUseCase>>>
+	categoriesPromise: Promise<Awaited<ReturnType<typeof getCategories>>>
 	approvedFarmersPromise: Promise<
 		Awaited<ReturnType<typeof getApprovedFarmersUseCase>>
 	>

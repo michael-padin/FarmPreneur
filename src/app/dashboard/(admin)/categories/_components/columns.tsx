@@ -10,8 +10,8 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { getCategories } from "@/data-access/categories"
 import { formatDate } from "@/lib/utils"
-import { getCategoriesUseCase } from "@/use-cases/categories"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import { useState } from "react"
@@ -21,7 +21,7 @@ import { DeleteCategoriesDialog } from "./delete-categories-dialog"
 import { UpdateCategoryDialog } from "./update-category-dialog"
 
 export const columns: ColumnDef<
-	Awaited<ReturnType<typeof getCategoriesUseCase>>[0]
+	Awaited<ReturnType<typeof getCategories>>[0]
 >[] = [
 	{
 		id: "image",
