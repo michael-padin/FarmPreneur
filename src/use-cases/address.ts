@@ -1,20 +1,5 @@
 import { auth } from "@/auth"
-import { getFarmerAddresses } from "@/data-access/address"
-import { getFarmerByUserId } from "@/data-access/farmers"
 import { db } from "@/lib/db"
-
-export const getFarmerAddressesUseCase = async () => {
-	const session = await auth()
-	if (!session || !session.user) {
-		throw new Error("Unauthorized")
-	}
-	const farmer = await getFarmerByUserId(session.user.id)
-
-	if (!farmer) {
-		throw new Error("No farmer found!")
-	}
-	return await getFarmerAddresses(farmer.id)
-}
 
 export const getAddressById = async (id: string) => {
 	const address = await db.address.findUnique({
