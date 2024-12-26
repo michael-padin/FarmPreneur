@@ -10,8 +10,8 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { getOrders } from "@/data-access/orders"
 import { formatPHP } from "@/lib/utils"
-import { getOrdersUseCase } from "@/use-cases/orders"
 import { Order, OrderStatus } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Package, Phone, User } from "lucide-react"
@@ -20,9 +20,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
 
-export const columns: ColumnDef<
-	Awaited<ReturnType<typeof getOrdersUseCase>>[0]
->[] = [
+export const columns: ColumnDef<Awaited<ReturnType<typeof getOrders>>[0]>[] = [
 	{
 		accessorKey: "id",
 		header: ({ column }) => (

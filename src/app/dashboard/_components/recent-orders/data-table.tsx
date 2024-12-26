@@ -1,14 +1,12 @@
 "use client"
 
 import {
-	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
-	useReactTable,
-	VisibilityState
+	useReactTable
 } from "@tanstack/react-table"
 
 import {
@@ -20,11 +18,10 @@ import {
 	TableRow
 } from "@/components/ui/table"
 import { use } from "react"
-import { DataTablePagination } from "@/app/dashboard/_components/data-table-pagination"
 
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { columns } from "./columns"
 import { getRecentOrdersUseCase } from "@/use-cases/orders"
+import { columns } from "./columns"
 
 interface DataTableProps {
 	data: Promise<Awaited<ReturnType<typeof getRecentOrdersUseCase>>>

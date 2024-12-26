@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
-import { getOrdersUseCase } from "@/use-cases/orders"
+import { getOrders } from "@/data-access/orders"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import { DataTable } from "./_components/data-table"
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 	title: "Orders"
 }
 export default async function Page() {
-	const ordersPromise = getOrdersUseCase()
+	const ordersPromise = getOrders()
 	const breadcrumbItems = [
 		{ href: "/dashboard", label: "Dashboard" },
 		{ label: "Pickup Orders" }

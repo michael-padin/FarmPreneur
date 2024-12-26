@@ -3,23 +3,12 @@ import {
 	getCustomerOrders,
 	getCustomerOrderStatuses,
 	getFarmerOrders,
-	getOrders,
 	getRecentOrders,
 	getTotalOrders,
 	getTotalOrdersByDate
 } from "@/data-access/orders"
 import { db } from "@/lib/db"
 import { OrderStatus } from "@prisma/client"
-
-export const getOrdersUseCase = async () => {
-	const session = await auth()
-
-	if (session?.user.role !== "ADMIN") {
-		throw new Error("Unauthorized")
-	}
-
-	return await getOrders()
-}
 
 export const getTotalOrdersUseCase = async () => {
 	const currentDate = new Date()

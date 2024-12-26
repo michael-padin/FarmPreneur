@@ -33,14 +33,14 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { getOrders } from "@/data-access/orders"
 import { getCommonPinningStyles } from "@/lib/data-table"
-import { getOrdersUseCase } from "@/use-cases/orders"
 import { format } from "date-fns"
 import { RotateCcw } from "lucide-react"
 import { columns } from "./columns"
 
 interface DataTableProps {
-	data: Promise<Awaited<ReturnType<typeof getOrdersUseCase>>>
+	data: Promise<Awaited<ReturnType<typeof getOrders>>>
 }
 
 export function DataTable({ data }: DataTableProps) {
