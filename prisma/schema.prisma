@@ -25,10 +25,6 @@ model User {
   farmer          Farmer?
   customer        Customer?
 
-  // accounts        Account[]
-  // sessions        Session[]
-  // Authenticators  Authenticator[]
-
   @@unique([email])
   @@index([role])
   @@map("users")
