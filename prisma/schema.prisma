@@ -9,25 +9,47 @@ generator client {
 
 // MARK: USER
 model User {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  email           String
-  emailVerified   DateTime?
-  image           String?
-  role            ROLE
-  password        String?
-  isEmailVerified Boolean        @default(false)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  notifications   Notification[]
-  profilePicture  String?
-  emailOtp        EmailOtp[]
-  farmer          Farmer?
-  customer        Customer?
+  id                      String                  @id @default(auto()) @map("_id") @db.ObjectId
+  name                    String?
+  email                   String
+  emailVerified           DateTime?
+  image                   String?
+  role                    ROLE
+  password                String?
+  isEmailVerified         Boolean                 @default(false)
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  notifications           Notification[]
+  profilePicture          String?
+  emailOtp                EmailOtp[]
+  farmer                  Farmer?
+  customer                Customer?
+  pushSubscription        PushSubscription?
+  notificationPreferences NotificationPreference?
 
   @@unique([email])
   @@index([role])
   @@map("users")
+}
+
+model NotificationPreference {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId String  @unique @db.ObjectId
+  user   User    @relation(fields: [userId], references: [id])
+  email  Boolean @default(true)
+  sms    Boolean @default(false)
+  push   Boolean @default(false)
+}
+
+model PushSubscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // MARK: FARMER
