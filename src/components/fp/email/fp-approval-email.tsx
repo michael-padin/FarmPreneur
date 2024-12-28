@@ -31,8 +31,8 @@ export function FPApprovalEmail({
 				Welcome to FarmPreneur - Your application has been approved!
 			</Preview>
 			<Tailwind>
-				<Body className="bg-green-50 font-sans">
-					<Container className="mx-auto my-8 max-w-xl">
+				<Body className="bg-gray-100 p-2 font-sans">
+					<Container className="mx-auto my-8 space-y-4 rounded-lg bg-white p-4 shadow-lg">
 						<Section className="rounded-lg bg-white p-8 shadow-lg">
 							{/* <Img
 								src="https://example.com/farmmarket-logo.png"
@@ -54,32 +54,6 @@ export function FPApprovalEmail({
 								approved. Welcome to the FarmPreneur - your gateway to
 								connecting with buyers and growing your agricultural business!
 							</Text>
-							{/* <Section className="mb-6 rounded-md bg-green-100 p-4">
-								<Text className="text-sm text-green-800">
-									<strong>Application ID:</strong> {applicationId}
-								</Text>
-							</Section> */}
-							{/* <Text className="mb-4 text-base text-gray-700">
-								Here&apos;s what you can do now on FarmMarket:
-							</Text> */}
-							{/* <ol className="mb-6 list-decimal pl-6 text-base text-gray-700">
-								<li className="mb-2">
-									List your products and set competitive prices
-								</li>
-								<li className="mb-2">
-									Connect with potential buyers from around the region
-								</li>
-								<li className="mb-2">
-									Access real-time market insights and trends
-								</li>
-								<li className="mb-2">
-									Manage orders and track your sales performance
-								</li>
-								<li className="mb-2">
-									Join our community forums to share knowledge with other
-									farmers
-								</li>
-							</ol> */}
 							<Section className="mb-6 text-center">
 								<Button
 									href={dashboardUrl}
@@ -88,12 +62,6 @@ export function FPApprovalEmail({
 									Access Your Farm Dashboard
 								</Button>
 							</Section>
-							{/* <Text className="mb-4 text-base text-gray-700">
-								To help you get started, we've prepared a series of onboarding
-								tutorials. You'll find these in your dashboard, guiding you
-								through setting up your profile, listing your first product, and
-								understanding our marketplace dynamics.
-							</Text> */}
 							<Text className="mb-6 text-base text-gray-700">
 								If you have any questions or need assistance, our farmpreneur
 								support team is here to help. Reach out to us at{" "}
@@ -103,7 +71,6 @@ export function FPApprovalEmail({
 								>
 									support@farmpreneur.com
 								</Link>{" "}
-								{/* or call us at +1 (555) 123-4567. */}
 							</Text>
 							<Text className="mb-6 text-base text-gray-700">
 								We&apos;re thrilled to have you onboard and can&pos;t wait to
@@ -116,11 +83,10 @@ export function FPApprovalEmail({
 								The FarmPreneur Team
 							</Text>
 							<Hr className="my-6 border-gray-300" />
-							{/* <Text className="text-center text-xs text-gray-500">
-								© 2023 FarmPreneur. All rights reserved.
+							<Text className="text-center text-xs text-gray-500">
+								© 2024 FarmPreneur. All rights reserved.
 								<br />
-								1234 Harvest Road, Agriville, AG 56789
-							</Text> */}
+							</Text>
 						</Section>
 					</Container>
 				</Body>

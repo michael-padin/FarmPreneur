@@ -31,7 +31,7 @@ export function OTPEmail({
 					<Container className="mx-auto my-8 space-y-4 rounded-lg bg-white p-4 shadow-lg">
 						<Heading className="mb-2 text-center text-3xl font-bold text-muted-foreground">
 							Verify your email to sign in to{" "}
-							<span className="text-green-500">{companyName}</span>
+							<span className="text-green-600">{companyName}</span>
 						</Heading>
 						<Text className="text-muted-foreground">
 							Hello <strong>{recipientName}</strong>,
@@ -41,7 +41,7 @@ export function OTPEmail({
 							Please use the following code to complete your action:
 						</Text>
 						<Section className="text-center">
-							<Text className="inline-block rounded-md bg-green-100 px-4 py-2 font-mono text-2xl font-bold text-green-500">
+							<Text className="inline-block rounded-md bg-green-100 px-4 py-2 font-mono text-2xl font-bold text-green-600">
 								{otp}
 							</Text>
 						</Section>
