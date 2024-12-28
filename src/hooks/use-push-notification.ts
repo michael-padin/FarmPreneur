@@ -1,5 +1,5 @@
 import { subscribeUser } from "@/actions/notifications"
-import { startTransition, useEffect, useState } from "react"
+import { startTransition, useCallback, useEffect, useState } from "react"
 
 export function usePushNotifications() {
 	const [isSubscribed, setIsSubscribed] = useState(false)
@@ -8,7 +8,23 @@ export function usePushNotifications() {
 	)
 	const [registration, setRegistration] =
 		useState<ServiceWorkerRegistration | null>(null)
+	const subscribeToPush = useCallback(() => {
+		const applicationServerKey = urlBase64ToUint8Array(
+			process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
+		)
+		startTransition(async () => {
+			const sub = await registration?.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey: applicationServerKey
+			})
 
+			if (sub) {
+				const serializedSub = JSON.parse(JSON.stringify(sub))
+				setIsSubscribed(true)
+				await subscribeUser(serializedSub)
+			}
+		})
+	}, [registration?.pushManager])
 	useEffect(() => {
 		if (
 			typeof window !== "undefined" &&
@@ -34,25 +50,7 @@ export function usePushNotifications() {
 					console.error("Service Worker registration failed:", error)
 				})
 		}
-	}, [])
-
-	const subscribeToPush = () => {
-		const applicationServerKey = urlBase64ToUint8Array(
-			process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
-		)
-		startTransition(async () => {
-			const sub = await registration?.pushManager.subscribe({
-				userVisibleOnly: true,
-				applicationServerKey: applicationServerKey
-			})
-
-			if (sub) {
-				const serializedSub = JSON.parse(JSON.stringify(sub))
-				setIsSubscribed(true)
-				await subscribeUser(serializedSub)
-			}
-		})
-	}
+	}, [subscribeToPush])
 
 	return { isSubscribed, subscription }
 }
