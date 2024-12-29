@@ -1,4 +1,4 @@
-import { subscribeUser } from "@/actions/notifications"
+import { subscribeUser } from "@/app/actions/notifications"
 import { startTransition, useCallback, useEffect, useState } from "react"
 
 export function usePushNotifications() {

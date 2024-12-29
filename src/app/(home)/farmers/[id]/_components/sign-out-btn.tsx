@@ -1,4 +1,4 @@
-import { signOutAction } from "@/actions/auth"
+import { signOutAction } from "@/app/actions/auth"
 import { cn } from "@/lib/utils"
 import { LogOut } from "lucide-react"
 import { ButtonHTMLAttributes } from "react"

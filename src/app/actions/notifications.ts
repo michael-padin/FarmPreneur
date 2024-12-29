@@ -1,3 +1,5 @@
+"use server"
+
 import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
 import webpush, { PushSubscription } from "web-push"

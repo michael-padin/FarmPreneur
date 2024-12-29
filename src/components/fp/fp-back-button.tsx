@@ -1,6 +1,6 @@
 "use client"
 
-import { signOutAction } from "@/actions/auth"
+import { signOutAction } from "@/app/actions/auth"
 import { cn } from "@/lib/utils"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"

@@ -1,5 +1,5 @@
 "use client"
-import { signOutAction } from "@/actions/auth"
+import { signOutAction } from "@/app/actions/auth"
 import { LogOut } from "lucide-react"
 
 export const FPSignOutButton = (
