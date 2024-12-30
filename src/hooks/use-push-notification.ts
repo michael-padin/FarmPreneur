@@ -1,7 +1,10 @@
+"use client"
 import { subscribeUser } from "@/app/actions/notifications"
+import { useSession } from "next-auth/react"
 import { startTransition, useCallback, useEffect, useState } from "react"
 
 export function usePushNotifications() {
+	const session = useSession()
 	const [isSubscribed, setIsSubscribed] = useState(false)
 	const [subscription, setSubscription] = useState<PushSubscription | null>(
 		null
@@ -29,7 +32,8 @@ export function usePushNotifications() {
 		if (
 			typeof window !== "undefined" &&
 			"serviceWorker" in navigator &&
-			"PushManager" in window
+			"PushManager" in window &&
+			session.status === "authenticated"
 		) {
 			// Register service worker
 			navigator.serviceWorker
@@ -47,10 +51,10 @@ export function usePushNotifications() {
 					}
 				})
 				.catch((error) => {
-					console.error("Service Worker registration failed:", error)
+					console.log("Service Worker registration failed:", error)
 				})
 		}
-	}, [subscribeToPush])
+	}, [subscribeToPush, session.status])
 
 	return { isSubscribed, subscription }
 }
