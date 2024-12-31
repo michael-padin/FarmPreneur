@@ -1,3 +1,4 @@
+import { PushNotificationManager } from "@/components/push-notification-manager"
 import { Suspense } from "react"
 import { BottomNav } from "./_components/bottom-navigation"
 import { FarmerMetricCardSkeleton } from "./_components/farmer-metric-card-skeleton"
@@ -10,6 +11,7 @@ export const experimental_ppr = true
 export default function FarmerDashboard() {
 	return (
 		<>
+			<PushNotificationManager />
 			<div className="h-screen w-full overflow-auto bg-secondary p-4 lg:px-5">
 				<header className="pb-4">
 					<div className="flex items-center justify-between">
