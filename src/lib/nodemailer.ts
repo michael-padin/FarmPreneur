@@ -1,4 +1,4 @@
-import { FPApprovalEmail } from "@/components/fp/email/fp-approval-email"
+import { FarmerApprovedEmail } from "@/components/fp/email/fp-approved-email"
 import { OTPEmail } from "@/components/fp/email/fp-otp-email"
 import { FPResetPasswordEmail } from "@/components/fp/email/fp-reset-password-email"
 import { render } from "@react-email/components"
@@ -59,7 +59,7 @@ export const sendApprovalEmail = async (
 	const dashboardUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer`
 
 	const html = await render(
-		FPApprovalEmail({ dashboardUrl, farmerName, farmName })
+		FarmerApprovedEmail({ dashboardUrl, farmerName, farmName })
 	)
 	await sendEmail(to, "Farm Approved", farmerName, html)
 }
