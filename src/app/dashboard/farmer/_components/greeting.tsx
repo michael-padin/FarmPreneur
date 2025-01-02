@@ -1,21 +1,38 @@
-import { auth } from "@/auth"
 import { getFirstWord } from "@/lib/utils"
+import { useCallback, useEffect, useState } from "react"
 
-export async function Greetings() {
-	const session = await auth()
-	const name = session?.user.farmerName || ""
+export function Greetings({ name }: { name: string }) {
+	const [greeting, setGreeting] = useState("")
 
-	const getGreeting = () => {
-		const currentHour = new Date().getHours()
+	const updateGreeting = useCallback(() => {
+		const hour = new Date().getHours()
+		let newGreeting
 
-		// Use inclusive ranges for clarity
-		if (currentHour >= 5 && currentHour < 12) return "Good Morning" // Morning: 5 AM - 11:59 AM
-		if (currentHour >= 12 && currentHour < 17) return "Good Afternoon" // Afternoon: 12 PM - 4:59 PM
-		if (currentHour >= 17 && currentHour < 21) return "Good Evening" // Evening: 5 PM - 8:59 PM
-		return "Good Night" // Night: 9 PM - 4:59 AM
-	}
+		if (hour >= 5 && hour < 12) {
+			newGreeting = "Good morning"
+		} else if (hour >= 12 && hour < 17) {
+			newGreeting = "Good afternoon"
+		} else if (hour >= 17 && hour < 22) {
+			newGreeting = "Good evening"
+		} else {
+			newGreeting = "Good night"
+		}
+
+		setGreeting(newGreeting)
+	}, [])
+
+	useEffect(() => {
+		// Initial update
+		updateGreeting()
+
+		// Update greeting every minute
+		const interval = setInterval(updateGreeting, 60000)
+
+		// Cleanup interval on unmount
+		return () => clearInterval(interval)
+	}, [updateGreeting])
 
 	return (
-		<h2 className="text-2xl font-semibold leading-none tracking-tight">{`${getGreeting()}, ${getFirstWord(name)} 👋`}</h2>
+		<h2 className="text-2xl font-semibold leading-none tracking-tight">{`${greeting}, ${getFirstWord(name)} 👋`}</h2>
 	)
 }

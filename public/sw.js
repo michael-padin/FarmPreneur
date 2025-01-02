@@ -11,11 +11,11 @@ self.addEventListener("push", function (event) {
 				primaryKey: "2"
 			}
 		}
-		event.waitUntil(self.registration.showNotification(data.title, options))
-	}
-})
 
-self.addEventListener("notificationclick", function (event) {
-	event.notification.close()
-	event.waitUntil(clients.openWindow(event.notification.data?.url))
+		const notification = new self.Notification(data.title, options)
+
+		notification.addEventListener("click", () => {
+			clients.openWindow(data.url)
+		})
+	}
 })

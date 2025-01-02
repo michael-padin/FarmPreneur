@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { BottomNav } from "./_components/bottom-navigation"
 import { FarmerMetricCardSkeleton } from "./_components/farmer-metric-card-skeleton"
 import { FarmerMetrics } from "./_components/farmer-metrics"
-import { Greetings } from "./_components/greeting"
+import { GreetingsWrapper } from "./_components/greeting-wrapper"
 import { ProfilePicture } from "./_components/profile-picture"
 
 export const experimental_ppr = true
@@ -19,7 +19,7 @@ export default function FarmerDashboard() {
 							<h2 className={`text-xs font-bold ${"text-primary"}`}>
 								FarmPreneur
 							</h2>
-							<Greetings />
+							<GreetingsWrapper />
 							<p className="mt-1 text-sm text-muted-foreground">
 								Here is an overview of your farm.
 							</p>
