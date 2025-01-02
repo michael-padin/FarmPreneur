@@ -94,7 +94,9 @@ export async function FarmerMetrics() {
 						<Star className="h-5 w-5 text-primary" />
 					</CardHeader>
 					<CardContent className="p-3 pt-0">
-						<div className="text-3xl font-bold">{averageRating} / 5.0</div>
+						<div className="text-3xl font-bold">
+							{averageRating.toFixed(2)} / 5.0
+						</div>
 						<p className="mt-1 text-sm text-muted-foreground">
 							Based on {totalReviews} reviews
 						</p>

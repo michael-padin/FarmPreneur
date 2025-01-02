@@ -1,9 +1,7 @@
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
-import { Button } from "@/components/ui/button"
 import { db } from "@/lib/db"
-import { Edit, MapPin, Star } from "lucide-react"
+import { MapPin, Star } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
 
 const getFarmerBasicInfo = async (farmerId?: string) => {
 	const farmer = await db.farmer.findUnique({
@@ -86,15 +84,6 @@ export async function FarmerProfile({ params }: { params: Params }) {
 								sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 								className="rounded-full object-cover"
 							/>
-							<Button
-								size="icon"
-								className="absolute bottom-0 right-0 h-6 w-6 rounded-full"
-								asChild
-							>
-								<Link href="/dashboard/farmer/profile/edit">
-									<Edit className="!h-3 !w-3" />
-								</Link>
-							</Button>
 						</div>
 						<div>
 							<h1 className="text-2xl font-bold">{farmerInfo.farmName}</h1>
@@ -118,7 +107,7 @@ export async function FarmerProfile({ params }: { params: Params }) {
 						<span>{farmerInfo.totalOrders} Orders</span>
 						<span className="flex items-center gap-1">
 							<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-							{farmerInfo.rating}
+							{farmerInfo.rating.toFixed(2)}
 						</span>
 					</div>
 				</div>

@@ -96,7 +96,7 @@ export async function FarmerProfile() {
 						<span>{farmerInfo.totalOrders} Orders</span>
 						<span className="flex items-center gap-1">
 							<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-							{farmerInfo.rating}
+							{farmerInfo.rating.toFixed(2)}
 						</span>
 					</div>
 				</div>
