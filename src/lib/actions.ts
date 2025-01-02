@@ -2,7 +2,10 @@
 
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
-import { notifyNewOrder } from "@/app/actions/notifications"
+import {
+	notifyNewOrder,
+	notifyOrderCancelled
+} from "@/app/actions/notifications"
 import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/validations"
 import { EditFarmerAddressSchema } from "@/app/dashboard/farmer/profile/address/[id]/edit/validation"
 import { EditFarmerProfileSchema } from "@/app/dashboard/farmer/profile/edit/validation"
@@ -19,7 +22,7 @@ import {
 import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import { NotificationType, OrderStatus, OrderSubStatus } from "@prisma/client"
+import { OrderStatus, OrderSubStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { verifyCustomerSession } from "./dal"
@@ -64,33 +67,6 @@ export const markNotificationAsRead = async (notificationId: string) => {
 		return { success: true, error: null }
 	} catch (error) {
 		return { success: false, error: getErrorMessage(error) }
-	}
-}
-
-export const revalidatePathFromNotifications = async (
-	type: NotificationType
-) => {
-	switch (type) {
-		case "ORDER_STATUS":
-			revalidatePath("/dashboard/orders")
-			revalidatePath("/dashboard/farmer/orders")
-			revalidatePath("/orders")
-			break
-		case "FARMER_APPROVAL":
-			revalidatePath("/dashboard/farmer/notifications")
-			revalidatePath("/dashboard/farmer/analytics")
-			break
-		case "PRODUCT_APPROVAL":
-			revalidatePath("/dashboard/products")
-			revalidatePath("/dashboard/farmer/products")
-			break
-		case "NEW_MESSAGE":
-			revalidatePath("/messages")
-			break
-		case "NEW_PRODUCT":
-			revalidatePath("/dashboard/products")
-			revalidatePath("/dashboard/farmer/products")
-			break
 	}
 }
 
@@ -413,6 +389,8 @@ export async function cancelOrder(payload: {
 				subStatus: payload.subStatus
 			}
 		})
+
+		await notifyOrderCancelled(orderId, cancellationReason)
 
 		revalidatePath("/dashboard/farmer/orders")
 		revalidatePath("/dashboard/orders")

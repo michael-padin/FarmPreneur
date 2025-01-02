@@ -1,6 +1,6 @@
 "use server"
+import { notifyFarmerApproval } from "@/app/actions/notifications"
 import { getErrorMessage } from "@/lib/handle-error"
-import { sendApprovalEmail } from "@/lib/nodemailer"
 import { pusherServer } from "@/lib/pusher"
 import { updateCustomerByUserIdUseCase } from "@/use-cases/customers"
 import {
@@ -52,14 +52,10 @@ export const updateFarmer = async (
 			})
 		}
 
-		if (
-			farmer.applicationStatus === "PENDING" &&
-			updatedFarmer?.applicationStatus === "APPROVED"
-		) {
-			await sendApprovalEmail(
-				farmer.user.email!,
-				farmer.user.name!,
-				farmer.farmName!
+		if (updatedFarmer?.applicationStatus !== "PENDING") {
+			await notifyFarmerApproval(
+				updatedFarmer.farmerId!,
+				updatedFarmer.applicationStatus === "APPROVED"
 			)
 		}
 

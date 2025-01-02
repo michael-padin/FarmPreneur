@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
-import { NotificationType } from "@prisma/client"
+import { pusherServer } from "@/lib/pusher"
+import { Notification, NotificationType } from "@prisma/client"
 import { render } from "@react-email/components"
 import nodemailer from "nodemailer"
 import { MailOptions } from "nodemailer/lib/json-transport"
@@ -30,6 +31,14 @@ export async function sendSMS(to: string, body: string) {
 	} catch (error) {
 		console.error("Error sending SMS:", error)
 	}
+}
+
+export async function sendInAppNotification(
+	userId: string,
+	notification: Notification
+) {
+	// Add Pusher trigger for in-app notification
+	await pusherServer.trigger(`user-${userId}`, "notification", notification)
 }
 
 export async function sendWebPush(
@@ -150,8 +159,7 @@ export async function sendNotification(
 		await createNotificationLog(userId, "push", notificationType, "success")
 	}
 
-	// Create in-app notification
-	await db.notification.create({
+	const createdInAppNotification = await db.notification.create({
 		data: {
 			title: notification.push.title,
 			message: notification.push.body,
@@ -160,6 +168,11 @@ export async function sendNotification(
 			metadata: { url: notification.push.url }
 		}
 	})
+
+	if (user.notificationPreferences?.inApp) {
+		// Create in-app notification
+		await sendInAppNotification(userId, createdInAppNotification)
+	}
 }
 
 async function createNotificationLog(

@@ -14,7 +14,6 @@ import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
 import { sendNotification } from "@/utils/notification-helper"
 import {
-	FarmerApplicationStatus,
 	NotificationType,
 	OrderStatus,
 	OrderSubStatus,
@@ -31,15 +30,6 @@ export async function notifyFarmerApproval(
 		include: { user: true }
 	})
 	if (!farmer) throw new Error("Farmer not found")
-
-	const newStatus = approved
-		? FarmerApplicationStatus.APPROVED
-		: FarmerApplicationStatus.REJECTED
-
-	await db.farmer.update({
-		where: { id: farmerId },
-		data: { applicationStatus: newStatus }
-	})
 
 	if (approved) {
 		await sendNotification(farmer.userId, NotificationType.FARMER_APPROVAL, {

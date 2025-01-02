@@ -1,32 +1,23 @@
 "use client"
 
-import { useMediaQuery } from "@/hooks/use-media-query"
-import {
-	markNotificationAsRead,
-	markNotificationsAsRead,
-	revalidatePathFromNotifications
-} from "@/lib/actions"
+import { markNotificationAsRead, markNotificationsAsRead } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
-import { pusherClient } from "@/lib/pusher"
-import { Notification as NotificationType } from "@/types/notification"
-import { NotificationType as PrismaNotificationType } from "@prisma/client"
-import { useRouter } from "next/navigation"
+import { Notification } from "@prisma/client"
 import {
 	createContext,
 	ReactNode,
 	use,
 	useCallback,
 	useContext,
-	useEffect,
 	useMemo,
 	useOptimistic,
 	useTransition
 } from "react"
-import { toast } from "sonner"
 
 // Context type
 interface NotificationContextType {
-	notifications: NotificationType[]
+	handleAddOptimisticNotification: (newNotification: Notification) => void
+	notifications: Notification[]
 	unreadCount: number
 	markAllAsRead: () => void
 	markAsRead: (notificationId: string) => Promise<void>
@@ -34,17 +25,17 @@ interface NotificationContextType {
 
 // Reducer action types
 type NotificationAction =
-	| { type: "SET_INITIAL_NOTIFICATIONS"; payload: NotificationType[] }
-	| { type: "ADD_NOTIFICATION"; payload: NotificationType }
+	| { type: "SET_INITIAL_NOTIFICATIONS"; payload: Notification[] }
+	| { type: "ADD_NOTIFICATION"; payload: Notification }
 	| { type: "MARK_ALL_READ" }
 	| { type: "MARK_SINGLE_READ"; payload: string }
-	| { type: "RESET_NOTIFICATIONS"; payload: NotificationType[] }
+	| { type: "RESET_NOTIFICATIONS"; payload: Notification[] }
 
 // Reducer function
 function notificationReducer(
-	state: NotificationType[],
+	state: Notification[],
 	action: NotificationAction
-): NotificationType[] {
+): Notification[] {
 	switch (action.type) {
 		case "SET_INITIAL_NOTIFICATIONS":
 			return action.payload
@@ -76,12 +67,10 @@ export function NotificationProvider({
 }: {
 	children: ReactNode
 	userId?: string
-	initialNotificationsPromise: Promise<NotificationType[]>
+	initialNotificationsPromise: Promise<Notification[]>
 }) {
 	const initialNotifications = use(initialNotificationsPromise)
-	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
-	const isDesktop = useMediaQuery("(min-width: 768px)")
 
 	const [optimisticNotifications, addOptimisticNotifications] = useOptimistic(
 		initialNotifications,
@@ -114,7 +103,6 @@ export function NotificationProvider({
 					payload: notificationId
 				})
 				const { error } = await markNotificationAsRead(notificationId)
-
 				if (error) {
 					showErrorToast(error)
 				}
@@ -124,7 +112,7 @@ export function NotificationProvider({
 	)
 
 	const handleAddOptimisticNotification = useCallback(
-		(newNotification: NotificationType) => {
+		(newNotification: Notification) => {
 			startTransition(() => {
 				addOptimisticNotifications({
 					type: "ADD_NOTIFICATION",
@@ -135,64 +123,22 @@ export function NotificationProvider({
 		[addOptimisticNotifications]
 	)
 
-	const handleRevalidatePaths = useCallback(
-		(notificationType: PrismaNotificationType) => {
-			startTransition(async () => {
-				await revalidatePathFromNotifications(notificationType)
-			})
-		},
-		[]
-	)
-
-	useEffect(() => {
-		if (userId) {
-			// Subscribe to Pusher channel
-			const channel = pusherClient.subscribe(`user-${userId}-notifications`)
-
-			const notificationSound = new Audio("/notification.mp3")
-
-			// this function will run every notification received
-			const handleNewNotification = async (
-				newNotification: NotificationType
-			) => {
-				handleRevalidatePaths(newNotification.type)
-				handleAddOptimisticNotification(newNotification)
-				toast.info(`${newNotification.title}`, {
-					description: newNotification.message,
-					dismissible: true,
-					position: isDesktop ? "top-right" : "top-right",
-					duration: 5000,
-					closeButton: true
-				})
-
-				notificationSound.play()
-			}
-
-			channel.bind("new-notification", handleNewNotification)
-
-			// Cleanup subscription
-			return () => {
-				pusherClient.unsubscribe(`user-${userId}-notifications`)
-				channel.unbind("new-notification", handleNewNotification)
-			}
-		}
-	}, [
-		handleRevalidatePaths,
-		userId,
-		router,
-		isDesktop,
-		addOptimisticNotifications,
-		handleAddOptimisticNotification
-	])
-
 	const contextValue = useMemo(
 		() => ({
+			handleAddOptimisticNotification,
+
 			notifications: optimisticNotifications,
 			unreadCount,
 			markAsRead,
 			markAllAsRead
 		}),
-		[optimisticNotifications, unreadCount, markAsRead, markAllAsRead]
+		[
+			optimisticNotifications,
+			unreadCount,
+			markAsRead,
+			markAllAsRead,
+			handleAddOptimisticNotification
+		]
 	)
 
 	return (

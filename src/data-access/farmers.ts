@@ -398,7 +398,8 @@ export const updateFarmerByUserId = async (
 				}
 			}))
 		return {
-			applicationStatus: updatedFarmer?.applicationStatus
+			applicationStatus: updatedFarmer!.applicationStatus!,
+			farmerId: updatedFarmer!.id!
 		}
 	})
 }
