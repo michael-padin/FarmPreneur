@@ -37,7 +37,10 @@ export function usePushNotifications() {
 		) {
 			// Register service worker
 			navigator.serviceWorker
-				.register("/sw.js")
+				.register("/sw.js", {
+					scope: "/",
+					updateViaCache: "none"
+				})
 				.then((reg) => {
 					setRegistration(reg)
 					return reg.pushManager.getSubscription()
