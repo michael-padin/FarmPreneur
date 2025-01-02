@@ -48,7 +48,7 @@ export async function notifyFarmerApproval(
 				component: FarmerApprovedEmail({
 					farmerName: farmer.name || "",
 					farmName: farmer.farmName || "",
-					dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`
+					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`
 				})
 			},
 			sms: `Congratulations ${farmer.name}! Your FarmPreneur application for ${farmer.farmName} has been approved. Log in to your dashboard to get started.`,
@@ -56,7 +56,7 @@ export async function notifyFarmerApproval(
 				title: "FarmPreneur Application Approved!",
 				body: `Congratulations! Your application for ${farmer.farmName} has been approved.`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`
 			}
 		})
 	} else {
@@ -69,7 +69,7 @@ export async function notifyFarmerApproval(
 					farmName: farmer.farmName || "",
 					rejectionReason:
 						"Your application did not meet our current criteria.",
-					supportUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/support`
+					supportUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/support`
 				})
 			},
 			sms: `We regret to inform you that your FarmPreneur application for ${farmer.farmName} has not been approved at this time. Please check your email for more details.`,
@@ -77,7 +77,7 @@ export async function notifyFarmerApproval(
 				title: "FarmPreneur Application Update",
 				body: `Your application for ${farmer.farmName} has not been approved. Please check your email for more information.`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `/${process.env.NEXT_PUBLIC_BASE_URL}/support`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/support`
 			}
 		})
 	}
@@ -111,7 +111,7 @@ export async function notifyProductListed(
 					component: ProductApprovalEmail({
 						farmerName: product.farmer.name || "",
 						productName: product.title,
-						dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+						dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 					})
 				},
 				sms: `Great news! Your product "${product.title}" has been approved and is now listed on FarmPreneur.`,
@@ -119,7 +119,7 @@ export async function notifyProductListed(
 					title: "Product Approved!",
 					body: `Your product "${product.title}" is now listed on FarmPreneur.`,
 					icon: "/web-app-manifest-192x192.png",
-					url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+					url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 				}
 			}
 		)
@@ -134,7 +134,7 @@ export async function notifyProductListed(
 						farmerName: product.farmer.name || "",
 						productName: product.title,
 						rejectionReason: reason || "No specific reason provided",
-						dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+						dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 					})
 				},
 				sms: `Your product "${product.title}" was not approved for listing. Please check your email for more details.`,
@@ -142,7 +142,7 @@ export async function notifyProductListed(
 					title: "Product Not Approved",
 					body: `Your product "${product.title}" was not approved for listing. Please check your email for more details.`,
 					icon: "/web-app-manifest-192x192.png",
-					url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+					url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 				}
 			}
 		)
@@ -178,7 +178,7 @@ export async function notifyNewOrder(orderId: string) {
 				orderNumber: order.id,
 				orderItems: orderItems,
 				orderTotal: `₱${orderTotal.toFixed(2)}`,
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 			})
 		},
 		sms: `New order #${order.id} received! Total: ₱${orderTotal.toFixed(2)}. Check your dashboard for details.`,
@@ -186,7 +186,7 @@ export async function notifyNewOrder(orderId: string) {
 			title: "New Order Received!",
 			body: `Order #${order.id} - Total:  ₱${orderTotal.toFixed(2)}`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 		}
 	})
 
@@ -200,7 +200,7 @@ export async function notifyNewOrder(orderId: string) {
 				newStatus: OrderStatus.PENDING,
 				statusDescription:
 					"Your order has been received and is being processed.",
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 			})
 		},
 		sms: `Your order #${order.id} has been received and is being processed. Total: ₱${orderTotal.toFixed(2)}`,
@@ -208,7 +208,7 @@ export async function notifyNewOrder(orderId: string) {
 			title: "Order Received",
 			body: `Your order #${order.id} has been received and is being processed.`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 		}
 	})
 }
@@ -303,7 +303,7 @@ export async function notifyOrderStatusUpdate(
 				orderNumber: order.id,
 				newStatus: newStatus,
 				statusDescription: statusDescription,
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 			})
 		},
 		sms: `Order #${order.id} update: ${newStatus}. ${statusDescription}`,
@@ -311,7 +311,7 @@ export async function notifyOrderStatusUpdate(
 			title: `Order #${order.id} Update`,
 			body: `Status: ${newStatus}. ${statusDescription}`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 		}
 	})
 
@@ -327,7 +327,7 @@ export async function notifyOrderStatusUpdate(
 					orderNumber: order.id,
 					newStatus: newStatus,
 					statusDescription: `Order #${order.id} has been ${newStatus.toLowerCase()}.`,
-					dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 				})
 			},
 			sms: `Order #${order.id} has been ${newStatus.toLowerCase()}.`,
@@ -335,7 +335,7 @@ export async function notifyOrderStatusUpdate(
 				title: `Order #${order.id} ${newStatus}`,
 				body: `Order #${order.id} has been ${newStatus.toLowerCase()}.`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 			}
 		})
 	}
@@ -389,7 +389,7 @@ export async function notifyNewMessage(messageId: string) {
 				recipientName,
 				senderName,
 				messagePreview: `${messagePreview} ${attachmentInfo}`,
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/conversations/${message.conversationId}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/conversations/${message.conversationId}`
 			})
 		},
 		sms: `New message from ${senderName} on FarmPreneur: "${messagePreview}" ${attachmentInfo}. Check your dashboard to view and reply.`,
@@ -397,7 +397,7 @@ export async function notifyNewMessage(messageId: string) {
 			title: "New Message",
 			body: `${senderName}: ${messagePreview} ${attachmentInfo}`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/conversations/${message.conversationId}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/conversations/${message.conversationId}`
 		}
 	})
 }
@@ -454,7 +454,7 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 				customerName: order.customer.name || "",
 				orderNumber: order.id,
 				cancellationReason: reason,
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 			})
 		},
 		sms: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
@@ -462,7 +462,7 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 			title: "Order Cancelled",
 			body: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 		}
 	})
 
@@ -473,7 +473,7 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 				customerName: order.farmer.name || "",
 				orderNumber: order.id,
 				cancellationReason: reason,
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 			})
 		},
 		sms: `Order #${order.id} has been cancelled. Reason: ${reason}`,
@@ -481,7 +481,7 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 			title: "Order Cancelled",
 			body: `Order #${order.id} has been cancelled. Reason: ${reason}`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 		}
 	})
 }
@@ -507,7 +507,7 @@ export async function notifyProductExpired(productId: string) {
 				farmerName: product.farmer.name || "",
 				productName: product.title,
 				expirationDate: new Date().toLocaleDateString(),
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 			})
 		},
 		sms: `Your product "${product.title}" has expired and is no longer visible on the FarmPreneur marketplace. Please update or relist if necessary.`,
@@ -515,7 +515,7 @@ export async function notifyProductExpired(productId: string) {
 			title: "Product Expired",
 			body: `Your product "${product.title}" has expired. Please update or relist if necessary.`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 		}
 	})
 }
@@ -540,7 +540,7 @@ export async function notifyProductOutOfStock(productId: string) {
 			component: ProductOutOfStockEmail({
 				farmerName: product.farmer.name || "",
 				productName: product.title,
-				dashboardUrl: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 			})
 		},
 		sms: `Your product "${product.title}" is out of stock on FarmPreneur. Please update your inventory as soon as possible.`,
@@ -548,7 +548,7 @@ export async function notifyProductOutOfStock(productId: string) {
 			title: "Product Out of Stock",
 			body: `Your product "${product.title}" is out of stock. Please update your inventory.`,
 			icon: "/web-app-manifest-192x192.png",
-			url: `/${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+			url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 		}
 	})
 }
