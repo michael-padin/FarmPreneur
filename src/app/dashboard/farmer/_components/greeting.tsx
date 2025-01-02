@@ -1,3 +1,4 @@
+"use client"
 import { getFirstWord } from "@/lib/utils"
 import { useCallback, useEffect, useState } from "react"
 
