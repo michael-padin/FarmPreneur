@@ -24,7 +24,7 @@ model User {
   emailOtp                EmailOtp[]
   farmer                  Farmer?
   customer                Customer?
-  pushSubscription        PushSubscription?
+  pushSubscription        PushSubscription[]
   notificationPreferences NotificationPreference?
   notificationLog         NotificationLog[]
   orderStatusHistory      OrderStatusHistory[]

@@ -576,14 +576,8 @@ export async function updateNotificationPreferences(data: {
 
 export async function subscribeUser(sub: PushSubscription) {
 	const { userId } = await verifySession()
-	await db.pushSubscription.upsert({
-		where: { userId: userId },
-		update: {
-			endpoint: sub.endpoint,
-			p256dh: sub.keys.p256dh,
-			auth: sub.keys.auth
-		},
-		create: {
+	await db.pushSubscription.create({
+		data: {
 			userId: userId,
 			endpoint: sub.endpoint,
 			p256dh: sub.keys.p256dh,

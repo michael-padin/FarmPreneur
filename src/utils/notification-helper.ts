@@ -133,16 +133,20 @@ export async function sendNotification(
 		await createNotificationLog(userId, "sms", notificationType, "success")
 	}
 
-	if (user.notificationPreferences?.push && user.pushSubscription) {
-		const pushSubscription = {
-			endpoint: user.pushSubscription.endpoint,
-			expirationTime: null,
-			keys: {
-				p256dh: user.pushSubscription.p256dh,
-				auth: user.pushSubscription.auth
-			}
-		}
-		await sendWebPush(pushSubscription, JSON.stringify(notification.push))
+	if (user.notificationPreferences?.push && user.pushSubscription.length > 0) {
+		await Promise.all(
+			user.pushSubscription.map(async (subscription) => {
+				const pushSubscription = {
+					endpoint: subscription.endpoint,
+					expirationTime: null,
+					keys: {
+						p256dh: subscription.p256dh,
+						auth: subscription.auth
+					}
+				}
+				await sendWebPush(pushSubscription, JSON.stringify(notification.push))
+			})
+		)
 		await createNotificationLog(userId, "push", notificationType, "success")
 	}
 
