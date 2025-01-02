@@ -2,6 +2,7 @@
 
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
+import { notifyNewOrder } from "@/app/actions/notifications"
 import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/validations"
 import { EditFarmerAddressSchema } from "@/app/dashboard/farmer/profile/address/[id]/edit/validation"
 import { EditFarmerProfileSchema } from "@/app/dashboard/farmer/profile/edit/validation"
@@ -254,6 +255,7 @@ export async function placeOrder(
 	}
 ): Promise<{ success: boolean; error?: string }> {
 	const { checkoutData, customerContactId } = payload
+	const createdOrderIds: string[] = []
 	try {
 		const session = await auth()
 
@@ -355,6 +357,8 @@ export async function placeOrder(
 					}
 				})
 
+				createdOrderIds.push(createdOrder.id)
+
 				// Update product quantities
 				for (const item of group.items) {
 					await tx.product.update({
@@ -366,32 +370,14 @@ export async function placeOrder(
 						}
 					})
 				}
-
-				await createNotificationByUserIdUseCase({
-					userId: foundUserFarmer.id || "",
-					title: "New Order Received",
-					message: `You have a new order from ${foundCustomer.name}. The order includes: ${group.items.map((item) => `${item.quantity}x ${item.product.name}`).join(", ")}.`,
-					type: "ORDER_STATUS",
-					metadata: {
-						farmer: {
-							farmerId: group.farmer.id,
-							farmerName: group.farmer.name!
-						},
-						order: {
-							orderId: createdOrder.id,
-							orderStatus: createdOrder.status,
-							orderSubStatus: createdOrder.subStatus,
-							orderItems: createdOrder.items.map((item) => ({
-								productId: item.product.id,
-								productName: item.product.title,
-								quantity: item.quantity,
-								price: item.price
-							}))
-						}
-					}
-				})
 			}
 		})
+
+		if (createdOrderIds.length > 0) {
+			await Promise.all(
+				createdOrderIds.map((orderId) => notifyNewOrder(orderId))
+			)
+		}
 
 		return { success: true }
 	} catch (error: any) {
