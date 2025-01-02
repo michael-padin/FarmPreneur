@@ -260,7 +260,8 @@ export const createUserWithOTP = async (
 						create: {
 							email: true,
 							sms: data.role === "FARMER",
-							push: true
+							push: true,
+							inApp: true
 						}
 					},
 					emailOtp: {
