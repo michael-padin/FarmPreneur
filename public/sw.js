@@ -1,7 +1,3 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-	? process.env.NEXT_PUBLIC_BASE_URL
-	: "https://localhost:3000"
-
 self.addEventListener("push", function (event) {
 	if (event.data) {
 		const data = event.data.json()
