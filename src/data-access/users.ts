@@ -256,6 +256,13 @@ export const createUserWithOTP = async (
 					password: data.password,
 					name: data.name,
 					role: data.role,
+					notificationPreferences: {
+						create: {
+							email: true,
+							sms: data.role === "FARMER",
+							push: true
+						}
+					},
 					emailOtp: {
 						create: {
 							email: data.email,
