@@ -7,7 +7,7 @@ self.addEventListener("push", function (event) {
 			badge: "/badge.png",
 			vibrate: [100, 50, 100],
 			data: {
-				url: JSON.parse(event.data).url,
+				url: data.url,
 				dateOfArrival: Date.now(),
 				primaryKey: "2"
 			}
