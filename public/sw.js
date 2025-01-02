@@ -7,15 +7,17 @@ self.addEventListener("push", function (event) {
 			badge: "/badge.png",
 			vibrate: [100, 50, 100],
 			data: {
+				url: JSON.parse(event.data).url,
 				dateOfArrival: Date.now(),
 				primaryKey: "2"
 			}
 		}
 
-		const notification = new self.Notification(data.title, options)
-
-		notification.addEventListener("click", () => {
-			clients.openWindow(data.url)
-		})
+		event.waitUntil(self.registration.showNotification(data.title, options))
 	}
+})
+
+self.addEventListener("notificationclick", function (event) {
+	event.notification.close()
+	event.waitUntil(clients.openWindow(event.notification.data.url))
 })
