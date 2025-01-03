@@ -4,24 +4,24 @@ const prisma = new PrismaClient()
 
 const users = [
 	{
-		email: "admin@gmail.com",
-		name: "Admin",
+		email: "padinmichael201@gmail.com",
+		name: "Michael Admin",
 		role: "ADMIN"
 	},
 	{
-		email: "farmer@gmail.com",
-		name: "Farmer",
+		email: "dealpool143@gmail.com",
+		name: "Michael Farmer",
 		role: "FARMER"
 	},
 	{
-		email: "customer@gmail.com",
-		name: "Customer",
+		email: "michaelgonzalespadin@gmail.com",
+		name: "Michael Customer",
 		role: "CUSTOMER"
 	}
 ]
 const customers = [
 	{
-		contactNumber: "+639955143588",
+		contactNumber: "+639984054200",
 		profilePicture: "/profile-images/customer-profile-image.jpg",
 		bio: "I love to buy utanon",
 		coverPhoto: "/cover-photos/customer-cover-photo.jpg",
@@ -42,10 +42,11 @@ const farmers = [
 		applicationStatus: "APPROVED",
 		birthDate: new Date(),
 		coverPhoto: "/cover-photos/farmer-cover-photo.jpg",
-		farmName: "Farm",
+		farmName: "Michael's Farm",
+		name: "Michael Farmer",
 		gender: "MALE",
 		profilePicture: "/profile-images/farmer-profile-image.jpg",
-		contactNumber: "+639955143587",
+		contactNumber: "+639955143588",
 		farmImages: ["/cover-photos/farmer-cover-photo.jpg"],
 		farmDescription: "Lumaki ako sa farm",
 		verificationDocument: {
@@ -169,6 +170,14 @@ async function seed() {
 			const createdUser = await prisma.user.create({
 				data: {
 					email: user.email,
+					notificationPreferences: {
+						create: {
+							email: true,
+							sms: user.role === "FARMER",
+							inApp: true,
+							push: true
+						}
+					},
 					role: user.role as ROLE,
 					password: password,
 					name: user.name,
@@ -197,6 +206,7 @@ async function seed() {
 										locationType: "FARM"
 									}
 								},
+								name: farmer.name,
 								applicationStatus: "APPROVED",
 								birthDate: farmer.birthDate,
 								contactNumber: farmer.contactNumber,
