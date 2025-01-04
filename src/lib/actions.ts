@@ -11,6 +11,7 @@ import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/val
 import { EditFarmerAddressSchema } from "@/app/dashboard/farmer/profile/address/[id]/edit/validation"
 import { EditFarmerProfileSchema } from "@/app/dashboard/farmer/profile/edit/validation"
 import { auth } from "@/auth"
+import { getStatusDescription } from "@/constants/order"
 import { getFarmerByUserId } from "@/data-access/farmers"
 import { getProductsSuggestions } from "@/data-access/products"
 import { db } from "@/lib/db"
@@ -24,7 +25,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { OrderStatus, OrderSubStatus } from "@prisma/client"
 import { compare, hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
-import { verifyCustomerSession } from "./dal"
+import { verifyCustomerSession, verifySession } from "./dal"
 import { getErrorMessage } from "./handle-error"
 import { s3Client } from "./s3-client"
 
@@ -332,6 +333,18 @@ export async function placeOrder(
 					}
 				})
 
+				await tx.orderStatusHistory.createMany({
+					data: {
+						updatedByUserId: session.user.id,
+						orderId: createdOrder.id,
+						status: OrderStatus.IN_PROGRESS,
+						subStatus: OrderSubStatus.ORDER_PLACED,
+						statusDescription: getStatusDescription(
+							OrderStatus.IN_PROGRESS,
+							OrderSubStatus.ORDER_PLACED
+						)
+					}
+				})
 				createdOrderIds.push(createdOrder.id)
 
 				// Update product quantities
@@ -361,7 +374,7 @@ export async function placeOrder(
 		}
 		return { success: true }
 	} catch (error: any) {
-		console.error(error.message)
+		console.error(error)
 		return { success: false, error: error.message || "Failed to create order" }
 	}
 }
@@ -374,6 +387,7 @@ export async function cancelOrder(payload: {
 	const { orderId, cancellationReason } = payload
 
 	try {
+		const { userId } = await verifySession()
 		const order = await db.order.findUnique({
 			where: { id: orderId },
 			include: {
@@ -396,6 +410,19 @@ export async function cancelOrder(payload: {
 
 		await notifyOrderCancelled(orderId, cancellationReason)
 
+		await db.orderStatusHistory.create({
+			data: {
+				updatedByUserId: userId,
+				orderId: orderId,
+				status: OrderStatus.CANCELLED,
+				subStatus: payload.subStatus,
+				statusDescription: getStatusDescription(
+					OrderStatus.CANCELLED,
+					payload.subStatus
+				)
+			}
+		})
+
 		revalidatePath("/dashboard/farmer/orders")
 		revalidatePath("/dashboard/orders")
 
@@ -412,6 +439,7 @@ export async function changeOrderStatus(
 		status: OrderStatus
 	}
 ): Promise<{ success: boolean; error?: string }> {
+	const { userId } = await verifySession()
 	const { orderId, status } = payload
 
 	try {
@@ -430,7 +458,9 @@ export async function changeOrderStatus(
 			where: { id: orderId },
 			data: {
 				status,
-				...(status === "IN_PROGRESS" && { subStatus: "PREPARING_PRODUCE" })
+				...(status === "IN_PROGRESS" && {
+					subStatus: OrderSubStatus.ORDER_ACCEPTED
+				})
 			},
 			include: {
 				items: { include: { product: true } },
@@ -438,6 +468,20 @@ export async function changeOrderStatus(
 				customer: {
 					include: { user: true }
 				}
+			}
+		})
+
+		await notifyOrderStatusUpdate(orderId, status, updatedOrder.subStatus)
+		await db.orderStatusHistory.create({
+			data: {
+				updatedByUserId: userId,
+				orderId: orderId,
+				status: status,
+				subStatus: updatedOrder.subStatus,
+				statusDescription: getStatusDescription(
+					updatedOrder.status,
+					updatedOrder.subStatus
+				)
 			}
 		})
 
@@ -844,6 +888,7 @@ export async function updateOrderSubStatus(payload: {
 	status: OrderSubStatus
 }) {
 	try {
+		const { userId } = await verifySession()
 		const order = await db.order.findUnique({
 			where: { id: payload.orderId },
 			include: {
@@ -867,18 +912,36 @@ export async function updateOrderSubStatus(payload: {
 
 		const updatedOrder = await db.order.update({
 			where: { id: payload.orderId },
-			data: { subStatus: payload.status },
+			data: {
+				subStatus: payload.status,
+				...(payload.status === "BUYER_CONFIRMED_ORDER" && {
+					status: "COMPLETED"
+				})
+			},
 			include: { items: { include: { product: true } } }
 		})
 
 		if (!updatedOrder) {
 			return { error: "Order not found", success: false }
 		}
-		notifyOrderStatusUpdate(
+		await notifyOrderStatusUpdate(
 			updatedOrder.id,
 			updatedOrder.status,
 			updatedOrder.subStatus
 		)
+
+		await db.orderStatusHistory.create({
+			data: {
+				updatedByUserId: userId,
+				orderId: payload.orderId,
+				status: updatedOrder.status,
+				subStatus: updatedOrder.subStatus,
+				statusDescription: getStatusDescription(
+					updatedOrder.status,
+					updatedOrder.subStatus
+				)
+			}
+		})
 
 		revalidatePath("/dashboard/farmer/orders?status=IN_PROGRESS")
 		return { error: null, success: true }
@@ -898,6 +961,7 @@ export async function confirmPickedUpOrder(
 	const { orderId, status, subStatus } = payload
 
 	try {
+		const { userId } = await verifySession()
 		const order = await db.order.findUnique({
 			where: { id: orderId },
 			include: {
@@ -927,6 +991,25 @@ export async function confirmPickedUpOrder(
 					}
 				},
 				customer: true
+			}
+		})
+
+		await notifyOrderStatusUpdate(
+			updatedOrder.id,
+			updatedOrder.status,
+			updatedOrder.subStatus
+		)
+
+		await db.orderStatusHistory.create({
+			data: {
+				updatedByUserId: userId,
+				orderId: payload.orderId,
+				status: updatedOrder.status,
+				subStatus: updatedOrder.subStatus,
+				statusDescription: getStatusDescription(
+					updatedOrder.status,
+					updatedOrder.subStatus
+				)
 			}
 		})
 
@@ -980,16 +1063,20 @@ export async function rateOrder(payload: {
 				})
 			)
 
-			await tx.order.update({
+			const updatedOrder = await tx.order.update({
 				where: { id: orderId },
 				data: {
 					status: "COMPLETED",
 					subStatus: "BUYER_REVIEWED"
 				}
 			})
+			await notifyOrderStatusUpdate(
+				updatedOrder.id,
+				updatedOrder.status,
+				updatedOrder.subStatus
+			)
 		})
 
-		revalidatePath("/orders?status=COMPLETED")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }

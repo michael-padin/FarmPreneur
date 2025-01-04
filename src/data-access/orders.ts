@@ -189,6 +189,37 @@ export const getCustomerOrderStatuses = async (customerId?: string) => {
 	})
 }
 
+export const getOrder = async (orderId: string) => {
+	await verifySession()
+	const order = await db.order.findUnique({
+		where: {
+			id: orderId
+		},
+		include: {
+			items: {
+				include: { product: true }
+			},
+			farmer: {
+				include: {
+					address: true
+				}
+			},
+			customer: true,
+			customerContact: true,
+			pickupLocation: true,
+			statusHistory: {
+				orderBy: {
+					createdAt: "desc"
+				}
+			}
+		}
+	})
+
+	if (!order) throw new Error("Order not found")
+
+	return order
+}
+
 export const getCustomerOrders = async (filter: {
 	status?: OrderStatus | null
 	search?: string | null

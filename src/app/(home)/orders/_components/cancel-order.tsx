@@ -69,7 +69,7 @@ export function CancelOrder({
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
-					<DrawerTitle className="sr-only"></DrawerTitle>
+					<DrawerTitle className="">Provide Cancellation Reason</DrawerTitle>
 					<DrawerDescription className="sr-only"></DrawerDescription>
 				</DrawerHeader>
 
@@ -82,10 +82,13 @@ export function CancelOrder({
 									name="reason"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Cancellation Reason</FormLabel>
+											<FormLabel className="sr-only">
+												Cancellation Reason
+											</FormLabel>
+
 											<FormControl>
 												<Textarea
-													placeholder="Your cancellation reason"
+													placeholder="Farmer didn't respond"
 													{...field}
 												/>
 											</FormControl>

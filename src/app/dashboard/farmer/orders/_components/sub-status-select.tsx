@@ -45,11 +45,13 @@ export function SubStatusSelect({
 					<SelectGroup>
 						<SelectLabel>Active/In Progress</SelectLabel>
 						<SelectItem value="PREPARING_PRODUCE">Preparing Produce</SelectItem>
-						<SelectItem value="READY_FOR_PICKUP">Ready for Pickup</SelectItem>
+						<SelectItem value="PRODUCE_READY_FOR_PICKUP">
+							Ready for Pickup
+						</SelectItem>
 					</SelectGroup>
 					<SelectGroup>
 						<SelectLabel>Completed</SelectLabel>
-						<SelectItem value="PICKED_UP">Picked Up</SelectItem>
+						<SelectItem value="PICKED_UP_BY_BUYER">Picked Up</SelectItem>
 					</SelectGroup>
 				</SelectContent>
 			</Select>

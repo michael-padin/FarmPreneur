@@ -33,7 +33,7 @@ export const formatPHP = (amount: number) => {
 	return new Intl.NumberFormat("en-PH", {}).format(amount)
 }
 
-export const isDevelopment = process.env.NODE_ENV === "development"
+export const isDevelopment = process.env.NODE_ENV !== "production"
 
 export const getFirstWord = (str: string) => {
 	// Split the string by spaces

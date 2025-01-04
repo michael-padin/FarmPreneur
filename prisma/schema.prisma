@@ -491,13 +491,12 @@ enum OrderSubStatus {
 
   // Cancellations & Issues: If the order is cancelled or has problems
   ORDER_REJECTED // Farmer rejects the order, either due to availability or other reasons
-  CANCELLED_BY_FARMER // Farmer cancels the order after accepting it (e.g., due to unforeseen issues)
-  CANCELLED_BY_BUYER // Buyer cancels the order before or after acceptance
+  ORDER_CANCELLED
   INSUFFICIENT_STOCK // Farmer cancels the order because they don’t have enough stock to fulfill it
   PAYMENT_FAILED // Payment failed due to a technical or financial issue
   QUALITY_ISSUES // Farmer or buyer cancels due to issues with the produce’s quality
   ORDER_EXPIRED // Order was not processed in time and has expired, no action taken
-  NO_SHOW_AT_PICKUP // Buyer failed to show up at the agreed pickup time
+  NO_SHOW_AT_PICKUP // Buyer failed to show up at the agreed pickup time 
   PICKUP_DELAYED // Pickup delayed due to unforeseen circumstances
 }
 

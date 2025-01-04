@@ -255,12 +255,12 @@ export async function notifyOrderStatusUpdate(
 			actionPrompt = "You will be notified once the farmer accepts your order."
 			break
 		case OrderSubStatus.ORDER_ACCEPTED:
-			statusDescription =
-				"The farmer has accepted your order and is preparing it."
+			statusDescription = "The farmer has accepted your order"
 			actionPrompt = "Please be ready to pick up the produce when notified."
 			break
 		case OrderSubStatus.PREPARING_PRODUCE:
-			statusDescription = "The farmer is now preparing your order."
+			statusDescription =
+				"The farmer is now preparing your order. You will be notified once the produce is ready for pickup."
 			actionPrompt = "Please wait for further updates."
 			break
 		case OrderSubStatus.PRODUCE_READY_FOR_PICKUP:
@@ -281,7 +281,7 @@ export async function notifyOrderStatusUpdate(
 			break
 		case OrderSubStatus.BUYER_CONFIRMED_ORDER:
 			statusDescription = "You have confirmed receipt of your order."
-			actionPrompt = "Thank you for confirming. Feel free to leave a review."
+			actionPrompt = "Thank you for confirming. Feel free to leave a review"
 			break
 		case OrderSubStatus.BUYER_REVIEWED:
 			statusDescription =
@@ -301,16 +301,6 @@ export async function notifyOrderStatusUpdate(
 				reason || "No reason provided"
 			}`
 			actionPrompt = "You may place a new order or contact the farmer."
-			break
-		case OrderSubStatus.CANCELLED_BY_FARMER:
-			statusDescription = `Your order has been cancelled by the farmer. Reason: ${
-				reason || "No reason provided"
-			}`
-			actionPrompt = "Please review the reason and place a new order if needed."
-			break
-		case OrderSubStatus.CANCELLED_BY_BUYER:
-			statusDescription = "You have cancelled your order."
-			actionPrompt = "No further action required."
 			break
 		case OrderSubStatus.INSUFFICIENT_STOCK:
 			statusDescription =
@@ -516,6 +506,7 @@ async function getUserName(userId: string): Promise<string> {
 }
 
 export async function notifyOrderCancelled(orderId: string, reason: string) {
+	await verifySession()
 	const order = await db.order.findUnique({
 		where: { id: orderId },
 		include: {
@@ -531,48 +522,49 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 		where: { id: orderId },
 		data: {
 			status: OrderStatus.CANCELLED,
-			subStatus: OrderSubStatus.CANCELLED_BY_FARMER,
+			subStatus: OrderSubStatus.ORDER_CANCELLED,
 			cancellationReason: reason
 		}
 	})
 
-	await sendNotification(order.customer.userId, NotificationType.ORDER_STATUS, {
-		email: {
-			subject: `Order #${order.id} has been cancelled`,
-			component: OrderCancelledEmail({
-				customerName: order.customer.name || "",
-				orderNumber: order.id,
-				cancellationReason: reason,
-				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
-			})
-		},
-		sms: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
-		push: {
-			title: "Order Cancelled",
-			body: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
-			icon: "/web-app-manifest-192x192.png",
-			url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
-		}
-	})
-
-	await sendNotification(order.farmer.userId, NotificationType.ORDER_STATUS, {
-		email: {
-			subject: `Order #${order.id} has been cancelled`,
-			component: OrderCancelledEmail({
-				customerName: order.farmer.name || "",
-				orderNumber: order.id,
-				cancellationReason: reason,
-				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
-			})
-		},
-		sms: `Order #${order.id} has been cancelled. Reason: ${reason}`,
-		push: {
-			title: "Order Cancelled",
-			body: `Order #${order.id} has been cancelled. Reason: ${reason}`,
-			icon: "/web-app-manifest-192x192.png",
-			url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
-		}
-	})
+	await Promise.all([
+		sendNotification(order.customer.userId, NotificationType.ORDER_STATUS, {
+			email: {
+				subject: `Order #${order.id} has been cancelled`,
+				component: OrderCancelledEmail({
+					customerName: order.customer.name || "",
+					orderNumber: order.id,
+					cancellationReason: reason,
+					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+				})
+			},
+			sms: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
+			push: {
+				title: "Order Cancelled",
+				body: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
+				icon: "/web-app-manifest-192x192.png",
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+			}
+		}),
+		sendNotification(order.farmer.userId, NotificationType.ORDER_STATUS, {
+			email: {
+				subject: `Order #${order.id} has been cancelled`,
+				component: OrderCancelledEmail({
+					customerName: order.farmer.name || "",
+					orderNumber: order.id,
+					cancellationReason: reason,
+					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				})
+			},
+			sms: `Order #${order.id} has been cancelled. Reason: ${reason}`,
+			push: {
+				title: "Order Cancelled",
+				body: `Order #${order.id} has been cancelled. Reason: ${reason}`,
+				icon: "/web-app-manifest-192x192.png",
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+			}
+		})
+	])
 }
 
 export async function notifyProductExpired(productId: string) {
