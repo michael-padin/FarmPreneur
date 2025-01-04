@@ -3,15 +3,15 @@
 import { NewAddressCustomerSchema } from "@/app/(home)/profile/address/create/validation"
 import { EditCustomerProfileSchema } from "@/app/(home)/profile/edit/validation"
 import {
-	notifyNewOrder,
-	notifyOrderCancelled
+	notifyOrderCancelled,
+	notifyOrderStatusUpdate,
+	readNotifications
 } from "@/app/actions/notifications"
 import { EditProductSchema } from "@/app/dashboard/farmer/products/[id]/edit/validations"
 import { EditFarmerAddressSchema } from "@/app/dashboard/farmer/profile/address/[id]/edit/validation"
 import { EditFarmerProfileSchema } from "@/app/dashboard/farmer/profile/edit/validation"
 import { auth } from "@/auth"
 import { getFarmerByUserId } from "@/data-access/farmers"
-import { markAllNotificationsAsRead } from "@/data-access/notifications"
 import { getProductsSuggestions } from "@/data-access/products"
 import { db } from "@/lib/db"
 import { CartItem, CartState } from "@/types/cart"
@@ -19,7 +19,6 @@ import {
 	getFarmersUseCase,
 	getPendingFarmerCountUseCase
 } from "@/use-cases/farmers"
-import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { OrderStatus, OrderSubStatus } from "@prisma/client"
@@ -40,7 +39,7 @@ export const markNotificationsAsRead = async (userId?: string) => {
 			return { success: false, error: "Unauthorized" }
 		}
 
-		await markAllNotificationsAsRead(finalUserId)
+		await readNotifications(finalUserId)
 		revalidatePath("/notifications")
 		revalidatePath("/dashboard/farmer/notifications")
 		revalidatePath("/dashboard/notifications")
@@ -145,7 +144,7 @@ export async function addToCart(
 			}
 		}
 
-		revalidatePath("/")
+		revalidatePath("/cart")
 		return { success: true }
 	} catch (error) {
 		console.error(error)
@@ -323,7 +322,7 @@ export async function placeOrder(
 						},
 						customerContactId: createdOrderCustomerContact.id,
 						status: "PENDING",
-						subStatus: "AWAITING_FARMER_ACCEPTANCE",
+						subStatus: "ORDER_PLACED",
 						pickupLocationId: group.pickupLocationId
 					},
 					include: {
@@ -351,10 +350,15 @@ export async function placeOrder(
 
 		if (createdOrderIds.length > 0) {
 			await Promise.all(
-				createdOrderIds.map((orderId) => notifyNewOrder(orderId))
+				createdOrderIds.map((orderId) =>
+					notifyOrderStatusUpdate(
+						orderId,
+						OrderStatus.PENDING,
+						OrderSubStatus.ORDER_PLACED
+					)
+				)
 			)
 		}
-
 		return { success: true }
 	} catch (error: any) {
 		console.error(error.message)
@@ -439,32 +443,6 @@ export async function changeOrderStatus(
 
 		if (!updatedOrder) {
 			return { success: false, error: "Order not found" }
-		}
-
-		if (updatedOrder.status === "IN_PROGRESS") {
-			await createNotificationByUserIdUseCase({
-				userId: updatedOrder.customer?.user.id || "",
-				title: "Order Accepted",
-				message: `Your Order from ${updatedOrder.farmer.farmName} has been accepted.`,
-				type: "ORDER_STATUS",
-				metadata: {
-					farmer: {
-						farmerId: updatedOrder.farmer.id,
-						farmerName: updatedOrder.farmer.farmName!
-					},
-					order: {
-						orderId: order.id,
-						orderStatus: updatedOrder.status,
-						// orderTotalPrice: updatedOrder.totalPrice,
-						orderItems: updatedOrder.items.map((item) => ({
-							productId: item.product.id,
-							productName: item.product.title,
-							quantity: item.quantity,
-							price: item.price
-						}))
-					}
-				}
-			})
 		}
 
 		revalidatePath("/dashboard/farmer/orders")
@@ -896,58 +874,11 @@ export async function updateOrderSubStatus(payload: {
 		if (!updatedOrder) {
 			return { error: "Order not found", success: false }
 		}
-
-		if (updatedOrder.subStatus === "READY_FOR_PICKUP") {
-			await createNotificationByUserIdUseCase({
-				userId: order.customer?.user.id || "",
-				title: "Order Ready for Pickup",
-				message: `Your Order from ${order.farmer.farmName} is now ready for pickup.`,
-				type: "ORDER_STATUS",
-				metadata: {
-					farmer: {
-						farmerId: order.farmer.id,
-						farmerName: order.farmer.farmName!
-					},
-					order: {
-						orderId: order.id,
-						orderStatus: updatedOrder.status,
-						orderSubStatus: updatedOrder.subStatus,
-						// orderTotalPrice: updatedOrder.totalPrice,
-						orderItems: updatedOrder.items.map((item) => ({
-							productId: item.product.id,
-							productName: item.product.title,
-							quantity: item.quantity,
-							price: item.price
-						}))
-					}
-				}
-			})
-		} else if (updatedOrder.subStatus === "PICKED_UP") {
-			await createNotificationByUserIdUseCase({
-				userId: order.customer?.user.id || "",
-				title: "Order Picked Up",
-				message: `You have picked up your Order from ${order.farmer.farmName}. Please confirm your order.`,
-				type: "ORDER_STATUS",
-				metadata: {
-					farmer: {
-						farmerId: order.farmer.id,
-						farmerName: order.farmer.farmName!
-					},
-					order: {
-						orderId: order.id,
-						orderStatus: updatedOrder.status,
-						orderSubStatus: updatedOrder.subStatus,
-						// orderTotalPrice: updatedOrder.totalPrice,
-						orderItems: updatedOrder.items.map((item) => ({
-							productId: item.product.id,
-							productName: item.product.title,
-							quantity: item.quantity,
-							price: item.price
-						}))
-					}
-				}
-			})
-		}
+		notifyOrderStatusUpdate(
+			updatedOrder.id,
+			updatedOrder.status,
+			updatedOrder.subStatus
+		)
 
 		revalidatePath("/dashboard/farmer/orders?status=IN_PROGRESS")
 		return { error: null, success: true }
@@ -999,31 +930,6 @@ export async function confirmPickedUpOrder(
 			}
 		})
 
-		await createNotificationByUserIdUseCase({
-			userId: updatedOrder.farmer?.user.id || "",
-			title: "Order Completed",
-			message: `${updatedOrder.customer?.name} has confirmed and completed the order from you.`,
-			type: "ORDER_STATUS",
-			metadata: {
-				farmer: {
-					farmerId: updatedOrder.farmer.id,
-					farmerName: updatedOrder.farmer.farmName!
-				},
-				order: {
-					orderId: order.id,
-					orderStatus: updatedOrder.status,
-					orderSubStatus: updatedOrder.subStatus || "BUYER_CONFIRMED",
-					// orderTotalPrice: updatedOrder.totalPrice,
-					orderItems: updatedOrder.items.map((item) => ({
-						productId: item.product.id,
-						productName: item.product.title,
-						quantity: item.quantity,
-						price: item.price
-					}))
-				}
-			}
-		})
-		revalidatePath("/orders?status=IN_PROGRESS")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }

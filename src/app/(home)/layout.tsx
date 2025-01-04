@@ -22,7 +22,7 @@ export default async function Layout({
 			userId={userId}
 		>
 			<CartProvider initialCartPromise={cartPromise}>
-				<PusherNotificationListener userId={userId!} />
+				<PusherNotificationListener userId={userId || ""} />
 				{/* <UnderConstruction /> */}
 				{children}
 			</CartProvider>

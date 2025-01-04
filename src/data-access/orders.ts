@@ -237,6 +237,7 @@ export const getCustomerOrders = async (filter: {
 				include: {
 					product: {
 						select: {
+							productImages: true,
 							title: true,
 							price: true,
 							unit: true,

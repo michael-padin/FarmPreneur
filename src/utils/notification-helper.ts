@@ -48,7 +48,6 @@ export async function sendWebPush(
 	try {
 		await webpush.sendNotification(subscription, payload)
 	} catch (error) {
-		console.table(error)
 		console.error("Error sending Web Push notification:", error)
 	}
 }

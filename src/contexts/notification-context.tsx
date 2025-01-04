@@ -1,7 +1,5 @@
 "use client"
 
-import { markNotificationAsRead, markNotificationsAsRead } from "@/lib/actions"
-import { showErrorToast } from "@/lib/handle-error"
 import { Notification } from "@prisma/client"
 import {
 	createContext,
@@ -9,18 +7,18 @@ import {
 	use,
 	useCallback,
 	useContext,
+	useEffect,
 	useMemo,
-	useOptimistic,
-	useTransition
+	useOptimistic
 } from "react"
 
 // Context type
 interface NotificationContextType {
-	handleAddOptimisticNotification: (newNotification: Notification) => void
+	addNotification: (newNotification: Notification) => void
 	notifications: Notification[]
 	unreadCount: number
-	markAllAsRead: () => void
-	markAsRead: (notificationId: string) => Promise<void>
+	readAllNotifications: () => void
+	readNotification: (notificationId: string) => void
 }
 
 // Reducer action types
@@ -40,7 +38,7 @@ function notificationReducer(
 		case "SET_INITIAL_NOTIFICATIONS":
 			return action.payload
 		case "ADD_NOTIFICATION":
-			return [...state, action.payload]
+			return [action.payload, ...state]
 		case "MARK_ALL_READ":
 			return state.map((notification) => ({ ...notification, isRead: true }))
 		case "MARK_SINGLE_READ":
@@ -70,54 +68,39 @@ export function NotificationProvider({
 	initialNotificationsPromise: Promise<Notification[]>
 }) {
 	const initialNotifications = use(initialNotificationsPromise)
-	const [isPending, startTransition] = useTransition()
-
 	const [optimisticNotifications, addOptimisticNotifications] = useOptimistic(
 		initialNotifications,
 		notificationReducer
 	)
 
-	const unreadCount = useMemo(
-		() =>
-			optimisticNotifications.filter((notification) => !notification.isRead)
-				.length,
-		[optimisticNotifications]
-	)
+	useEffect(() => {
+		console.log("optimisticNotifications :>> ", optimisticNotifications)
+	}, [optimisticNotifications])
 
-	const markAllAsRead = useCallback(async () => {
-		startTransition(async () => {
-			addOptimisticNotifications({ type: "MARK_ALL_READ" })
-			const { error } = await markNotificationsAsRead(userId || "")
-			if (error) {
-				showErrorToast(error)
-			}
-		})
-	}, [userId, addOptimisticNotifications])
+	const unreadCount = optimisticNotifications.filter(
+		(notification) => !notification.isRead
+	).length
+
+	const readAllNotifications = useCallback(() => {
+		addOptimisticNotifications({ type: "MARK_ALL_READ" })
+	}, [addOptimisticNotifications])
 
 	// Mark notification as read
-	const markAsRead = useCallback(
-		async (notificationId: string) => {
-			startTransition(async () => {
-				addOptimisticNotifications({
-					type: "MARK_SINGLE_READ",
-					payload: notificationId
-				})
-				const { error } = await markNotificationAsRead(notificationId)
-				if (error) {
-					showErrorToast(error)
-				}
+	const readNotification = useCallback(
+		(notificationId: string) => {
+			addOptimisticNotifications({
+				type: "MARK_SINGLE_READ",
+				payload: notificationId
 			})
 		},
 		[addOptimisticNotifications]
 	)
 
-	const handleAddOptimisticNotification = useCallback(
+	const addNotification = useCallback(
 		(newNotification: Notification) => {
-			startTransition(() => {
-				addOptimisticNotifications({
-					type: "ADD_NOTIFICATION",
-					payload: newNotification
-				})
+			addOptimisticNotifications({
+				type: "ADD_NOTIFICATION",
+				payload: newNotification
 			})
 		},
 		[addOptimisticNotifications]
@@ -125,19 +108,18 @@ export function NotificationProvider({
 
 	const contextValue = useMemo(
 		() => ({
-			handleAddOptimisticNotification,
-
+			addNotification,
 			notifications: optimisticNotifications,
 			unreadCount,
-			markAsRead,
-			markAllAsRead
+			readNotification,
+			readAllNotifications
 		}),
 		[
+			addNotification,
 			optimisticNotifications,
 			unreadCount,
-			markAsRead,
-			markAllAsRead,
-			handleAddOptimisticNotification
+			readNotification,
+			readAllNotifications
 		]
 	)
 

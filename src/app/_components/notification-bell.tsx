@@ -1,24 +1,24 @@
 "use client"
 
-import { Bell, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger
 } from "@/components/ui/popover"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useNotifications } from "@/contexts/notification-context"
-import Link from "next/link"
-import { NotificationIcon } from "../dashboard/(admin)/notifications/_components/notification-icon"
-import { formatDistanceToNowStrict } from "date-fns"
-import { useState } from "react"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { formatDistanceToNowStrict } from "date-fns"
+import { Bell, X } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+import { NotificationIcon } from "../dashboard/(admin)/notifications/_components/notification-icon"
 
 export function NotificationBell() {
 	const [open, setOpen] = useState(false)
 	const isDesktop = useMediaQuery("(min-width: 768px)")
-	const { markAsRead, notifications, unreadCount } = useNotifications()
+	const { readNotification, notifications, unreadCount } = useNotifications()
 
 	return (
 		<Popover onOpenChange={setOpen} open={open}>
@@ -80,7 +80,7 @@ export function NotificationBell() {
 									variant="ghost"
 									size="icon"
 									className="h-8 w-8"
-									onClick={() => markAsRead(notification.id)}
+									onClick={() => readNotification(notification.id)}
 								>
 									<X className="h-4 w-4" />
 									<span className="sr-only">Mark as read</span>

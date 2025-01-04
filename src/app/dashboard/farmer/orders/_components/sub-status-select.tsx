@@ -26,7 +26,7 @@ export function SubStatusSelect({
 		startTransition(async () => {
 			await updateOrderSubStatus({
 				orderId,
-				status: value as "PREPARING_PRODUCE" | "READY_FOR_PICKUP" | "PICKED_UP"
+				status: value as OrderSubStatus
 			})
 		})
 	}

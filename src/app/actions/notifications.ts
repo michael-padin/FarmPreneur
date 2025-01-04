@@ -1,5 +1,6 @@
 "use server"
 
+import AdminNotificationEmail from "@/components/fp/email/fp-admin-notification-email"
 import { FarmerApprovedEmail } from "@/components/fp/email/fp-approved-email"
 import { FarmerRejectedEmail } from "@/components/fp/email/fp-farmer-rejected-email"
 import { NewMessageEmail } from "@/components/fp/email/fp-new-message-email"
@@ -12,13 +13,16 @@ import { ProductOutOfStockEmail } from "@/components/fp/email/fp-product-out-of-
 import { ProductRejectedEmail } from "@/components/fp/email/fp-product-rejected-email"
 import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
+import { getErrorMessage } from "@/lib/handle-error"
 import { sendNotification } from "@/utils/notification-helper"
 import {
 	NotificationType,
 	OrderStatus,
 	OrderSubStatus,
-	ProductListingStatus
+	ProductListingStatus,
+	ROLE
 } from "@prisma/client"
+import { revalidatePath } from "next/cache"
 import { PushSubscription } from "web-push"
 
 export async function notifyFarmerApproval(
@@ -73,7 +77,7 @@ export async function notifyFarmerApproval(
 	}
 }
 
-export async function notifyProductListed(
+export async function notifyFarmerProductListed(
 	productId: string,
 	status: ProductListingStatus,
 	reason?: string
@@ -188,6 +192,7 @@ export async function notifyNewOrder(orderId: string) {
 				customerName: order.customer.name || "",
 				orderNumber: order.id,
 				newStatus: OrderStatus.PENDING,
+				actionPrompt: "No further action required at this time.",
 				statusDescription:
 					"Your order has been received and is being processed.",
 				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
@@ -213,98 +218,189 @@ export async function notifyOrderStatusUpdate(
 		where: { id: orderId },
 		include: {
 			customer: { include: { user: true } },
-			farmer: { include: { user: true } }
+			farmer: { include: { user: true } },
+			items: { include: { product: true } },
+			customerContact: true
 		}
 	})
 
 	if (!order || !order.customer || !order.farmer)
 		throw new Error("Order, Customer, or Farmer not found")
 
-	await db.order.update({
-		where: { id: orderId },
-		data: {
-			status: newStatus,
-			subStatus: newSubStatus
-		}
-	})
+	// await db.order.update({
+	// 	where: { id: orderId },
+	// 	data: {
+	// 		status: newStatus,
+	// 		subStatus: newSubStatus
+	// 	}
+	// })
 
-	await db.orderStatusHistory.create({
-		data: {
-			orderId,
-			status: newStatus,
-			reason,
-			updatedByUserId: order.farmer.userId // Assuming the farmer is updating the status
-		}
-	})
+	// await db.orderStatusHistory.create({
+	// 	data: {
+	// 		orderId,
+	// 		status: newStatus,
+	// 		reason,
+	// 		updatedByUserId: order.farmer.userId // Assuming the farmer is updating the status
+	// 	}
+	// })
 
 	let statusDescription = ""
+	let actionPrompt = ""
+
 	switch (newSubStatus) {
-		case OrderSubStatus.AWAITING_FARMER_ACCEPTANCE:
-			statusDescription = "Your order is awaiting acceptance by the farmer."
+		case OrderSubStatus.ORDER_PLACED:
+			statusDescription = `Your order has been placed successfully! \nDetails:\n- Price: ₱${order.totalPrice}\n- Items: ${order.items.map(
+				(item) => `${item.product.title} (x${item.quantity})`
+			)}`
+			actionPrompt = "You will be notified once the farmer accepts your order."
+			break
+		case OrderSubStatus.ORDER_ACCEPTED:
+			statusDescription =
+				"The farmer has accepted your order and is preparing it."
+			actionPrompt = "Please be ready to pick up the produce when notified."
 			break
 		case OrderSubStatus.PREPARING_PRODUCE:
 			statusDescription = "The farmer is now preparing your order."
+			actionPrompt = "Please wait for further updates."
 			break
-		case OrderSubStatus.READY_FOR_PICKUP:
+		case OrderSubStatus.PRODUCE_READY_FOR_PICKUP:
 			statusDescription = "Your order is ready for pickup."
+			actionPrompt = "Please collect your order at the specified location."
 			break
-		case OrderSubStatus.PICKED_UP:
-			statusDescription = "Your order has been picked up."
+		case OrderSubStatus.PICKED_UP_BY_BUYER:
+			statusDescription = "Your order has been picked up by you."
+			actionPrompt = "Please confirm the order in your dashboard."
+			break
+		case OrderSubStatus.PAYMENT_PENDING:
+			statusDescription = "Payment is pending for your order."
+			actionPrompt = "Please complete the payment to proceed."
 			break
 		case OrderSubStatus.PAYMENT_PROCESSED:
 			statusDescription = "Payment for your order has been processed."
+			actionPrompt = "No further action required."
 			break
-		case OrderSubStatus.BUYER_CONFIRMED:
+		case OrderSubStatus.BUYER_CONFIRMED_ORDER:
 			statusDescription = "You have confirmed receipt of your order."
-			break
-		case OrderSubStatus.FULLY_SETTLED:
-			statusDescription = "Your order has been fully settled."
+			actionPrompt = "Thank you for confirming. Feel free to leave a review."
 			break
 		case OrderSubStatus.BUYER_REVIEWED:
 			statusDescription =
 				"You have reviewed your order. Thank you for your feedback!"
+			actionPrompt = "We appreciate your input."
+			break
+		case OrderSubStatus.FULLY_SETTLED:
+			statusDescription = "Your order has been fully settled and completed."
+			actionPrompt = "Thank you for using our service."
+			break
+		case OrderSubStatus.ORDER_COMPLETED:
+			statusDescription = "Your order has been completed."
+			actionPrompt = "No further action required."
+			break
+		case OrderSubStatus.ORDER_REJECTED:
+			statusDescription = `Your order has been rejected by the farmer. Reason: ${
+				reason || "No reason provided"
+			}`
+			actionPrompt = "You may place a new order or contact the farmer."
 			break
 		case OrderSubStatus.CANCELLED_BY_FARMER:
-			statusDescription = `Your order has been cancelled by the farmer. Reason: ${reason || "No reason provided"}`
+			statusDescription = `Your order has been cancelled by the farmer. Reason: ${
+				reason || "No reason provided"
+			}`
+			actionPrompt = "Please review the reason and place a new order if needed."
 			break
 		case OrderSubStatus.CANCELLED_BY_BUYER:
 			statusDescription = "You have cancelled your order."
+			actionPrompt = "No further action required."
 			break
 		case OrderSubStatus.INSUFFICIENT_STOCK:
 			statusDescription =
 				"Your order has been cancelled due to insufficient stock."
+			actionPrompt = "You may place a new order or explore other options."
 			break
 		case OrderSubStatus.PAYMENT_FAILED:
 			statusDescription =
 				"Your order has been cancelled due to payment failure."
+			actionPrompt = "Please check your payment details and try again."
 			break
 		case OrderSubStatus.QUALITY_ISSUES:
 			statusDescription = "Your order has been cancelled due to quality issues."
+			actionPrompt = "You may place a new order or contact support."
+			break
+		case OrderSubStatus.NO_SHOW_AT_PICKUP:
+			statusDescription = "The buyer did not show up for the pickup."
+			actionPrompt = "Please contact the farmer to resolve the issue."
+			break
+		case OrderSubStatus.PICKUP_DELAYED:
+			statusDescription =
+				"Pickup has been delayed due to unforeseen circumstances."
+			actionPrompt = "Please wait for updated instructions."
 			break
 		default:
 			statusDescription = `Your order status has been updated to ${newSubStatus}.`
+			actionPrompt = "Please check your dashboard for more details."
 	}
 
+	// Send notification to the customer
 	await sendNotification(order.customer.userId, NotificationType.ORDER_STATUS, {
 		email: {
-			subject: `Order #${order.id} status update: ${newStatus}`,
+			subject: `Order #${order.id} Status Update: ${newStatus}`,
 			component: OrderStatusUpdateEmail({
 				customerName: order.customer.name || "",
 				orderNumber: order.id,
 				newStatus: newStatus,
 				statusDescription: statusDescription,
+				actionPrompt: actionPrompt,
+				// price: order.totalPrice,
+				// items: order.items
+				// 	.map((item) => `${item.product.title} (x${item.quantity})`)
+				// 	.join(", "),
 				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 			})
 		},
-		sms: `Order #${order.id} update: ${newStatus}. ${statusDescription}`,
+		sms: `Order #${order.id} update: ${statusDescription}. Price: ₱${order.totalPrice}. ${actionPrompt}`,
 		push: {
 			title: `Order #${order.id} Update`,
-			body: `Status: ${newStatus}. ${statusDescription}`,
+			body: `Price: ₱${order.totalPrice}, Items: ${order.items
+				.map((item) => item.product.title)
+				.join(", ")}. ${statusDescription}.`,
 			icon: "/web-app-manifest-192x192.png",
 			url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 		}
 	})
 
+	// Notify the farmer for newly placed orders
+	if (newSubStatus === OrderSubStatus.ORDER_PLACED) {
+		const orderItems = order.items
+			.map((item) => `${item.quantity}x ${item.product.title}`)
+			.join(", ")
+		await sendNotification(order.farmer.userId, NotificationType.ORDER_STATUS, {
+			email: {
+				subject: `New Order Placed: #${order.id}`,
+				component: NewOrderEmail({
+					customerName: order.customer.name || "",
+					farmerName: order.farmer.name || "",
+					orderNumber: order.id,
+					orderItems: orderItems,
+					orderTotal: `₱${order.totalPrice?.toFixed(2)}`,
+					actionPrompt: "Please review and accept the order in your dashboard.",
+					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				})
+			},
+			sms: `New Order #${order.id} placed by ${order.customer.name}. Price: ₱${order.totalPrice}, Items: ${order.items
+				.map((item) => item.product.title)
+				.join(", ")}. Please review it in your dashboard.`,
+			push: {
+				title: `New Order #${order.id}`,
+				body: `A new order has been placed by ${order.customer.name}. Price: ₱${order.totalPrice}, Items: ${order.items
+					.map((item) => item.product.title)
+					.join(", ")}. Please review it in your dashboard.`,
+				icon: "/web-app-manifest-192x192.png",
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+			}
+		})
+	}
+
+	// If the order is cancelled or completed, notify the farmer as well
 	if (
 		newStatus === OrderStatus.CANCELLED ||
 		newStatus === OrderStatus.COMPLETED
@@ -316,14 +412,17 @@ export async function notifyOrderStatusUpdate(
 					customerName: order.farmer.name || "",
 					orderNumber: order.id,
 					newStatus: newStatus,
-					statusDescription: `Order #${order.id} has been ${newStatus.toLowerCase()}.`,
+					statusDescription: `Order #${order.id} has been ${newStatus.toLowerCase()}. \nDetails:\n- Customer: ${order.customer.name}\n- Price: ₱${order.totalPrice}\n- Items: ${order.items
+						.map((item) => `${item.product.title} (x${item.quantity})`)
+						.join(", ")}`,
+					actionPrompt: "Please review the order details in your dashboard.",
 					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 				})
 			},
-			sms: `Order #${order.id} has been ${newStatus.toLowerCase()}.`,
+			sms: `Order #${order.id} ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
 			push: {
 				title: `Order #${order.id} ${newStatus}`,
-				body: `Order #${order.id} has been ${newStatus.toLowerCase()}.`,
+				body: `Order #${order.id} has been ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
 				icon: "/web-app-manifest-192x192.png",
 				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 			}
@@ -543,6 +642,151 @@ export async function notifyProductOutOfStock(productId: string) {
 	})
 }
 
+export async function notifyAdminNewFarmerRegistration(farmerId: string) {
+	const farmer = await db.farmer.findUnique({
+		where: { id: farmerId },
+		include: { user: true }
+	})
+	if (!farmer) throw new Error("Farmer not found")
+
+	const admins = await db.user.findMany({
+		where: { role: ROLE.ADMIN }
+	})
+
+	for (const admin of admins) {
+		await sendNotification(admin.id, NotificationType.FARMER_APPROVAL, {
+			email: {
+				subject: "New Farmer Registration Awaiting Approval",
+				component: AdminNotificationEmail({
+					adminName: admin.name || "Admin",
+					notificationType: "New Farmer Registration",
+					content: `${farmer.name} (${farmer.user.email}) has registered as a new farmer and is awaiting approval.`,
+					actionUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/farmers/${farmer.id}`
+				})
+			},
+			sms: `${farmer.name} has registered as a new farmer and is awaiting approval.`,
+			push: {
+				title: "New Farmer Registration",
+				body: `${farmer.name} has registered as a new farmer and is awaiting approval.`,
+				icon: "/web-app-manifest-192x192.png",
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/farmers/${farmer.id}`
+			}
+		})
+	}
+}
+
+export async function notifyAdminProductListed(
+	productId: string,
+	status: ProductListingStatus,
+	reason?: string
+) {
+	const product = await db.product.findUnique({
+		where: { id: productId },
+		include: { farmer: { include: { user: true } } }
+	})
+
+	if (!product || !product.farmer)
+		throw new Error("Product or Farmer not found")
+
+	// await db.product.update({
+	// 	where: { id: productId },
+	// 	data: { listingStatus: status }
+	// })
+
+	if (status === ProductListingStatus.PENDING) {
+		const admins = await db.user.findMany({
+			where: { role: ROLE.ADMIN }
+		})
+
+		for (const admin of admins) {
+			await sendNotification(admin.id, NotificationType.NEW_PRODUCT, {
+				email: {
+					subject: "New Product Listing Awaiting Approval",
+					component: AdminNotificationEmail({
+						adminName: admin.name || "Admin",
+						notificationType: "New Product Listing",
+						content: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
+						actionUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/products/${product.id}`
+					})
+				},
+				sms: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
+				push: {
+					title: "New Product Listing",
+					body: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
+					icon: "/web-app-manifest-192x192.png",
+					url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/products/${product.id}`
+				}
+			})
+		}
+	}
+
+	// Existing code for other statuses...
+}
+
+export async function notifyAdminSystemAlert(
+	alertType: string,
+	message: string,
+	actionUrl?: string
+) {
+	// const admins = await db.user.findMany({
+	// 	where: { role: UserRole.ADMIN }
+	// })
+	// for (const admin of admins) {
+	// 	await sendNotification(admin.id, NotificationType.ADMIN_ALERT, {
+	// 		email: {
+	// 			subject: `System Alert: ${alertType}`,
+	// 			component: AdminNotificationEmail({
+	// 				adminName: admin.name || "Admin",
+	// 				notificationType: alertType,
+	// 				content: message,
+	// 				actionUrl:
+	// 					actionUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`
+	// 			})
+	// 		},
+	// 		push: {
+	// 			title: `System Alert: ${alertType}`,
+	// 			body: message,
+	// 			icon: "/web-app-manifest-192x192.png",
+	// 			url: actionUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`
+	// 		}
+	// 	})
+	// }
+}
+
+export async function notifyAdminUserReport(
+	reportType: string,
+	reporterId: string,
+	reportedItemId: string,
+	reason: string
+) {
+	// const reporter = await db.user.findUnique({
+	// 	where: { id: reporterId }
+	// })
+	// if (!reporter) throw new Error("Reporter not found")
+	// const admins = await db.user.findMany({
+	// 	where: { role: UserRole.ADMIN }
+	// })
+	// for (const admin of admins) {
+	// 	await sendNotification(admin.id, NotificationType.ADMIN_ALERT, {
+	// 		email: {
+	// 			subject: `User Report: ${reportType}`,
+	// 			component: AdminNotificationEmail({
+	// 				adminName: admin.name || "Admin",
+	// 				notificationType: "User Report",
+	// 				content: `${reporter.name} (${reporter.email}) has reported a ${reportType}. Reason: ${reason}`,
+	// 				actionUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/reports/${reportedItemId}`
+	// 			})
+	// 		},
+	// 		push: {
+	// 			title: `User Report: ${reportType}`,
+	// 			body: `A ${reportType} has been reported. Reason: ${reason}`,
+	// 			icon: "/web-app-manifest-192x192.png",
+	// 			url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/reports/${reportedItemId}`
+	// 		}
+	// 	})
+	// }
+}
+
 export async function updateNotificationPreferences(data: {
 	userId: string
 	preferences: {
@@ -584,4 +828,47 @@ export async function unsubscribeUser(endpoint: string) {
 		}
 	})
 	return { success: true, message: "Push subscription removed successfully" }
+}
+
+export const readNotifications = async (prevState: any) => {
+	try {
+		const { userId } = await verifySession()
+		await db.notification.updateMany({
+			where: {
+				userId: userId
+			},
+			data: {
+				isRead: true
+			}
+		})
+		revalidatePath("/notifications")
+		revalidatePath("/dashboard/farmer/notifications")
+		revalidatePath("/dashboard/notifications")
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
+}
+
+export const readNotification = async (
+	prevState: any,
+	notificationId: string
+) => {
+	try {
+		await verifySession()
+		await db.notification.update({
+			where: {
+				id: notificationId
+			},
+			data: {
+				isRead: true
+			}
+		})
+		revalidatePath("/notifications")
+		revalidatePath("/dashboard/farmer/notifications")
+		revalidatePath("/dashboard/notifications")
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
 }

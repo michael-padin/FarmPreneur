@@ -1,11 +1,9 @@
+import { NotificationList } from "@/app/_components/notification-list"
+import { NotificationSkeleton } from "@/app/_components/notification-skeleton"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import BottomNav from "../_components/bottom-nav"
-import { NotificationListWrapper } from "./_components/notification-list-wrapper"
-import { NotificationSkeleton } from "./_components/notification-skeleton"
 import { NotificationsNavLinks } from "./nav-links"
-
-export const experimental_ppr = true
 
 export const metadata: Metadata = {
 	title: "Notifications"
@@ -33,7 +31,7 @@ export default function Page() {
 				<div className="pb-24 pt-16">
 					<div className="pt-4">
 						<Suspense fallback={<NotificationSkeleton />}>
-							<NotificationListWrapper />
+							<NotificationList />
 						</Suspense>
 					</div>
 				</div>

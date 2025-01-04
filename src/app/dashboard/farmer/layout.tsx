@@ -34,7 +34,6 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 
 	if (!user) redirect("/login")
 
-	if (user.farmer?.applicationStatus === "PENDING") redirect("/admin-approval")
 	if (!user?.farmer) redirect("/farmer-registration")
 
 	const initialNotificationsPromise = getNotificationsByUserIdUseCase()

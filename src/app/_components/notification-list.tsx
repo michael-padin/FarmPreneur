@@ -1,27 +1,33 @@
 "use client"
 
 import { NotificationItem } from "@/app/_components/notification-item"
-import { Button } from "@/components/ui/button"
 import { useNotifications } from "@/contexts/notification-context"
+import { CircleCheckBig } from "lucide-react"
+import { useActionState } from "react"
+import { readNotifications } from "../actions/notifications"
 import { NotificationIcon } from "./notification-icon"
 
 export const NotificationList = () => {
 	const { readAllNotifications, readNotification, notifications } =
 		useNotifications()
-
+	const [, formAction] = useActionState(readNotifications, null)
+	const readNotificationsAction = formAction.bind(null)
 	return (
 		<div className="lg:container lg:mx-auto lg:rounded-lg lg:border lg:bg-card lg:p-6">
-			<div className="flex items-center justify-between pb-4">
-				<h2 className="text-2xl font-semibold leading-none tracking-tight">
-					Notifications
-				</h2>
+			<form
+				action={async () => {
+					readAllNotifications()
+					await readNotificationsAction()
+				}}
+			>
+				<div className="flex justify-end p-4">
+					<button>
+						<CircleCheckBig className="h-6 w-6 text-primary" />
+						<span className="sr-only">Mark all as read</span>
+					</button>
+				</div>
+			</form>
 
-				<form action="">
-					<Button variant="default" size="sm">
-						Read all
-					</Button>
-				</form>
-			</div>
 			<div className="">
 				{notifications.map((notif) => (
 					<NotificationItem

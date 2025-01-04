@@ -1,6 +1,5 @@
 import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
-import { NotifMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
 
 export const getNotificationsByUserId = async (userId: string) => {
@@ -31,7 +30,9 @@ export const createNotificationByUserId = async (data: {
 	message: string
 	type: NotificationType
 	title: string
-	metadata?: NotifMetadata
+	metadata?: {
+		url?: string
+	}
 }) => {
 	return await db.notification.create({
 		data: {
@@ -41,17 +42,6 @@ export const createNotificationByUserId = async (data: {
 			message: data.message,
 			title: data.title,
 			metadata: data.metadata
-		}
-	})
-}
-
-export const markAllNotificationsAsRead = async (userId: string) => {
-	return await db.notification.updateMany({
-		where: {
-			userId: userId
-		},
-		data: {
-			isRead: true
 		}
 	})
 }

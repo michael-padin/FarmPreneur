@@ -1,5 +1,6 @@
 import { EditUserSchema } from "@/app/dashboard/(admin)/users/[id]/edit/validations"
 import { db } from "@/lib/db"
+import { DocumentType } from "@prisma/client"
 
 export const getFarmerByUserId = async (userId: string) => {
 	return await db.farmer.findUnique({
@@ -24,12 +25,7 @@ export const getFarmerByUserId = async (userId: string) => {
 					orders: true
 				}
 			},
-			verificationDocument: {
-				select: {
-					image: true,
-					type: true
-				}
-			},
+
 			products: { include: { reviews: true } },
 			user: {
 				select: {
@@ -69,12 +65,6 @@ export const getFarmerById = async (id: string) => {
 				select: {
 					products: true,
 					orders: true
-				}
-			},
-			verificationDocument: {
-				select: {
-					image: true,
-					type: true
 				}
 			},
 			farmImages: true,
@@ -124,8 +114,7 @@ export const getFarmers = async () => {
 						}
 					},
 					products: { include: { reviews: true } },
-					address: true,
-					verificationDocument: true
+					address: true
 				}
 			}
 		},
@@ -155,8 +144,7 @@ export const getPendingFarmers = async () => {
 				}
 			},
 			address: true,
-			orders: true,
-			verificationDocument: true
+			orders: true
 		},
 		orderBy: {
 			createdAt: "desc"
@@ -329,6 +317,8 @@ export const getTopFarmers = async (limit = 10) => {
 export const updateFarmerByUserId = async (
 	data: EditUserSchema & {
 		userId: string
+		newGovIdImage?: string
+		newSelfieWithGovIdImage?: string
 	}
 ) => {
 	return await db.$transaction(async (tx) => {
@@ -352,6 +342,10 @@ export const updateFarmerByUserId = async (
 					userId: data.userId
 				},
 				create: {
+					govIdType: DocumentType.NATIONAL_ID,
+					govIdImage: data.newGovIdImage || "",
+					selfieWithGovIdImage: data.newSelfieWithGovIdImage || "",
+					name: data.name,
 					userId: data.userId,
 					applicationStatus: "PENDING",
 					contactNumber: data.farmer.contactNumber,
@@ -365,38 +359,9 @@ export const updateFarmerByUserId = async (
 					farmName: data?.farmer?.farmName,
 					farmDescription: data?.farmer?.farmDescription,
 					applicationStatus: data?.farmer?.applicationStatus
-					// address: {
-					// 	update: {
-					// 		data: {
-					// 			latitude: data!.farmer!.address!.latitude,
-					// 			longitude: data!.farmer!.address!.longitude,
-					// 			fullAddress: data!.farmer!.address!.fullAddress || "",
-					// 			street: data!.farmer!.address!.street || "",
-					// 			region: data!.farmer!.address!.region || "",
-					// 			country: data!.farmer!.address!.country || "",
-					// 			postalCode: data!.farmer!.address!.postalCode || ""
-					// 		}
-					// 	}
-					// }
 				}
 			}))
 
-		const updatedVerificationDocument =
-			data.farmer?.verificationDocument &&
-			data.farmer?.verificationDocument.image &&
-			(await tx.verificationDocument.upsert({
-				where: {
-					farmerId: updatedFarmer!.id
-				},
-				create: {
-					type: data.farmer.verificationDocument.type,
-					image: data.farmer.verificationDocument.image.url
-				},
-				update: {
-					image: data.farmer.verificationDocument.image.url,
-					type: data.farmer.verificationDocument.type
-				}
-			}))
 		return {
 			applicationStatus: updatedFarmer!.applicationStatus!,
 			farmerId: updatedFarmer!.id!

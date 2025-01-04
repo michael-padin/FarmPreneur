@@ -14,7 +14,7 @@ export function ConfirmPickedUpOrder({ orderId }: { orderId: string }) {
 	const formActionsWithData = formAction.bind(null, {
 		orderId,
 		status: "COMPLETED",
-		subStatus: "BUYER_CONFIRMED"
+		subStatus: "BUYER_CONFIRMED_ORDER"
 	})
 
 	useEffect(() => {

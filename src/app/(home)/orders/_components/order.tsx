@@ -93,7 +93,7 @@ export default function Order({
 								subStatus={order.subStatus || "CANCELLED_BY_FARMER"}
 							/>
 						)}
-						{order.subStatus === "PICKED_UP" && (
+						{order.subStatus === "PICKED_UP_BY_BUYER" && (
 							<ConfirmPickedUpOrder orderId={order.id} />
 						)}
 						{order.status === "COMPLETED" &&

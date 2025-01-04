@@ -2,6 +2,10 @@ import { NotificationType } from "@prisma/client"
 
 export { NotificationType }
 
+export type NotificationMetadata = {
+	url?: string
+}
+
 export const notificationTypeMap: Record<NotificationType, string> = {
 	FARMER_APPROVAL: "Farmer Approval",
 	PRODUCT_APPROVAL: "Product Approval",

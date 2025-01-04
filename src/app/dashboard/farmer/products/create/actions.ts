@@ -1,10 +1,9 @@
 "use server"
+import { notifyAdminProductListed } from "@/app/actions/notifications"
 import { auth } from "@/auth"
 import { getProductBySlug } from "@/data-access/products"
 import { getErrorMessage } from "@/lib/handle-error"
-import { pusherServer } from "@/lib/pusher"
 import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
-import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
 import { createProductUseCase } from "@/use-cases/products"
 import { createProductSchema, CreateProductSchema } from "./validations"
 
@@ -37,32 +36,15 @@ export const createProduct = async (data: CreateProductSchema) => {
 			userId,
 			slug: uniqueSlug
 		})
-		if (createdProduct.listingStatus === "PENDING") {
-			// await pusherServer.trigger("pending-products-count", "update", {
-			// 	count: await getPendingFarmerCountUseCase()
-			// })
 
-			await createNotificationsForAdminsUseCase({
-				title: "Product Approval",
-				message: `New product waiting for approval`,
-				type: "PRODUCT_APPROVAL",
-				metadata: {
-					product: {
-						productImage: createdProduct.productImages[0],
-						productId: createdProduct.id,
-						productName: createdProduct.title
-					},
-					farmer: {
-						farmerId: createdProduct.farmerId!,
-						farmerName: createdProduct.farmer?.farmName || ""
-					}
-				}
-			})
-
-			await pusherServer.trigger("pending-products", "update", {
-				data: createProduct
-			})
+		if (!createdProduct) {
+			return { error: "Failed to create product" }
 		}
+
+		await notifyAdminProductListed(
+			createdProduct.id,
+			createdProduct.listingStatus
+		)
 		return { error: null }
 	} catch (error) {
 		console.error(error)

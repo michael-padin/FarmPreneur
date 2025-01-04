@@ -1,6 +1,4 @@
 "use client"
-import { Button } from "@/components/ui/button"
-import { useNotifications } from "@/contexts/notification-context"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { pusherClient } from "@/lib/pusher"
 import { Notification } from "@prisma/client"
@@ -13,7 +11,6 @@ type Metadata = {
 }
 
 export function PusherNotificationListener({ userId }: { userId: string }) {
-	const { handleAddOptimisticNotification } = useNotifications()
 	const router = useRouter()
 	const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -32,13 +29,14 @@ export function PusherNotificationListener({ userId }: { userId: string }) {
 					duration: 5000,
 					closeButton: true,
 					...(metadata.url && {
-						action: (
-							<Button onClick={() => router.push(metadata.url!)}>View</Button>
-						)
+						action: {
+							label: "View",
+							onClick: () => router.push(metadata.url || "/")
+						}
 					})
 				})
-				handleAddOptimisticNotification(newNotification)
 				notificationSound.play()
+				router.refresh()
 			}
 
 			channel.bind("notification", handleNewNotification)
@@ -48,7 +46,7 @@ export function PusherNotificationListener({ userId }: { userId: string }) {
 				pusherClient.unsubscribe(`user-${userId}`)
 			}
 		}
-	}, [handleAddOptimisticNotification, userId, isDesktop, router])
+	}, [userId, isDesktop, router])
 
 	return null
 }

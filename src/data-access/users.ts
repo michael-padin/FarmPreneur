@@ -42,8 +42,7 @@ export const getUserById = async (id: string) => {
 							reviews: true
 						}
 					},
-					orders: true,
-					verificationDocument: true
+					orders: true
 				}
 			}
 		}
@@ -63,7 +62,11 @@ export const getUserByEmail = async (email: string) => {
 	})
 }
 export const createUserFarmerById = async (
-	data: FarmRegistrationSchema & { userId: string }
+	data: FarmRegistrationSchema & {
+		userId: string
+		newGovIdImage?: string
+		newSelfieWithGovIdImage?: string
+	}
 ) => {
 	return await db.$transaction(async (tx) => {
 		await tx.user.update({
@@ -77,6 +80,12 @@ export const createUserFarmerById = async (
 
 		const farmer = await tx.farmer.create({
 			data: {
+				govIdImage: data.newGovIdImage || "",
+				selfieWithGovIdImage: data.newSelfieWithGovIdImage || "",
+				govIdType: data.govIdType,
+				farmDescription: data.farmDescription || "",
+				farmName: data.farmName || "",
+				name: data.user.name,
 				userId: data.userId,
 				applicationStatus: "PENDING",
 				contactNumber: data.contactNumber,
@@ -92,13 +101,7 @@ export const createUserFarmerById = async (
 						longitude: data.address.longitude || 0
 					}
 				},
-				farmImages: data.farmImages.map((image) => image.url),
-				verificationDocument: {
-					create: {
-						type: data.documentVerification.type,
-						image: data.documentVerification.image.url
-					}
-				}
+				farmImages: data.farmImages.map((image) => image.url)
 			},
 			include: {
 				user: {
@@ -128,7 +131,6 @@ export const getUserFarmerById = async (id: string) => {
 			name: true,
 			farmer: {
 				include: {
-					verificationDocument: true,
 					address: true
 				}
 			}
