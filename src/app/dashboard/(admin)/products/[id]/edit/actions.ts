@@ -2,7 +2,6 @@
 import { getCategoryBySlug } from "@/data-access/categories"
 import { getErrorMessage } from "@/lib/handle-error"
 import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
-import { createNotificationByUserIdUseCase } from "@/use-cases/notifications"
 import {
 	getProductByIdUseCase,
 	updateProductUseCase
@@ -60,20 +59,20 @@ export const adminUpdateProduct = async (
 			// })
 			const userId = updatedProduct.farmer?.user.id || ""
 
-			await createNotificationByUserIdUseCase({
-				userId,
-				title: "Product Approval Update",
-				message: `Product ${updatedProduct.title} has been approved.`,
-				type: "PRODUCT_APPROVAL",
-				metadata: {
-					product: {
-						productImage: updatedProduct.productImages[0],
-						productId: updatedProduct.id,
-						productName: updatedProduct.title,
-						productListingStatus: updatedProduct.listingStatus
-					}
-				}
-			})
+			// await createNotificationByUserIdUseCase({
+			// 	userId,
+			// 	title: "Product Approval Update",
+			// 	message: `Product ${updatedProduct.title} has been approved.`,
+			// 	type: "PRODUCT_APPROVAL",
+			// 	metadata: {
+			// 		product: {
+			// 			productImage: updatedProduct.productImages[0],
+			// 			productId: updatedProduct.id,
+			// 			productName: updatedProduct.title,
+			// 			productListingStatus: updatedProduct.listingStatus
+			// 		}
+			// 	}
+			// })
 		}
 
 		revalidatePath("/dashboard/products")

@@ -1,6 +1,5 @@
 import { addressSchema } from "@/validations/address"
 import { mediaFileSchema } from "@/validations/media"
-import { verificationDocumentSchema } from "@/validations/verification-document"
 import { FarmerApplicationStatus, ROLE } from "@prisma/client"
 // import { isValidPhoneNumber } from "react-phone-number-input"
 import { z } from "zod"
@@ -18,7 +17,9 @@ export const editFarmerSchema = z.object({
 	farmDescription: z.string().min(2),
 	applicationStatus: z.nativeEnum(FarmerApplicationStatus),
 	address: addressSchema,
-	verificationDocument: verificationDocumentSchema,
+	govIdImage: mediaFileSchema.required().refine((data) => data.file, {
+		message: "Required"
+	}),
 	farmImages: mediaFileSchema.array().min(1, "Required")
 })
 

@@ -87,34 +87,23 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								file: null
 							}))
 						: [],
-				farmName: user.farmer!.farmName || "",
-				verificationDocument: {
-					image: user.farmer!.verificationDocument!.image
-						? {
-								id: Math.random().toString(36).substring(7),
-								url: user.farmer!.verificationDocument?.image || "",
-								type: "image" as "image" | "video",
-								file: null
-							}
-						: null,
-					type: user.farmer!.verificationDocument?.type || "VOTER_ID"
-				}
+				farmName: user.farmer!.farmName || ""
 			}
 		}
 	})
 
 	const onSubmit = async (data: EditUserSchema) => {
 		startTransition(async () => {
-			const finalVerificationDocument = await processMediaUpdate({
-				currentFiles: user.farmer!.verificationDocument!.image
+			const finalGovIdImage = await processMediaUpdate({
+				currentFiles: user.farmer!.govIdImage
 					? {
 							id: Math.random().toString(36).substring(7),
-							url: user.farmer!.verificationDocument?.image || "",
+							url: user.farmer!.govIdImage || "",
 							type: "image" as "image" | "video",
 							file: null
 						}
 					: null,
-				newFiles: data.farmer!.verificationDocument.image,
+				newFiles: data.farmer!.govIdImage,
 				userId: user?.id || "",
 				path: "verification-documents"
 			})
@@ -136,10 +125,8 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 				...data,
 				farmer: {
 					...data.farmer!,
-					verificationDocument: {
-						...data.farmer!.verificationDocument,
-						image: finalVerificationDocument[0]
-					}
+					farmImages: finalFarmImages,
+					govIdImage: finalGovIdImage[0]
 				},
 				userId: user!.id
 			})
@@ -300,7 +287,7 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 						/>
 						<FormField
 							control={form.control}
-							name="farmer.verificationDocument.image"
+							name="farmer.govIdImage"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Verification Document</FormLabel>
@@ -310,11 +297,10 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 											onChange={field.onChange}
 											singleImage
 											initialMedia={
-												user.farmer!.verificationDocument!.image
+												user.farmer!.govIdImage
 													? {
 															id: Math.random().toString(36).substring(7),
-															url:
-																user.farmer!.verificationDocument?.image || "",
+															url: user.farmer!.govIdImage || "",
 															type: "image" as "image" | "video",
 															file: null
 														}

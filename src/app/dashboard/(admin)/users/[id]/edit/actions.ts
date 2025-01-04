@@ -36,6 +36,8 @@ export const updateCustomer = async (
 export const updateFarmer = async (
 	data: EditUserSchema & {
 		userId: string
+		newGovIdImage?: string
+		newSelfieWithGovIdImage?: string
 	}
 ) => {
 	try {

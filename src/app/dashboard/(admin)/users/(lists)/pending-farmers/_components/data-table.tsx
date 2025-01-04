@@ -437,7 +437,7 @@ export function DataTable({ data }: DataTableProps) {
 											</DialogHeader>
 											<div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
 												<Image
-													src={farmer.verificationDocument!.image!}
+													src={farmer.govIdImage!}
 													alt="Verification document"
 													fill
 													className="object-cover"
@@ -448,7 +448,7 @@ export function DataTable({ data }: DataTableProps) {
 								</div>
 								<div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted">
 									<Image
-										src={farmer.verificationDocument!.image!}
+										src={farmer.govIdImage!}
 										alt="Verification document thumbnail"
 										fill
 										className="object-cover"

@@ -1,36 +1,4 @@
-import React from "react"
-import {
-	User,
-	VerificationDocument,
-	Farmer,
-	Product,
-	Image as ImageType,
-	Address
-} from "@prisma/client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle
-} from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-	MapPin,
-	Phone,
-	Mail,
-	Calendar,
-	Tractor,
-	FileText,
-	Package,
-	DollarSign
-} from "lucide-react"
+import { Address, Farmer, Image as ImageType, User } from "@prisma/client"
 
 interface UserDetailsProps {
 	user: User & Farmer & Address & ImageType

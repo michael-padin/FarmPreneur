@@ -97,7 +97,7 @@ export const columns: ColumnDef<
 			/>
 		),
 		cell: ({ row }) => {
-			const image = row.original.verificationDocument?.image
+			const image = row.original.govIdImage
 
 			return image && <VerificationDocumentCell image={image} />
 		},
