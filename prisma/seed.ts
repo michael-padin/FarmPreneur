@@ -46,13 +46,12 @@ const farmers = [
 		name: "Michael Farmer",
 		gender: "MALE",
 		profilePicture: "/profile-images/farmer-profile-image.jpg",
+		govIdImage: "/valid-id/drivers-license.jpg",
+		selfieWithGovIdImage: "/valid-id/drivers-license.jpg",
+		govIdType: DocumentType.DRIVER_LICENSE,
 		contactNumber: "+639955143588",
 		farmImages: ["/cover-photos/farmer-cover-photo.jpg"],
-		farmDescription: "Lumaki ako sa farm",
-		verificationDocument: {
-			image: "/valid-id/drivers-license.jpg",
-			type: "DRIVER_LICENSE"
-		}
+		farmDescription: "Lumaki ako sa farm"
 	}
 ]
 
@@ -68,7 +67,7 @@ const categories = [
 		description:
 			"Fresh, dried, and tropical fruits including bananas, mangoes, apples, and berries.",
 		name: "fruits",
-		slug: "vegetables",
+		slug: "fruits",
 		image: "/category-images/fruits.jpg"
 	},
 	{
@@ -120,7 +119,7 @@ const products = [
 		unit: "kg",
 		quantity: 200,
 		productImages: ["/product-images/mangosteen.jpg"],
-		slug: "lanzones"
+		slug: "manosteen"
 	},
 	{
 		title: "Pineapple",
@@ -146,7 +145,7 @@ async function seed() {
 	categoriesWithoutFruit.splice(1, 1)
 
 	await Promise.all(
-		categories.map((category) => {
+		categoriesWithoutFruit.map((category) => {
 			return prisma.category.create({
 				data: {
 					name: category.name,
@@ -210,18 +209,16 @@ async function seed() {
 								applicationStatus: "APPROVED",
 								birthDate: farmer.birthDate,
 								contactNumber: farmer.contactNumber,
+								govIdImage: farmer.govIdImage,
+								selfieWithGovIdImage: farmer.selfieWithGovIdImage,
+								govIdType: farmer.govIdType,
+								govIdNumber: "123456789",
 								coverPhoto: farmer.coverPhoto,
 								farmDescription: farmer.farmDescription,
 								farmImages: farmer.farmImages,
 								profilePicture: farmer.profilePicture,
 								farmName: farmer.farmName,
-								gender: "MALE",
-								verificationDocument: {
-									create: {
-										image: farmer.verificationDocument.image,
-										type: farmer.verificationDocument.type as DocumentType
-									}
-								}
+								gender: "MALE"
 							}
 						})
 						await Promise.all(
