@@ -1031,6 +1031,7 @@ export async function rateOrder(payload: {
 	const { orderId, ratings } = payload
 
 	try {
+		const { userId } = await verifySession()
 		// get all the product in the order items and create a new review for each product
 		const order = await db.order.findUnique({
 			where: { id: orderId },
@@ -1070,6 +1071,20 @@ export async function rateOrder(payload: {
 					subStatus: "BUYER_REVIEWED"
 				}
 			})
+
+			await tx.orderStatusHistory.create({
+				data: {
+					updatedByUserId: userId,
+					orderId: updatedOrder.id,
+					statusDescription: getStatusDescription(
+						updatedOrder.status,
+						updatedOrder.subStatus
+					),
+					status: updatedOrder.status,
+					subStatus: updatedOrder.subStatus
+				}
+			})
+
 			await notifyOrderStatusUpdate(
 				updatedOrder.id,
 				updatedOrder.status,

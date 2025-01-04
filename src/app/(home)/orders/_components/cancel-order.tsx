@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { cancelOrder } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { OrderStatus } from "@prisma/client"
+import { OrderStatus, OrderSubStatus } from "@prisma/client"
 import { useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -53,7 +53,7 @@ export function CancelOrder({
 			const { error } = await cancelOrder({
 				orderId,
 				cancellationReason: data.reason,
-				subStatus: "CANCELLED_BY_BUYER"
+				subStatus: OrderSubStatus.ORDER_CANCELLED
 			})
 			if (error) {
 				showErrorToast(error)
@@ -99,7 +99,7 @@ export function CancelOrder({
 								<Button
 									className="w-full"
 									disabled={isPending}
-									variant={"outline"}
+									variant={"secondary"}
 								>
 									{status === "PENDING" ? "Submitting..." : "Submit"}
 								</Button>

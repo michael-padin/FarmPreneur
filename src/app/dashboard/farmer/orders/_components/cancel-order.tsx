@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { cancelOrder } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { OrderStatus } from "@prisma/client"
+import { OrderStatus, OrderSubStatus } from "@prisma/client"
 import { useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -53,7 +53,7 @@ export function CancelOrder({
 			const { error } = await cancelOrder({
 				orderId,
 				cancellationReason: data.reason,
-				subStatus: "CANCELLED_BY_FARMER"
+				subStatus: OrderSubStatus.ORDER_CANCELLED
 			})
 			if (error) {
 				showErrorToast(error)
@@ -71,7 +71,7 @@ export function CancelOrder({
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
-					<DrawerTitle className="sr-only"></DrawerTitle>
+					<DrawerTitle className="">Provide Cancellation Reason</DrawerTitle>
 					<DrawerDescription className="sr-only"></DrawerDescription>
 				</DrawerHeader>
 
@@ -84,12 +84,11 @@ export function CancelOrder({
 									name="reason"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Cancellation Reason</FormLabel>
+											<FormLabel className="sr-only">
+												Cancellation Reason
+											</FormLabel>
 											<FormControl>
-												<Textarea
-													placeholder="Your cancellation reason"
-													{...field}
-												/>
+												<Textarea placeholder="Insufficient stock" {...field} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -98,7 +97,7 @@ export function CancelOrder({
 								<Button
 									className="w-full"
 									disabled={isPending}
-									variant={"outline"}
+									variant={"secondary"}
 								>
 									{status === "PENDING"
 										? isPending
