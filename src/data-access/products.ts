@@ -142,7 +142,6 @@ export const getPendingProducts = async () => {
 					}
 				}
 			},
-			images: true,
 			category: true
 		}
 	})

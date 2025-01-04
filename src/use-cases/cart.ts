@@ -26,7 +26,7 @@ export const getCartUseCase = async (id?: string): Promise<CartState> => {
 				id: item.product.id,
 				name: item.product.title,
 				price: item.product.price,
-				image: item.product.images[0].url,
+				image: item.product.productImages[0],
 				unit: item.product.unit as UnitKey,
 				farmer: {
 					id: item.product.farmer!.id,

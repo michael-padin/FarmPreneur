@@ -1,6 +1,4 @@
 "use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
 	Tooltip,
@@ -33,7 +31,7 @@ export function PendingProducts({
 						<div className="flex items-center space-x-4">
 							<div className="relative aspect-square h-12">
 								<Image
-									src={product.images[0]?.url}
+									src={product.productImages[0]}
 									alt={product.title}
 									fill
 									className="h-full w-full object-cover"
