@@ -6,12 +6,14 @@ interface OrderStatusUpdateEmailProps {
 	orderNumber: string
 	newStatus: string
 	statusDescription: string
+	actionPrompt: string
 	dashboardUrl: string
 }
 
 export function OrderStatusUpdateEmail({
 	customerName,
 	orderNumber,
+	actionPrompt,
 	newStatus,
 	statusDescription,
 	dashboardUrl

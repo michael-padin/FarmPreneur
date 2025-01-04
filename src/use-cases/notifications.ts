@@ -6,7 +6,7 @@ import {
 } from "@/data-access/notifications"
 import { getAdminIds } from "@/data-access/users"
 import { pusherServer } from "@/lib/pusher"
-import { NotifMetadata } from "@/types/notification"
+import { NotificationMetadata } from "@/types/notification"
 import { NotificationType } from "@prisma/client"
 
 export const getNotificationsByUserIdUseCase = async (userId?: string) => {
@@ -20,7 +20,7 @@ export const getNotificationsByUserIdUseCase = async (userId?: string) => {
 
 	const shapedNotifications = notifications.map((notification) => ({
 		...notification,
-		metadata: notification.metadata as NotifMetadata
+		metadata: notification.metadata
 	}))
 
 	return shapedNotifications
@@ -31,7 +31,7 @@ export const createNotificationByUserIdUseCase = async (data: {
 	message: string
 	type: NotificationType
 	title: string
-	metadata?: NotifMetadata
+	metadata?: NotificationMetadata
 }) => {
 	try {
 		const notification = await createNotificationByUserId(data)
@@ -49,7 +49,9 @@ export const createNotificationsForAdminsUseCase = async (data: {
 	title: string
 	message: string
 	type: NotificationType
-	metadata?: NotifMetadata
+	metadata?: {
+		url?: string
+	}
 }) => {
 	try {
 		const adminIds = await getAdminIds()

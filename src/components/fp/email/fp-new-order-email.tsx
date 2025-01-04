@@ -7,9 +7,12 @@ interface NewOrderEmailProps {
 	orderItems: string
 	orderTotal: string
 	dashboardUrl: string
+	actionPrompt?: string
+	customerName?: string
 }
 
 export function NewOrderEmail({
+	customerName,
 	farmerName,
 	orderNumber,
 	orderItems,
@@ -23,8 +26,8 @@ export function NewOrderEmail({
 			</Heading>
 			<Text className="mb-4 text-base text-gray-700">Dear {farmerName},</Text>
 			<Text className="mb-4 text-base text-gray-700">
-				You have received a new order (#{orderNumber}) on FarmPreneur. Here are
-				the details:
+				You have received a new order from <strong>{customerName}</strong> (#
+				{orderNumber}) on FarmPreneur. Here are the details:
 			</Text>
 			<Text className="mb-4 text-base text-gray-700">
 				<strong>Order Items:</strong> {orderItems}

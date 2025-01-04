@@ -19,12 +19,13 @@ export const farmRegistrationSchema = z.object({
 	farmName: z.string().min(2),
 	birthDate: z.date(),
 	farmImages: z.array(mediaFileSchema).min(1, "Required"),
-	documentVerification: z.object({
-		type: z.nativeEnum(DocumentType),
-		image: mediaFileSchema.refine((data) => data.url, {
-			message: "Required"
-		})
-	})
+	govIdImage: mediaFileSchema.required().refine((data) => data.file, {
+		message: "Required"
+	}),
+	selfieWithGovIdImage: mediaFileSchema.refine((data) => data.file, {
+		message: "Required"
+	}),
+	govIdType: z.nativeEnum(DocumentType)
 })
 
 export type FarmRegistrationSchema = z.infer<typeof farmRegistrationSchema>

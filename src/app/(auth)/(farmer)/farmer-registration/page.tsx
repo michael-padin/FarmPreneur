@@ -1,5 +1,4 @@
 import { auth } from "@/auth"
-import { FPBackButtonLogout } from "@/components/fp/fp-back-button"
 import {
 	Card,
 	CardContent,
@@ -26,15 +25,13 @@ export default async function Page() {
 
 	if (user.farmer?.applicationStatus === "APPROVED")
 		redirect("/dashboard/farmer")
-	if (user.farmer?.applicationStatus === "PENDING") redirect("/admin-approval")
 
 	return (
 		<>
 			<AuthLeftSection>
 				<div className="space-y-2">
-					<FPBackButtonLogout />
-					<Card className="lg:border-0 lg:shadow-none">
-						<CardHeader>
+					<Card className="border-0 shadow-none">
+						<CardHeader className="max-md:p-3">
 							<CardTitle>Provide Farm Information</CardTitle>
 							<CardDescription>
 								<span className="text-lg text-destructive">* </span>
@@ -45,7 +42,7 @@ export default async function Page() {
 								application
 							</CardDescription>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="max-md:p-3">
 							<FarmRegistrationForm user={user} />
 						</CardContent>
 					</Card>

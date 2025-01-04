@@ -202,6 +202,8 @@ export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
 export const updateFarmerByUserIdUseCase = async (
 	data: EditUserSchema & {
 		userId: string
+		newGovIdImage?: string
+		newSelfieWithGovIdImage?: string
 	}
 ) => {
 	return await updateFarmerByUserId(data)

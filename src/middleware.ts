@@ -12,6 +12,20 @@ export default auth(async function middleware(req) {
 
 	// 2. Check for auth routes
 	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
+
+	if (pathname === "/" && user?.role === "FARMER") {
+		return NextResponse.redirect(
+			new URL(DEFAULT_LOGIN_REDIRECT(user?.role || "CUSTOMER"), nextUrl)
+		)
+	} else if (
+		pathname.startsWith("/dashboard/farmer") &&
+		user?.role === "CUSTOMER"
+	) {
+		return NextResponse.redirect(
+			new URL(DEFAULT_LOGIN_REDIRECT(user?.role || "CUSTOMER"), nextUrl)
+		)
+	}
+
 	if (isAuthRoute) {
 		if (isLoggedIn) {
 			// Redirect to default page if already logged in

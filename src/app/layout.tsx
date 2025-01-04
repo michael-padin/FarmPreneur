@@ -89,7 +89,7 @@ export default async function RootLayout({
 			<body className={inter.className}>
 				<NuqsAdapter>
 					<Providers>{children}</Providers>
-					<Toaster richColors className={inter.className} />
+					<Toaster className={inter.className} />
 				</NuqsAdapter>
 			</body>
 		</html>

@@ -86,7 +86,10 @@ export function FPMediaUploader({
 	}
 
 	const renderMediaItem = (item: MediaFile) => (
-		<div key={item.id} className={cn("relative rounded-lg", mediaClassName)}>
+		<div
+			key={item.id}
+			className={cn("relative rounded-lg border", mediaClassName)}
+		>
 			{item.type === "image" ? (
 				<Image
 					src={item.url || "/placeholder.svg"}
@@ -120,9 +123,9 @@ export function FPMediaUploader({
 	const renderDropZone = () => (
 		<div
 			{...getRootProps()}
-			className={`flex cursor-pointer items-center justify-center border-2 border-dashed ${mediaClassName} ${
+			className={`flex cursor-pointer items-center justify-center border border-dashed ${mediaClassName} ${
 				isDragActive
-					? "border-2 border-dashed border-primary bg-green-50 text-primary"
+					? "border border-dashed border-primary bg-green-50 text-primary"
 					: "text-muted-foreground"
 			}`}
 		>

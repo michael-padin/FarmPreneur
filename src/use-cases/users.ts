@@ -32,7 +32,11 @@ export const getUserByEmailUseCase = async (email: string) => {
 }
 
 export const getUserFarmerByIdUseCase = async (id: string) => {
-	return await getUserFarmerById(id)
+	const foundFarmer = await getUserFarmerById(id)
+
+	if (!foundFarmer) throw new Error("Farmer not found!")
+
+	return foundFarmer
 }
 
 export const getUserWithPasswordByEmailUseCase = async (email: string) => {
@@ -71,7 +75,11 @@ export const getTotalUsersUseCase = async () => {
 }
 // MARK: MUTATIONS
 export const createUserFarmerByIdUseCase = async (
-	data: FarmRegistrationSchema & { userId: string }
+	data: FarmRegistrationSchema & {
+		userId: string
+		newGovIdImage?: string
+		newSelfieWithGovIdImage?: string
+	}
 ) => {
 	return await createUserFarmerById(data)
 }

@@ -1,40 +1,26 @@
 "use server"
+import { notifyAdminNewFarmerRegistration } from "@/app/actions/notifications"
 import { getErrorMessage } from "@/lib/handle-error"
-import { pusherServer } from "@/lib/pusher"
-import { getPendingFarmerCountUseCase } from "@/use-cases/farmers"
-import { createNotificationsForAdminsUseCase } from "@/use-cases/notifications"
 import { createUserFarmerByIdUseCase } from "@/use-cases/users"
 import { FarmRegistrationSchema } from "./types"
 
 export const upsertFarmerAction = async (
-	data: FarmRegistrationSchema & { userId: string }
+	data: FarmRegistrationSchema & {
+		userId: string
+		newGovIdImage?: string
+		newSelfieWithGovIdImage?: string
+	}
 ) => {
 	try {
 		const createdFarmer = await createUserFarmerByIdUseCase({
 			...data
 		})
 
-		if (createdFarmer.applicationStatus === "PENDING") {
-			await pusherServer.trigger("pending-farmers-count", "update", {
-				count: await getPendingFarmerCountUseCase()
-			})
-
-			await createNotificationsForAdminsUseCase({
-				title: "Farmer Approval",
-				message: `A new farmer has registered`,
-				type: "FARMER_APPROVAL",
-				metadata: {
-					user: {
-						userId: createdFarmer.userId,
-						name: createdFarmer.farmName || ""
-					}
-				}
-			})
-
-			await pusherServer.trigger("pending-farmers", "update", {
-				data: createdFarmer
-			})
+		if (!createdFarmer) {
+			return { error: "Failed to create farmer" }
 		}
+
+		await notifyAdminNewFarmerRegistration(createdFarmer.id)
 
 		return { error: null }
 	} catch (error) {
