@@ -59,7 +59,7 @@ export default function OrderDetailsBottomNav({
 							<Button
 								// asChild
 								onClick={() => toast.info("Coming soon...")}
-								className="flex items-center"
+								className="flex flex-1 items-center"
 								variant={"outline"}
 							>
 								{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
