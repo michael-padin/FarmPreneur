@@ -1,44 +1,38 @@
 "use client"
-import { Separator } from "@/components/ui/separator"
 import { getProductBySlugUseCase } from "@/use-cases/products"
-import { MessageCircle, ShoppingCart } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 import Link from "next/link"
 
+import { Button } from "@/components/ui/button"
 import { AddToCart } from "./add-to-cart"
 import { BuyNow } from "./buy-now"
 
 export default function ProductBottomNav({
 	customerId,
-	product
+	product,
+	userId
 }: {
 	customerId: string
+	userId: string
 	product: Awaited<ReturnType<typeof getProductBySlugUseCase>>
 }) {
 	return (
-		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background">
-			<div className="flex h-16 w-full items-center gap-4 p-2">
-				<div className="flex h-full gap-4">
-					<div>
-						<Link href={"/messages"}>
-							<div className="flex flex-col items-center">
-								<MessageCircle className="h-6 w-6 text-primary" />
-								<span className="text-xs">Message</span>
-							</div>
+		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background drop-shadow-2xl">
+			<div className="flex w-full items-center gap-3 px-3 py-4">
+				<div className="flex h-full">
+					<Button variant="outline" size={"icon"}>
+						<Link href={`/messages/${userId}`}>
+							<MessageCircle className="" />
+							<span className="sr-only">Send Message</span>
 						</Link>
-					</div>
-					<Separator orientation="vertical" />
-					<AddToCart product={product} customerId={customerId}>
-						<button
-							className="flex flex-col items-center rounded-none"
-							type="submit"
-						>
-							<div className="flex flex-col items-center">
-								<ShoppingCart className="h-6 w-6 text-primary" />
-								<span className="text-xs">Add to Cart</span>
-							</div>
-						</button>
-					</AddToCart>
+					</Button>
 				</div>
+				<AddToCart product={product} customerId={customerId}>
+					<Button variant="outline" type="submit">
+						{/* <ShoppingCart className="text-primary" /> */}
+						<span className="">Add to Cart</span>
+					</Button>
+				</AddToCart>
 				<div className="flex h-full w-full flex-1 items-center">
 					<BuyNow product={product} />
 				</div>

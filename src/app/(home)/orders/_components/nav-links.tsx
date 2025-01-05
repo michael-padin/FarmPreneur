@@ -1,40 +1,27 @@
 "use client"
 
+import { FPMessageCircleMore } from "@/components/fp/fp-message-circle-more"
+import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { useCart } from "@/contexts/cart-context"
 import { cn } from "@/lib/utils"
-import { ShoppingCart } from "lucide-react"
-import { NavLink } from "../../_components/nav-link"
 
 export function OrdersNavLinks() {
 	const {
 		cart: { distinctProductsCount }
 	} = useCart()
-	const countMessages = 10
+	const containerClasses = cn("bg-transparent text-primary")
+	const badgeClasses = cn("bg-primary text-white")
 
-	const navButtonClasses = cn(
-		"flex items-center justify-center rounded-full p-1.5",
-		"bg-transparent text-primary"
-	)
-
-	const badgeClasses = cn(
-		"absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[0.6rem] font-medium text-primary-foreground"
-	)
 	return (
 		<div className="flex gap-3">
-			<NavLink
-				href="/cart"
-				count={distinctProductsCount}
-				Icon={ShoppingCart}
-				navButtonClasses={navButtonClasses}
-				badgeClasses={badgeClasses}
+			<FPShoppingCart
+				badgeClassName={badgeClasses}
+				containerClassName={containerClasses}
 			/>
-			{/* <NavLink
-				href="/messages"
-				count={countMessages}
-				Icon={MessageCircleMore}
-				navButtonClasses={navButtonClasses}
-				badgeClasses={badgeClasses}
-			/> */}
+			<FPMessageCircleMore
+				className={badgeClasses}
+				containerClassName={containerClasses}
+			/>
 		</div>
 	)
 }

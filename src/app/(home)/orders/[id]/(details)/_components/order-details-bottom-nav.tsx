@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { getOrder } from "@/data-access/orders"
 import { MessageCircle } from "lucide-react"
 import Link from "next/link"
+import { toast } from "sonner"
 import { CancelOrder } from "../../../_components/cancel-order"
 import { ConfirmPickedUpOrder } from "../../../_components/confirm-picked-up-order"
 import { ViewCancellation } from "../../../_components/view-cancellation"
@@ -21,9 +22,9 @@ export default function OrderDetailsBottomNav({
 
 	return (
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background drop-shadow-2xl">
-			<div className="flex w-full items-center p-3">
-				<div className="flex w-full flex-grow gap-2">
-					<Button className="" variant="outline" asChild>
+			<div className="flex w-full items-center px-3 py-4">
+				<div className="flex w-full gap-3">
+					<Button className="" variant="outline" asChild size={"icon"}>
 						<Link href={`/messages/${order.farmer.userId}`} className="flex">
 							<MessageCircle />
 						</Link>
@@ -47,7 +48,7 @@ export default function OrderDetailsBottomNav({
 					)}
 					{order.status === "COMPLETED" &&
 						!["BUYER_REVIEWED"].includes(order.subStatus || "") && (
-							<Button asChild className="flex w-full items-center">
+							<Button asChild className="flex-grow">
 								<Link href={`/orders/${order.id}/rate`} prefetch>
 									Rate Order
 								</Link>
@@ -57,7 +58,7 @@ export default function OrderDetailsBottomNav({
 						order.subStatus === "BUYER_REVIEWED" && (
 							<Button
 								// asChild
-								// onClick={() => toast.info("Coming soon...")}
+								onClick={() => toast.info("Coming soon...")}
 								className="flex items-center"
 								variant={"outline"}
 							>

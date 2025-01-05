@@ -85,6 +85,7 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 					</div>
 					<div className="md:hidden">
 						<ProductBottomNav
+							userId={product?.farmer?.userId || ""}
 							product={product}
 							customerId={session?.user?.customerId || ""}
 						/>

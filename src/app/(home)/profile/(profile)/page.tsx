@@ -1,4 +1,6 @@
+import { FPMessageCircleMore } from "@/components/fp/fp-message-circle-more"
 import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
+import { cn } from "@/lib/utils"
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
 import BottomNav from "../../_components/bottom-nav"
@@ -8,6 +10,8 @@ import { SignOutBtn } from "./_components/sign-out-btn"
 export const experimental_ppr = true
 
 export default function CustomerProfilePage() {
+	const containerClasses = cn("bg-transparent text-primary")
+	const badgeClasses = cn("bg-primary text-white")
 	return (
 		<div className="h-screen overflow-auto bg-muted pb-[84.5px]">
 			<header className="w-full bg-background p-4 md:hidden">
@@ -19,7 +23,16 @@ export default function CustomerProfilePage() {
 							</h2>
 							<h1 className="text-2xl font-bold">Profile</h1>
 						</div>
-						<FPShoppingCart containerClassName="text-primary" />
+						<div className="flex gap-3">
+							<FPShoppingCart
+								badgeClassName={badgeClasses}
+								containerClassName={containerClasses}
+							/>
+							<FPMessageCircleMore
+								className={badgeClasses}
+								containerClassName={containerClasses}
+							/>
+						</div>{" "}
 					</div>
 				</div>
 			</header>

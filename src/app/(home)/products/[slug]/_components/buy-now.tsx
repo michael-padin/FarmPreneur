@@ -31,7 +31,6 @@ export function BuyNow({ product, className, ...props }: BuyNowProps) {
 	return (
 		<Button
 			className={cn("flex w-full", className)}
-			size="lg"
 			type="button"
 			onClick={handleBuyNow}
 			{...props}

@@ -9,8 +9,8 @@ export default function OrderDetailsPage({ params }: { params: Params }) {
 	return (
 		<div className="h-screen overflow-auto bg-secondary">
 			<header className="fixed left-0 right-0 top-0 z-50 w-full bg-background pb-0 shadow-sm">
-				<div className="flex w-full items-center gap-2 px-4 py-4">
-					<FPBackButton />
+				<div className="flex w-full items-center gap-3 px-3 py-4">
+					<FPBackButton className="" />
 					<h1 className="text-xl font-semibold">Order Details</h1>
 				</div>
 			</header>

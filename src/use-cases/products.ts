@@ -292,6 +292,7 @@ export const getProductBySlugUseCase = async (slug: string) => {
 		},
 		productImages: product?.productImages || [],
 		farmer: {
+			userId: product.farmer?.user.id || "",
 			id: product.farmer?.id || "",
 			name: product.farmer?.farmName || product.farmer?.user.name || "",
 			contactNumber: product.farmer?.contactNumber || "",

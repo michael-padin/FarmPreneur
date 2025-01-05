@@ -1,4 +1,5 @@
 "use client"
+import { FPMessageCircleMore } from "@/components/fp/fp-message-circle-more"
 import { FPSearchSheet } from "@/components/fp/fp-search-sheet"
 import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { Button } from "@/components/ui/button"
@@ -55,10 +56,10 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 								badgeClassName={badgeClasses}
 								containerClassName={containerClasses}
 							/>
-							{/* <FPMessageCircleMore
+							<FPMessageCircleMore
 								className={badgeClasses}
 								containerClassName={containerClasses}
-							/> */}
+							/>
 						</>
 					) : (
 						<div className="flex items-center gap-4">

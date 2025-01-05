@@ -30,7 +30,7 @@ export const FPMessageCircleMore = ({
 
 	return (
 		<Link
-			href={`/cart`}
+			href={`/messages`}
 			className="cursor-pointer hover:bg-transparent hover:text-current"
 		>
 			<motion.div

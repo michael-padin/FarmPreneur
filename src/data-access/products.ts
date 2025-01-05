@@ -571,6 +571,7 @@ export const getProductBySlug = async (slug: string) => {
 					farmName: true,
 					user: {
 						select: {
+							id: true,
 							name: true
 						}
 					},
