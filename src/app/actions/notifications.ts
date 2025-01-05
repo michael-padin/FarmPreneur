@@ -3,6 +3,7 @@
 import AdminNotificationEmail from "@/components/fp/email/fp-admin-notification-email"
 import { FarmerApprovedEmail } from "@/components/fp/email/fp-approved-email"
 import { FarmerRejectedEmail } from "@/components/fp/email/fp-farmer-rejected-email"
+import { NewMessageEmail } from "@/components/fp/email/fp-new-message-email"
 import { NewOrderEmail } from "@/components/fp/email/fp-new-order-email"
 import { OrderCancelledEmail } from "@/components/fp/email/fp-order-cancelled-email"
 import { OrderStatusUpdateEmail } from "@/components/fp/email/fp-order-status-update-email"
@@ -15,6 +16,7 @@ import { db } from "@/lib/db"
 import { getErrorMessage } from "@/lib/handle-error"
 import { sendNotification } from "@/utils/notification-helper"
 import {
+	Message,
 	NotificationType,
 	OrderStatus,
 	OrderSubStatus,
@@ -417,58 +419,50 @@ export async function notifyOrderStatusUpdate(
 	}
 }
 
-export async function notifyNewMessage(messageId: string) {
-	// const message = await db.message.findUnique({
-	// 	where: { id: messageId },
-	// 	include: {
-	// 		sender: true,
-	// 		conversation: {
-	// 			include: {
-	// 				participants: {
-	// 					include: {
-	// 						user: true
-	// 					}
-	// 				}
-	// 			}
-	// 		},
-	// 		attachment: true
-	// 	}
-	// })
-	// if (!message) throw new Error("Message not found")
+export async function notifyNewMessage(data: {
+	content: string
+	fileUrl?: string | null
+	senderId: string
+	receiverId: string
+	receiverRole: ROLE
+	senderRole: ROLE
+	fileType?: "image" | "video"
+	replyToId?: string | null
+	replyTo?: Message | null
+}) {
 	// // Find the recipient (the participant who is not the sender)
-	// const recipient = message.conversation.participants.find(
-	// 	(participant) => participant.userId !== message.senderId
-	// )
-	// if (!recipient) throw new Error("Recipient not found")
-	// // Fetch sender's name from customer or farmer model
-	// // Fetch sender's and recipient's names
-	// const senderName = await getUserName(message.senderId)
-	// const recipientName = await getUserName(recipient.userId)
-	// // Prepare attachment info if present
-	// let attachmentInfo = ""
-	// if (message.attachment) {
-	// 	attachmentInfo = `[Attachment: ${message.attachment.type}]`
-	// }
-	// // Prepare message preview
-	// const messagePreview = `${message.content.substring(0, 97)}${message.content.length > 97 ? "..." : ""}`
-	// await sendNotification(recipient.userId, NotificationType.NEW_MESSAGE, {
-	// 	email: {
-	// 		subject: `New message from ${senderName} on FarmPreneur`,
-	// 		component: NewMessageEmail({
-	// 			recipientName,
-	// 			senderName,
-	// 			messagePreview: `${messagePreview} ${attachmentInfo}`,
-	// 			dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/conversations/${message.conversationId}`
-	// 		})
-	// 	},
-	// 	sms: `New message from ${senderName} on FarmPreneur: "${messagePreview}" ${attachmentInfo}. Check your dashboard to view and reply.`,
-	// 	push: {
-	// 		title: "New Message",
-	// 		body: `${senderName}: ${messagePreview} ${attachmentInfo}`,
-	// 		icon: "/web-app-manifest-192x192.png",
-	// 		url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/conversations/${message.conversationId}`
-	// 	}
-	// })
+	// Fetch sender's and recipient's names
+	const senderName = await getUserName(data.senderId)
+	const recipientName = await getUserName(data.receiverId)
+	const dashboardUrl =
+		data.senderRole === "FARMER"
+			? `${process.env.NEXT_PUBLIC_BASE_URL}/messages/${data.receiverId}`
+			: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/messages/${data.receiverId}`
+	// Prepare attachment info if present
+	let attachmentInfo = ""
+	if (data.fileUrl) {
+		attachmentInfo = `[Attachment: ${data.fileType}]`
+	}
+	// Prepare message preview
+	const messagePreview = `${data.content.substring(0, 97)}${data.content.length > 97 ? "..." : ""}`
+	await sendNotification(data.receiverId, NotificationType.NEW_MESSAGE, {
+		email: {
+			subject: `New message from ${senderName} on FarmPreneur`,
+			component: NewMessageEmail({
+				recipientName,
+				senderName,
+				messagePreview: `${messagePreview} ${attachmentInfo}`,
+				dashboardUrl
+			})
+		},
+		sms: `New message from ${senderName} on FarmPreneur: "${messagePreview}" ${attachmentInfo}. Check your dashboard to view and reply.`,
+		push: {
+			title: "New Message",
+			body: `${senderName}: ${messagePreview} ${attachmentInfo}`,
+			icon: "/web-app-manifest-192x192.png",
+			url: dashboardUrl
+		}
+	})
 }
 
 async function getUserName(userId: string): Promise<string> {

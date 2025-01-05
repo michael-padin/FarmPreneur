@@ -4,16 +4,17 @@ import { db } from "@/lib/db"
 import { getErrorMessage } from "@/lib/handle-error"
 import { pusherServer } from "@/lib/pusher"
 import { isDevelopment } from "@/lib/utils"
+import { Message, ROLE } from "@prisma/client"
 import { revalidatePath } from "next/cache"
-import { Message } from "react-hook-form"
+import { notifyNewMessage } from "./notifications"
 
 export const sendMessage = async (data: {
 	content: string
 	fileUrl?: string | null
 	senderId: string
 	receiverId: string
-	receiverRole: string
-	senderRole: string
+	receiverRole: ROLE
+	senderRole: ROLE
 	fileType?: "image" | "video"
 	replyToId?: string | null
 	replyTo?: Message | null
@@ -42,6 +43,10 @@ export const sendMessage = async (data: {
 		if (!message) {
 			return { success: false, message: "Failed to create message" }
 		}
+
+		await notifyNewMessage({
+			...data
+		})
 
 		// Trigger Pusher event for real-time updates
 		if (!isDevelopment) {
