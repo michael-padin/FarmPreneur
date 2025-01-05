@@ -249,9 +249,7 @@ export async function notifyOrderStatusUpdate(
 
 	switch (newSubStatus) {
 		case OrderSubStatus.ORDER_PLACED:
-			statusDescription = `Your order has been placed successfully! \nDetails:\n- Price: ₱${order.totalPrice}\n- Items: ${order.items.map(
-				(item) => `${item.product.title} (x${item.quantity})`
-			)}`
+			statusDescription = `Your order has been placed successfully!`
 			actionPrompt = "You will be notified once the farmer accepts your order."
 			break
 		case OrderSubStatus.ORDER_ACCEPTED:
@@ -349,10 +347,10 @@ export async function notifyOrderStatusUpdate(
 		},
 		sms: `Order #${order.id} update: ${statusDescription}. Price: ₱${order.totalPrice}. ${actionPrompt}`,
 		push: {
-			title: `Order #${order.id} Update`,
-			body: `Price: ₱${order.totalPrice}, Items: ${order.items
-				.map((item) => item.product.title)
-				.join(", ")}. ${statusDescription}.`,
+			title: `Order Update`,
+			body: `${statusDescription}.\nDetails:\n- Order #: ${order.id}\n- Price: ₱${order.totalPrice}\n- Items: ${order.items.map(
+				(item) => `${item.product.title} (x${item.quantity})`
+			)}`,
 			icon: "/web-app-manifest-192x192.png",
 			url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
 		}
