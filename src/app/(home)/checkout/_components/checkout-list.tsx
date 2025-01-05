@@ -163,7 +163,7 @@ export default function CartCheckOutList({
 															latitude:
 																group?.farmer.addresses[0]?.latitude || 0
 														}}
-														title={`${group.farmer?.name}'s Farm Location`}
+														title={`${group.farmer?.name} Location`}
 													/>
 												</div>
 											</div>
