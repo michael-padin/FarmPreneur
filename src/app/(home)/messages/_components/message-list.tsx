@@ -97,7 +97,7 @@ export function MessageList({
 
 	return (
 		<div className="">
-			{[...conversations, ...conversations].map((conversation) => {
+			{conversations.map((conversation) => {
 				const partnerDetails = conversation.farmer
 				return (
 					<Link
