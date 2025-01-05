@@ -379,8 +379,8 @@ export async function notifyOrderStatusUpdate(
 				.map((item) => item.product.title)
 				.join(", ")}. Please review it in your dashboard.`,
 			push: {
-				title: `New Order #${order.id}`,
-				body: `A new order has been placed by ${order.customer.name}. Price: ₱${order.totalPrice}, Items: ${order.items
+				title: `New Order`,
+				body: `A new order has been placed by ${order.customer.name}. Order #: ${order.id}, Price: ₱${order.totalPrice}, Items: ${order.items
 					.map((item) => item.product.title)
 					.join(", ")}. Please review it in your dashboard.`,
 				icon: "/web-app-manifest-192x192.png",
