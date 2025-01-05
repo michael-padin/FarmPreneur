@@ -7,10 +7,12 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { locationLabelMap, LocationType } from "@/constants/address"
 import { getOrder } from "@/data-access/orders"
 import { formatPHP } from "@/lib/utils"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, MapPin } from "lucide-react"
 import Link from "next/link"
 import { Fragment } from "react"
 import { OrderItem } from "./order-item"
@@ -25,7 +27,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 		<div className="space-y-2">
 			<OrderTimeline timeline={order.statusHistory} />
 			<Card className="border-none">
-				<CardHeader className="p-3 pb-2">
+				<CardHeader className="p-3">
 					<CardTitle className="text-base font-normal">
 						Your Contact Information
 					</CardTitle>
@@ -35,77 +37,111 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 				</CardHeader>
 				<CardContent className="p-3 pt-0">
 					<div className="flex justify-between">
-						<div className="flex items-center gap-1">
-							<h2 className="font-semibold text-foreground">
-								{order.customerContact?.contactName}
-							</h2>
-						</div>
-					</div>
-					<div className="space-y-1 text-sm">
-						{order.customerContact?.contactNumber && (
-							<div className="flex items-center gap-1">
-								<FPContactNumberDisplay
-									contactNumber={order.customerContact.contactNumber}
-								/>
-							</div>
-						)}
-						<div className="flex items-center gap-1">
-							<div>
-								<span className="">{order.customerContact?.fullAddress}</span>
-								<AddressDetailsDrawerDialog
-									address={{
-										fullAddress: order.customerContact?.fullAddress || "",
-										longitude: order.customerContact?.longitude || 0,
-										latitude: order.customerContact?.latitude || 0
-									}}
-									title={`${order.farmer?.farmName}'s Location`}
-								/>
+						<div className="flex flex-grow">
+							<MapPin className="mr-2 mt-1 h-4 w-4 text-primary" />
+							<div className="">
+								<Label
+									htmlFor={`address-${order.customerContact?.id}`}
+									className="flex items-center text-base font-semibold"
+								>
+									{
+										locationLabelMap[
+											order.customerContact?.label as LocationType
+										]
+									}
+								</Label>
+								<div className="space-y-2 text-sm">
+									<div className="flex gap-2">
+										<div>
+											<span className="">
+												{order.customerContact?.fullAddress}
+											</span>
+
+											<AddressDetailsDrawerDialog
+												address={{
+													fullAddress: order.customerContact?.fullAddress,
+													longitude: order.customerContact?.longitude || 0,
+													latitude: order.customerContact?.latitude || 0
+												}}
+												title={`${order.customerContact?.contactName} Location`}
+											/>
+										</div>
+									</div>
+									<div className="">
+										<p className="text-sm">
+											{order.customerContact?.contactName}
+										</p>
+										{order.customerContact?.contactNumber && (
+											<p className="text-sm text-muted-foreground">
+												<FPContactNumberDisplay
+													contactNumber={order.customerContact.contactNumber}
+												/>
+											</p>
+										)}
+									</div>
+									{/* <p className="text-sm">
+												Note:{" "}
+												<span className="text-muted-foreground">
+													{defaultCustomerAddress.note}
+												</span>
+											</p> */}
+								</div>
 							</div>
 						</div>
 					</div>
 				</CardContent>
 			</Card>
 			<Card className="border-none">
-				<CardHeader className="sr-only p-3">
-					<CardTitle className="sr-only text-base font-normal">
+				<CardHeader className="p-3">
+					<CardTitle className="text-base font-normal">
 						Farmer Information
 					</CardTitle>
 					<CardDescription className="sr-only">
 						Farmer contact information
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="p-3">
-					<div className="flex justify-between">
-						<Link href={`/farmers/${order.farmer?.id}`}>
-							<div className="flex items-center gap-1">
-								<h2 className="font-semibold text-foreground">
-									{order.farmer?.farmName}
-								</h2>
-								<ChevronRight className="h-4 w-4" />
+				<CardContent className="p-3 pt-0">
+					<div className="flex flex-grow">
+						<MapPin className="mr-2 mt-1 h-4 w-4 text-primary" />
+						<div>
+							<div className="flex">
+								<Link
+									href={`/farmers/${order.farmer?.id}`}
+									className="flex items-center"
+								>
+									<div className="flex items-center gap-1">
+										<h2 className="font-semibold text-foreground">
+											{order.farmer?.farmName}
+										</h2>
+										<ChevronRight className="h-4 w-4" />
+									</div>
+								</Link>
 							</div>
-						</Link>
-					</div>
-					<div className="space-y-1 text-sm">
-						{order.farmer?.contactNumber && (
-							<div className="flex items-center gap-1">
-								<FPContactNumberDisplay
-									contactNumber={order.farmer?.contactNumber}
-								/>
-							</div>
-						)}
-						<div className="flex items-center gap-1">
-							<div>
-								<span className="">
-									{order.farmer?.address[0]?.fullAddress}
-								</span>
-								<AddressDetailsDrawerDialog
-									address={{
-										fullAddress: order.farmer?.address[0]?.fullAddress || "",
-										longitude: order.farmer?.address[0]?.longitude || 0,
-										latitude: order.farmer?.address[0]?.latitude || 0
-									}}
-									title={`${order.farmer?.farmName}'s Location`}
-								/>
+
+							<div className="space-y-2 text-sm">
+								<div className="flex gap-2">
+									<div>
+										<span className="">
+											{order.farmer.address[0].fullAddress}
+										</span>
+
+										<AddressDetailsDrawerDialog
+											address={{
+												fullAddress: order.farmer.address[0].fullAddress,
+												longitude: order.farmer.address[0].longitude || 0,
+												latitude: order?.farmer.address[0].latitude || 0
+											}}
+											title={`${order.farmer?.name} Location`}
+										/>
+									</div>
+								</div>
+								{order.farmer?.contactNumber && (
+									<div className="flex items-center gap-1">
+										<FPContactNumberDisplay
+											contactNumber={order.farmer?.contactNumber}
+										/>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>

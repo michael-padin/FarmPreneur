@@ -101,7 +101,7 @@ export function CancelOrder({
 									disabled={isPending}
 									variant={"secondary"}
 								>
-									{status === "PENDING" ? "Submitting..." : "Submit"}
+									{isPending ? "Submitting..." : "Submit"}
 								</Button>
 							</fieldset>
 						</form>

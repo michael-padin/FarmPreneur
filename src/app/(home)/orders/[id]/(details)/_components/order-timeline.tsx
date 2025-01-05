@@ -14,7 +14,7 @@ interface OrderTimelineProps {
 export function OrderTimeline({ timeline }: OrderTimelineProps) {
 	return (
 		<Card className="border-none">
-			<CardHeader className="p-3 pb-2">
+			<CardHeader className="p-3">
 				<CardTitle className="text-base font-normal">
 					Order Timeline Information
 				</CardTitle>
@@ -30,7 +30,7 @@ export function OrderTimeline({ timeline }: OrderTimelineProps) {
 							className={`relative mb-5 pl-3 ${index === 0 ? "text-primary" : ""}`}
 						>
 							<span
-								className={`absolute -left-[6px] top-1 flex h-2.5 w-2.5 items-center justify-center rounded-full ${index === 0 ? "bg-primary" : "bg-muted-foreground"} text-background`}
+								className={`absolute -left-[5.5px] top-1 flex h-2.5 w-2.5 items-center justify-center rounded-full ${index === 0 ? "bg-primary" : "bg-muted-foreground"} text-background`}
 							></span>
 							<p className="text-sm font-normal">{event.statusDescription}</p>
 							<time className="block text-xs font-normal leading-none">

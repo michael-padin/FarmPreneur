@@ -299,7 +299,7 @@ export async function placeOrder(
 						longitude: foundCustomerContact?.longitude || 0,
 						country: foundCustomerContact?.country || "",
 						region: foundCustomerContact?.region || "",
-						label: "Customer Contact",
+						label: foundCustomerContact?.label,
 						note: foundCustomerContact?.note || "",
 						street: foundCustomerContact?.street || "",
 						locationType: "CustomerContact",
