@@ -55,14 +55,14 @@ export async function Farmer({ farmerId }: FarmerProps) {
 								Products
 							</div>
 						</div>
-						<div className="text-center">
+						{/* <div className="text-center">
 							<div className="font-semibold text-primary">
 								{farmer.responseRate}
 							</div>
 							<div className="text-sm text-muted-foreground lg:text-sm">
 								Response
 							</div>
-						</div>
+						</div> */}
 					</div>
 					<div className="flex h-full items-end">
 						<Button className="" variant={"outline"} size={"sm"} asChild>
