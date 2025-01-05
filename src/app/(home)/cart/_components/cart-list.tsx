@@ -44,21 +44,24 @@ export default function CartListPage() {
 									key={group.farmer.id}
 									className="border-none bg-background"
 								>
-									<CardContent className="space-y-2 p-4">
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<h2 className="text-lg font-semibold">
-													{group.farmer.name}
+									<CardContent className="space-y-2 p-3">
+										<Link
+											href={`/farmers/${group.farmer?.id}`}
+											className="flex items-center"
+										>
+											<div className="flex items-center gap-1">
+												<h2 className="font-semibold text-foreground">
+													{group.farmer?.name}
 												</h2>
 												<ChevronRight className="h-4 w-4" />
 											</div>
-										</div>
+										</Link>
 
-										<div className="space-y-4">
+										<div className="space-y-3">
 											{group.items.map((item) => (
 												<div className="space-y-4" key={item.id}>
-													<div key={item.id} className="flex gap-4">
-														<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+													<div key={item.id} className="flex gap-3">
+														<div className="relative h-20 w-20 overflow-hidden rounded-lg border">
 															<Image
 																src={item.product.image}
 																alt={item.product.name}
@@ -88,7 +91,7 @@ export default function CartListPage() {
 																		</span>
 																	</p>
 																</div>
-																<div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+																<div className="ml-auto flex h-9 flex-row items-center rounded-lg border border-neutral-200 dark:border-neutral-700">
 																	<EditItemQuantityButton
 																		type="minus"
 																		item={{
