@@ -34,8 +34,10 @@ const cancelOrderSchema = z.object({
 
 export function CancelOrder({
 	orderId,
-	status
+	status,
+	triggerClassName
 }: {
+	triggerClassName?: string
 	orderId: string
 	status: OrderStatus
 }) {
@@ -65,7 +67,9 @@ export function CancelOrder({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"}>Cancel</Button>
+				<Button variant={"outline"} className={triggerClassName}>
+					Cancel
+				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">

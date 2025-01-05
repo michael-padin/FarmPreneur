@@ -1,10 +1,7 @@
 "use client"
 
-import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
-import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
 import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
 	Form,
 	FormControl,
@@ -23,7 +20,7 @@ import { getCustomerUnReviewedOrderUseCase } from "@/use-cases/orders"
 import { processMediaUpdate } from "@/utils/media"
 import { mediaFileSchema } from "@/validations/media"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MapPin, PhoneCall, Star } from "lucide-react"
+import { Star } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
@@ -136,7 +133,7 @@ export function RateForm({
 		<div>
 			<Form {...form}>
 				<div className="relative w-full">
-					<Card>
+					{/* <Card>
 						<CardContent className="p-2">
 							<div className="rounded-lg text-muted-foreground">
 								<div className="flex justify-between">
@@ -151,7 +148,7 @@ export function RateForm({
 										<h2 className="font-semibold text-foreground">
 											{order.farmer.farmName}
 										</h2>
-										{/* <ChevronRight className="h-4 w-4" /> */}
+										<ChevronRight className="h-4 w-4" />
 									</div>
 								</div>
 								<div className="my-2 space-y-2 text-sm">
@@ -183,9 +180,9 @@ export function RateForm({
 								</div>
 							</div>
 						</CardContent>
-					</Card>
+					</Card> */}
 					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<fieldset className="mt-2 space-y-2" disabled={isPending}>
+						<fieldset className="space-y-2" disabled={isPending}>
 							{order.items.map((item, index) => (
 								<div
 									key={item.productId}
@@ -293,7 +290,7 @@ export function RateForm({
 								</div>
 							))}
 
-							<div className="fixed bottom-0 left-0 right-0 flex bg-background p-4">
+							<div className="fixed bottom-0 left-0 right-0 flex bg-background p-4 drop-shadow-2xl">
 								<Button
 									className="w-full"
 									disabled={isPending}

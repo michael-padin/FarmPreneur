@@ -136,7 +136,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 									</div>
 								</div>
 								{order.farmer?.contactNumber && (
-									<div className="flex items-center gap-1">
+									<div className="flex items-center gap-1 text-muted-foreground">
 										<FPContactNumberDisplay
 											contactNumber={order.farmer?.contactNumber}
 										/>

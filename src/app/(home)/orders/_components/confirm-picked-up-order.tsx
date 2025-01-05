@@ -36,7 +36,7 @@ export function ConfirmPickedUpOrder({ orderId }: { orderId: string }) {
 	}, [state])
 
 	return (
-		<form action={formActionsWithData}>
+		<form action={formActionsWithData} className="w-full">
 			<Button className="w-full" disabled={isPending}>
 				{isPending ? "Confirming..." : "Confirm Order"}
 			</Button>
