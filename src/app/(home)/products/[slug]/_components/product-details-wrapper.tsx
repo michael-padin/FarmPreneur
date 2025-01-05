@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { FPBreadcrumbResponsive } from "@/components/fp/fp-breadcrumb"
 import { QuantityProvider } from "@/contexts/quantity-context"
 import { generateProductJsonLd } from "@/lib/structured-data"
@@ -30,8 +31,8 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 		notFound()
 	}
 	const product = await getProduct(slug)
-
 	const reviews = await getProductReviews(product.id)
+	const session = await auth()
 
 	const breadcrumbItems = [
 		{ href: "/", label: "FarmPreneur" },
@@ -80,7 +81,10 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 						</div>
 					</div>
 					<div className="md:hidden">
-						<ProductBottomNav product={product} />
+						<ProductBottomNav
+							product={product}
+							customerId={session?.user?.customerId || ""}
+						/>
 					</div>
 				</div>
 			</QuantityProvider>

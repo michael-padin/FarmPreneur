@@ -1,12 +1,13 @@
 import { auth } from "@/auth"
 import { ROLE } from "@prisma/client"
+import { redirect } from "next/navigation"
 import { cache } from "react"
 import "server-only"
 
 const validateSession = async () => {
 	const session = await auth()
 	if (!session || !session.user) {
-		throw new Error("Unauthorized: No valid session found")
+		redirect("/login")
 	}
 	return session.user
 }

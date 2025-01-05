@@ -149,7 +149,7 @@ export async function addToCart(
 		return { success: true }
 	} catch (error) {
 		console.error(error)
-		return { success: false, error: "Failed to add item to cart" }
+		return { success: false, error: "Failed to add item in cart" }
 	}
 }
 
