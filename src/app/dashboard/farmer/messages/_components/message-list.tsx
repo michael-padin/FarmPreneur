@@ -1,0 +1,143 @@
+"use client"
+
+import { pusherClient } from "@/lib/pusher"
+import { Customer, Farmer, Message, ROLE, User } from "@prisma/client"
+import { formatDistanceToNow } from "date-fns"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState, useTransition } from "react"
+
+type ConversationPartner = User & {
+	customer?: Customer | null
+	farmer?: Farmer | null
+	lastMessage: Message & {
+		sender: User & {
+			customer?: Customer | null
+			farmer?: Farmer | null
+		}
+	}
+}
+
+interface MessageListProps {
+	currentUserId: string
+	role: ROLE
+	initialConversations: ConversationPartner[]
+	fetchMoreConversations: (
+		lastId: string,
+		currentUserId: string
+	) => Promise<ConversationPartner[]>
+}
+
+export function MessageList({
+	currentUserId,
+	role,
+	initialConversations,
+	fetchMoreConversations
+}: MessageListProps) {
+	const [conversations, setConversations] = useState(initialConversations)
+	const [isPending, startTransition] = useTransition()
+
+	useEffect(() => {
+		const channel = pusherClient.subscribe(`user-${currentUserId}`)
+
+		channel.bind(
+			"new-message",
+			(data: { conversation: ConversationPartner }) => {
+				setConversations((prevConversations) => {
+					const existingConversationIndex = prevConversations.findIndex(
+						(conv) => conv.id === data.conversation.id
+					)
+
+					if (existingConversationIndex !== -1) {
+						const updatedConversations = [...prevConversations]
+						updatedConversations[existingConversationIndex] = data.conversation
+						return [
+							updatedConversations[existingConversationIndex],
+							...updatedConversations.filter(
+								(_, index) => index !== existingConversationIndex
+							)
+						]
+					} else {
+						return [data.conversation, ...prevConversations]
+					}
+				})
+			}
+		)
+
+		return () => {
+			pusherClient.unsubscribe(`user-${currentUserId}`)
+		}
+	}, [currentUserId])
+
+	// useEffect(() => {
+	// 	const lastConversation = conversations[conversations.length - 1]
+	// 	if (lastConversation) {
+	// 		const observer = new IntersectionObserver(
+	// 			(entries) => {
+	// 				if (entries[0].isIntersecting) {
+	// 					startTransition(async () => {
+	// 						const moreConversations = await fetchMoreConversations(
+	// 							lastConversation.id,
+	// 							currentUserId
+	// 						)
+	// 						setConversations((prev) => [...prev, ...moreConversations])
+	// 					})
+	// 				}
+	// 			},
+	// 			{ threshold: 1 }
+	// 		)
+
+	// 		observer.observe(
+	// 			document.getElementById(`conversation-${lastConversation.id}`)!
+	// 		)
+
+	// 		return () => observer.disconnect()
+	// 	}
+	// }, [conversations, fetchMoreConversations])
+
+	return (
+		<div className="">
+			{conversations.map((conversation) => {
+				const partnerDetails = conversation.customer
+				return (
+					<Link
+						key={conversation.id + "sd"}
+						id={`conversation-${conversation.id}`}
+						href={`/dashboard/farmer/messages/${conversation.id}`}
+						className="flex items-center p-4 transition-colors hover:bg-gray-50"
+					>
+						<Image
+							src={partnerDetails?.profilePicture || "/placeholder-avatar.png"}
+							alt={partnerDetails?.name || "Unknown"}
+							width={50}
+							height={50}
+							className="mr-4 rounded-full"
+						/>
+						<div className="min-w-0 flex-1">
+							<div className="flex items-center justify-between">
+								<h2 className="truncate text-lg font-semibold">
+									{partnerDetails?.name || "Unknown"}
+								</h2>
+								<span className="text-xs text-gray-500">
+									{formatDistanceToNow(
+										new Date(conversation.lastMessage.createdAt),
+										{ addSuffix: true }
+									)}
+								</span>
+							</div>
+							<p className="truncate text-muted-foreground">
+								{conversation.lastMessage.senderId === currentUserId
+									? "You: "
+									: ""}
+								{conversation.lastMessage.content}
+							</p>
+						</div>
+					</Link>
+				)
+			})}
+			{isPending && (
+				<div className="p-4 text-center">Loading more conversations...</div>
+			)}
+		</div>
+	)
+}

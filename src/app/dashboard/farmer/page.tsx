@@ -4,7 +4,7 @@ import { BottomNav } from "./_components/bottom-navigation"
 import { FarmerMetricCardSkeleton } from "./_components/farmer-metric-card-skeleton"
 import { FarmerMetrics } from "./_components/farmer-metrics"
 import { GreetingsWrapper } from "./_components/greeting-wrapper"
-import { ProfilePicture } from "./_components/profile-picture"
+import { FarmerDashboardNavLink } from "./_components/nav-links"
 
 export const experimental_ppr = true
 
@@ -24,7 +24,8 @@ export default function FarmerDashboard() {
 								Here is an overview of your farm.
 							</p>
 						</div>
-						<ProfilePicture />
+						{/* <ProfilePicture /> */}
+						<FarmerDashboardNavLink />
 					</div>
 				</header>
 				<div className="grid gap-2 pb-[76.5px] md:grid-cols-2 lg:grid-cols-4">

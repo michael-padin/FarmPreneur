@@ -31,7 +31,7 @@ export default function OrderDetailsBottomNav({
 						asChild
 						size={"icon"}
 					>
-						<Link href={`/messages/${order.farmer.userId}`} className="flex">
+						<Link href={`/messages/${order.customer?.userId}`} className="flex">
 							{order.subStatus === "BUYER_CONFIRMED_ORDER" ? (
 								<span>Message</span>
 							) : (

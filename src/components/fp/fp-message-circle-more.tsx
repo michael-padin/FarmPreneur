@@ -7,10 +7,12 @@ import Link from "next/link"
 import { useEffect, useRef } from "react"
 
 export const FPMessageCircleMore = ({
+	url = "/messages",
 	className,
 	containerClassName,
 	iconClassName
 }: {
+	url?: string
 	iconClassName?: string
 	className?: string
 	containerClassName?: string
@@ -30,7 +32,7 @@ export const FPMessageCircleMore = ({
 
 	return (
 		<Link
-			href={`/messages`}
+			href={`${url}`}
 			className="cursor-pointer hover:bg-transparent hover:text-current"
 		>
 			<motion.div

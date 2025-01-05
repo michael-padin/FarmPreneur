@@ -9,7 +9,7 @@ export async function ProfilePicture() {
 		<Link
 			href={`/dashboard/farmer/profile`}
 			prefetch
-			className="relative h-20 w-20 overflow-hidden rounded-full"
+			className="relative h-5 w-5 overflow-hidden rounded-full"
 		>
 			<Image
 				src={user?.profilePicture || "/placeholder.svg"}

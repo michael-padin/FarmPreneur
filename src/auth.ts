@@ -20,6 +20,7 @@ declare module "next-auth" {
 			profilePicture: string | null
 			cartId?: string
 			farmerName?: string
+			farmName?: string
 			isEmailVerified: boolean
 			emailVerified: Date | null
 		} & DefaultSession["user"]

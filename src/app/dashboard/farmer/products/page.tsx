@@ -5,6 +5,7 @@ import { type SearchParams } from "nuqs/server"
 import { BottomNav } from "../_components/bottom-navigation"
 import { FilterProducts } from "./_components/filter-products"
 import { FarmerProductListWrapper } from "./_components/product-list-wrapper"
+import { ProductsNavLink } from "./_components/products-nav-link"
 import { StatusTabs } from "./_components/tab-list"
 
 type PageProps = {
@@ -27,6 +28,7 @@ export default function ProductsPage({ searchParams }: PageProps) {
 							<h1 className="text-2xl font-bold">Products</h1>
 						</div>
 						<div className="flex items-center gap-3">
+							<ProductsNavLink />
 							<Button asChild size="sm">
 								<Link
 									href={"/dashboard/farmer/products/create"}

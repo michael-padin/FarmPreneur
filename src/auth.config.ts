@@ -38,6 +38,7 @@ const providers: Provider[] = [
 					}),
 					...(user.role === "FARMER" && {
 						farmerId: user.farmer?.id || "",
+						farmName: user.farmer?.farmName,
 						farmerName: user.farmer?.farmName || ""
 					})
 				}

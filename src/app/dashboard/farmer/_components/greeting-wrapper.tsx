@@ -3,6 +3,6 @@ import { Greetings } from "./greeting"
 
 export async function GreetingsWrapper() {
 	const session = await auth()
-	const name = session?.user.farmerName || ""
+	const name = session?.user.farmName || ""
 	return <Greetings name={name} />
 }
