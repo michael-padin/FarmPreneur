@@ -1,6 +1,6 @@
 "use client"
 import { useNotifications } from "@/contexts/notification-context"
-import { Bell, Box, Home, ShoppingCart, User } from "lucide-react"
+import { Bell, Box, Home, Leaf, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -14,11 +14,11 @@ export function BottomNav() {
 				{[
 					{ icon: Home, label: "Home", url: "/dashboard/farmer" },
 					{
-						icon: ShoppingCart,
+						icon: Box,
 						label: "Orders",
 						url: "/dashboard/farmer/orders"
 					},
-					{ icon: Box, label: "Products", url: "/dashboard/farmer/products" },
+					{ icon: Leaf, label: "Products", url: "/dashboard/farmer/products" },
 					{
 						icon: Bell,
 						label: "Notifications",
