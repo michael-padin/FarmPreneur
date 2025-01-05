@@ -167,6 +167,7 @@ export function EditProductForm({ product, categories }: EditProductFormProps) {
 							name="unit"
 							render={({ field }) => (
 								<FormItem>
+									<FormLabel>Unit</FormLabel>
 									<FPSelect
 										{...field}
 										items={units}
