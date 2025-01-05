@@ -178,16 +178,19 @@ export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
 	if (!farmer) throw new Error("No farmer found!")
 
 	const totalProducts = farmer._count.products
-	const averageRating = 0
-	// farmer.reviews.reduce((sum, review) => sum + review.rating, 0) /
-	// 	farmer.reviews.length || 0
-
-	// const totalReviews = farmer.reviews.length
-	const totalReviews = 0
+	const averageRating = await db.productReview.aggregate({
+		where: {
+			product: {
+				farmerId: id
+			}
+		},
+		_avg: {
+			rating: true
+		}
+	})
 	return {
 		numberOfProducts: totalProducts,
-		totalReviews,
-		averageRating,
+		averageRating: averageRating._avg.rating,
 		farmName: farmer.farmName,
 		name: farmer.user.name,
 		contactNumber: farmer.contactNumber,

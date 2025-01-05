@@ -1,4 +1,5 @@
 import { FPMessageCircleMore } from "@/components/fp/fp-message-circle-more"
+import { FPSearchSheet } from "@/components/fp/fp-search-sheet"
 import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { cn } from "@/lib/utils"
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
@@ -24,6 +25,7 @@ export default function CustomerProfilePage() {
 							<h1 className="text-2xl font-bold">Profile</h1>
 						</div>
 						<div className="flex gap-3">
+							<FPSearchSheet triggerClassName={containerClasses} />
 							<FPShoppingCart
 								badgeClassName={badgeClasses}
 								containerClassName={containerClasses}

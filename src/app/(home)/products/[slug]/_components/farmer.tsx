@@ -41,7 +41,7 @@ export async function Farmer({ farmerId }: FarmerProps) {
 					<div className="flex w-full flex-wrap gap-6">
 						<div className="text-center">
 							<div className="font-semibold text-primary">
-								{farmer.averageRating}
+								<p>{farmer?.averageRating?.toFixed(1)}</p>
 							</div>
 							<div className="text-sm text-muted-foreground lg:text-sm">
 								Rating

@@ -1,7 +1,9 @@
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
+import { Button } from "@/components/ui/button"
 import { db } from "@/lib/db"
 import { MapPin, Star } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 const getFarmerBasicInfo = async (farmerId?: string) => {
 	const farmer = await db.farmer.findUnique({
@@ -45,6 +47,7 @@ const getFarmerBasicInfo = async (farmerId?: string) => {
 			latitude: farmer?.address?.[0]?.latitude || 0,
 			longitude: farmer?.address?.[0]?.longitude || 0
 		},
+		userId: farmer?.userId,
 		createdAt: farmer?.createdAt || "",
 		farmName: farmer?.farmName || "",
 		email: farmer?.user.email || "",
@@ -73,8 +76,8 @@ export async function FarmerProfile({ params }: { params: Params }) {
 				/>
 			</div>
 			<div className="relative mx-2 -mt-14 rounded-lg bg-background">
-				<div className="space-y-4 p-4">
-					<div className="flex items-center space-x-4">
+				<div className="space-y-4 p-3">
+					<div className="flex items-start space-x-4">
 						<div className="relative aspect-square h-20 w-20">
 							<Image
 								src={farmerInfo.profilePicture || "/placeholder.svg"}
@@ -85,9 +88,9 @@ export async function FarmerProfile({ params }: { params: Params }) {
 								className="rounded-full object-cover"
 							/>
 						</div>
-						<div>
-							<h1 className="text-2xl font-bold">{farmerInfo.farmName}</h1>
-							<div className="flex gap-1">
+						<div className="w-full space-y-3">
+							<h1 className="text-xl font-bold">{farmerInfo.farmName}</h1>
+							<div className="flex gap-1 text-sm">
 								<MapPin className="mt-1 h-5 w-5" />
 								<div className="">
 									<span className="truncate">
@@ -98,6 +101,16 @@ export async function FarmerProfile({ params }: { params: Params }) {
 										title={`${farmerInfo.farmName}'s Location`}
 									/>
 								</div>
+							</div>
+							<div className="">
+								<Button
+									size={"sm"}
+									variant={"outline"}
+									className="w-full"
+									asChild
+								>
+									<Link href={`/messages/${farmerInfo.userId}`}>Message</Link>
+								</Button>
 							</div>
 						</div>
 					</div>

@@ -1,22 +1,18 @@
 "use client"
 import { FPSearchSheet } from "@/components/fp/fp-search-sheet"
-import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
 import { Button } from "@/components/ui/button"
 import { useScrollDetection } from "@/hooks/use-scroll-detection"
 import { cn } from "@/lib/utils"
 import { Session } from "next-auth"
 import Image from "next/image"
 import Link from "next/link"
+import { FarmerPageNavLinks } from "./nav-links"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
 	const scrolled = useScrollDetection({ threshold: 60 })
+	const containerClasses = cn("bg-transparent text-primary")
+	const badgeClasses = cn("bg-primary text-white")
 
-	const containerClasses = cn(
-		scrolled ? "bg-transparent text-primary" : "bg-transparent text-white"
-	)
-	const badgeClasses = cn(
-		scrolled ? "bg-primary text-white" : "bg-white text-primary border-primary"
-	)
 	return (
 		<div
 			className={cn(
@@ -25,7 +21,7 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 			)}
 		>
 			<div className="flex items-center justify-between gap-4 lg:container">
-				<div className="flex items-center gap-2">
+				<Link className="flex items-center gap-2" href={"/"}>
 					{/* <div
 						className={`flex min-h-10 min-w-10 items-center justify-center rounded-lg bg-background font-bold text-primary ${scrolled ? "bg-primary text-white" : ""}`}
 					>
@@ -41,25 +37,19 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
 					/>
 					<h1 className={`font-bold text-primary`}>FarmPreneur</h1>
-				</div>
+				</Link>
 
 				<div className="flex items-center gap-2 text-primary-foreground">
-					<FPSearchSheet triggerClassName={containerClasses} />
 					{user ? (
-						<>
-							<FPShoppingCart
-								badgeClassName={"bg-primary text-white"}
-								containerClassName={`bg-transparent text-primary`}
-							/>
-							{/* <FPMessageCircleMore
-								className={badgeClasses}
-								containerClassName={containerClasses}
-							/> */}
-						</>
+						<FarmerPageNavLinks />
 					) : (
-						<div className="flex items-center gap-4">
-							<Button variant={scrolled ? "default" : "secondary"} asChild>
+						<div className="flex items-center gap-2">
+							<FPSearchSheet triggerClassName={containerClasses} />
+							{/* <Button variant={"secondary"} asChild>
 								<Link href="/signup">Sign up</Link>
+							</Button> */}
+							<Button variant={"default"} asChild>
+								<Link href="/login">Log in</Link>
 							</Button>
 						</div>
 					)}

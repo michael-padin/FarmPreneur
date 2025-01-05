@@ -12,6 +12,7 @@ import { DailyDiscovery } from "./_components/daily-discovery"
 import { FeaturedProducts } from "./_components/featured-products"
 import { FeaturedProductsCarouselSkeleton } from "./_components/featured-products-carousel-skeleton"
 import { HomeNav } from "./_components/home-nav"
+import { LoginSignUpCTA } from "./_components/login-sign-up-cta"
 import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 
 export const experimental_ppr = true
@@ -29,7 +30,7 @@ export default function Home() {
 				<JsonLd data={[websiteJsonLd, organizationJsonLd]} />
 				<section className="m-auto h-full w-full bg-primary lg:flex lg:h-[70vh] lg:items-center">
 					<div className="relative mx-auto h-full px-0 lg:p-0 lg:px-0 lg:pt-0">
-						<div className="flex items-center justify-center pb-20 pt-24 lg:h-full lg:rounded-lg lg:pb-0 lg:pt-0">
+						<div className="flex items-center justify-center px-3 pb-20 pt-24 lg:h-full lg:rounded-lg lg:pb-0 lg:pt-0">
 							<div className="relative space-y-5 px-2 text-center text-white lg:space-y-10">
 								<h1 className="text-3xl font-bold leading-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
 									Discover Local Farm-Fresh Produce
@@ -39,6 +40,9 @@ export default function Home() {
 									directly from local farmers. No delivery, just pure local
 									goodness.
 								</p>
+								<Suspense fallback={"..."}>
+									<LoginSignUpCTA />
+								</Suspense>
 							</div>
 						</div>
 					</div>

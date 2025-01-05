@@ -2,12 +2,10 @@
 import { FPMessageCircleMore } from "@/components/fp/fp-message-circle-more"
 import { FPSearchSheet } from "@/components/fp/fp-search-sheet"
 import { FPShoppingCart } from "@/components/fp/fp-shopping-cart"
-import { Button } from "@/components/ui/button"
 import { useScrollDetection } from "@/hooks/use-scroll-detection"
 import { cn } from "@/lib/utils"
 import { Session } from "next-auth"
 import Image from "next/image"
-import Link from "next/link"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
 	const scrolled = useScrollDetection({ threshold: 60 })
@@ -62,11 +60,7 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 							/>
 						</>
 					) : (
-						<div className="flex items-center gap-4">
-							<Button variant={scrolled ? "default" : "secondary"} asChild>
-								<Link href="/signup">Sign up</Link>
-							</Button>
-						</div>
+						""
 					)}
 				</div>
 			</div>
