@@ -10,7 +10,7 @@ export function OrderItem({ item }: OrderItemProps) {
 	return (
 		<div className="">
 			<div key={item.id} className="flex gap-4">
-				<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+				<div className="relative h-20 w-20 overflow-hidden rounded-lg border">
 					<Image
 						src={item.product.productImages[0]}
 						alt={item.product.title}

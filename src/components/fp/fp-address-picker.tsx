@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { useClickOutside } from "@/hooks/use-click-outside-ref"
 import { useMapbox } from "@/hooks/use-mapbox"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { getErrorMessage } from "@/lib/handle-error"
+import { getErrorMessage, showErrorToast } from "@/lib/handle-error"
 import { Feature, FeatureCollection } from "@/types"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { ClassValue } from "clsx"
@@ -198,6 +198,7 @@ export const AddressInput = ({
 	onAddressSelect,
 	dialogTriggerText
 }: AddressInputProps) => {
+	const isDesktop = useMediaQuery("(min-width: 768px)")
 	const [open, setOpen] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const commandListRef = useRef<HTMLDivElement>(null)
@@ -229,7 +230,9 @@ export const AddressInput = ({
 				setSuggestions(data.features || [])
 			} catch (error) {
 				console.error("Error fetching suggestions:", error)
-				toast("Failed to fetch address suggestions. Please try again.")
+				toast.error("Failed to fetch address suggestions. Please try again.", {
+					position: isDesktop ? "bottom-right" : "top-right"
+				})
 				setSuggestions([])
 			} finally {
 				setLoading(false)
@@ -307,6 +310,9 @@ export const AddressInput = ({
 						onAddressSelect?.(newAddress || defaultAddress)
 					}
 				} catch (error) {
+					toast.error("Failed to get address  from you location", {
+						position: isDesktop ? "bottom-right" : "top-right"
+					})
 					console.error("Error reverse geocoding:", error)
 					getErrorMessage(
 						"Failed to get address from your location. Please try again."
@@ -314,10 +320,11 @@ export const AddressInput = ({
 				}
 			},
 			(error) => {
-				getErrorMessage("Error getting location")
+				showErrorToast(error)
 			}
 		)
 	}, [
+		isDesktop,
 		createAddressFromFeature,
 		mapboxApiKey,
 		onAddressSelect,

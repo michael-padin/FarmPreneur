@@ -2,17 +2,24 @@
 import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 import { locationLabelMap, LocationType } from "@/constants/address"
 import { formatPHP } from "@/lib/utils"
 import { CartState } from "@/types/cart"
 import { getDefaultAddressByCustomerId } from "@/use-cases/address"
-import { MapPin } from "lucide-react"
+import { ChevronRight, MapPin } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { Fragment, useState } from "react"
+import { Fragment } from "react"
 import { PlaceOrder } from "./place-order"
 
 export default function CartCheckOutList({
@@ -24,39 +31,27 @@ export default function CartCheckOutList({
 		ReturnType<typeof getDefaultAddressByCustomerId>
 	>
 }) {
-	const [newCheckoutData, setNewCheckoutData] =
-		useState<CartState>(checkoutData)
-	const [errors, setErrors] = useState<Record<number, boolean>>({})
-	const [pickupLocationId, setPickupLocationId] = useState<string>("")
-
-	const validateCheckout = () => {
-		// const newErrors = {} as Record<number, boolean>
-
-		// newCheckoutData.groupedItems.forEach((group, index) => {
-		// 	if (!group.pickupLocationId) {
-		// 		newErrors[index] = true
-		// 	}
-		// })
-
-		// setErrors(newErrors)
-
-		// if (Object.keys(newErrors).length > 0) {
-		// 	return false
-		// }
-
-		if (!defaultCustomerAddress) {
-			return false
-		}
-
-		return true
-	}
+	const validateCheckout = () => !!defaultCustomerAddress
 
 	return (
 		<>
 			<ScrollArea className="flex-1 p-2">
 				<div className="space-y-2 lg:container">
 					<Card className="border-none bg-background">
-						<CardContent className="w-full space-y-2 p-2">
+						<div className="flex justify-between p-3 pb-0">
+							<CardHeader className="p-0">
+								<CardTitle className="text-base font-normal">
+									Your Contact Information
+								</CardTitle>
+								<CardDescription className="sr-only">
+									Customer contact information
+								</CardDescription>
+							</CardHeader>
+							<Link href={`/profile/address`} className="text-primary">
+								<span className="">Edit</span>
+							</Link>
+						</div>
+						<CardContent className="w-full space-y-2 p-3">
 							{defaultCustomerAddress ? (
 								<div className="flex justify-between">
 									<div className="flex flex-grow">
@@ -72,10 +67,25 @@ export default function CartCheckOutList({
 													]
 												}
 											</Label>
-											<div className="space-y-2">
-												<p className="text-sm text-muted-foreground">
-													{defaultCustomerAddress.fullAddress}
-												</p>
+											<div className="space-y-2 text-sm">
+												<div className="flex gap-2">
+													<div>
+														<span className="">
+															{defaultCustomerAddress?.fullAddress}
+														</span>
+
+														<AddressDetailsDrawerDialog
+															address={{
+																fullAddress:
+																	defaultCustomerAddress?.fullAddress,
+																longitude:
+																	defaultCustomerAddress?.longitude || 0,
+																latitude: defaultCustomerAddress?.latitude || 0
+															}}
+															title={`${defaultCustomerAddress?.contactName} Location`}
+														/>
+													</div>
+												</div>
 												<div className="">
 													<p className="text-sm">
 														{defaultCustomerAddress?.contactName}
@@ -99,9 +109,6 @@ export default function CartCheckOutList({
 											</div>
 										</div>
 									</div>
-									<Link href={`/profile/address`} className="text-primary">
-										<span className="">Edit</span>
-									</Link>
 								</div>
 							) : (
 								<Button variant={"outline"} asChild className="w-full">
@@ -113,146 +120,70 @@ export default function CartCheckOutList({
 						</CardContent>
 					</Card>
 					{checkoutData?.groupedItems?.map((group, index) => (
-						<Card key={group.farmer.id} className="border-none bg-background">
-							<CardContent className="w-full space-y-2 p-2">
-								<div className="rounded-lg bg-muted p-2 text-muted-foreground">
-									<div className="flex justify-between">
-										<div className="flex items-center gap-2">
-											<Image
-												src={group.farmer?.profilePicture || "/placeholder.svg"}
-												alt={group.farmer?.name}
-												width={30}
-												height={30}
-												className="rounded-full"
-											/>
-											<h2 className="font-semibold text-foreground">
-												{group.farmer?.name}
-											</h2>
-											{/* <ChevronRight className="h-4 w-4" /> */}
+						<Card className="border-none" key={index}>
+							<CardHeader className="p-3 pb-0">
+								<CardTitle className="text-base font-normal">
+									Farmer Information
+								</CardTitle>
+								<CardDescription className="sr-only">
+									Farmer contact information
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="w-full p-3">
+								<div className="flex flex-grow">
+									<MapPin className="mr-2 mt-1 h-4 w-4 text-primary" />
+									<div>
+										<div className="flex">
+											<Link
+												href={`/farmers/${group.farmer?.id}`}
+												className="flex items-center"
+											>
+												<div className="flex items-center gap-1">
+													<h2 className="font-semibold text-foreground">
+														{group.farmer?.name}
+													</h2>
+													<ChevronRight className="h-4 w-4" />
+												</div>
+											</Link>
 										</div>
-									</div>
-									<div className="my-2 space-y-2 text-sm">
-										<div className="flex gap-2">
-											<MapPin className="mt-1 h-4 w-4 text-primary" />
-											<div>
-												<span className="">
-													{group?.farmer.addresses[0]?.fullAddress}
-												</span>
 
-												<AddressDetailsDrawerDialog
-													address={{
-														fullAddress:
-															group?.farmer.addresses[0]?.fullAddress,
-														longitude:
-															group?.farmer.addresses[0]?.longitude || 0,
-														latitude: group?.farmer.addresses[0]?.latitude || 0
-													}}
-													title={`${group.farmer?.name}'s Farm Location`}
-												/>
-											</div>
-										</div>
-										{group.farmer?.contactNumber && (
-											<div className="flex items-center gap-2">
-												<div className="h-4 w-4 text-primary" />
-												<FPContactNumberDisplay
-													contactNumber={group.farmer?.contactNumber}
-												/>
-											</div>
-										)}
-									</div>
-								</div>
-								<div className="mb-2 flex items-center justify-between text-sm">
-									<div className="w-full">
-										<div className="flex justify-between">
-											<div className="w-full">
-												{/* <Select
-													onValueChange={(value) => {
-														setNewCheckoutData((prev) => {
-															return {
-																...prev,
-																groupedItems: [
-																	...prev.groupedItems.map((group, i) => {
-																		if (i === index) {
-																			return {
-																				...group,
-																				pickupLocationId: value
-																			}
-																		}
-																		return group
-																	})
-																]
-															}
-														})
-														setPickupLocationId(value)
+										<div className="space-y-2 text-sm">
+											<div className="flex gap-2">
+												<div>
+													<span className="">
+														{group?.farmer.addresses[0]?.fullAddress}
+													</span>
 
-														// Clear error when a valid pickupLocationId is selected
-														setErrors((prev) => {
-															const newErrors = { ...prev }
-															newErrors[index] = false
-															return newErrors
-														})
-													}}
-												>
-													<Label htmlFor="pickup-location">
-														Pickup Location
-													</Label>
-													<SelectTrigger
-														className={`w-full ${
-															errors[index]
-																? "border-destructive text-destructive ring-destructive focus:ring-destructive"
-																: ""
-														}`}
-														id="pickup-location"
-													>
-														<SelectValue placeholder="Select Pickup Location">
-															<span className="mb-2">
-																{
-																	group.farmer.addresses.find(
-																		(address) => address.id === pickupLocationId
-																	)?.fullAddress
-																}
-															</span>
-														</SelectValue>
-													</SelectTrigger>
-													<SelectContent>
-														{group.farmer.addresses &&
-														group.farmer.addresses?.length > 0 ? (
-															group.farmer.addresses.map((address) => (
-																<SelectItem key={address.id} value={address.id}>
-																	<div className="flex flex-col">
-																		<span className="truncate">
-																			{address.fullAddress}
-																		</span>
-																	</div>
-																</SelectItem>
-															))
-														) : (
-															<SelectItem disabled value="#">
-																No Address
-															</SelectItem>
-														)}
-													</SelectContent>
-												</Select> */}
-												{pickupLocationId && (
 													<AddressDetailsDrawerDialog
-														address={
-															group.farmer.addresses.find(
-																(address) => address.id === pickupLocationId
-															)!
-														}
-														title="Pickup Location"
+														address={{
+															fullAddress:
+																group?.farmer.addresses[0]?.fullAddress,
+															longitude:
+																group?.farmer.addresses[0]?.longitude || 0,
+															latitude:
+																group?.farmer.addresses[0]?.latitude || 0
+														}}
+														title={`${group.farmer?.name}'s Farm Location`}
 													/>
-												)}
+												</div>
 											</div>
+											{group.farmer?.contactNumber && (
+												<div className="flex items-center gap-1">
+													<FPContactNumberDisplay
+														contactNumber={group.farmer?.contactNumber}
+													/>
+												</div>
+											)}
 										</div>
 									</div>
 								</div>
-								<div className="w-full space-y-4">
+								<Separator className="my-3" />
+								<div className="w-full space-y-3">
 									{group.items.map((item) => (
 										<Fragment key={item.product.id}>
 											<div className="space-y-4">
 												<div key={item.id} className="flex gap-4">
-													<div className="relative h-24 w-24 overflow-hidden rounded-lg border">
+													<div className="relative h-20 w-20 overflow-hidden rounded-lg border">
 														<Image
 															src={item.product.image}
 															alt={item.product.name}
@@ -285,6 +216,23 @@ export default function CartCheckOutList({
 										</Fragment>
 									))}
 								</div>
+
+								<div className="flex items-center justify-end pt-3">
+									<p>
+										Total:{" "}
+										<span className="font-semibold">
+											₱
+											{formatPHP(
+												Number(
+													group.items.reduce(
+														(sum, b) => sum + b.product.price * b.quantity,
+														0
+													)
+												)
+											)}
+										</span>
+									</p>
+								</div>
 							</CardContent>
 						</Card>
 					))}
@@ -304,7 +252,7 @@ export default function CartCheckOutList({
 						</div>
 						<PlaceOrder
 							customerContactId={defaultCustomerAddress?.id || ""}
-							checkoutData={newCheckoutData}
+							checkoutData={checkoutData}
 							validateCheckout={validateCheckout}
 						/>
 					</div>

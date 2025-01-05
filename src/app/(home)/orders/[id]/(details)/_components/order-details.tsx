@@ -110,7 +110,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 						</div>
 					</div>
 					<Separator className="my-3" />
-					<div className="w-full">
+					<div className="w-full space-y-3">
 						{order.items.map((item) => (
 							<Fragment key={item.id}>
 								<OrderItem item={item} />
