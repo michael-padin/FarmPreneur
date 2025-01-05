@@ -7,12 +7,10 @@ import {
 	use,
 	useCallback,
 	useContext,
-	useEffect,
 	useMemo,
 	useOptimistic
 } from "react"
 
-// Context type
 interface NotificationContextType {
 	addNotification: (newNotification: Notification) => void
 	notifications: Notification[]
@@ -21,7 +19,6 @@ interface NotificationContextType {
 	readNotification: (notificationId: string) => void
 }
 
-// Reducer action types
 type NotificationAction =
 	| { type: "SET_INITIAL_NOTIFICATIONS"; payload: Notification[] }
 	| { type: "ADD_NOTIFICATION"; payload: Notification }
@@ -29,7 +26,6 @@ type NotificationAction =
 	| { type: "MARK_SINGLE_READ"; payload: string }
 	| { type: "RESET_NOTIFICATIONS"; payload: Notification[] }
 
-// Reducer function
 function notificationReducer(
 	state: Notification[],
 	action: NotificationAction
@@ -60,7 +56,6 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 
 export function NotificationProvider({
 	children,
-	userId,
 	initialNotificationsPromise
 }: {
 	children: ReactNode
@@ -72,10 +67,6 @@ export function NotificationProvider({
 		initialNotifications,
 		notificationReducer
 	)
-
-	useEffect(() => {
-		console.log("optimisticNotifications :>> ", optimisticNotifications)
-	}, [optimisticNotifications])
 
 	const unreadCount = optimisticNotifications.filter(
 		(notification) => !notification.isRead
@@ -130,7 +121,6 @@ export function NotificationProvider({
 	)
 }
 
-// Custom hook to use the Notification Context
 export function useNotifications() {
 	const context = useContext(NotificationContext)
 	if (context === undefined) {
