@@ -1,10 +1,9 @@
-import { AddressDetailsDrawerDialog } from "@/app/dashboard/(admin)/users/(lists)/_components/address-details"
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
-import { FPContactNumberDisplay } from "@/components/fp/fp-contact-number"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
-import { MapPin, PhoneCall } from "lucide-react"
+import Link from "next/link"
 import { Fragment } from "react"
 import { AcceptOrder } from "./accept-order"
 import { CancelOrder } from "./cancel-order"
@@ -18,60 +17,39 @@ export default function Order({
 	order: Awaited<ReturnType<typeof getFarmerOrdersUseCase>>[0]
 }) {
 	return (
-		<Card key={order.farmer.id} className="border-none bg-background">
-			<CardContent className="w-full space-y-3 p-2">
-				<div className="rounded-lg bg-muted p-2 text-muted-foreground">
-					<div className="flex justify-between">
-						<div className="flex items-center gap-2">
-							<h2 className="font-semibold text-foreground">
-								{order.customer?.user.name}
-							</h2>
-							{/* <ChevronRight className="h-4 w-4" /> */}
-						</div>
-						<OrderStatusBadge status={order.status} showText />
-					</div>
-					<div className="my-2 space-y-2 text-sm">
-						{order.customerContact?.contactNumber && (
+		<Card
+			key={order.farmer.id}
+			className="hover:border-1 border-0 bg-background hover:shadow-lg"
+		>
+			<CardContent className="w-full space-y-3 p-3">
+				<Link href={`/orders/${order.id}`}>
+					<div className="rounded-lg pb-3 text-muted-foreground">
+						<div className="flex justify-between">
 							<div className="flex items-center gap-2">
-								<PhoneCall className="h-4 w-4" />
-								<FPContactNumberDisplay
-									contactNumber={order.customerContact?.contactNumber || ""}
-								/>
+								<h2 className="font-semibold text-foreground">
+									{order.customer?.name}
+								</h2>
+								{/* <ChevronRight className="h-4 w-4" /> */}
 							</div>
-						)}
-						<div className="flex items-center gap-2">
-							<MapPin className="h-5 w-5" />
-							<div>
-								<span className="">{order.customerContact?.fullAddress}</span>
-
-								<AddressDetailsDrawerDialog
-									address={{
-										fullAddress: order.customerContact?.fullAddress || "",
-										longitude: order.customerContact?.longitude || 0,
-										latitude: order.customerContact?.latitude || 0
-									}}
-									title={`${order.customer?.user.name}'s Location`}
-								/>
-							</div>
+							<OrderStatusBadge status={order.status} showText />
 						</div>
 					</div>
-				</div>
-
-				<div className="w-full space-y-3">
-					{order.items.map((item, index) => (
-						<Fragment key={item.id}>
-							<OrderItem item={item} />
-						</Fragment>
-					))}
-				</div>
-				<div className="flex items-center justify-end">
-					<p>
-						Total:{" "}
-						<span className="font-semibold">
-							₱{formatPHP(Number(order.totalPrice))}
-						</span>
-					</p>
-				</div>
+					<div className="w-full space-y-3">
+						{order.items.map((item, index) => (
+							<Fragment key={item.id}>
+								<OrderItem item={item} />
+							</Fragment>
+						))}
+					</div>
+					<div className="flex items-center justify-end">
+						<p>
+							Total:{" "}
+							<span className="font-semibold">
+								₱{formatPHP(Number(order.totalPrice))}
+							</span>
+						</p>
+					</div>
+				</Link>
 				<div className="flex items-center justify-end">
 					<div className="flex gap-2 pt-2">
 						{order.status !== "CANCELLED" && order.status !== "COMPLETED" && (
@@ -90,6 +68,20 @@ export default function Order({
 								subStatus={order.subStatus || "CANCELLED_BY_FARMER"}
 							/>
 						)}
+
+						{order.status === "COMPLETED" &&
+							order.subStatus === "BUYER_REVIEWED" && (
+								<Button
+									// asChild
+									// onClick={() => toast.info("Coming soon...")}
+									className="flex items-center"
+									variant={"outline"}
+								>
+									{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
+									View Rating
+									{/* </Link> */}
+								</Button>
+							)}
 					</div>
 				</div>
 			</CardContent>
