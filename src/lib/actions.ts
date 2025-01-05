@@ -423,6 +423,7 @@ export async function cancelOrder(payload: {
 			}
 		})
 
+		revalidatePath(`/orders/${order.id}`)
 		revalidatePath("/dashboard/farmer/orders")
 		revalidatePath("/dashboard/orders")
 
@@ -489,7 +490,10 @@ export async function changeOrderStatus(
 			return { success: false, error: "Order not found" }
 		}
 
+		revalidatePath(`/orders/${order.id}`)
+		revalidatePath(`/dashboard/farmer/orders/${order.id}`)
 		revalidatePath("/dashboard/farmer/orders")
+		revalidatePath(`/dashboard/orders/${order.id}`)
 		revalidatePath("/dashboard/orders")
 
 		return { success: true }
@@ -1013,6 +1017,12 @@ export async function confirmPickedUpOrder(
 			}
 		})
 
+		revalidatePath(`/orders/${order.id}`)
+		revalidatePath(`/dashboard/farmer/orders/${order.id}`)
+		revalidatePath("/dashboard/farmer/orders")
+		revalidatePath(`/dashboard/orders/${order.id}`)
+		revalidatePath("/dashboard/orders")
+
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
@@ -1091,7 +1101,11 @@ export async function rateOrder(payload: {
 				updatedOrder.subStatus
 			)
 		})
-
+		revalidatePath(`/orders/${order.id}`)
+		revalidatePath(`/dashboard/farmer/orders/${order.id}`)
+		revalidatePath("/dashboard/farmer/orders")
+		revalidatePath(`/dashboard/orders/${order.id}`)
+		revalidatePath("/dashboard/orders")
 		return { error: null, success: true }
 	} catch (error) {
 		return { error: getErrorMessage(error), success: false }
