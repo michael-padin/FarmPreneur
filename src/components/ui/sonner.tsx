@@ -1,11 +1,13 @@
 "use client"
 
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { useTheme } from "next-themes"
 import { Toaster as Sonner } from "sonner"
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 const Toaster = ({ ...props }: ToasterProps) => {
+	const isDesktop = useMediaQuery("(min-width: 768px)")
 	const { theme } = useTheme()
 
 	return (
@@ -23,6 +25,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 						"group-[.toast]:!bg-muted group-[.toast]:!text-muted-foreground"
 				}
 			}}
+			position={`${isDesktop ? "bottom-right" : "top-right"}`}
 			{...props}
 		/>
 	)
