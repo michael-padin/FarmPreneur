@@ -168,7 +168,7 @@ export default function CartCheckOutList({
 												</div>
 											</div>
 											{group.farmer?.contactNumber && (
-												<div className="flex items-center gap-1">
+												<div className="flex items-center gap-1 text-muted-foreground">
 													<FPContactNumberDisplay
 														contactNumber={group.farmer?.contactNumber}
 													/>
