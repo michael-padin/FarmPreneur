@@ -2,17 +2,17 @@
 
 import { Button } from "@/components/ui/button"
 import { changeOrderStatus } from "@/lib/actions"
-import { OrderSubStatus } from "@prisma/client"
+import { OrderStatus, OrderSubStatus } from "@prisma/client"
 import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
 
-export function AcceptOrder({ orderId }: { orderId: string }) {
+export function PrepareOrder({ orderId }: { orderId: string }) {
 	const [state, formAction, isPending] = useActionState(changeOrderStatus, null)
 
 	const formActionsWithData = formAction.bind(null, {
 		orderId,
-		status: "IN_PROGRESS",
-		subStatus: OrderSubStatus.ORDER_ACCEPTED
+		status: OrderStatus.IN_PROGRESS,
+		subStats: OrderSubStatus.PREPARING_PRODUCE
 	})
 
 	useEffect(() => {

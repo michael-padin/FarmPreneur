@@ -5,7 +5,6 @@ import {
 	SelectContent,
 	SelectGroup,
 	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
@@ -15,8 +14,10 @@ import { useTransition } from "react"
 
 export function SubStatusSelect({
 	orderId,
+	triggerClassName,
 	currentSubStatus
 }: {
+	triggerClassName?: string
 	orderId: string
 	currentSubStatus: OrderSubStatus
 }) {
@@ -36,21 +37,23 @@ export function SubStatusSelect({
 			<Select
 				onValueChange={handleValueChange}
 				disabled={isPending}
-				defaultValue={currentSubStatus}
+				defaultValue={
+					currentSubStatus === "ORDER_ACCEPTED" ? undefined : currentSubStatus
+				}
 			>
-				<SelectTrigger>
+				<SelectTrigger className={triggerClassName}>
 					<SelectValue placeholder="Select a status" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel>Active/In Progress</SelectLabel>
+						{/* <SelectLabel>Active/In Progress</SelectLabel> */}
 						<SelectItem value="PREPARING_PRODUCE">Preparing Produce</SelectItem>
 						<SelectItem value="PRODUCE_READY_FOR_PICKUP">
 							Ready for Pickup
 						</SelectItem>
 					</SelectGroup>
 					<SelectGroup>
-						<SelectLabel>Completed</SelectLabel>
+						{/* <SelectLabel>Completed</SelectLabel> */}
 						<SelectItem value="PICKED_UP_BY_BUYER">Picked Up</SelectItem>
 					</SelectGroup>
 				</SelectContent>

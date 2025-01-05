@@ -18,9 +18,11 @@ import { useState } from "react"
 
 export function ViewCancellation({
 	reason,
+	triggerClassName,
 	subStatus
 }: {
 	reason: string
+	triggerClassName?: string
 	subStatus: OrderSubStatus
 }) {
 	const [open, setOpen] = useState(false)
@@ -28,8 +30,8 @@ export function ViewCancellation({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"} size={"sm"}>
-					Reason
+				<Button variant={"outline"} size={"sm"} className={triggerClassName}>
+					View Cancellation Reason
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>

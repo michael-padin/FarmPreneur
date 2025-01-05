@@ -22,7 +22,7 @@ export default function Order({
 			className="hover:border-1 border-0 bg-background hover:shadow-lg"
 		>
 			<CardContent className="w-full space-y-3 p-3">
-				<Link href={`/orders/${order.id}`}>
+				<Link href={`/dashboard/farmer/orders/${order.id}`}>
 					<div className="rounded-lg pb-3 text-muted-foreground">
 						<div className="flex justify-between">
 							<div className="flex items-center gap-2">
@@ -57,6 +57,7 @@ export default function Order({
 						)}
 						{order.status === "IN_PROGRESS" && (
 							<SubStatusSelect
+								triggerClassName="bg-primary text-primary-foreground hover:bg-primary/90"
 								orderId={order.id}
 								currentSubStatus={order.subStatus || "PREPARING_PRODUCE"}
 							/>

@@ -438,6 +438,7 @@ export async function changeOrderStatus(
 	payload: {
 		orderId: string
 		status: OrderStatus
+		subStatus?: OrderSubStatus
 	}
 ): Promise<{ success: boolean; error?: string }> {
 	const { userId } = await verifySession()
@@ -458,10 +459,8 @@ export async function changeOrderStatus(
 		const updatedOrder = await db.order.update({
 			where: { id: orderId },
 			data: {
-				status,
-				...(status === "IN_PROGRESS" && {
-					subStatus: OrderSubStatus.ORDER_ACCEPTED
-				})
+				status: payload.status,
+				subStatus: payload.subStatus
 			},
 			include: {
 				items: { include: { product: true } },

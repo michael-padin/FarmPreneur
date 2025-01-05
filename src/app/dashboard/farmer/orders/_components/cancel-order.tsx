@@ -34,8 +34,10 @@ const cancelOrderSchema = z.object({
 
 export function CancelOrder({
 	orderId,
-	status
+	status,
+	triggerClassName
 }: {
+	triggerClassName?: string
 	orderId: string
 	status: OrderStatus
 }) {
@@ -53,7 +55,7 @@ export function CancelOrder({
 			const { error } = await cancelOrder({
 				orderId,
 				cancellationReason: data.reason,
-				subStatus: OrderSubStatus.ORDER_CANCELLED
+				subStatus: OrderSubStatus.ORDER_REJECTED
 			})
 			if (error) {
 				showErrorToast(error)
@@ -65,7 +67,7 @@ export function CancelOrder({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"}>
+				<Button variant={"outline"} className={triggerClassName}>
 					{status === "PENDING" ? "Decline" : "Cancel"}
 				</Button>
 			</DrawerTrigger>
