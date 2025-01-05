@@ -4,21 +4,20 @@ import { useQuantity } from "@/contexts/quantity-context"
 import { addToCart } from "@/lib/actions"
 import { showErrorToast } from "@/lib/handle-error"
 import { getProductBySlugUseCase } from "@/use-cases/products"
-import { ShoppingCart } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useActionState, useEffect, useMemo } from "react"
+import React, { useActionState, useEffect, useMemo } from "react"
 import { toast } from "sonner"
 
 export function AddToCart({
+	children,
 	customerId,
 	product
 }: {
+	children: React.ReactNode
 	customerId: string
 	product: Awaited<ReturnType<typeof getProductBySlugUseCase>>
 }) {
 	const router = useRouter()
-	const session = useSession()
 	const { addItem, cart } = useCart()
 	const [state, formAction] = useActionState(addToCart, null)
 	const { quantity: inputtedQuantity } = useQuantity()
@@ -79,14 +78,5 @@ export function AddToCart({
 		await actionWithProductId()
 	}
 
-	return (
-		<form action={handleFormAction}>
-			<button className="flex flex-col items-center rounded-none" type="submit">
-				<div className="flex flex-col items-center">
-					<ShoppingCart className="h-6 w-6 text-primary" />
-					<span className="text-xs">Add to Cart</span>
-				</div>
-			</button>
-		</form>
-	)
+	return <form action={handleFormAction}>{children}</form>
 }

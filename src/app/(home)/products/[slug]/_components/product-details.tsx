@@ -11,8 +11,10 @@ import { BuyNow } from "./buy-now"
 import { QuantitySelector } from "./quantity-selector"
 
 export function ProductDetails({
+	customerId,
 	product
 }: {
+	customerId: string
 	product: Awaited<ReturnType<typeof getProductBySlugUseCase>>
 }) {
 	return (
@@ -52,7 +54,7 @@ export function ProductDetails({
 				</div>
 			</div>
 			<div className="hidden gap-4 lg:mt-8 lg:flex">
-				<AddToCart product={product}>
+				<AddToCart product={product} customerId={customerId}>
 					<Button variant={"outline"} size={"lg"}>
 						Add To cart
 					</Button>

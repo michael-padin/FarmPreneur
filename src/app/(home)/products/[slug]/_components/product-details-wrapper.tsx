@@ -70,7 +70,10 @@ export async function ProductDetailsWrapper(props: { params: Params }) {
 								</div>
 							</div>
 							<div className="md:p-4">
-								<ProductDetails product={product} />
+								<ProductDetails
+									product={product}
+									customerId={session?.user?.customerId || ""}
+								/>
 							</div>
 						</div>
 						<div className="bg-background p-4 md:rounded-md">

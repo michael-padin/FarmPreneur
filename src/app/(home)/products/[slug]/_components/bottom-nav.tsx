@@ -1,7 +1,7 @@
 "use client"
 import { Separator } from "@/components/ui/separator"
 import { getProductBySlugUseCase } from "@/use-cases/products"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 
 import { AddToCart } from "./add-to-cart"
@@ -27,7 +27,17 @@ export default function ProductBottomNav({
 						</Link>
 					</div>
 					<Separator orientation="vertical" />
-					<AddToCart product={product} customerId={customerId} />
+					<AddToCart product={product} customerId={customerId}>
+						<button
+							className="flex flex-col items-center rounded-none"
+							type="submit"
+						>
+							<div className="flex flex-col items-center">
+								<ShoppingCart className="h-6 w-6 text-primary" />
+								<span className="text-xs">Add to Cart</span>
+							</div>
+						</button>
+					</AddToCart>
 				</div>
 				<div className="flex h-full w-full flex-1 items-center">
 					<BuyNow product={product} />
