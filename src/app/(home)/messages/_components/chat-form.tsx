@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ROLE } from "@prisma/client"
 import { ImageIcon, Loader2, SendIcon, X } from "lucide-react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -37,7 +36,6 @@ export function ChatForm({
 	receiverRole,
 	senderRole
 }: ChatFormProps) {
-	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<ChatSchema>({
 		resolver: zodResolver(chatSchema),
