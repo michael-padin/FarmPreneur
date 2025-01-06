@@ -7,6 +7,7 @@ import { showErrorToast } from "@/lib/handle-error"
 import { processMediaUpdate } from "@/utils/media"
 import { MediaFile, mediaFileSchema } from "@/validations/media"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ROLE } from "@prisma/client"
 import { ImageIcon, Loader2, SendIcon, X } from "lucide-react"
 import Image from "next/image"
 import { useTransition } from "react"
@@ -23,9 +24,9 @@ type ChatSchema = z.infer<typeof chatSchema>
 interface ChatFormProps {
 	senderId: string
 	receiverId: string
-	receiverRole: string
+	receiverRole: ROLE
 	replyToId?: string | null
-	senderRole: string
+	senderRole: ROLE
 }
 export function ChatForm({
 	senderId,
@@ -62,8 +63,7 @@ export function ChatForm({
 				receiverId,
 				receiverRole,
 				senderRole,
-				replyToId: replyToId ? replyToId : null,
-				replyTo: replyToId
+				replyToId: replyToId ? replyToId : null
 			})
 			// const { error } = await createCustomerAddress(values)
 			if (error) {
