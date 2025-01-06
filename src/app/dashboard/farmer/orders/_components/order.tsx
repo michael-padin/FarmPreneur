@@ -66,7 +66,7 @@ export default function Order({
 						{order.status === "CANCELLED" && (
 							<ViewCancellation
 								reason={order.cancellationReason || ""}
-								subStatus={order.subStatus || "CANCELLED_BY_FARMER"}
+								subStatus={order.subStatus}
 							/>
 						)}
 

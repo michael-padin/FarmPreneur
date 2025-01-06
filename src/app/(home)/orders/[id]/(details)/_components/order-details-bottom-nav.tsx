@@ -40,7 +40,7 @@ export default function OrderDetailsBottomNav({
 						<ViewCancellation
 							triggerClassName="w-full"
 							reason={order.cancellationReason || ""}
-							subStatus={order.subStatus || "CANCELLED_BY_FARMER"}
+							subStatus={order.subStatus}
 						/>
 					)}
 					{order.subStatus === "PICKED_UP_BY_BUYER" && (
