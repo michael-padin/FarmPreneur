@@ -386,8 +386,8 @@ export async function cancelOrder(payload: {
 }) {
 	const { orderId, cancellationReason } = payload
 
+	const { userId } = await verifySession()
 	try {
-		const { userId } = await verifySession()
 		const order = await db.order.findUnique({
 			where: { id: orderId },
 			include: {
@@ -890,8 +890,8 @@ export async function updateOrderSubStatus(payload: {
 	orderId: string
 	status: OrderSubStatus
 }) {
+	const { userId } = await verifySession()
 	try {
-		const { userId } = await verifySession()
 		const order = await db.order.findUnique({
 			where: { id: payload.orderId },
 			include: {
@@ -963,8 +963,8 @@ export async function confirmPickedUpOrder(
 ) {
 	const { orderId, status, subStatus } = payload
 
+	const { userId } = await verifySession()
 	try {
-		const { userId } = await verifySession()
 		const order = await db.order.findUnique({
 			where: { id: orderId },
 			include: {
@@ -1039,8 +1039,8 @@ export async function rateOrder(payload: {
 }) {
 	const { orderId, ratings } = payload
 
+	const { userId } = await verifySession()
 	try {
-		const { userId } = await verifySession()
 		// get all the product in the order items and create a new review for each product
 		const order = await db.order.findUnique({
 			where: { id: orderId },

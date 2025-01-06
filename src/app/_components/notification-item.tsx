@@ -30,9 +30,9 @@ export function NotificationItem({
 	const metadata = props.metadata as NotificationMetadata
 	return (
 		<div
-			className={`flex items-start gap-2 p-2 px-4 ${!isRead ? "bg-green-50" : ""}`}
+			className={`flex w-full items-start gap-2 p-2 px-4 ${!isRead ? "bg-green-50" : ""}`}
 		>
-			<Link href={metadata?.url || "#"}>
+			<Link href={metadata?.url || "#"} className="w-full">
 				<div
 					className={`flex items-start gap-4 py-2 ${isRead ? "opacity-50" : ""} `}
 				>

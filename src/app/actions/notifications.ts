@@ -410,7 +410,7 @@ export async function notifyOrderStatusUpdate(
 			},
 			sms: `Order #${order.id} ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
 			push: {
-				title: `Order #${order.id} ${newStatus}`,
+				title: `Order Completed`,
 				body: `Order #${order.id} has been ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
 				icon: "/web-app-manifest-192x192.png",
 				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
@@ -437,7 +437,7 @@ export async function notifyNewMessage(data: {
 	const dashboardUrl =
 		data.senderRole === "FARMER"
 			? `${process.env.NEXT_PUBLIC_BASE_URL}/messages/${data.receiverId}`
-			: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/messages/${data.receiverId}`
+			: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/messages/${data.senderId}`
 	// Prepare attachment info if present
 	let attachmentInfo = ""
 	if (data.fileUrl) {
@@ -490,7 +490,7 @@ async function getUserName(userId: string): Promise<string> {
 }
 
 export async function notifyOrderCancelled(orderId: string, reason: string) {
-	await verifySession()
+	const { role } = await verifySession()
 	const order = await db.order.findUnique({
 		where: { id: orderId },
 		include: {
@@ -511,6 +511,11 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 		}
 	})
 
+	const url =
+		role === ROLE.CUSTOMER
+			? `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+			: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/orders/${order.id}`
+
 	await Promise.all([
 		sendNotification(order.customer.userId, NotificationType.ORDER_STATUS, {
 			email: {
@@ -527,7 +532,7 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 				title: "Order Cancelled",
 				body: `Your order #${order.id} has been cancelled. Reason: ${reason}`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
+				url
 			}
 		}),
 		sendNotification(order.farmer.userId, NotificationType.ORDER_STATUS, {
@@ -545,7 +550,7 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 				title: "Order Cancelled",
 				body: `Order #${order.id} has been cancelled. Reason: ${reason}`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				url
 			}
 		})
 	])
@@ -786,15 +791,19 @@ export async function updateNotificationPreferences(data: {
 
 export async function subscribeUser(sub: PushSubscription) {
 	const { userId } = await verifySession()
-	await db.pushSubscription.create({
-		data: {
-			userId: userId,
-			endpoint: sub.endpoint,
-			p256dh: sub.keys.p256dh,
-			auth: sub.keys.auth
-		}
-	})
-	return { success: true, message: "Push subscription saved successfully" }
+	try {
+		await db.pushSubscription.create({
+			data: {
+				userId: userId,
+				endpoint: sub.endpoint,
+				p256dh: sub.keys.p256dh,
+				auth: sub.keys.auth
+			}
+		})
+		return { success: true, error: null }
+	} catch (error) {
+		return { success: false, error: getErrorMessage(error) }
+	}
 }
 
 export async function unsubscribeUser(endpoint: string) {
@@ -807,8 +816,8 @@ export async function unsubscribeUser(endpoint: string) {
 }
 
 export const readNotifications = async (prevState: any) => {
+	const { userId } = await verifySession()
 	try {
-		const { userId } = await verifySession()
 		await db.notification.updateMany({
 			where: {
 				userId: userId
@@ -830,8 +839,8 @@ export const readNotification = async (
 	prevState: any,
 	notificationId: string
 ) => {
+	await verifySession()
 	try {
-		await verifySession()
 		await db.notification.update({
 			where: {
 				id: notificationId

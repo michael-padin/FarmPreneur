@@ -78,7 +78,7 @@ export function PushNotificationManager() {
 			const result = await Notification.requestPermission()
 			setPermission(result)
 			if (result === "granted") {
-				registerServiceWorker()
+				await registerServiceWorker()
 				toast("Notifications enabled", {
 					description: "You will now receive push notifications."
 				})

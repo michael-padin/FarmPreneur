@@ -3,11 +3,10 @@ import {
 	Bell,
 	Box,
 	HelpCircle,
+	Leaf,
 	Megaphone,
 	MessageSquare,
 	ShieldCheck,
-	ShoppingBag,
-	Tag,
 	UserCheck
 } from "lucide-react"
 
@@ -26,7 +25,7 @@ export function NotificationIcon({
 
 	switch (type) {
 		case NotificationType.ORDER_STATUS:
-			return <ShoppingBag {...iconProps} aria-label="Order Status" />
+			return <Box {...iconProps} aria-label="Order Status" />
 		case NotificationType.FARMER_APPROVAL:
 			return <UserCheck {...iconProps} aria-label="Farmer Approval" />
 		case NotificationType.PRODUCT_APPROVAL:
@@ -34,7 +33,7 @@ export function NotificationIcon({
 		case NotificationType.NEW_MESSAGE:
 			return <MessageSquare {...iconProps} aria-label="New Message" />
 		case NotificationType.NEW_PRODUCT:
-			return <Tag {...iconProps} aria-label="New Product" />
+			return <Leaf {...iconProps} aria-label="New Product" />
 		case NotificationType.PROMOTION:
 			return <Megaphone {...iconProps} aria-label="Promotion" />
 		case NotificationType.SYSTEM_ALERT:
