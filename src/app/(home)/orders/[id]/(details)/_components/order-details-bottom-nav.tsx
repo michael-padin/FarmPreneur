@@ -24,11 +24,13 @@ export default function OrderDetailsBottomNav({
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background drop-shadow-2xl">
 			<div className="flex w-full items-center px-3 py-4">
 				<div className="flex w-full gap-3">
-					<Button variant="outline" size={"icon"}>
-						<Link href={`/messages/${order.farmer.userId}`}>
-							<MessageCircle />
-						</Link>
-					</Button>
+					<div>
+						<Button variant="outline" size={"icon"} asChild>
+							<Link href={`/messages/${order.farmer.userId}`}>
+								<MessageCircle />
+							</Link>
+						</Button>
+					</div>
 					{canBeCancelled && (
 						<CancelOrder
 							orderId={order.id}

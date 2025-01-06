@@ -39,7 +39,13 @@ export function Chat({
 	const otherUserDetails = otherUser.customer
 
 	useEffect(() => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+		if (messages) {
+			setTimeout(() => {
+				messagesEndRef.current?.scrollIntoView({
+					behavior: "smooth"
+				})
+			}, 100)
+		}
 	}, [messages])
 
 	useEffect(() => {
@@ -57,7 +63,7 @@ export function Chat({
 					}
 				}
 			) => {
-				setMessages((prevMessages) => [...prevMessages, data])
+				setMessages((prevMessages) => [data, ...prevMessages])
 			}
 		)
 
@@ -99,7 +105,7 @@ export function Chat({
 	return (
 		<>
 			<div className="flex h-full flex-col bg-gray-100">
-				<div className="flex-1 overflow-y-auto p-4">
+				<div className="flex-1 overflow-y-auto p-2">
 					{messages.map((message) => (
 						<Message
 							key={message.id}
@@ -114,7 +120,7 @@ export function Chat({
 			</div>
 			<div className="fixed bottom-0 left-0 right-0 w-full">
 				{replyingTo && (
-					<div className="mb-2 flex items-center bg-green-50 p-3 text-sm text-muted-foreground">
+					<div className="mb-2 flex items-center bg-green-50 p-2 text-sm text-muted-foreground">
 						<span className="mr-2">Replying to:</span>
 						<span className="flex-1 truncate font-medium">
 							{messages.find((m) => m.id === replyingTo)?.content.slice(0, 50)}

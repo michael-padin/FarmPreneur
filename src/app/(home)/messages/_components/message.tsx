@@ -1,13 +1,13 @@
 import FPDynamicImage from "@/components/fp/fp-dyanmic-image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Message as MessageType, User } from "@prisma/client"
+import { Farmer, Message as MessageType, User } from "@prisma/client"
 import { formatDistanceToNow } from "date-fns"
 import { useState } from "react"
 
 interface MessageProps {
 	message: MessageType & {
 		sender: User & {
-			farmer?: User
+			farmer?: Farmer | null
 		}
 	}
 	currentUserId: string
@@ -33,21 +33,23 @@ export function Message({
 			<div className="flex gap-2">
 				{!isOwnMessage && (
 					<div className="flex h-full justify-end">
-						<Avatar className="h-8 w-8">
+						<Avatar className="flex h-8 w-8 items-center justify-center bg-background">
 							<AvatarImage
 								src={
 									message.sender.farmer?.profilePicture ||
 									"/placeholder-avatar.png"
 								}
 							/>
-							<AvatarFallback>{message.sender.name?.charAt(0)}</AvatarFallback>
-							<span className="sr-only">{message.sender.name}</span>
+							<AvatarFallback className="text-primary">
+								{message.sender.name?.charAt(0)}
+							</AvatarFallback>
+							<span className="sr-only">{message.sender.farmer?.farmName}</span>
 						</Avatar>
 					</div>
 				)}
 				<div className="">
 					<div
-						className={`max-w-[300px] ${message.fileUrl ? "min-w-[300px]" : ""} ${isOwnMessage ? "bg-primary text-white" : "bg-white"} rounded-xl p-3 shadow`}
+						className={`max-w-[250px] ${message.fileUrl ? "min-w-[250px]" : ""} ${isOwnMessage ? "bg-primary text-white" : "bg-white"} rounded-lg p-3 shadow`}
 					>
 						{/* {!isOwnMessage && (
 						<p className="mb-1 text-sm font-semibold">
@@ -61,12 +63,15 @@ export function Message({
 							<video
 								src={message.fileUrl}
 								controls
+								autoPlay={false}
 								className="max-w-full rounded-lg"
 							></video>
 						)}
-						<p className={`${message.fileUrl ? "mt-3" : ""}`}>
-							{message.content}
-						</p>
+						<div className="break-words">
+							<p className={`${message.fileUrl ? "mt-1" : ""} `}>
+								{message.content}
+							</p>
+						</div>
 						{/* <div
 						className={`mt-2 flex items-center justify-between text-right ${isOwnMessage ? "text-white" : "text-muted-foreground"}`}
 					>

@@ -39,7 +39,13 @@ export function Chat({
 	const otherUserDetails = otherUser.farmer
 
 	useEffect(() => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+		if (messages) {
+			setTimeout(() => {
+				messagesEndRef.current?.scrollIntoView({
+					behavior: "smooth"
+				})
+			}, 100)
+		}
 	}, [messages])
 
 	useEffect(() => {
@@ -99,7 +105,7 @@ export function Chat({
 	return (
 		<>
 			<div className="flex h-full flex-col bg-gray-100">
-				<div className="flex-1 overflow-y-auto p-4">
+				<div className="flex-1 overflow-y-auto p-2">
 					{messages.map((message) => (
 						<Message
 							key={message.id}

@@ -25,20 +25,22 @@ export default function OrderDetailsBottomNav({
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background drop-shadow-2xl">
 			<div className="flex w-full items-center px-3 py-4">
 				<div className="flex w-full gap-3">
-					<Button
+					<div
 						className={`${order.subStatus === "BUYER_CONFIRMED_ORDER" ? "flex-1" : ""}`}
-						variant="outline"
-						asChild
-						size={"icon"}
 					>
-						<Link href={`/messages/${order.customer?.userId}`} className="flex">
-							{order.subStatus === "BUYER_CONFIRMED_ORDER" ? (
-								<span>Message</span>
-							) : (
-								<MessageCircle />
-							)}
-						</Link>
-					</Button>
+						<Button variant="outline" asChild size={"icon"}>
+							<Link
+								href={`/messages/${order.customer?.userId}`}
+								className="flex"
+							>
+								{order.subStatus === "BUYER_CONFIRMED_ORDER" ? (
+									<span>Message</span>
+								) : (
+									<MessageCircle />
+								)}
+							</Link>
+						</Button>
+					</div>
 					{canBeCancelled && (
 						<CancelOrder orderId={order.id} status={order.status} />
 					)}

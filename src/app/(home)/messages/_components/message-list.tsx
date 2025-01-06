@@ -1,9 +1,9 @@
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { pusherClient } from "@/lib/pusher"
 import { Customer, Farmer, Message, ROLE, User } from "@prisma/client"
 import { formatDistanceToNow } from "date-fns"
-import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState, useTransition } from "react"
 
@@ -102,17 +102,24 @@ export function MessageList({
 				return (
 					<Link
 						key={conversation.id + "sd"}
+						prefetch
 						id={`conversation-${conversation.id}`}
+						scroll={false}
 						href={`/messages/${conversation.id}`}
 						className="flex items-center p-4 transition-colors hover:bg-gray-50"
 					>
-						<Image
-							src={partnerDetails?.profilePicture || "/placeholder-avatar.png"}
-							alt={partnerDetails?.farmName || "Unknown"}
-							width={50}
-							height={50}
-							className="mr-4 rounded-full"
-						/>
+						<Avatar className="mr-4 flex h-[50px] w-[50px] items-center justify-center bg-background">
+							<AvatarImage
+								src={
+									partnerDetails?.profilePicture || "/placeholder-avatar.png"
+								}
+							/>
+							<AvatarFallback className="text-primary">
+								{partnerDetails?.farmName?.charAt(0)}
+							</AvatarFallback>
+							<span className="sr-only">{partnerDetails?.farmName}</span>
+						</Avatar>
+
 						<div className="min-w-0 flex-1">
 							<div className="flex items-center justify-between">
 								<h2 className="truncate text-lg font-semibold">

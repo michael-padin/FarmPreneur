@@ -33,12 +33,6 @@ export function PlaceOrder({
 					position: "top-right"
 				})
 			} else {
-				toast.success("Order created successfully", {
-					closeButton: true,
-					duration: 2000,
-					position: "top-right"
-				})
-
 				router.push("/orders")
 			}
 		}

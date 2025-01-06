@@ -1,5 +1,5 @@
 import JsonLd from "@/components/json-ld"
-import { PushNotificationManager } from "@/components/push-notification-manager"
+import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import {
 	generateHomeJsonLd,
 	generateOrganizationJsonLd
@@ -22,7 +22,7 @@ export default function Home() {
 	const organizationJsonLd = generateOrganizationJsonLd()
 	return (
 		<>
-			<PushNotificationManager />
+			<PushNotificationManagerWrapper />
 			<header>
 				<HomeNav />
 			</header>

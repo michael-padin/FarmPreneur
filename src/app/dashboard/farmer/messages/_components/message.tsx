@@ -34,21 +34,23 @@ export function Message({
 			<div className="flex gap-2">
 				{!isOwnMessage && (
 					<div className="flex h-full justify-end">
-						<Avatar className="h-8 w-8">
+						<Avatar className="flex h-8 w-8 items-center justify-center bg-background">
 							<AvatarImage
 								src={
 									message.sender.customer?.profilePicture ||
 									"/placeholder-avatar.png"
 								}
 							/>
-							<AvatarFallback>{message.sender.name?.charAt(0)}</AvatarFallback>
+							<AvatarFallback className="text-primary">
+								{message.sender.name?.charAt(0)}
+							</AvatarFallback>
 							<span className="sr-only">{message.sender.name}</span>
 						</Avatar>
 					</div>
 				)}
 				<div className="">
 					<div
-						className={`max-w-[300px] ${message.fileUrl ? "min-w-[300px]" : ""} ${isOwnMessage ? "bg-primary text-white" : "bg-white"} rounded-xl p-3 shadow`}
+						className={`max-w-[250px] ${message.fileUrl ? "min-w-[250px]" : ""} ${isOwnMessage ? "bg-primary text-white" : "bg-white"} rounded-xl p-3 shadow`}
 					>
 						{/* {!isOwnMessage && (
 							<p className="mb-1 text-sm font-semibold">
@@ -65,9 +67,11 @@ export function Message({
 								className="max-w-full rounded-lg"
 							></video>
 						)}
-						<p className={`${message.fileUrl ? "mt-3" : ""}`}>
-							{message.content}
-						</p>
+						<div className="break-words">
+							<p className={`${message.fileUrl ? "mt-1" : ""} `}>
+								{message.content}
+							</p>
+						</div>
 						{/* <div
 							className={`mt-2 flex items-center justify-between text-right ${isOwnMessage ? "text-white" : "text-muted-foreground"}`}
 						>

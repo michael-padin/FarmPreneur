@@ -3,9 +3,7 @@ import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db"
 import { getErrorMessage } from "@/lib/handle-error"
 import { pusherServer } from "@/lib/pusher"
-import { isDevelopment } from "@/lib/utils"
 import { Message, ROLE } from "@prisma/client"
-import { revalidatePath } from "next/cache"
 import { notifyNewMessage } from "./notifications"
 
 export const sendMessage = async (data: {
@@ -16,7 +14,7 @@ export const sendMessage = async (data: {
 	receiverRole: ROLE
 	senderRole: ROLE
 	fileType?: "image" | "video"
-	replyToId?: string | null
+	replyToId?: string
 	replyTo?: Message | null
 }) => {
 	const { userId } = await verifySession()
@@ -49,22 +47,29 @@ export const sendMessage = async (data: {
 		})
 
 		// Trigger Pusher event for real-time updates
-		if (!isDevelopment) {
-			await pusherServer.trigger(
-				`chat-${userId}-${data.receiverId}`,
-				"new-message",
-				message
-			)
-			await pusherServer.trigger(`user-${data.receiverId}`, "new-message", {
-				conversation: {
-					id: userId,
-					lastMessage: message
-				}
-			})
-		}
+		await pusherServer.trigger(
+			`chat-${userId}-${data.receiverId}`,
+			"new-message",
+			message
+		)
+		await pusherServer.trigger(
+			`chat-${data.receiverId}-${userId}`,
+			"new-message",
+			message
+		)
 
-		revalidatePath(`/messages/${data.receiverId}`)
-		revalidatePath("/messages")
+		await pusherServer.trigger(`user-${data.receiverId}`, "new-message", {
+			conversation: {
+				id: userId,
+				lastMessage: message
+			}
+		})
+
+		// revalidatePath(`/messages`)
+		// revalidatePath(`/messages/${data.senderId}`)
+		// revalidatePath(`/dashboard/farmer/messages`)
+		// revalidatePath(`/dashboard/farmer/messages/${data.senderId}`)
+		// revalidatePath("/messages")
 
 		return { success: true, message }
 	} catch (error) {

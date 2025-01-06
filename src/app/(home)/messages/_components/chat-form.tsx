@@ -3,12 +3,15 @@ import { sendMessage } from "@/app/actions/message"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast } from "@/lib/handle-error"
 import { processMediaUpdate } from "@/utils/media"
 import { MediaFile, mediaFileSchema } from "@/validations/media"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ROLE } from "@prisma/client"
 import { ImageIcon, Loader2, SendIcon, X } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -23,9 +26,9 @@ type ChatSchema = z.infer<typeof chatSchema>
 interface ChatFormProps {
 	senderId: string
 	receiverId: string
-	receiverRole: string
+	receiverRole: ROLE
 	replyToId?: string | null
-	senderRole: string
+	senderRole: ROLE
 }
 export function ChatForm({
 	senderId,
@@ -34,6 +37,7 @@ export function ChatForm({
 	receiverRole,
 	senderRole
 }: ChatFormProps) {
+	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 	const form = useForm<ChatSchema>({
 		resolver: zodResolver(chatSchema),
@@ -62,14 +66,14 @@ export function ChatForm({
 				receiverId,
 				receiverRole,
 				senderRole,
-				replyToId: replyToId ? replyToId : null,
-				replyTo: replyToId
+				...(replyToId && { replyToId })
+				// replyTo:
 			})
 			// const { error } = await createCustomerAddress(values)
 			if (error) {
 				showErrorToast(error)
+				return
 			}
-
 			form.reset()
 		})
 	}
@@ -154,10 +158,10 @@ export function ChatForm({
 							render={({ field }) => (
 								<FormItem className="w-full">
 									<FormControl>
-										<Input
+										<Textarea
 											{...field}
-											type="text"
 											placeholder="Type a message..."
+											className="max-h-10 min-h-10"
 										/>
 									</FormControl>
 								</FormItem>

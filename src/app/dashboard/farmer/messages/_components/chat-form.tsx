@@ -3,6 +3,7 @@ import { sendMessage } from "@/app/actions/message"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast } from "@/lib/handle-error"
 import { processMediaUpdate } from "@/utils/media"
 import { MediaFile, mediaFileSchema } from "@/validations/media"
@@ -63,11 +64,12 @@ export function ChatForm({
 				receiverId,
 				receiverRole,
 				senderRole,
-				replyToId: replyToId ? replyToId : null
+				...(replyToId && { replyToId })
 			})
 			// const { error } = await createCustomerAddress(values)
 			if (error) {
 				showErrorToast(error)
+				return
 			}
 
 			form.reset()
@@ -154,10 +156,10 @@ export function ChatForm({
 							render={({ field }) => (
 								<FormItem className="w-full">
 									<FormControl>
-										<Input
+										<Textarea
 											{...field}
-											type="text"
 											placeholder="Type a message..."
+											className="max-h-10 min-h-10"
 										/>
 									</FormControl>
 								</FormItem>
