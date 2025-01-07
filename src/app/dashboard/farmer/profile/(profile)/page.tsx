@@ -1,6 +1,7 @@
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
 import { BottomNav } from "../../_components/bottom-navigation"
+import { ProfileNavLinks } from "./_components/nav-links"
 import { FarmerProfile } from "./_components/profile-header"
 import { SignOutBtn } from "./_components/sign-out-btn"
 
@@ -18,7 +19,7 @@ export default function FarmerProfilePage() {
 							</h2>
 							<h1 className="text-2xl font-bold">Profile</h1>
 						</div>
-						{/* <ProfileNavLinks /> */}
+						<ProfileNavLinks />
 					</div>
 				</div>
 			</header>

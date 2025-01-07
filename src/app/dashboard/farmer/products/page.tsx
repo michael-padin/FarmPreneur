@@ -28,7 +28,6 @@ export default function ProductsPage({ searchParams }: PageProps) {
 							<h1 className="text-2xl font-bold">Products</h1>
 						</div>
 						<div className="flex items-center gap-3">
-							<ProductsNavLink />
 							<Button asChild size="sm">
 								<Link
 									href={"/dashboard/farmer/products/create"}
@@ -37,6 +36,7 @@ export default function ProductsPage({ searchParams }: PageProps) {
 									Add Product
 								</Link>
 							</Button>
+							<ProductsNavLink />
 						</div>
 					</div>
 					<FilterProducts />

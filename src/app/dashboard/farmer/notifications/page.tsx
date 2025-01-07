@@ -3,6 +3,7 @@ import { NotificationSkeleton } from "@/app/_components/notification-skeleton"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import { BottomNav } from "../_components/bottom-navigation"
+import { NotificationNavLink } from "./_components/notification-nav-link"
 
 export const metadata: Metadata = {
 	title: "Notifications"
@@ -21,9 +22,7 @@ export default function Page() {
 							<h1 className="text-2xl font-bold">Notifications</h1>
 						</div>
 					</div>
-					{/* <div className="flex items-center gap-2">
-						<FPMessageCircleMore containerClassName="text-primary" />
-					</div> */}
+					<NotificationNavLink />
 				</div>
 			</header>
 			<main className="w-full">
