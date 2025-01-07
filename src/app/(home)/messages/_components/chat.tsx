@@ -34,17 +34,18 @@ export function Chat({
 }: ChatProps) {
 	const [messages, setMessages] = useState(initialMessages)
 	const [replyingTo, setReplyingTo] = useState<string | null>(null)
-	const chatContainerRef = useRef<HTMLDivElement>(null)
+	const messagesEndRef = useRef<HTMLDivElement>(null)
 
-	const scrollToBottom = () => {
-		chatContainerRef.current?.scrollTo({
-			top: chatContainerRef.current.scrollHeight,
-			behavior: "smooth"
-		})
-	}
+	const otherUserDetails = otherUser.farmer
 
 	useEffect(() => {
-		scrollToBottom()
+		if (messages) {
+			setTimeout(() => {
+				messagesEndRef.current?.scrollIntoView({
+					behavior: "smooth"
+				})
+			}, 100)
+		}
 	}, [messages])
 
 	useEffect(() => {
@@ -114,6 +115,7 @@ export function Chat({
 							// onReact={handleReact}
 						/>
 					))}
+					<div ref={messagesEndRef} />
 				</div>
 			</div>
 			<div className="fixed bottom-0 left-0 right-0 w-full">
