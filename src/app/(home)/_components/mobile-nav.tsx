@@ -6,6 +6,7 @@ import { useScrollDetection } from "@/hooks/use-scroll-detection"
 import { cn } from "@/lib/utils"
 import { Session } from "next-auth"
 import Image from "next/image"
+import { HowItWorksDialog } from "./how-it-works-dialog"
 
 export function MobileNav({ user }: { user?: Session["user"] }) {
 	const scrolled = useScrollDetection({ threshold: 60 })
@@ -60,7 +61,7 @@ export function MobileNav({ user }: { user?: Session["user"] }) {
 							/>
 						</>
 					) : (
-						""
+						<HowItWorksDialog />
 					)}
 				</div>
 			</div>

@@ -36,9 +36,8 @@ export default function Home() {
 									Discover Local Farm-Fresh Produce
 								</h1>
 								<p className="mx-auto max-w-[700px] lg:text-xl">
-									Pick up the freshest, highest-quality fruits and vegetables
-									directly from local farmers. No delivery, just pure local
-									goodness.
+									Pick up the freshest, highest-quality produce from local
+									farmers. No delivery, just pure local goodness.
 								</p>
 								<Suspense fallback={"..."}>
 									<LoginSignUpCTA />
