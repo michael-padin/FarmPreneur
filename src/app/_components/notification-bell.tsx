@@ -59,7 +59,7 @@ export function NotificationBell() {
 									className="h-4 w-4"
 								/>
 							</div>{" "}
-							<div className="flex-1 space-y-1">
+							<div className="flex-1">
 								<div className="flex items-center gap-2">
 									<p className="text-sm font-medium">{notification.title}</p>
 									{!notification.isRead && (

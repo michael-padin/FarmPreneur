@@ -10,6 +10,7 @@ export async function LoginSignUpCTA() {
 	return (
 		<div className="flex w-full justify-center gap-3">
 			<Button
+				size={"lg"}
 				asChild
 				variant={"outline"}
 				className="bg-transparent hover:bg-transparent hover:text-white"
@@ -17,6 +18,7 @@ export async function LoginSignUpCTA() {
 				<Link href="/signup">Sign up</Link>
 			</Button>
 			<Button
+				size={"lg"}
 				className="bg-background text-foreground"
 				variant={"ghost"}
 				asChild

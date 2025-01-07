@@ -124,12 +124,21 @@ export function MessageList({
 										})}
 									</span> */}
 								</div>
-								<p className="truncate text-muted-foreground">
-									{conversation.lastMessage.senderId === currentUserId
-										? "You: "
-										: ""}
-									{conversation.lastMessage.content}
-								</p>
+								<div className="flex items-center justify-between gap-2">
+									<p className="truncate text-muted-foreground">
+										{conversation.lastMessage.senderId === currentUserId
+											? "You: "
+											: ""}
+										{conversation.lastMessage.content}
+									</p>
+									<div className="text-xs text-muted-foreground">
+										<time className="block w-max text-xs font-normal leading-none text-muted-foreground">
+											{new Date(
+												conversation.lastMessage.createdAt
+											).toLocaleString()}
+										</time>
+									</div>
+								</div>
 							</div>
 						</Link>
 					)

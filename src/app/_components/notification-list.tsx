@@ -35,7 +35,7 @@ export const NotificationList = () => {
 						{...notif}
 						markAsRead={readNotification}
 						Icon={
-							<div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+							<div className="flex h-10 min-w-10 items-center justify-center rounded-full bg-primary/10">
 								<NotificationIcon type={notif.type} className="h-5 w-5" />
 							</div>
 						}

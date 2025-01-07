@@ -85,6 +85,9 @@ export default function Order({
 							)}
 					</div>
 				</div>
+				<span className="text-xs">
+					Updated: {new Date(order.updatedAt).toLocaleString()}
+				</span>
 			</CardContent>
 		</Card>
 	)

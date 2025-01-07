@@ -19,7 +19,7 @@ export const OrderStatusNotificationItem = ({
 					className="object-cover"
 				/>
 			</div>
-			<div className="flex-1 space-y-1">
+			<div className="flex-1">
 				<div className="flex items-center gap-2">
 					<p className="text-sm font-medium">Order Status</p>
 				</div>

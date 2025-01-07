@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button"
 import { NotificationMetadata } from "@/types/notification"
 import { Notification } from "@prisma/client"
-import { formatDistanceToNowStrict } from "date-fns"
 import { X } from "lucide-react"
 import Link from "next/link"
 import { useActionState } from "react"
@@ -30,14 +29,15 @@ export function NotificationItem({
 	const metadata = props.metadata as NotificationMetadata
 	return (
 		<div
-			className={`flex w-full items-start gap-2 p-2 px-4 ${!isRead ? "bg-green-50" : ""}`}
+			className={`flex w-full items-start gap-2 p-2 px-4 ${!isRead ? "bg-green-50" : ""} `}
 		>
-			<Link href={metadata?.url || "#"} className="w-full">
-				<div
-					className={`flex items-start gap-4 py-2 ${isRead ? "opacity-50" : ""} `}
-				>
+			<Link
+				href={metadata?.url || "#"}
+				className="w-full overflow-hidden break-words"
+			>
+				<div className={`flex items-start gap-4 ${isRead ? "" : ""} `}>
 					{Icon}
-					<div className="flex-1 space-y-1">
+					<div className="flex-1 break-words">
 						<div className="flex items-center gap-2">
 							<p className="font-medium">{title}</p>
 							{!isRead && (
@@ -45,14 +45,14 @@ export function NotificationItem({
 							)}
 						</div>
 						{nodeMessage || (
-							<p className="text-sm text-muted-foreground">{message}</p>
+							<div className="break-words text-sm text-muted-foreground">
+								{message}
+							</div>
 						)}
 						{createdAt && (
-							<p className="text-xs text-muted-foreground">
-								{`${formatDistanceToNowStrict(new Date(createdAt), {
-									addSuffix: true
-								})}`}
-							</p>
+							<time className="mt-2 block text-xs font-normal leading-none text-muted-foreground">
+								{new Date(createdAt).toLocaleString()}
+							</time>
 						)}
 					</div>
 				</div>

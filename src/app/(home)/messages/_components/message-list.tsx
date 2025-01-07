@@ -3,7 +3,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { pusherClient } from "@/lib/pusher"
 import { Customer, Farmer, Message, ROLE, User } from "@prisma/client"
-import { formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState, useTransition } from "react"
 
@@ -125,19 +124,22 @@ export function MessageList({
 								<h2 className="truncate text-lg font-semibold">
 									{partnerDetails?.farmName || "Unknown"}
 								</h2>
-								<span className="text-xs text-gray-500">
-									{formatDistanceToNow(
-										new Date(conversation.lastMessage.createdAt),
-										{ addSuffix: true }
-									)}
-								</span>
 							</div>
-							<p className="truncate text-gray-600">
-								{conversation.lastMessage.senderId === currentUserId
-									? "You: "
-									: ""}
-								{conversation.lastMessage.content}
-							</p>
+							<div className="flex items-center justify-between gap-2">
+								<p className="truncate text-muted-foreground">
+									{conversation.lastMessage.senderId === currentUserId
+										? "You: "
+										: ""}
+									{conversation.lastMessage.content}
+								</p>
+								<div className="text-xs text-muted-foreground">
+									<time className="block w-max text-xs font-normal leading-none text-muted-foreground">
+										{new Date(
+											conversation.lastMessage.createdAt
+										).toLocaleString()}
+									</time>
+								</div>
+							</div>
 						</div>
 					</Link>
 				)

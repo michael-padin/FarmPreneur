@@ -43,7 +43,7 @@ export function BottomNav() {
 					>
 						<div className="relative flex flex-col items-center gap-1">
 							<div className="truncate">
-								<item.icon className="h-6 w-6" />
+								<item.icon className="h-5 w-5" />
 							</div>
 							{item.badge && (
 								<span className="absolute -top-1 right-2.5 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-center text-xs font-semibold leading-none text-white">

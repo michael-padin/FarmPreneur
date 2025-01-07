@@ -12,8 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { locationLabelMap, LocationType } from "@/constants/address"
 import { getOrder } from "@/data-access/orders"
 import { formatPHP } from "@/lib/utils"
-import { ChevronRight, MapPin } from "lucide-react"
-import Link from "next/link"
+import { MapPin } from "lucide-react"
 import { Fragment } from "react"
 import { OrderItem } from "./order-item"
 import { OrderTimeline } from "./order-timeline"
@@ -105,17 +104,11 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 						<MapPin className="mr-2 mt-1 h-4 w-4 text-primary" />
 						<div>
 							<div className="flex">
-								<Link
-									href={`/farmers/${order.farmer?.id}`}
-									className="flex items-center"
-								>
-									<div className="flex items-center gap-1">
-										<h2 className="font-semibold text-foreground">
-											{order.farmer?.farmName}
-										</h2>
-										<ChevronRight className="h-4 w-4" />
-									</div>
-								</Link>
+								<div className="flex items-center gap-1">
+									<h2 className="font-semibold text-foreground">
+										{order.farmer?.farmName}
+									</h2>
+								</div>
 							</div>
 
 							<div className="space-y-2 text-sm">

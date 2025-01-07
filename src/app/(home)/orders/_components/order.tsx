@@ -24,7 +24,7 @@ export default function Order({
 				<Link href={`/orders/${order.id}`} prefetch>
 					<div className="rounded-lg pb-3 text-muted-foreground">
 						<div className="flex justify-between">
-							<div className="flex items-center gap-2">
+							<div className="">
 								{/* <Image
 									src={order.farmer?.profilePicture || "/placeholder.svg"}
 									alt={`${order.farmer?.farmName}'s Profile picture`}
@@ -35,6 +35,7 @@ export default function Order({
 								<h2 className="font-semibold text-foreground">
 									{order.farmer?.farmName}
 								</h2>
+
 								{/* <ChevronRight className="h-4 w-4" /> */}
 							</div>
 							<OrderStatusBadge status={order.status} showText />
@@ -94,6 +95,9 @@ export default function Order({
 							)}
 					</div>
 				</div>
+				<span className="text-xs">
+					Updated: {new Date(order.updatedAt).toLocaleString()}
+				</span>
 			</CardContent>
 		</Card>
 	)

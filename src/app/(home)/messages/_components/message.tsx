@@ -1,7 +1,6 @@
 import FPDynamicImage from "@/components/fp/fp-dyanmic-image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Farmer, Message as MessageType, User } from "@prisma/client"
-import { formatDistanceToNow } from "date-fns"
 import { useState } from "react"
 
 interface MessageProps {
@@ -118,11 +117,9 @@ export function Message({
 					<div
 						className={`flex w-full ${isOwnMessage ? "justify-end" : "justify-start"} mt-2 text-muted-foreground`}
 					>
-						<span className="text-right text-xs">
-							{formatDistanceToNow(new Date(message.createdAt), {
-								addSuffix: true
-							})}
-						</span>
+						<time className="block w-max text-xs font-normal leading-none text-muted-foreground">
+							{new Date(message.createdAt).toLocaleString()}
+						</time>
 					</div>
 				</div>
 			</div>
