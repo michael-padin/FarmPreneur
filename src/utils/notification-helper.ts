@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
 import { pusherServer } from "@/lib/pusher"
+import { vonageSmsClient } from "@/lib/vonage-sms"
 import { Notification, NotificationType } from "@prisma/client"
 import { render } from "@react-email/components"
 import nodemailer from "nodemailer"
@@ -21,14 +22,39 @@ webpush.setVapidDetails(
 	process.env.VAPID_PRIVATE_KEY!
 )
 
+function formatToE164PH(phoneNumber: string) {
+	// Remove spaces, dashes, parentheses, and other non-numeric characters
+	let cleanedNumber = phoneNumber.replace(/[^0-9+]/g, "")
+
+	// Handle numbers starting with '+'
+	if (cleanedNumber.startsWith("+")) {
+		cleanedNumber = cleanedNumber.substring(1) // Remove the '+'
+	}
+
+	// Handle numbers starting with '00'
+	if (cleanedNumber.startsWith("00")) {
+		cleanedNumber = cleanedNumber.substring(2) // Remove the '00'
+	}
+
+	// Replace leading '0' with '63' for local Philippine numbers
+	if (cleanedNumber.startsWith("0")) {
+		cleanedNumber = "63" + cleanedNumber.substring(1)
+	}
+
+	return cleanedNumber
+}
+
 export async function sendSMS(to: string, body: string) {
 	try {
-		// await twilioClient.messages.create({
-		// 	body,
-		// 	from: process.env.TWILIO_PHONE_NUMBER,
-		// 	to
-		// })
+		console.log("to :>> ", to)
+		console.log("formatToE164PH(to) :>> ", formatToE164PH(to))
+		await vonageSmsClient.send({
+			from: "Vonage APIs",
+			to: formatToE164PH(to),
+			text: body
+		})
 	} catch (error) {
+		if (error instanceof Error) console.log(error.cause)
 		console.error("Error sending SMS:", error)
 	}
 }
@@ -101,7 +127,7 @@ export async function sendNotification(
 			subject: string
 			component: React.ReactElement
 		}
-		sms: string
+		sms?: string
 		push: {
 			title: string
 			body: string
@@ -136,7 +162,7 @@ export async function sendNotification(
 		await createNotificationLog(userId, "email", notificationType, "success")
 	}
 
-	if (user.notificationPreferences?.sms && contactNumber) {
+	if (user.notificationPreferences?.sms && contactNumber && notification.sms) {
 		await sendSMS(contactNumber, notification.sms)
 		await createNotificationLog(userId, "sms", notificationType, "success")
 	}

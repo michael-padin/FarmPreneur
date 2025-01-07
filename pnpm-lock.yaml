@@ -132,6 +132,12 @@ importers:
       '@types/react-dom':
         specifier: 19.0.2
         version: 19.0.2(@types/react@19.0.1)
+      '@vonage/auth':
+        specifier: ^1.12.0
+        version: 1.12.0
+      '@vonage/sms':
+        specifier: ^1.17.1
+        version: 1.17.1
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -2332,6 +2338,9 @@ packages:
   '@types/mapbox__vector-tile@1.3.4':
     resolution: {integrity: sha512-bpd8dRn9pr6xKvuEBQup8pwQfD4VUyqO/2deGjfpe6AwC8YRlyEipvefyRJUSiCJTZuCb8Pl1ciVV5ekqJ96Bg==}
 
+  '@types/node-fetch@2.6.11':
+    resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
+
   '@types/node-fetch@2.6.12':
     resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
 
@@ -2457,6 +2466,21 @@ packages:
 
   '@vitest/utils@2.1.8':
     resolution: {integrity: sha512-dwSoui6djdwbfFmIgbIjX2ZhIoG7Ex/+xpxyiEgIGzjliY8xGkcpITKTlp6B4MgtGkF2ilvm97cPM96XZaAgcA==}
+
+  '@vonage/auth@1.12.0':
+    resolution: {integrity: sha512-tV7RvEhLn/w506PjA9NKFq/Kglxs98vpQ7qsyNXB8xUqblJaiajVhBASFKaYai+MdsBjjacbPRc+9hDKNHezEw==}
+
+  '@vonage/jwt@1.11.0':
+    resolution: {integrity: sha512-P9KM6QYBBkW8ruC+HeOxFGVQh123KCqgVuGyWjp+VjD64WikYAfT73N5isP4rQob0umpMDjGKNOIAYsVAaRdnA==}
+
+  '@vonage/server-client@1.16.1':
+    resolution: {integrity: sha512-FbNPZEWKbXVhC/2hIt7BfZrzg3nSdC3EGBENU3NgrCazqXzTtziGW4tgtjWwY9DnmAVMYNSyDGPNz+tegJ5/iw==}
+
+  '@vonage/sms@1.17.1':
+    resolution: {integrity: sha512-cGLO1/prAAI5MkVTo6r+3Ll8vyx+gXcFqOlIJ4HYJvYobKCxtq2dM0DMmAfJACbVcHVMQ19McNPo6R7ZyQnb3w==}
+
+  '@vonage/vetch@1.8.0':
+    resolution: {integrity: sha512-CuYnW5VrywLhWSdnAb+06b0fan2oDa0pexMi7kQHtRte/TIO0t0TSZvV5/74xDNtSqkhNFGgAlc8pgwn84sR4Q==}
 
   abbrev@2.0.0:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
@@ -3761,6 +3785,9 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash.camelcase@4.3.0:
+    resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
+
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
@@ -3776,17 +3803,26 @@ packages:
   lodash.isnumber@3.0.3:
     resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
 
+  lodash.isobject@3.0.2:
+    resolution: {integrity: sha512-3/Qptq2vr7WeJbB4KHUSKlq8Pl7ASXi3UG6CMbBm8WRtXi8+GHm7mKaU3urfpSEzWe2wCIChs6/sdocUsTKJiA==}
+
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
 
   lodash.isstring@4.0.1:
     resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
 
+  lodash.kebabcase@4.1.1:
+    resolution: {integrity: sha512-N8XRTIMMqqDgSy4VLKPnJ/+hpGZN+PHQiJnSenYqPaVV/NCqEogTnAdZLQiGKhxX+JCs8waWq2t1XHWKOmlY8g==}
+
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
+
+  lodash.snakecase@4.1.1:
+    resolution: {integrity: sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw==}
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
@@ -7480,6 +7516,11 @@ snapshots:
       '@types/mapbox__point-geometry': 0.1.4
       '@types/pbf': 3.0.5
 
+  '@types/node-fetch@2.6.11':
+    dependencies:
+      '@types/node': 22.10.1
+      form-data: 4.0.1
+
   '@types/node-fetch@2.6.12':
     dependencies:
       '@types/node': 22.10.1
@@ -7647,6 +7688,50 @@ snapshots:
       '@vitest/pretty-format': 2.1.8
       loupe: 3.1.2
       tinyrainbow: 1.2.0
+
+  '@vonage/auth@1.12.0':
+    dependencies:
+      '@vonage/jwt': 1.11.0
+      debug: 4.3.7
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vonage/jwt@1.11.0':
+    dependencies:
+      debug: 4.3.7
+      jsonwebtoken: 9.0.2
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vonage/server-client@1.16.1':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/vetch': 1.8.0
+      debug: 4.3.7
+      lodash.camelcase: 4.3.0
+      lodash.isobject: 3.0.2
+      lodash.kebabcase: 4.1.1
+      lodash.snakecase: 4.1.1
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/sms@1.17.1':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/server-client': 1.16.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/vetch@1.8.0':
+    dependencies:
+      '@types/node-fetch': 2.6.11
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
 
   abbrev@2.0.0: {}
 
@@ -9106,6 +9191,8 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash.camelcase@4.3.0: {}
+
   lodash.debounce@4.0.8: {}
 
   lodash.includes@4.3.0: {}
@@ -9116,13 +9203,19 @@ snapshots:
 
   lodash.isnumber@3.0.3: {}
 
+  lodash.isobject@3.0.2: {}
+
   lodash.isplainobject@4.0.6: {}
 
   lodash.isstring@4.0.1: {}
 
+  lodash.kebabcase@4.1.1: {}
+
   lodash.merge@4.6.2: {}
 
   lodash.once@4.1.1: {}
+
+  lodash.snakecase@4.1.1: {}
 
   lodash@4.17.21: {}
 

@@ -375,9 +375,7 @@ export async function notifyOrderStatusUpdate(
 					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 				})
 			},
-			sms: `New Order #${order.id} placed by ${order.customer.name}. Price: ₱${order.totalPrice}, Items: ${order.items
-				.map((item) => item.product.title)
-				.join(", ")}. Please review it in your dashboard.`,
+			sms: `New Order placed by ${order.customer.name}. Price: ${order.totalPrice}, Items: ${orderItems}. Please review it in your dashboard.`,
 			push: {
 				title: `New Order`,
 				body: `A new order has been placed by ${order.customer.name}. Order #: ${order.id}, Price: ₱${order.totalPrice}, Items: ${order.items
@@ -408,7 +406,7 @@ export async function notifyOrderStatusUpdate(
 					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
 				})
 			},
-			sms: `Order #${order.id} ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
+			sms: `Order ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
 			push: {
 				title: `Order Completed`,
 				body: `Order #${order.id} has been ${newStatus.toLowerCase()}. Customer: ${order.customer.name}, Price: ₱${order.totalPrice}. Please review it in your dashboard.`,
@@ -580,7 +578,7 @@ export async function notifyProductExpired(productId: string) {
 				dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 			})
 		},
-		sms: `Your product "${product.title}" has expired and is no longer visible on the FarmPreneur marketplace. Please update or relist if necessary.`,
+		// sms: `Your product "${product.title}" has expired and is no longer visible on the FarmPreneur marketplace. Please update or relist if necessary.`,
 		push: {
 			title: "Product Expired",
 			body: `Your product "${product.title}" has expired. Please update or relist if necessary.`,
