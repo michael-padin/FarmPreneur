@@ -384,7 +384,7 @@ export async function notifyOrderStatusUpdate(
 					.map((item) => item.product.title)
 					.join(", ")}. Please review it in your dashboard.`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/orders/${order.id}`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/orders/${order.id}`
 			}
 		})
 	}

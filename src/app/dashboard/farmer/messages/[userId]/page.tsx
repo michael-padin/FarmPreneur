@@ -7,6 +7,7 @@ import { Chat } from "../_components/chat"
 type Params = Promise<{ userId: string }>
 
 export default async function ChatPage({ params }: { params: Params }) {
+	const otherUserId = (await params).userId
 	const session = await auth()
 
 	if (!session) {
@@ -14,7 +15,6 @@ export default async function ChatPage({ params }: { params: Params }) {
 	}
 
 	const currentUserId = session.user.id
-	const otherUserId = (await params).userId
 	const role = session.user.role
 
 	const messages = await db.message.findMany({

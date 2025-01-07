@@ -64,6 +64,12 @@ export const sendMessage = async (data: {
 				lastMessage: message
 			}
 		})
+		await pusherServer.trigger(`user-${userId}`, "new-message", {
+			conversation: {
+				id: userId,
+				lastMessage: message
+			}
+		})
 
 		// revalidatePath(`/messages`)
 		// revalidatePath(`/messages/${data.senderId}`)

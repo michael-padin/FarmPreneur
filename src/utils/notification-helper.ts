@@ -1,6 +1,5 @@
 import { db } from "@/lib/db"
 import { pusherServer } from "@/lib/pusher"
-import { isDevelopment } from "@/lib/utils"
 import { Notification, NotificationType } from "@prisma/client"
 import { render } from "@react-email/components"
 import nodemailer from "nodemailer"
@@ -128,7 +127,7 @@ export async function sendNotification(
 	const contactNumber =
 		user.farmer?.contactNumber || user.customer?.contactNumber
 
-	if (user.notificationPreferences?.email && !isDevelopment) {
+	if (user.notificationPreferences?.email) {
 		await sendEmail(
 			user.email,
 			notification.email.subject,
@@ -137,7 +136,7 @@ export async function sendNotification(
 		await createNotificationLog(userId, "email", notificationType, "success")
 	}
 
-	if (user.notificationPreferences?.sms && contactNumber && !isDevelopment) {
+	if (user.notificationPreferences?.sms && contactNumber) {
 		await sendSMS(contactNumber, notification.sms)
 		await createNotificationLog(userId, "sms", notificationType, "success")
 	}
@@ -169,7 +168,7 @@ export async function sendNotification(
 		}
 	})
 
-	if (user.notificationPreferences?.inApp && !isDevelopment) {
+	if (user.notificationPreferences?.inApp) {
 		// Create in-app notification
 		await sendInAppNotification(userId, createdInAppNotification)
 	}

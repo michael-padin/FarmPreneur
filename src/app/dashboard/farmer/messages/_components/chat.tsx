@@ -106,9 +106,9 @@ export function Chat({
 		<>
 			<div className="flex h-full flex-col bg-gray-100">
 				<div className="flex-1 overflow-y-auto p-2">
-					{messages.map((message) => (
+					{messages.map((message, index) => (
 						<Message
-							key={message.id}
+							key={`${message.id}-${index}`}
 							message={message}
 							currentUserId={currentUserId}
 							onReply={handleReply}
