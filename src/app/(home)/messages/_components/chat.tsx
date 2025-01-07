@@ -104,7 +104,7 @@ export function Chat({
 
 	return (
 		<>
-			<div className="flex h-full flex-col bg-gray-100">
+			<div className="flex flex-col bg-gray-100">
 				<div className="flex-1 overflow-y-auto px-2">
 					{messages.map((message, index) => (
 						<Message

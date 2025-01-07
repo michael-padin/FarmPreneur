@@ -33,7 +33,7 @@ export function Message({
 			<div className="flex gap-2">
 				{!isOwnMessage && (
 					<div className="flex h-full justify-end">
-						<Avatar className="flex h-8 w-8 items-center justify-center bg-background">
+						<Avatar className="flex h-8 w-8 items-center justify-center bg-background object-cover">
 							<AvatarImage
 								src={
 									message.sender.farmer?.profilePicture || "/placeholder.png"

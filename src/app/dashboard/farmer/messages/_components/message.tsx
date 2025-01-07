@@ -39,6 +39,7 @@ export function Message({
 								src={
 									message.sender.customer?.profilePicture || "/placeholder.png"
 								}
+								className="object-cover"
 							/>
 							<AvatarFallback className="text-primary">
 								{message.sender.name?.charAt(0)}

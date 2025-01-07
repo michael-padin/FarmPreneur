@@ -103,7 +103,7 @@ export function Chat({
 
 	return (
 		<>
-			<div className="flex h-full flex-col bg-gray-100">
+			<div className="flex flex-col bg-gray-100">
 				<div className="flex-1 overflow-y-auto px-2">
 					{messages.map((message, index) => (
 						<Message
@@ -117,7 +117,7 @@ export function Chat({
 					<div ref={messagesEndRef} />
 				</div>
 			</div>
-			<div className="">
+			<div className="fixed bottom-0 left-0 right-0 w-full">
 				{replyingTo && (
 					<div className="mb-2 flex items-center bg-green-50 p-2 text-sm text-muted-foreground">
 						<span className="mr-2">Replying to:</span>
