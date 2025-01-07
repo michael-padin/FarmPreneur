@@ -34,18 +34,19 @@ export function Chat({
 }: ChatProps) {
 	const [messages, setMessages] = useState(initialMessages)
 	const [replyingTo, setReplyingTo] = useState<string | null>(null)
-	const messagesEndRef = useRef<HTMLDivElement>(null)
+	const chatContainerRef = useRef<HTMLDivElement>(null)
 
 	const otherUserDetails = otherUser.customer
 
+	const scrollToBottom = () => {
+		chatContainerRef.current?.scrollTo({
+			top: chatContainerRef.current.scrollHeight,
+			behavior: "smooth"
+		})
+	}
+
 	useEffect(() => {
-		if (messages) {
-			setTimeout(() => {
-				messagesEndRef.current?.scrollIntoView({
-					behavior: "smooth"
-				})
-			}, 100)
-		}
+		scrollToBottom()
 	}, [messages])
 
 	useEffect(() => {
@@ -104,8 +105,11 @@ export function Chat({
 
 	return (
 		<>
-			<div className="flex h-full flex-col bg-gray-100">
-				<div className="flex-1 overflow-y-auto p-2">
+			<div
+				className="flex h-[calc(100vh-140px)] flex-col overflow-y-auto bg-gray-100"
+				ref={chatContainerRef}
+			>
+				<div className="px-2 py-4">
 					{messages.map((message, index) => (
 						<Message
 							key={`${message.id}-${index}`}
@@ -115,10 +119,9 @@ export function Chat({
 							// onReact={handleReact}
 						/>
 					))}
-					<div ref={messagesEndRef} />
 				</div>
 			</div>
-			<div className="fixed bottom-0 left-0 right-0 w-full">
+			<div className="">
 				{replyingTo && (
 					<div className="mb-2 flex items-center bg-green-50 p-2 text-sm text-muted-foreground">
 						<span className="mr-2">Replying to:</span>
