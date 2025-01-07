@@ -48,5 +48,5 @@ export function PusherNotificationListener({ userId }: { userId: string }) {
 		}
 	}, [userId, isDesktop, router])
 
-	return null
+	return <></>
 }

@@ -50,49 +50,53 @@ export function PushNotificationManager({ session }: { session: Session }) {
 		})
 	}, [swRegistration])
 
-	const registerServiceWorker = useCallback(async () => {
+	const registerServiceWorker = useCallback(() => {
 		if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
 			toast.error("Push notifications are not supported in this browser")
 			return
 		}
 
-		try {
-			const registration = await navigator.serviceWorker.register("/sw.js", {
-				scope: "/",
-				updateViaCache: "none"
-			})
+		startTransition(async () => {
+			try {
+				const registration = await navigator.serviceWorker.register("/sw.js", {
+					scope: "/",
+					updateViaCache: "none"
+				})
 
-			setSwRegistration(registration)
-			const subscription = await registration.pushManager.getSubscription()
+				setSwRegistration(registration)
+				const subscription = await registration.pushManager.getSubscription()
 
-			if (subscription) {
-				setIsSubscribed(true)
-			} else if (permission === "granted") {
-				subscribeToPush()
+				if (subscription) {
+					setIsSubscribed(true)
+				} else if (permission === "granted") {
+					subscribeToPush()
+				}
+			} catch (error) {
+				console.error("Service Worker registration failed:", error)
+				// toast.error("Failed to register service worker")
 			}
-		} catch (error) {
-			console.error("Service Worker registration failed:", error)
-			// toast.error("Failed to register service worker")
-		}
+		})
 	}, [permission, subscribeToPush])
 
-	const requestNotificationPermission = useCallback(async () => {
+	const requestNotificationPermission = useCallback(() => {
 		if (!("Notification" in window)) {
 			toast.error("Notifications are not supported in this browser")
 			return
 		}
 
-		try {
-			const result = await Notification.requestPermission()
-			setPermission(result)
+		startTransition(async () => {
+			try {
+				const result = await Notification.requestPermission()
+				setPermission(result)
 
-			if (result === "granted") {
-				await registerServiceWorker()
+				if (result === "granted") {
+					await registerServiceWorker()
+				}
+			} catch (error) {
+				console.error("Error requesting notification permission:", error)
+				toast.error("Failed to request notification permission")
 			}
-		} catch (error) {
-			console.error("Error requesting notification permission:", error)
-			toast.error("Failed to request notification permission")
-		}
+		})
 	}, [registerServiceWorker])
 
 	useEffect(() => {
@@ -110,5 +114,5 @@ export function PushNotificationManager({ session }: { session: Session }) {
 		}
 	}, [session, registerServiceWorker, requestNotificationPermission])
 
-	return null
+	return <></>
 }
