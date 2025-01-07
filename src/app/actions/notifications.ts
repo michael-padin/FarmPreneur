@@ -436,7 +436,7 @@ export async function notifyNewMessage(data: {
 	const recipientName = await getUserName(data.receiverId)
 	const dashboardUrl =
 		data.senderRole === "FARMER"
-			? `${process.env.NEXT_PUBLIC_BASE_URL}/messages/${data.receiverId}`
+			? `${process.env.NEXT_PUBLIC_BASE_URL}/messages/${data.senderId}`
 			: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/messages/${data.senderId}`
 	// Prepare attachment info if present
 	let attachmentInfo = ""
