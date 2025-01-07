@@ -1,6 +1,7 @@
 import FPDynamicImage from "@/components/fp/fp-dyanmic-image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Farmer, Message as MessageType, User } from "@prisma/client"
+import { formatDistanceToNow } from "date-fns"
 import { useState } from "react"
 
 interface MessageProps {
@@ -46,9 +47,11 @@ export function Message({
 						</Avatar>
 					</div>
 				)}
-				<div className="">
+				<div
+					className={`flex flex-col ${isOwnMessage ? "items-end justify-end" : "items-start justify-start"} mb-4`}
+				>
 					<div
-						className={`max-w-[250px] ${message.fileUrl ? "min-w-[250px]" : ""} ${isOwnMessage ? "bg-primary text-white" : "bg-white"} rounded-lg p-3 shadow`}
+						className={`max-w-[250px] ${message.fileUrl ? "min-w-[250px]" : ""} ${isOwnMessage ? "bg-primary text-white" : "bg-white"} rounded-lg px-3 py-2 shadow`}
 					>
 						{/* {!isOwnMessage && (
 						<p className="mb-1 text-sm font-semibold">
@@ -117,9 +120,12 @@ export function Message({
 					<div
 						className={`flex w-full ${isOwnMessage ? "justify-end" : "justify-start"} mt-2 text-muted-foreground`}
 					>
-						<time className="block w-max text-xs font-normal leading-none text-muted-foreground">
-							{new Date(message.createdAt).toLocaleString()}
-						</time>
+						<span className="text-right text-xs">
+							Sent{" "}
+							{formatDistanceToNow(new Date(message.createdAt), {
+								addSuffix: true
+							})}
+						</span>
 					</div>
 				</div>
 			</div>
