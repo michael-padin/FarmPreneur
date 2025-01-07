@@ -36,8 +36,7 @@ export function Message({
 						<Avatar className="flex h-8 w-8 items-center justify-center bg-background">
 							<AvatarImage
 								src={
-									message.sender.farmer?.profilePicture ||
-									"/placeholder-avatar.png"
+									message.sender.farmer?.profilePicture || "/placeholder.png"
 								}
 							/>
 							<AvatarFallback className="text-primary">
