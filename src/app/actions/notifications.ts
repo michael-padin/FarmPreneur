@@ -695,7 +695,7 @@ export async function notifyAdminProductListed(
 					title: "New Product Listing",
 					body: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
 					icon: "/web-app-manifest-192x192.png",
-					url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/products/${product.id}`
+					url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/products/${product.id}/edit`
 				}
 			})
 		}
