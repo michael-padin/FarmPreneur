@@ -49,7 +49,7 @@ export default async function ChatPage({ params }: { params: Params }) {
 
 	return (
 		<>
-			<header className="fixed left-0 right-0 top-0 z-50">
+			<header className="">
 				<div className="flex items-center gap-3 bg-white p-4 px-3 shadow-sm">
 					<FPBackButton />
 					<div className="flex items-center">
@@ -59,7 +59,7 @@ export default async function ChatPage({ params }: { params: Params }) {
 					</div>
 				</div>
 			</header>
-			<main className="h-screen overflow-auto bg-secondary py-20">
+			<main className="overflow-hidden bg-secondary">
 				<Chat
 					currentUserId={currentUserId}
 					currentRole={role}
