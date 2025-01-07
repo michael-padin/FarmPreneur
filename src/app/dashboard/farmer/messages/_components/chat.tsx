@@ -63,7 +63,7 @@ export function Chat({
 					}
 				}
 			) => {
-				setMessages((prevMessages) => [data, ...prevMessages])
+				setMessages((prevMessages) => [...prevMessages, data])
 			}
 		)
 
