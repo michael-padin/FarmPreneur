@@ -18,7 +18,7 @@ import { MoreHorizontal, Package, Phone, User } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { toast } from "sonner"
-import { OrderStatusBadge } from "../../(admin)/users/(lists)/_components/badges"
+import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
 
 export const columns: ColumnDef<
 	Awaited<ReturnType<typeof getRecentOrdersUseCase>>[0]

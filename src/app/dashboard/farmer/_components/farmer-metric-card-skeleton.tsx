@@ -17,11 +17,11 @@ export function FarmerMetricCardSkeleton({
 			)}
 		>
 			<div className="flex flex-col gap-2">
-				<div className="flex items-center gap-2">
-					<Skeleton className="h-4 w-4 rounded-full" />
-					<Skeleton className="h-4 w-24 rounded" />
+				<div className="flex items-center justify-between">
+					<Skeleton className="h-4 w-10 rounded" />
 				</div>
 				<Skeleton className="h-8 w-32 rounded" />
+				<Skeleton className="h-[23.8px] w-44 rounded" />
 				<Skeleton className="h-4 w-40 rounded" />
 			</div>
 			{/* <Skeleton
