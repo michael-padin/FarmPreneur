@@ -549,7 +549,7 @@ export const editProduct = async (
 						id: data.categoryId
 					}
 				},
-				productImages: { set: data.images.map((image) => image.url) },
+				productImages: data.images.map((image) => image.url),
 				unit: data.unit
 			}
 		})
