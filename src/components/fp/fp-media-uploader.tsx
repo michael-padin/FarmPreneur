@@ -7,6 +7,7 @@ import { FileIcon, Plus, X } from "lucide-react"
 import Image from "next/image"
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
+import { Lightbox } from "./fp-light-box"
 
 export interface FPMediaUploaderProps {
 	initialMedia: MediaFile[] | MediaFile | null
@@ -37,6 +38,8 @@ export function FPMediaUploader({
 	mediaClassName = "w-24 h-24 object-cover rounded-lg",
 	singleImage = false
 }: FPMediaUploaderProps) {
+	const [lightboxOpen, setLightboxOpen] = useState(false)
+
 	// Normalize initialMedia to always be an array
 	const normalizedMedia = Array.isArray(initialMedia)
 		? initialMedia
@@ -91,16 +94,29 @@ export function FPMediaUploader({
 			className={cn("relative rounded-lg border", mediaClassName)}
 		>
 			{item.type === "image" ? (
-				<Image
-					src={item.url || "/placeholder.svg"}
-					alt="Uploaded image"
-					fill
-					priority
-					className={cn(
-						"h-full w-full rounded-lg object-cover",
-						imageClassName
+				<div className="relative h-full w-full">
+					<div
+						className="absolute inset-0 z-50 h-full w-full cursor-pointer"
+						onClick={() => setLightboxOpen(true)}
+					></div>
+					{lightboxOpen && item.url && (
+						<Lightbox
+							images={[item.url]}
+							currentIndex={0}
+							onClose={() => setLightboxOpen(false)}
+						/>
 					)}
-				/>
+					<Image
+						src={item.url || "/placeholder.svg"}
+						alt="Uploaded image"
+						fill
+						priority
+						className={cn(
+							"h-full w-full rounded-lg object-cover",
+							imageClassName
+						)}
+					/>
+				</div>
 			) : (
 				<div
 					className={`flex items-center justify-center bg-muted ${mediaClassName}`}

@@ -31,20 +31,20 @@ export async function ApplicationStatus() {
 		[FarmerApplicationStatus.PENDING]: {
 			icon: Clock,
 			title: "Pending Review",
-			description: "Pending review",
+			description: "Pending",
 			color: "text-yellow-500",
 			bgColor: "bg-yellow-100"
 		},
 		[FarmerApplicationStatus.APPROVED]: {
 			icon: CheckCircle,
-			title: "Application Approved",
+			title: "Approved",
 			description: "Your farmer account has been activated",
 			color: "text-green-500",
 			bgColor: "bg-green-100"
 		},
 		[FarmerApplicationStatus.REJECTED]: {
 			icon: XCircle,
-			title: "Application Rejected",
+			title: "Rejected",
 			description: "Your farmer application was not approved",
 			color: "text-red-500",
 			bgColor: "bg-red-100"

@@ -28,7 +28,8 @@ import { PushSubscription } from "web-push"
 
 export async function notifyFarmerApproval(
 	farmerId: string,
-	approved: boolean
+	approved: boolean,
+	rejectionReason?: string
 ) {
 	const farmer = await db.farmer.findUnique({
 		where: { id: farmerId },
@@ -43,15 +44,15 @@ export async function notifyFarmerApproval(
 				component: FarmerApprovedEmail({
 					farmerName: farmer.name || "",
 					farmName: farmer.farmName || "",
-					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`
+					dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/application-status`
 				})
 			},
 			sms: `Congratulations ${farmer.name}! Your FarmPreneur application for ${farmer.farmName} has been approved. Log in to your dashboard to get started.`,
 			push: {
 				title: "FarmPreneur Application Approved!",
-				body: `Congratulations! Your application for ${farmer.farmName} has been approved.`,
+				body: `Congratulations! Your application for ${farmer.farmName} has been approved. You can now list your products and start selling them.`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/application-status`
 			}
 		})
 	} else {
@@ -63,16 +64,17 @@ export async function notifyFarmerApproval(
 					farmerName: farmer.name || "",
 					farmName: farmer.farmName || "",
 					rejectionReason:
+						rejectionReason ||
 						"Your application did not meet our current criteria.",
-					supportUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/support`
+					supportUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/application-status`
 				})
 			},
 			sms: `We regret to inform you that your FarmPreneur application for ${farmer.farmName} has not been approved at this time. Please check your email for more details.`,
 			push: {
 				title: "FarmPreneur Application Update",
-				body: `Your application for ${farmer.farmName} has not been approved. Please check your email for more information.`,
+				body: `Your application for ${farmer.farmName} has not been approved.  Reason: ${rejectionReason}`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `${process.env.NEXT_PUBLIC_BASE_URL}/support`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/application-status`
 			}
 		})
 	}
@@ -640,7 +642,7 @@ export async function notifyAdminNewFarmerRegistration(farmerId: string) {
 					adminName: admin.name || "Admin",
 					notificationType: "New Farmer Registration",
 					content: `${farmer.name} (${farmer.user.email}) has registered as a new farmer and is awaiting approval.`,
-					actionUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/farmers/${farmer.id}`
+					actionUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/users/farmers/${farmer.id}`
 				})
 			},
 			sms: `${farmer.name} has registered as a new farmer and is awaiting approval.`,
@@ -648,7 +650,7 @@ export async function notifyAdminNewFarmerRegistration(farmerId: string) {
 				title: "New Farmer Registration",
 				body: `${farmer.name} has registered as a new farmer and is awaiting approval.`,
 				icon: "/web-app-manifest-192x192.png",
-				url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/farmers/${farmer.id}`
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/users/farmers/${farmer.id}`
 			}
 		})
 	}

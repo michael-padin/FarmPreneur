@@ -34,6 +34,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast } from "@/lib/handle-error"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { processMediaUpdate } from "@/utils/media"
@@ -65,6 +66,7 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 			password: "",
 			isEmailVerified: user?.isEmailVerified || false,
 			farmer: {
+				applicationRejection: user!.farmer!.applicationRejection || "",
 				applicationStatus: user!.farmer!.applicationStatus!,
 				address: {
 					country: user.farmer!.address[0].country || "",
@@ -101,6 +103,8 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 			}
 		}
 	})
+
+	const applicationStatus = form.watch("farmer.applicationStatus")
 
 	const onSubmit = async (data: EditUserSchema) => {
 		startTransition(async () => {
@@ -268,33 +272,6 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="farmer.farmImages"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Farm Images</FormLabel>
-									<FormControl>
-										<FPMediaUploader
-											{...field}
-											onChange={field.onChange}
-											singleImage
-											initialMedia={
-												user.farmer!.farmImages.length > 0
-													? user.farmer!.farmImages.map((image) => ({
-															id: Math.random().toString(36).substring(7),
-															url: image,
-															type: "image" as "image" | "video",
-															file: null
-														}))
-													: []
-											}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
 						<FormField
 							control={form.control}
@@ -360,6 +337,55 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								</FormItem>
 							)}
 						/>
+
+						<FormField
+							control={form.control}
+							name="farmer.farmImages"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Farm Images</FormLabel>
+									<FormControl>
+										<FPMediaUploader
+											{...field}
+											onChange={field.onChange}
+											singleImage
+											initialMedia={
+												user.farmer!.farmImages.length > 0
+													? user.farmer!.farmImages.map((image) => ({
+															id: Math.random().toString(36).substring(7),
+															url: image,
+															type: "image" as "image" | "video",
+															file: null
+														}))
+													: []
+											}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						{applicationStatus === "REJECTED" && (
+							<FormField
+								control={form.control}
+								name="farmer.applicationRejection"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Rejection Reason</FormLabel>
+										<FormControl>
+											<Textarea
+												placeholder=""
+												{...field}
+												value={field.value || ""}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						)}
+
 						{process.env.NODE_ENV === "development" && (
 							<Accordion type="single" collapsible>
 								<AccordionItem value="item-1">

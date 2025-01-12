@@ -189,7 +189,9 @@ export const columns: ColumnDef<
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/${user.id}`}>Details</Link>
+								<Link href={`/dashboard/users/farmers/${user.farmer?.id}`}>
+									Details
+								</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
 								<Link href={`/dashboard/users/${user.id}/edit`}>Edit</Link>

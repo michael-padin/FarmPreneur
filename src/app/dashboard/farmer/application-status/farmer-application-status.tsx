@@ -71,7 +71,7 @@ export function FarmerApplicationStatus({
 						{status === FarmerApplicationStatusType.PENDING &&
 							"Thank you for registering! Our team will review your application shortly. We'll notify you once your account has been approved."}
 						{status === FarmerApplicationStatusType.APPROVED &&
-							"Congratulations! Your application has been approved. You can now access all farmer features."}
+							"Congratulations! Your application has been approved. You can now list your products and start selling them."}
 						{status === FarmerApplicationStatusType.REJECTED && (
 							<>
 								We&apos;re sorry, but your application has been rejected.
@@ -101,9 +101,19 @@ export function FarmerApplicationStatus({
 							</div>
 						)}
 						{status === FarmerApplicationStatusType.REJECTED && (
-							<div className="flex items-center space-x-2 text-sm text-muted-foreground">
-								<XCircle className="h-5 w-5 text-red-500" />
-								<span>Application rejected</span>
+							<div className="">
+								<div className="flex items-center space-x-2 text-sm text-muted-foreground">
+									<XCircle className="h-5 w-5 text-red-500" />
+									<span>Application rejected</span>
+								</div>
+								<Button
+									variant="outline"
+									size="sm"
+									asChild
+									className="mt-4 w-full"
+								>
+									<a href="mailto:support@farmpreneur.com">Contact support</a>
+								</Button>
 							</div>
 						)}
 					</div>

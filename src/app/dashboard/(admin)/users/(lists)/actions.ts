@@ -1,9 +1,9 @@
 "use server"
-import { revalidatePath } from "next/cache"
-import { deleteUsersByIdUseCase, updateUserUseCase } from "@/use-cases/users"
-import { UpdateUserTypes, updateUserSchema } from "./types"
 import { getErrorMessage } from "@/lib/handle-error"
+import { deleteUsersByIdUseCase } from "@/use-cases/users"
 import { hash } from "bcryptjs"
+import { revalidatePath } from "next/cache"
+import { UpdateUserTypes, updateUserSchema } from "./types"
 
 export const updateUser = async (
 	user: UpdateUserTypes & {
@@ -51,6 +51,7 @@ export const deleteUsers = async ({ ids }: { ids: string[] }) => {
 			error: null
 		}
 	} catch (error) {
+		console.log("error :>> ", error)
 		return {
 			data: null,
 			error: getErrorMessage(error)

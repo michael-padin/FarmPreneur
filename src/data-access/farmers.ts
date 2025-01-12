@@ -51,8 +51,11 @@ export const getFarmerById = async (id: string) => {
 		select: {
 			id: true,
 			birthDate: true,
+			name: true,
+			govIdImage: true,
 			applicationStatus: true,
 			contactNumber: true,
+			selfieWithGovIdImage: true,
 			farmName: true,
 			farmDescription: true,
 			userId: true,

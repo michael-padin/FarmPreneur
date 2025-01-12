@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import { Skeleton } from "@/components/ui/skeleton"
 import { getUserByIdUseCase } from "@/use-cases/users"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
@@ -22,7 +23,16 @@ export default async function EditUserPage(props: { params: Params }) {
 
 	return (
 		<div className="space-y-4 px-4 py-5 lg:px-5">
-			<Suspense fallback={<EditUserSkeleton />}>
+			<Suspense
+				fallback={
+					<div>
+						<Skeleton className="h-6 w-40 bg-background" />
+						<div className="mx-auto max-w-screen-md">
+							<EditUserSkeleton />
+						</div>
+					</div>
+				}
+			>
 				<FormComponentWrapper promiseUser={promiseUser} />
 			</Suspense>
 		</div>

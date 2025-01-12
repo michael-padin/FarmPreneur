@@ -158,6 +158,7 @@ export const columns: ColumnDef<
 		cell: function Cell({ row }) {
 			const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false)
 			const id = row.original.user.id
+			const farmerId = row.original.id
 
 			return (
 				<>
@@ -186,7 +187,9 @@ export const columns: ColumnDef<
 								Copy ID
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link href={`/dashboard/users/${id}`}>Details</Link>
+								<Link href={`/dashboard/users/farmers/${farmerId}`}>
+									Details
+								</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
 								<Link href={`/dashboard/users/${id}/edit`}>Edit</Link>

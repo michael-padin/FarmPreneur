@@ -10,10 +10,10 @@ export const editCustomerSchema = z.object({
 })
 
 export const editFarmerSchema = z.object({
+	applicationRejection: z.string().min(2).nullish(),
 	birthDate: z.date(),
 	contactNumber: z.string(),
 	selfieWithGovIdImage: mediaFileSchema
-		.required()
 		.refine((data) => data.url, {
 			message: "Required"
 		})
