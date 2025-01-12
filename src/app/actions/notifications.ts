@@ -93,11 +93,6 @@ export async function notifyFarmerProductListed(
 	if (!product || !product.farmer)
 		throw new Error("Product or Farmer not found")
 
-	await db.product.update({
-		where: { id: productId },
-		data: { listingStatus: status }
-	})
-
 	if (status === ProductListingStatus.APPROVED) {
 		await sendNotification(
 			product.farmer.userId,
@@ -502,15 +497,6 @@ export async function notifyOrderCancelled(orderId: string, reason: string) {
 	if (!order || !order.customer || !order.farmer)
 		throw new Error("Order, Customer, or Farmer not found")
 
-	await db.order.update({
-		where: { id: orderId },
-		data: {
-			status: OrderStatus.CANCELLED,
-			subStatus: OrderSubStatus.ORDER_CANCELLED,
-			cancellationReason: reason
-		}
-	})
-
 	const url =
 		role === ROLE.CUSTOMER
 			? `${process.env.NEXT_PUBLIC_BASE_URL}/orders/${order.id}`
@@ -565,11 +551,6 @@ export async function notifyProductExpired(productId: string) {
 	if (!product || !product.farmer)
 		throw new Error("Product or Farmer not found")
 
-	await db.product.update({
-		where: { id: productId },
-		data: { listingStatus: ProductListingStatus.EXPIRED }
-	})
-
 	await sendNotification(product.farmer.userId, NotificationType.SYSTEM_ALERT, {
 		email: {
 			subject: `Your product ${product.title} has expired`,
@@ -598,11 +579,6 @@ export async function notifyProductOutOfStock(productId: string) {
 
 	if (!product || !product.farmer)
 		throw new Error("Product or Farmer not found")
-
-	await db.product.update({
-		where: { id: productId },
-		data: { listingStatus: ProductListingStatus.OUT_OF_STOCK }
-	})
 
 	await sendNotification(product.farmer.userId, NotificationType.SYSTEM_ALERT, {
 		email: {

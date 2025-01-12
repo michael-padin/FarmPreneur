@@ -1,5 +1,6 @@
 "use server"
 import { notifyAdminNewFarmerRegistration } from "@/app/actions/notifications"
+import { auth, unstable_update } from "@/auth"
 import { getErrorMessage } from "@/lib/handle-error"
 import { createUserFarmerByIdUseCase } from "@/use-cases/users"
 import { FarmRegistrationSchema } from "./types"
@@ -11,9 +12,15 @@ export const upsertFarmerAction = async (
 		newSelfieWithGovIdImage?: string
 	}
 ) => {
+	const session = await auth()
 	try {
 		const createdFarmer = await createUserFarmerByIdUseCase({
 			...data
+		})
+
+		await unstable_update({
+			...session,
+			user: { ...session?.user, farmerId: createdFarmer.id }
 		})
 
 		if (!createdFarmer) {
