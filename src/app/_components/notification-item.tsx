@@ -1,5 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { NotificationMetadata } from "@/types/notification"
 import { Notification } from "@prisma/client"
 import { X } from "lucide-react"
@@ -11,11 +12,15 @@ interface NotificationItemProps extends Notification {
 	markAsRead: (id: string) => void
 	Icon: React.ReactNode
 	nodeMessage?: React.ReactNode
+	titleClassName?: string
+	bodyClassName?: string
 }
 
 export function NotificationItem({
 	id,
 	title,
+	titleClassName,
+	bodyClassName,
 	message,
 	nodeMessage,
 	createdAt,
@@ -39,13 +44,18 @@ export function NotificationItem({
 					{Icon}
 					<div className="flex-1 break-words">
 						<div className="flex items-center gap-2">
-							<p className="font-medium">{title}</p>
+							<p className={cn("font-medium", titleClassName)}>{title}</p>
 							{!isRead && (
 								<span className="flex h-2 w-2 rounded-full bg-blue-600"></span>
 							)}
 						</div>
 						{nodeMessage || (
-							<div className="break-words text-sm text-muted-foreground">
+							<div
+								className={cn(
+									"break-words text-sm text-muted-foreground",
+									bodyClassName
+								)}
+							>
 								{message}
 							</div>
 						)}

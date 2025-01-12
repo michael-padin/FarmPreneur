@@ -679,6 +679,7 @@ export async function notifyAdminProductListed(
 			where: { role: ROLE.ADMIN }
 		})
 
+		const dashboardUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
 		for (const admin of admins) {
 			await sendNotification(admin.id, NotificationType.NEW_PRODUCT, {
 				email: {
@@ -687,7 +688,7 @@ export async function notifyAdminProductListed(
 						adminName: admin.name || "Admin",
 						notificationType: "New Product Listing",
 						content: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
-						actionUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/products/${product.id}`
+						actionUrl: dashboardUrl
 					})
 				},
 				sms: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
@@ -695,7 +696,7 @@ export async function notifyAdminProductListed(
 					title: "New Product Listing",
 					body: `A new product "${product.title}" by ${product.farmer.name} is awaiting approval.`,
 					icon: "/web-app-manifest-192x192.png",
-					url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/products/${product.id}/edit`
+					url: dashboardUrl
 				}
 			})
 		}

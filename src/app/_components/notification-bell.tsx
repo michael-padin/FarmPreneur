@@ -9,11 +9,11 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useNotifications } from "@/contexts/notification-context"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { formatDistanceToNowStrict } from "date-fns"
-import { Bell, X } from "lucide-react"
+import { Bell } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { NotificationIcon } from "../dashboard/(admin)/notifications/_components/notification-icon"
+import { NotificationItem } from "./notification-item"
 
 export function NotificationBell() {
 	const [open, setOpen] = useState(false)
@@ -48,46 +48,22 @@ export function NotificationBell() {
 					</Button>
 				</div>
 				<ScrollArea className="h-[300px]">
-					{notifications.map((notification) => (
-						<div
-							key={notification.id}
-							className={`flex items-start gap-2 ${notification.isRead ? "opacity-50" : ""} py-1`}
-						>
-							<div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-								<NotificationIcon
-									type={notification.type}
-									className="h-4 w-4"
-								/>
-							</div>{" "}
-							<div className="flex-1">
-								<div className="flex items-center gap-2">
-									<p className="text-sm font-medium">{notification.title}</p>
-									{!notification.isRead && (
-										<span className="flex h-2 w-2 rounded-full bg-blue-600"></span>
-									)}
-								</div>
-								<p className="text-xs text-muted-foreground">
-									{notification.message}
-								</p>
-								<p className="text-xs text-muted-foreground">
-									{formatDistanceToNowStrict(notification.createdAt, {
-										addSuffix: true
-									})}
-								</p>
-							</div>
-							{!notification.isRead && (
-								<Button
-									variant="ghost"
-									size="icon"
-									className="h-8 w-8"
-									onClick={() => readNotification(notification.id)}
-								>
-									<X className="h-4 w-4" />
-									<span className="sr-only">Mark as read</span>
-								</Button>
-							)}
-						</div>
-					))}
+					<div className="">
+						{notifications.map((notif) => (
+							<NotificationItem
+								key={notif.id}
+								{...notif}
+								markAsRead={readNotification}
+								titleClassName="text-sm"
+								bodyClassName="text-xs"
+								Icon={
+									<div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-primary/10">
+										<NotificationIcon type={notif.type} className="h-5 w-5" />
+									</div>
+								}
+							/>
+						))}
+					</div>
 				</ScrollArea>
 			</PopoverContent>
 		</Popover>

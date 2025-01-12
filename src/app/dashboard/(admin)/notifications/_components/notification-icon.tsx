@@ -1,15 +1,13 @@
 import { NotificationType } from "@prisma/client"
 import {
-	ShoppingBag,
-	UserCheck,
-	CheckCircle,
-	MessageSquare,
-	Tag,
-	Megaphone,
 	Bell,
-	ShieldCheck,
+	Box,
 	HelpCircle,
-	Box
+	Megaphone,
+	MessageSquare,
+	ShieldCheck,
+	ShoppingBag,
+	UserCheck
 } from "lucide-react"
 
 interface NotificationIconProps {
@@ -35,7 +33,7 @@ export function NotificationIcon({
 		case NotificationType.NEW_MESSAGE:
 			return <MessageSquare {...iconProps} aria-label="New Message" />
 		case NotificationType.NEW_PRODUCT:
-			return <Tag {...iconProps} aria-label="New Product" />
+			return <Box {...iconProps} aria-label="New Product" />
 		case NotificationType.PROMOTION:
 			return <Megaphone {...iconProps} aria-label="Promotion" />
 		case NotificationType.SYSTEM_ALERT:
