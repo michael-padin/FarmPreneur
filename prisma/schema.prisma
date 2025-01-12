@@ -247,6 +247,7 @@ model Order {
   farmerId           String               @db.ObjectId
   customer           Customer?            @relation(fields: [customerId], references: [id])
   customerId         String?              @db.ObjectId
+  orderNote          String?
   cancellationReason String?
   items              OrderItem[]
   statusHistory      OrderStatusHistory[]

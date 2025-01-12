@@ -10,8 +10,9 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
 import { locationLabelMap, LocationType } from "@/constants/address"
 import { formatPHP } from "@/lib/utils"
 import { CartState } from "@/types/cart"
@@ -19,7 +20,7 @@ import { getDefaultAddressByCustomerId } from "@/use-cases/address"
 import { ChevronRight, MapPin } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import { PlaceOrder } from "./place-order"
 
 export default function CartCheckOutList({
@@ -31,6 +32,7 @@ export default function CartCheckOutList({
 		ReturnType<typeof getDefaultAddressByCustomerId>
 	>
 }) {
+	const [newCheckoutData, setNewCheckoutData] = useState(checkoutData)
 	const validateCheckout = () => !!defaultCustomerAddress
 
 	return (
@@ -177,7 +179,18 @@ export default function CartCheckOutList({
 										</div>
 									</div>
 								</div>
-								<Separator className="my-3" />
+								<div className="my-2">
+									<Label>Note to Farmer:</Label>
+									<Textarea
+										placeholder="Please ko tarong og putos unya akong kwarta kay 1000 para maka prepare ka daan sa sukli, Thank you!"
+										onChange={(e) =>
+											setNewCheckoutData((prev) => ({
+												...prev,
+												orderNote: e.target.value
+											}))
+										}
+									/>
+								</div>
 								<div className="w-full space-y-3">
 									{group.items.map((item) => (
 										<Fragment key={item.product.id}>
@@ -236,6 +249,63 @@ export default function CartCheckOutList({
 							</CardContent>
 						</Card>
 					))}
+					<Card className="border-none">
+						<CardHeader className="p-3 pb-0">
+							<CardTitle className="text-base font-normal">
+								Shipping Option
+							</CardTitle>
+							<CardDescription className="sr-only">
+								Shipping option
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="w-full p-3">
+							<RadioGroup defaultValue="pickup">
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="pickup" id="r1" />
+									<Label htmlFor="r1">Pickup from Farmer&apos;s Location</Label>
+								</div>
+								<div
+									className="flex items-center space-x-2 text-muted-foreground"
+									aria-disabled
+								>
+									<RadioGroupItem value="delivery" id="r2" disabled />
+									<Label htmlFor="r2">Home Delivery</Label>
+								</div>
+							</RadioGroup>
+						</CardContent>
+					</Card>
+					<Card className="border-none">
+						<CardHeader className="p-3 pb-0">
+							<CardTitle className="text-base font-normal">
+								Payment Method
+							</CardTitle>
+							<CardDescription className="sr-only">
+								Payment method
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="w-full p-3">
+							<RadioGroup defaultValue="cash">
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="cash" id="r1" />
+									<Label htmlFor="r1">Cash</Label>
+								</div>
+								<div
+									className="flex items-center space-x-2 text-muted-foreground"
+									aria-disabled
+								>
+									<RadioGroupItem value="wallet" id="r2" disabled />
+									<Label htmlFor="r2">Wallet</Label>
+								</div>
+								<div
+									className="flex items-center space-x-2 text-muted-foreground"
+									aria-disabled
+								>
+									<RadioGroupItem value="card" id="r2" disabled />
+									<Label htmlFor="r2">Card</Label>
+								</div>
+							</RadioGroup>
+						</CardContent>
+					</Card>
 				</div>
 			</ScrollArea>
 
@@ -252,7 +322,7 @@ export default function CartCheckOutList({
 						</div>
 						<PlaceOrder
 							customerContactId={defaultCustomerAddress?.id || ""}
-							checkoutData={checkoutData}
+							checkoutData={newCheckoutData}
 							validateCheckout={validateCheckout}
 						/>
 					</div>

@@ -24,9 +24,11 @@ export async function CheckoutWrapper({
 	}
 
 	return (
-		<CartCheckOutList
-			checkoutData={checkoutData}
-			defaultCustomerAddress={defaultCustomerAddress}
-		/>
+		<>
+			<CartCheckOutList
+				checkoutData={checkoutData}
+				defaultCustomerAddress={defaultCustomerAddress}
+			/>
+		</>
 	)
 }

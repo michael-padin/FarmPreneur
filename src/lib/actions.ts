@@ -227,7 +227,9 @@ export async function placeOrder(
 	prevState: any,
 	payload: {
 		customerContactId: string
-		checkoutData: CartState
+		checkoutData: CartState & {
+			orderNote?: string
+		}
 	}
 ): Promise<{ success: boolean; error?: string }> {
 	const { checkoutData, customerContactId } = payload
@@ -311,6 +313,7 @@ export async function placeOrder(
 				// Create the order
 				const createdOrder = await tx.order.create({
 					data: {
+						orderNote: checkoutData.orderNote,
 						customerId,
 						farmerId: group.farmer.id,
 						totalPrice: checkoutData.total,

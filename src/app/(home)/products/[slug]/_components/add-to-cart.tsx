@@ -37,6 +37,13 @@ export function AddToCart({
 			if (state.error) {
 				showErrorToast(state.error)
 			}
+			if (state.success) {
+				toast.success("Product added to cart successfully!", {
+					closeButton: true,
+					duration: 2000,
+					position: "top-right"
+				})
+			}
 		}
 	}, [state])
 

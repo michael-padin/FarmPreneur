@@ -13,7 +13,9 @@ export function PlaceOrder({
 	validateCheckout
 }: {
 	customerContactId: string
-	checkoutData: CartState
+	checkoutData: CartState & {
+		orderNote?: string
+	}
 	validateCheckout?: () => boolean
 }) {
 	const router = useRouter()
