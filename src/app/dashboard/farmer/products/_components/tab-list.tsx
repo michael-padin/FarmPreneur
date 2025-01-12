@@ -7,15 +7,12 @@ import { useQueryState } from "nuqs"
 import { useRef, useTransition } from "react"
 import { searchParams } from "./searchParams"
 
-const productListingStatusMap: Record<ProductListingStatus, { label: string }> =
-	{
-		[ProductListingStatus.PENDING]: { label: "Pending" },
-		[ProductListingStatus.APPROVED]: { label: "Approved" },
-		[ProductListingStatus.REJECTED]: { label: "Rejected" },
-		[ProductListingStatus.OUT_OF_STOCK]: { label: "Out of Stock" },
-		[ProductListingStatus.EXPIRED]: { label: "Expired" },
-		[ProductListingStatus.PAUSED]: { label: "Paused" }
-	}
+const productListingStatusMap: Record<string, { label: string }> = {
+	[ProductListingStatus.PENDING]: { label: "Pending" },
+	[ProductListingStatus.APPROVED]: { label: "Approved" },
+	[ProductListingStatus.REJECTED]: { label: "Rejected" },
+	[ProductListingStatus.UNLISTED]: { label: "Unlisted" }
+}
 export function StatusTabs() {
 	const [isLoading, startTransition] = useTransition()
 	const scrollAreaRef = useRef<HTMLDivElement>(null)

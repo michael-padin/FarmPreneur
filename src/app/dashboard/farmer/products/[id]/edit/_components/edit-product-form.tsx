@@ -1,4 +1,5 @@
 "use client"
+import { unlistProduct } from "@/app/actions/product"
 import { FPMediaUploader } from "@/components/fp/fp-media-uploader"
 import { FPSelect } from "@/components/fp/fp-select"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,7 @@ import { showErrorToast } from "@/lib/handle-error"
 import { getProductByIdFromFarmerUseCase } from "@/use-cases/products"
 import { processMediaUpdate } from "@/utils/media"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ProductListingStatus } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
@@ -39,7 +41,7 @@ interface EditProductFormProps {
 }
 export function EditProductForm({ product, categories }: EditProductFormProps) {
 	const router = useRouter()
-
+	const [isUnlistPending, startUnlistTransition] = useTransition()
 	const [isUpdatePending, startUpdateTransition] = useTransition()
 	const form = useForm<EditProductSchema>({
 		resolver: zodResolver(editProductSchema),
@@ -79,6 +81,35 @@ export function EditProductForm({ product, categories }: EditProductFormProps) {
 			router.push("/dashboard/farmer/products")
 		})
 	}
+
+	const handleListUnlist = async (status: ProductListingStatus) => {
+		startUnlistTransition(async () => {
+			const { error } = await unlistProduct({
+				status,
+				productId: product.id
+			})
+			if (error) {
+				showErrorToast(error)
+				return
+			}
+
+			if (status === ProductListingStatus.UNLISTED) {
+				toast.success("Product listed successfully!", {
+					closeButton: true,
+					duration: 2000,
+					position: "top-right"
+				})
+			} else {
+				toast.success("Product unlisted successfully!", {
+					closeButton: true,
+					duration: 2000,
+					position: "top-right"
+				})
+			}
+			router.push("/dashboard/farmer/products")
+		})
+	}
+
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
@@ -231,13 +262,37 @@ export function EditProductForm({ product, categories }: EditProductFormProps) {
 					/>
 
 					<div className="fixed bottom-0 left-0 right-0 z-10 flex bg-background p-4">
-						<Button
-							type="submit"
-							className="w-full"
-							disabled={isUpdatePending || !form.formState.isDirty}
-						>
-							{isUpdatePending ? "Updating..." : "Update Product"}
-						</Button>
+						<div className="flex w-full gap-2">
+							{product.listingStatus === "APPROVED" && (
+								<Button
+									onClick={() =>
+										handleListUnlist(ProductListingStatus.UNLISTED)
+									}
+									type="button"
+									className="flex items-center"
+									variant={"secondary"}
+								>
+									Unlist
+								</Button>
+							)}
+							{product.listingStatus === "UNLISTED" && (
+								<Button
+									onClick={() => handleListUnlist(ProductListingStatus.PENDING)}
+									type="button"
+									className="flex items-center"
+									variant={"secondary"}
+								>
+									List
+								</Button>
+							)}
+							<Button
+								type="submit"
+								className="w-full"
+								disabled={isUpdatePending || !form.formState.isDirty}
+							>
+								{isUpdatePending ? "Updating..." : "Update Product"}
+							</Button>
+						</div>
 					</div>
 				</fieldset>
 			</form>

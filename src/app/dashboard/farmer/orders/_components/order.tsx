@@ -1,5 +1,4 @@
 import { OrderStatusBadge } from "@/app/dashboard/(admin)/users/(lists)/_components/badges"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatPHP } from "@/lib/utils"
 import { getFarmerOrdersUseCase } from "@/use-cases/orders"
@@ -70,19 +69,12 @@ export default function Order({
 							/>
 						)}
 
-						{order.status === "COMPLETED" &&
+						{/* {order.status === "COMPLETED" &&
 							order.subStatus === "BUYER_REVIEWED" && (
-								<Button
-									// asChild
-									// onClick={() => toast.info("Coming soon...")}
-									className="flex items-center"
-									variant={"outline"}
-								>
-									{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
+								<Button className="flex items-center" variant={"outline"}>
 									View Rating
-									{/* </Link> */}
 								</Button>
-							)}
+							)} */}
 					</div>
 				</div>
 				<span className="text-xs">

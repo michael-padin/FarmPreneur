@@ -81,6 +81,7 @@ export const getProductByIdFromFarmerUseCase = async (id: string) => {
 	return {
 		userId: foundProduct.farmer?.user.id,
 		id: foundProduct.id,
+		listingStatus: foundProduct.listingStatus,
 		categoryId: foundProduct.categoryId || "",
 		title: foundProduct.title,
 		description: foundProduct.description,
