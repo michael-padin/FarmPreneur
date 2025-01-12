@@ -13,13 +13,17 @@ export const upsertFarmerAction = async (
 	}
 ) => {
 	const session = await auth()
+
+	if (!session?.user) {
+		return { error: "Unauthorized" }
+	}
+
 	try {
 		const createdFarmer = await createUserFarmerByIdUseCase({
 			...data
 		})
 
 		await unstable_update({
-			...session,
 			user: { ...session?.user, farmerId: createdFarmer.id }
 		})
 

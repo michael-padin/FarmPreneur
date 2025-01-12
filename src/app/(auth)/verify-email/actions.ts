@@ -1,4 +1,13 @@
 "use server"
+import { auth, unstable_update } from "@/auth"
+import { getErrorMessage } from "@/lib/handle-error"
+import { sendOTPEmail } from "@/lib/nodemailer"
+import { isOtpExpired } from "@/lib/utils"
+import {
+	createEmailOtpUseCase,
+	deleteEmailOtpByEmailUseCase,
+	getEmailOtpByEmailUseCase
+} from "@/use-cases/email-otp"
 import {
 	getUserByIdUseCase,
 	updateVerifiedUserUseCase
@@ -7,19 +16,15 @@ import {
 	generateExpiration,
 	generateOTP
 } from "@/utils/generateVerificationCode"
-import { sendOTPEmail } from "@/lib/nodemailer"
 import { VerificationFormSchema, VerificationType } from "./types"
-import {
-	createEmailOtpUseCase,
-	deleteEmailOtpByEmailUseCase,
-	getEmailOtpByEmailUseCase
-} from "@/use-cases/email-otp"
-import { getErrorMessage } from "@/lib/handle-error"
-import { isOtpExpired } from "@/lib/utils"
 
 export const verifyCode = async (
 	data: VerificationType & { userId: string; email: string }
 ) => {
+	const session = await auth()
+
+	if (!session?.user) throw new Error("Unauthorized")
+
 	try {
 		const validations = VerificationFormSchema.safeParse(data)
 
@@ -30,6 +35,7 @@ export const verifyCode = async (
 			getEmailOtpByEmailUseCase(data.email),
 			getUserByIdUseCase(data.userId)
 		])
+
 		// Check if OTP matches and is still valid
 		if (otp) {
 			if (!isOtpExpired(otp?.expiresAt)) {
@@ -40,6 +46,13 @@ export const verifyCode = async (
 					updateVerifiedUserUseCase(user!.id),
 					deleteEmailOtpByEmailUseCase(data.email)
 				])
+
+				await unstable_update({
+					user: {
+						...session.user,
+						isEmailVerified: verifiedUser.isEmailVerified
+					}
+				})
 				return { success: "Email verified", data: verifiedUser }
 			} else {
 				await deleteEmailOtpByEmailUseCase(data.email)

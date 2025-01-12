@@ -23,7 +23,6 @@ import { isOtpExpired } from "@/lib/utils"
 import { getEmailOtpExpirationByUserIdUseCase } from "@/use-cases/email-otp"
 import { Loader2 } from "lucide-react"
 import { Session } from "next-auth"
-import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { toast } from "sonner"
@@ -34,7 +33,6 @@ interface InputOTPFormProps {
 	otp?: Awaited<ReturnType<typeof getEmailOtpExpirationByUserIdUseCase>>
 }
 export function InputOTPForm({ user, otp }: InputOTPFormProps) {
-	const { update } = useSession()
 	const [canResend, setCanResend] = useState(false)
 	const [timeLeft, setTimeLeft] = useState(300) // 5 minutes in seconds
 
@@ -85,11 +83,6 @@ export function InputOTPForm({ user, otp }: InputOTPFormProps) {
 				showErrorToast(res.error)
 				return
 			}
-
-			await update({
-				...user,
-				isEmailVerified: res.data?.isEmailVerified || true
-			})
 
 			setTimeLeft(0)
 			toast.success("Email Verified")

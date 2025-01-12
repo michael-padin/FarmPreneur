@@ -91,12 +91,12 @@ export function FPMediaUploader({
 	const renderMediaItem = (item: MediaFile) => (
 		<div
 			key={item.id}
-			className={cn("relative rounded-lg border", mediaClassName)}
+			className={cn("group relative rounded-lg border", mediaClassName)}
 		>
 			{item.type === "image" ? (
 				<div className="relative h-full w-full">
 					<div
-						className="absolute inset-0 z-50 h-full w-full cursor-pointer"
+						className="absolute inset-0 z-10 h-full w-full cursor-pointer"
 						onClick={() => setLightboxOpen(true)}
 					></div>
 					{lightboxOpen && item.url && (
@@ -128,7 +128,7 @@ export function FPMediaUploader({
 				variant="destructive"
 				type="button"
 				size="icon"
-				className="absolute right-0 top-0 h-5 w-5 rounded-full lg:hidden lg:group-hover:flex"
+				className="absolute right-0 top-0 z-20 h-5 w-5 rounded-full lg:hidden lg:group-hover:flex"
 				onClick={() => removeMedia(item.id)}
 			>
 				<X className="!h-4 !w-4" />

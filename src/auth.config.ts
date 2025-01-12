@@ -67,7 +67,7 @@ export default {
 				token.user = { ...user, id: user.id || "" }
 			}
 			if (trigger === "update" && session) {
-				token = { ...token, user: session }
+				token = { ...token, user: { ...session.user } }
 			}
 
 			return token
