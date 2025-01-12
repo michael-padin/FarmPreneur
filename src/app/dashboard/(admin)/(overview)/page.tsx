@@ -1,5 +1,11 @@
 import { DashboardHeader } from "@/app/_components/header"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle
+} from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getRecentOrdersUseCase } from "@/use-cases/orders"
 import { Suspense } from "react"
@@ -48,6 +54,9 @@ export default function AdminDashboardPage() {
 						<Card className="h-full">
 							<CardHeader>
 								<CardTitle>Recent Orders</CardTitle>
+								<CardDescription>
+									Recent orders in the marketplace
+								</CardDescription>
 							</CardHeader>
 							<CardContent className="">
 								<Suspense fallback={<Skeleton className="h-24" />}>
