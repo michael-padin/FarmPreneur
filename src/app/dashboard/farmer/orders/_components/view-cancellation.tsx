@@ -2,6 +2,14 @@
 
 import { Button } from "@/components/ui/button"
 import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from "@/components/ui/dialog"
+import {
 	Drawer,
 	DrawerClose,
 	DrawerContent,
@@ -13,6 +21,7 @@ import {
 } from "@/components/ui/drawer"
 import { Textarea } from "@/components/ui/textarea"
 import { orderSubStatusMap } from "@/constants/order"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { OrderSubStatus } from "@prisma/client"
 import { useState } from "react"
 
@@ -25,7 +34,35 @@ export function ViewCancellation({
 	triggerClassName?: string
 	subStatus: OrderSubStatus
 }) {
+	const isDesktop = useMediaQuery("(min-width: 768px)")
 	const [open, setOpen] = useState(false)
+
+	if (isDesktop) {
+		return (
+			<Dialog open={open} onOpenChange={setOpen}>
+				<DialogTrigger asChild>
+					<Button variant={"outline"} size={"sm"} className={triggerClassName}>
+						View Cancellation Reason
+					</Button>
+				</DialogTrigger>
+				<DialogContent className="max-w-screen-sm">
+					<DialogHeader>
+						<DialogTitle className="text-destructive">
+							{orderSubStatusMap[subStatus].label}
+						</DialogTitle>
+						<DialogDescription className="sr-only"></DialogDescription>
+					</DialogHeader>
+					<div className="w-full px-4">
+						<Textarea
+							placeholder="Your cancellation reason"
+							disabled
+							value={reason}
+						/>
+					</div>
+				</DialogContent>
+			</Dialog>
+		)
+	}
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
