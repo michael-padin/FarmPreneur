@@ -1,6 +1,7 @@
 import { ChevronRight, MapPin, Shield, User } from "lucide-react"
 import Link from "next/link"
 import { BottomNav } from "../../_components/bottom-navigation"
+import { ApplicationStatus } from "./_components/application-status"
 import { ProfileNavLinks } from "./_components/nav-links"
 import { FarmerProfile } from "./_components/profile-header"
 import { SignOutBtn } from "./_components/sign-out-btn"
@@ -61,6 +62,7 @@ export default function FarmerProfilePage() {
 									</div>
 									<ChevronRight className="h-5 w-5" />
 								</Link> */}
+								<ApplicationStatus />
 								<Link
 									href="/dashboard/farmer/profile/security/change-password"
 									className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"

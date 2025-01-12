@@ -132,7 +132,7 @@ export const FarmRegistrationForm = ({ user }: FarmRegistrationFormProps) => {
 			}
 
 			toast.success("Successfully created farmer details")
-			router.push("/dashboard/farmer")
+			router.push("/dashboard/farmer/application-status")
 		})
 	}
 
