@@ -80,19 +80,12 @@ export default function Order({
 									</Link>
 								</Button>
 							)}
-						{order.status === "COMPLETED" &&
+						{/* {order.status === "COMPLETED" &&
 							order.subStatus === "BUYER_REVIEWED" && (
-								<Button
-									// asChild
-									// onClick={() => toast.info("Coming soon...")}
-									className="flex items-center"
-									variant={"outline"}
-								>
-									{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
+								<Button className="flex items-center" variant={"outline"}>
 									View Rating
-									{/* </Link> */}
 								</Button>
-							)}
+							)} */}
 					</div>
 				</div>
 				<span className="text-xs">

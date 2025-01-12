@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import { getOrder } from "@/data-access/orders"
 import { MessageCircle } from "lucide-react"
 import Link from "next/link"
-import { toast } from "sonner"
 import { AcceptOrder } from "../../../_components/accept-order"
 import { CancelOrder } from "../../../_components/cancel-order"
 import { SubStatusSelect } from "../../../_components/sub-status-select"
@@ -69,7 +68,7 @@ export default function OrderDetailsBottomNav({
 						/>
 					)}
 
-					{order.status === "COMPLETED" &&
+					{/* {order.status === "COMPLETED" &&
 						order.subStatus === "BUYER_REVIEWED" && (
 							<Button
 								// asChild
@@ -77,11 +76,9 @@ export default function OrderDetailsBottomNav({
 								className="flex flex-1 items-center"
 								variant={"outline"}
 							>
-								{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
 								View Rating
-								{/* </Link> */}
 							</Button>
-						)}
+						)} */}
 				</div>
 			</div>
 		</div>

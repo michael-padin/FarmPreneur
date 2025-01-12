@@ -50,9 +50,7 @@ export async function TopFarmers() {
 										variant={"outline"}
 										asChild
 									>
-										<Link href={`/dashboard/farmer/farmer-details/${farm.id}`}>
-											Visit Farm
-										</Link>
+										<Link href={`/farmers/${farm.id}`}>Visit Farm</Link>
 									</Button>
 								</div>
 							</div>
