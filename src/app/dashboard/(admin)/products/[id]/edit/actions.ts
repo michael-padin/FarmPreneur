@@ -1,4 +1,5 @@
 "use server"
+import { notifyFarmerProductListed } from "@/app/actions/notifications"
 import { getCategoryBySlug } from "@/data-access/categories"
 import { getErrorMessage } from "@/lib/handle-error"
 import { generateSlug, INITIAL_MAX_ITERATIONS } from "@/lib/slugify"
@@ -54,25 +55,10 @@ export const adminUpdateProduct = async (
 			existingProduct.listingStatus === "PENDING" &&
 			updatedProduct.listingStatus === "APPROVED"
 		) {
-			// await pusherServer.trigger("pending-products-count", "update", {
-			// 	count: await getPendingFarmerCountUseCase()
-			// })
-			const userId = updatedProduct.farmer?.user.id || ""
-
-			// await createNotificationByUserIdUseCase({
-			// 	userId,
-			// 	title: "Product Approval Update",
-			// 	message: `Product ${updatedProduct.title} has been approved.`,
-			// 	type: "PRODUCT_APPROVAL",
-			// 	metadata: {
-			// 		product: {
-			// 			productImage: updatedProduct.productImages[0],
-			// 			productId: updatedProduct.id,
-			// 			productName: updatedProduct.title,
-			// 			productListingStatus: updatedProduct.listingStatus
-			// 		}
-			// 	}
-			// })
+			await notifyFarmerProductListed(
+				updatedProduct.id,
+				updatedProduct.listingStatus
+			)
 		}
 
 		revalidatePath("/dashboard/products")
