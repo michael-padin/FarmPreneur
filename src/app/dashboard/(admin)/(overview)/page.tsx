@@ -1,16 +1,19 @@
 import { DashboardHeader } from "@/app/_components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getRecentOrdersUseCase } from "@/use-cases/orders"
 import { Suspense } from "react"
 import { FarmerMetricCardSkeleton } from "../../farmer/_components/farmer-metric-card-skeleton"
 import { GreetingsWrapper } from "./_components/greetings-wrapper"
 import { OverviewMetrics } from "./_components/overview-metrics"
+import { RecentOrdersTable } from "./_components/recent-orders/data-table"
 import { TopFarmers } from "./_components/top-farmers"
 import TopFarmProducts from "./_components/top-selling-produce"
 
 export const experimental_ppr = true
 
 export default function AdminDashboardPage() {
+	const recentOrdersPromise = getRecentOrdersUseCase()
 	return (
 		<div>
 			<DashboardHeader />
@@ -48,7 +51,7 @@ export default function AdminDashboardPage() {
 							</CardHeader>
 							<CardContent className="">
 								<Suspense fallback={<Skeleton className="h-24" />}>
-									{/* <RecentOrdersTable data={recentOrdersPromise} /> */}
+									<RecentOrdersTable data={recentOrdersPromise} />
 								</Suspense>
 							</CardContent>
 						</Card>{" "}

@@ -16,6 +16,7 @@ import { Order, OrderStatus } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Package, Phone, User } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
 import { OrderStatusBadge } from "../../../users/(lists)/_components/badges"
@@ -196,12 +197,17 @@ export const columns: ColumnDef<
 							>
 								Copy ID
 							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => setShowUpdateDialog(true)}>
-								View Details
+							<DropdownMenuItem
+								onSelect={() => setShowUpdateDialog(true)}
+								asChild
+							>
+								<Link href={`/dashboard/orders/${row.original.id}`}>
+									View Details
+								</Link>
 							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => setShowUpdateDialog(true)}>
+							{/* <DropdownMenuItem onSelect={() => setShowUpdateDialog(true)}>
 								Update Status
-							</DropdownMenuItem>
+							</DropdownMenuItem> */}
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onSelect={() => setShowProductDialog(true)}>
 								Delete
