@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getCartUseCase } from "@/use-cases/cart"
@@ -23,6 +24,7 @@ export default async function Layout({
 		>
 			<CartProvider initialCartPromise={cartPromise}>
 				<PusherNotificationListener userId={userId || ""} />
+				<PushNotificationManagerWrapper />
 				{/* <UnderConstruction /> */}
 				{children}
 			</CartProvider>

@@ -6,6 +6,7 @@ import ThemeProvider from "@/components/theme-provider"
 import { Metadata } from "next"
 
 import { PusherNotificationListener } from "@/app/_components/pusher-notification-listener"
+import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
 import { getUserFarmerByIdUseCase } from "@/use-cases/users"
@@ -46,6 +47,8 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 				userId={session.user.id}
 			>
 				<PusherNotificationListener userId={session.user.id} />
+				<PushNotificationManagerWrapper />
+
 				{/* <FarmerSidebar user={session.user} /> */}
 				{children}
 			</NotificationProvider>

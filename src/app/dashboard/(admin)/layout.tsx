@@ -6,7 +6,8 @@ import { Metadata } from "next"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { PendingFarmerCountProvider } from "@/contexts/pending-farmer-count-context"
 
-import {} from "@/app/_components/pusher-notification-listener"
+import { PusherNotificationListener } from "@/app/_components/pusher-notification-listener"
+import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
 import { ThemeProvider } from "next-themes"
@@ -45,6 +46,8 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 						<SidebarProvider>
 							<AdminSidebar user={user} />
 							<SidebarInset className="overflow-hidden bg-secondary dark:bg-background">
+								<PusherNotificationListener userId={session.user.id} />
+								<PushNotificationManagerWrapper />
 								{children}
 							</SidebarInset>
 						</SidebarProvider>
