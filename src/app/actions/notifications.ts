@@ -93,6 +93,8 @@ export async function notifyFarmerProductListed(
 	if (!product || !product.farmer)
 		throw new Error("Product or Farmer not found")
 
+	const dashboardUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/farmer/products/${product.id}`
+
 	if (status === ProductListingStatus.APPROVED) {
 		await sendNotification(
 			product.farmer.userId,
@@ -103,7 +105,7 @@ export async function notifyFarmerProductListed(
 					component: ProductApprovalEmail({
 						farmerName: product.farmer.name || "",
 						productName: product.title,
-						dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+						dashboardUrl: dashboardUrl
 					})
 				},
 				sms: `Great news! Your product "${product.title}" has been approved and is now listed on FarmPreneur.`,
@@ -111,7 +113,7 @@ export async function notifyFarmerProductListed(
 					title: "Product Approved!",
 					body: `Your product "${product.title}" is now listed on FarmPreneur.`,
 					icon: "/web-app-manifest-192x192.png",
-					url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+					url: dashboardUrl
 				}
 			}
 		)
@@ -126,7 +128,7 @@ export async function notifyFarmerProductListed(
 						farmerName: product.farmer.name || "",
 						productName: product.title,
 						rejectionReason: reason || "No specific reason provided",
-						dashboardUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+						dashboardUrl: dashboardUrl
 					})
 				},
 				sms: `Your product "${product.title}" was not approved for listing. Please check your email for more details.`,
@@ -134,7 +136,7 @@ export async function notifyFarmerProductListed(
 					title: "Product Not Approved",
 					body: `Your product "${product.title}" was not approved for listing. Please check your email for more details.`,
 					icon: "/web-app-manifest-192x192.png",
-					url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/products/${product.id}`
+					url: dashboardUrl
 				}
 			}
 		)
