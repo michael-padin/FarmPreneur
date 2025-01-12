@@ -103,6 +103,7 @@ export function MessageList({
 						>
 							<Avatar className="mr-4 flex h-[50px] w-[50px] items-center justify-center bg-background">
 								<AvatarImage
+									className="object-cover"
 									src={partnerDetails?.profilePicture || "/placeholder.png"}
 								/>
 								<AvatarFallback className="text-primary">
