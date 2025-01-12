@@ -87,7 +87,17 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								file: null
 							}))
 						: [],
-				farmName: user.farmer!.farmName || ""
+				farmName: user.farmer!.farmName || "",
+				selfieWithGovIdImage:
+					user.farmer!.selfieWithGovIdImage &&
+					user.farmer!.selfieWithGovIdImage.length > 0
+						? {
+								id: Math.random().toString(36).substring(7),
+								url: user.farmer!.selfieWithGovIdImage,
+								type: "image" as "image" | "video",
+								file: null
+							}
+						: null
 			}
 		}
 	})
@@ -285,29 +295,67 @@ export default function FarmerForm({ user }: FarmerFormProps) {
 								</FormItem>
 							)}
 						/>
+
 						<FormField
 							control={form.control}
 							name="farmer.govIdImage"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Verification Document</FormLabel>
+									<FormLabel>Government ID </FormLabel>
 									<FormControl>
 										<FPMediaUploader
 											{...field}
-											onChange={field.onChange}
-											singleImage
 											initialMedia={
-												user.farmer!.govIdImage
+												user.farmer!.govIdImage &&
+												user.farmer!.govIdImage.length > 0
 													? {
 															id: Math.random().toString(36).substring(7),
-															url: user.farmer!.govIdImage || "",
+															url: user.farmer!.govIdImage,
 															type: "image" as "image" | "video",
 															file: null
 														}
-													: []
+													: null
 											}
+											onChange={field.onChange}
+											singleImage
+											maxFiles={1}
+											imageClassName="w-full h-48 object-contain"
+											mediaClassName="w-full h-48 object-contain"
 										/>
 									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="farmer.selfieWithGovIdImage"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Selfie with Government ID</FormLabel>
+									<FormControl>
+										<FPMediaUploader
+											{...field}
+											initialMedia={
+												user.farmer!.selfieWithGovIdImage &&
+												user.farmer!.selfieWithGovIdImage.length > 0
+													? {
+															id: Math.random().toString(36).substring(7),
+															url: user.farmer!.selfieWithGovIdImage,
+															type: "image" as "image" | "video",
+															file: null
+														}
+													: null
+											}
+											onChange={field.onChange}
+											singleImage
+											maxFiles={1}
+											imageClassName="w-full h-48 object-contain"
+											mediaClassName="w-full h-48 object-contain"
+										/>
+									</FormControl>
+
 									<FormMessage />
 								</FormItem>
 							)}

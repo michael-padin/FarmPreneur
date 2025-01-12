@@ -12,12 +12,17 @@ export const editCustomerSchema = z.object({
 export const editFarmerSchema = z.object({
 	birthDate: z.date(),
 	contactNumber: z.string(),
-
+	selfieWithGovIdImage: mediaFileSchema
+		.required()
+		.refine((data) => data.url, {
+			message: "Required"
+		})
+		.nullable(),
 	farmName: z.string().min(2),
 	farmDescription: z.string().min(2),
 	applicationStatus: z.nativeEnum(FarmerApplicationStatus),
 	address: addressSchema,
-	govIdImage: mediaFileSchema.required().refine((data) => data.file, {
+	govIdImage: mediaFileSchema.required().refine((data) => data.url, {
 		message: "Required"
 	}),
 	farmImages: mediaFileSchema.array().min(1, "Required")
