@@ -13,6 +13,11 @@ export async function OrderDetailsWrapper({ params }: { params: Params }) {
 
 	return (
 		<>
+			{order.status === "COMPLETED" && (
+				<h2 className="mb-2 text-center text-2xl font-semibold text-primary">
+					Order Completed
+				</h2>
+			)}
 			<OrderDetails order={order} />
 			<OrderDetailsBottomNav order={order} />
 		</>

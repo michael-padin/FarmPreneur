@@ -1,4 +1,5 @@
 import { FPBackButton } from "@/components/fp/fp-back-button"
+import { Loader2 } from "lucide-react"
 import { Suspense } from "react"
 import { OrderDetailsWrapper } from "./_components/order-details-wrapper"
 
@@ -20,7 +21,11 @@ export default function FarmerOrderDetailsPage({ params }: { params: Params }) {
 						<div className="">
 							<div className="pb-20 pt-20">
 								<Suspense
-									fallback={<div className="space-y-2">Loading...</div>}
+									fallback={
+										<div className="flex h-screen items-center justify-center">
+											<Loader2 className="h-5 w-5 animate-spin text-primary" />
+										</div>
+									}
 								>
 									<OrderDetailsWrapper params={params} />
 								</Suspense>

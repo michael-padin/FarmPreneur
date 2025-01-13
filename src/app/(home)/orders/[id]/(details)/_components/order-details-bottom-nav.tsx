@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import { getOrder } from "@/data-access/orders"
 import { MessageCircle } from "lucide-react"
 import Link from "next/link"
-import { toast } from "sonner"
 import { CancelOrder } from "../../../_components/cancel-order"
 import { ConfirmPickedUpOrder } from "../../../_components/confirm-picked-up-order"
 import { ViewCancellation } from "../../../_components/view-cancellation"
@@ -24,13 +23,24 @@ export default function OrderDetailsBottomNav({
 		<div className="fixed bottom-0 left-0 right-0 z-10 bg-background drop-shadow-2xl">
 			<div className="flex w-full items-center px-3 py-4">
 				<div className="flex w-full gap-3">
-					<div>
+					{order.status === "COMPLETED" &&
+					order.subStatus === "BUYER_REVIEWED" ? (
+						<Button variant="outline" asChild className="w-full">
+							<Link
+								href={`/messages/${order.farmer.userId}`}
+								className="w-full"
+							>
+								<MessageCircle />
+								Send Message
+							</Link>
+						</Button>
+					) : (
 						<Button variant="outline" size={"icon"} asChild>
 							<Link href={`/messages/${order.farmer.userId}`}>
 								<MessageCircle />
 							</Link>
 						</Button>
-					</div>
+					)}
 					{canBeCancelled && (
 						<CancelOrder
 							orderId={order.id}
@@ -56,19 +66,16 @@ export default function OrderDetailsBottomNav({
 								</Link>
 							</Button>
 						)}
-					{order.status === "COMPLETED" &&
+					{/* {order.status === "COMPLETED" &&
 						order.subStatus === "BUYER_REVIEWED" && (
 							<Button
-								// asChild
 								onClick={() => toast.info("Coming soon...")}
 								className="flex flex-1 items-center"
 								variant={"outline"}
 							>
-								{/* <Link href={`/orders/${order.id}/rate`} prefetch> */}
 								View Rating
-								{/* </Link> */}
 							</Button>
-						)}
+						)} */}
 				</div>
 			</div>
 		</div>
