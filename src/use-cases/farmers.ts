@@ -190,7 +190,7 @@ export const getFarmerInfoInProductDetailsUseCase = async (id: string) => {
 	})
 	return {
 		numberOfProducts: totalProducts,
-		averageRating: averageRating._avg.rating,
+		averageRating: averageRating._avg.rating || 0,
 		farmName: farmer.farmName,
 		name: farmer.user.name,
 		contactNumber: farmer.contactNumber,

@@ -88,18 +88,18 @@ export async function FarmerProfile({ params }: { params: Params }) {
 								className="rounded-full object-cover"
 							/>
 						</div>
-						<div className="w-full space-y-3">
+						<div className="space-y-3">
 							<h1 className="text-xl font-bold">{farmerInfo.farmName}</h1>
 							<div className="flex gap-1 text-sm">
 								<MapPin className="mt-1 h-5 w-5" />
 								<div className="">
-									<span className="truncate">
-										{farmerInfo.address.fullAddress}
-									</span>
-									<AddressDetailsDrawerDialog
-										address={farmerInfo.address}
-										title={`${farmerInfo.farmName}'s Location`}
-									/>
+									<span className="">{farmerInfo.address.fullAddress}</span>
+									<div>
+										<AddressDetailsDrawerDialog
+											address={farmerInfo.address}
+											title={`${farmerInfo.farmName}'s Location`}
+										/>
+									</div>
 								</div>
 							</div>
 							<div className="">
