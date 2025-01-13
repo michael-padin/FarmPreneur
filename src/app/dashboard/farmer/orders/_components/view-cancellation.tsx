@@ -41,7 +41,7 @@ export function ViewCancellation({
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button variant={"outline"} size={"sm"} className={triggerClassName}>
+					<Button variant={"outline"} className={triggerClassName}>
 						View Cancellation Reason
 					</Button>
 				</DialogTrigger>
@@ -67,7 +67,7 @@ export function ViewCancellation({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant={"outline"} size={"sm"} className={triggerClassName}>
+				<Button variant={"outline"} className={triggerClassName}>
 					View Cancellation Reason
 				</Button>
 			</DrawerTrigger>
