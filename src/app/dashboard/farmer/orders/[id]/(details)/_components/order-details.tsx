@@ -88,6 +88,12 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 							</div>
 						</div>
 					</div>
+					{order.orderNote && (
+						<div className="my-2">
+							<Label>Customer note:</Label>
+							<div className="rounded-lg border p-2">{order.orderNote}</div>
+						</div>
+					)}
 				</CardContent>
 			</Card>
 			<Card className="border-none">
