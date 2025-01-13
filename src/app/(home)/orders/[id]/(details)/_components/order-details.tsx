@@ -8,6 +8,7 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import { locationLabelMap, LocationType } from "@/constants/address"
 import { getOrder } from "@/data-access/orders"
@@ -89,6 +90,14 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 							</div>
 						</div>
 					</div>
+					{order.orderNote && (
+						<div className="my-2">
+							<Label>Your note:</Label>
+							<div className="rounded-lg border p-2 text-sm">
+								{order.orderNote}
+							</div>
+						</div>
+					)}
 				</CardContent>
 			</Card>
 			<Card className="border-none">
@@ -162,6 +171,39 @@ export function OrderDetails({ order }: OrderDetailsProps) {
 							</span>
 						</p>
 					</div>
+				</CardContent>
+			</Card>
+
+			<Card className="border-none">
+				<CardHeader className="p-3 pb-0">
+					<CardTitle className="text-base font-normal">
+						Shipping Option
+					</CardTitle>
+					<CardDescription className="sr-only">Shipping option</CardDescription>
+				</CardHeader>
+				<CardContent className="w-full p-3">
+					<RadioGroup defaultValue="pickup">
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="pickup" id="r1" />
+							<Label htmlFor="r1">Pickup from Farmer&apos;s Location</Label>
+						</div>
+					</RadioGroup>
+				</CardContent>
+			</Card>
+			<Card className="border-none">
+				<CardHeader className="p-3 pb-0">
+					<CardTitle className="text-base font-normal">
+						Payment Method
+					</CardTitle>
+					<CardDescription className="sr-only">Payment method</CardDescription>
+				</CardHeader>
+				<CardContent className="w-full p-3">
+					<RadioGroup defaultValue="cash">
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="cash" id="r1" />
+							<Label htmlFor="r1">Cash</Label>
+						</div>
+					</RadioGroup>
 				</CardContent>
 			</Card>
 		</div>
