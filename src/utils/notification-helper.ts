@@ -159,12 +159,10 @@ export async function sendNotification(
 			notification.email.subject,
 			notification.email.component
 		)
-		await createNotificationLog(userId, "email", notificationType, "success")
 	}
 
 	if (user.notificationPreferences?.sms && contactNumber && notification.sms) {
 		await sendSMS(contactNumber, notification.sms)
-		await createNotificationLog(userId, "sms", notificationType, "success")
 	}
 
 	if (user.notificationPreferences?.push && user.pushSubscription.length > 0) {
@@ -181,7 +179,6 @@ export async function sendNotification(
 				await sendWebPush(pushSubscription, JSON.stringify(notification.push))
 			})
 		)
-		await createNotificationLog(userId, "push", notificationType, "success")
 	}
 
 	const createdInAppNotification = await db.notification.create({
@@ -198,21 +195,4 @@ export async function sendNotification(
 		// Create in-app notification
 		await sendInAppNotification(userId, createdInAppNotification)
 	}
-}
-
-async function createNotificationLog(
-	userId: string,
-	type: string,
-	event: string,
-	status: string
-) {
-	await db.notificationLog.create({
-		data: {
-			userId,
-			type,
-			event,
-			message: `${type.toUpperCase()} notification sent for event: ${event}`,
-			status
-		}
-	})
 }
