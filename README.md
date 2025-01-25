@@ -1,4 +1,5 @@
-# FarmPreneur - Capstone Project
+# FarmPreneur  Local Grower's Digital Marketplace
+![FarmPreneur - Db](https://github.com/user-attachments/assets/8f15f6e5-130d-4c94-9e87-c32f6b2a54b8)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
