@@ -194,9 +194,7 @@ export async function updateItemQuantity(
 				where: { id },
 				data: { quantity },
 				include: {
-					product: {
-						include: { images: true }
-					}
+					product: true
 				}
 			})
 		}

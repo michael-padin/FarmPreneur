@@ -8,7 +8,6 @@ export const getCartById = async (id: string) => {
 				include: {
 					product: {
 						include: {
-							images: true,
 							farmer: {
 								select: {
 									profilePicture: true,

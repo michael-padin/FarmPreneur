@@ -29,11 +29,6 @@ export const createProduct = async (
 					id: true,
 					farmName: true
 				}
-			},
-			images: {
-				select: {
-					url: true
-				}
 			}
 		}
 	})
@@ -67,7 +62,6 @@ export const getAllProducts = async () => {
 						}
 					},
 					reviews: true,
-					images: true,
 					wishlistItems: true
 				}
 			},
@@ -281,7 +275,6 @@ export const getProducts = async (filter: {
 					}
 				}
 			},
-			images: true,
 			category: true
 		}
 	})
@@ -358,7 +351,6 @@ export const getProductsOnProductListPage = async (filters: {
 					}
 				}
 			},
-			images: true,
 			category: true,
 			_count: {
 				select: {
@@ -443,7 +435,6 @@ export const getFarmerProductLists = async (filters: {
 					}
 				}
 			},
-			images: true,
 			category: true,
 			_count: {
 				select: {
@@ -486,7 +477,6 @@ export const getDailyProducts = async (address?: Address) => {
 					reviews: true
 				}
 			},
-			images: true,
 			reviews: true,
 			category: true
 		}
@@ -648,7 +638,6 @@ export const updateProduct = async (
 				unit: data.unit
 			},
 			include: {
-				images: true,
 				farmer: {
 					include: {
 						user: {

@@ -12,11 +12,7 @@ export const getOrders = async () => {
 		include: {
 			items: {
 				include: {
-					product: {
-						include: {
-							images: true
-						}
-					}
+					product: true
 				}
 			},
 			farmer: {
@@ -63,11 +59,7 @@ export const getRecentOrders = async () => {
 		include: {
 			items: {
 				include: {
-					product: {
-						include: {
-							images: true
-						}
-					}
+					product: true
 				}
 			},
 			farmer: {
@@ -138,9 +130,7 @@ export const getFarmerOrders = async (filter: {
 			pickupLocation: true,
 			items: {
 				include: {
-					product: {
-						include: { images: true }
-					}
+					product: true
 				}
 			},
 			customer: {
@@ -271,13 +261,7 @@ export const getCustomerOrders = async (filter: {
 							productImages: true,
 							title: true,
 							price: true,
-							unit: true,
-							images: {
-								select: {
-									url: true,
-									altText: true
-								}
-							}
+							unit: true
 						}
 					}
 				}

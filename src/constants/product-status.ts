@@ -6,5 +6,6 @@ export const PRODUCT_STATUS: Record<ProductListingStatus, string> = {
 	[ProductListingStatus.REJECTED]: "REJECTED",
 	[ProductListingStatus.EXPIRED]: "EXPIRED",
 	[ProductListingStatus.PAUSED]: "PAUSED",
-	[ProductListingStatus.OUT_OF_STOCK]: "OUT OF STOCK"
+	[ProductListingStatus.OUT_OF_STOCK]: "OUT OF STOCK",
+	[ProductListingStatus.UNLISTED]: "UNLISTED"
 }

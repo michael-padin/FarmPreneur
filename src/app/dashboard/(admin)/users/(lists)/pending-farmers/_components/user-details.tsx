@@ -1,7 +1,7 @@
-import { Address, Farmer, Image as ImageType, User } from "@prisma/client"
+import { Address, Farmer, User } from "@prisma/client"
 
 interface UserDetailsProps {
-	user: User & Farmer & Address & ImageType
+	user: User & Farmer & Address
 }
 
 export default function EnhancedUserDetails({ user }: UserDetailsProps) {
