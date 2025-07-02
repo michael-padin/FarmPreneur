@@ -10,6 +10,7 @@ import {
 } from "@prisma/client"
 import { useEffect, useRef, useState } from "react"
 import { ChatForm } from "./chat-form"
+import { EmptyChatState } from "./empty-chat-state"
 import { Message } from "./message"
 
 interface ChatProps {
@@ -106,15 +107,19 @@ export function Chat({
 		<>
 			<div className="flex flex-col bg-gray-100">
 				<div className="flex-1 overflow-y-auto px-2">
-					{messages.map((message, index) => (
-						<Message
-							key={`${message.id}-${index}`}
-							message={message}
-							currentUserId={currentUserId}
-							onReply={handleReply}
-							// onReact={handleReact}
-						/>
-					))}
+					{messages.length === 0 ? (
+						<EmptyChatState />
+					) : (
+						messages.map((message, index) => (
+							<Message
+								key={`${message.id}-${index}`}
+								message={message}
+								currentUserId={currentUserId}
+								onReply={handleReply}
+								// onReact={handleReact}
+							/>
+						))
+					)}
 					<div ref={messagesEndRef} />
 				</div>
 			</div>

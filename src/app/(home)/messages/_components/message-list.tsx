@@ -5,6 +5,7 @@ import { pusherClient } from "@/lib/pusher"
 import { Customer, Farmer, Message, ROLE, User } from "@prisma/client"
 import Link from "next/link"
 import { useEffect, useState, useTransition } from "react"
+import { EmptyMessageState } from "./empty-message-state"
 
 type ConversationPartner = User & {
 	customer?: Customer | null
@@ -93,6 +94,10 @@ export function MessageList({
 	// 		return () => observer.disconnect()
 	// 	}
 	// }, [conversations, fetchMoreConversations])
+
+	if (conversations.length === 0) {
+		return <EmptyMessageState />
+	}
 
 	return (
 		<div className="">
