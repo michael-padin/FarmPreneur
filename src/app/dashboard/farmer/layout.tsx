@@ -6,6 +6,7 @@ import ThemeProvider from "@/components/theme-provider"
 import { Metadata } from "next"
 
 import { PusherNotificationListener } from "@/app/_components/pusher-notification-listener"
+import { DeviceRestriction } from "@/components/device-restriction"
 import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
@@ -50,7 +51,9 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 				<PushNotificationManagerWrapper />
 
 				{/* <FarmerSidebar user={session.user} /> */}
-				{children}
+				<DeviceRestriction user={session.user} role="FARMER">
+					{children}
+				</DeviceRestriction>
 			</NotificationProvider>
 			{/* </SidebarProvider> */}
 		</ThemeProvider>

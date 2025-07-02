@@ -7,6 +7,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { PendingFarmerCountProvider } from "@/contexts/pending-farmer-count-context"
 
 import { PusherNotificationListener } from "@/app/_components/pusher-notification-listener"
+import { DeviceRestriction } from "@/components/device-restriction"
 import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { getNotificationsByUserIdUseCase } from "@/use-cases/notifications"
@@ -44,12 +45,14 @@ export default async function Layout({ children }: DashboardLayoutProps) {
 				>
 					<PendingFarmerCountProvider>
 						<SidebarProvider>
-							<AdminSidebar user={user} />
-							<SidebarInset className="overflow-hidden bg-secondary dark:bg-background">
-								<PusherNotificationListener userId={session.user.id} />
-								<PushNotificationManagerWrapper />
-								{children}
-							</SidebarInset>
+							<DeviceRestriction user={user} role="ADMIN">
+								<AdminSidebar user={user} />
+								<SidebarInset className="overflow-hidden bg-secondary dark:bg-background">
+									<PusherNotificationListener userId={session.user.id} />
+									<PushNotificationManagerWrapper />
+									{children}
+								</SidebarInset>
+							</DeviceRestriction>
 						</SidebarProvider>
 					</PendingFarmerCountProvider>
 				</NotificationProvider>

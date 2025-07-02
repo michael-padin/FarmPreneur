@@ -1,4 +1,6 @@
 import { auth } from "@/auth"
+import { DeviceRestriction } from "@/components/device-restriction"
+import { LoginStatusIndicator } from "@/components/login-status-indicator"
 import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
@@ -13,6 +15,7 @@ export default async function Layout({
 }) {
 	const session = await auth()
 	const userId = session?.user?.id
+	const userRole = session?.user?.role || "CUSTOMER" // Default to customer for non-authenticated users
 
 	const cartPromise = getCartUseCase()
 	const initialNotificationsPromise = getNotificationsByUserIdUseCase()
@@ -25,8 +28,13 @@ export default async function Layout({
 			<CartProvider initialCartPromise={cartPromise}>
 				<PusherNotificationListener userId={userId || ""} />
 				<PushNotificationManagerWrapper />
-				{/* <UnderConstruction /> */}
-				{children}
+				<DeviceRestriction user={session?.user} role={userRole}>
+					{children}
+					{/* Show login status indicator for customers */}
+					{userRole === "CUSTOMER" && (
+						<LoginStatusIndicator user={session?.user} />
+					)}
+				</DeviceRestriction>
 			</CartProvider>
 		</NotificationProvider>
 	)
