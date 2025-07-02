@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import Link from "next/link"
 
 import GoogleButton from "@/app/_components/google-button"
-import LoginForm from "./_components/login-form"
+import { buttonVariants } from "@/components/ui/button"
 import {
 	Card,
 	CardContent,
@@ -12,9 +12,10 @@ import {
 	CardTitle
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
 import { AuthLeftSection } from "../_components/auth-left-section"
 import { AuthRightSection } from "../_components/auth-right-section"
+import { DemoAccounts } from "./_components/demo-accounts"
+import LoginForm from "./_components/login-form"
 
 export const metadata: Metadata = {
 	title: "Log in",
@@ -48,6 +49,7 @@ export default async function LoginPage() {
 							</div>
 						</div>
 						<LoginForm />
+						<DemoAccounts />
 					</CardContent>
 					<CardFooter>
 						<div className="mx-auto w-full text-center">
