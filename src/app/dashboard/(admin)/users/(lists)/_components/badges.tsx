@@ -131,6 +131,7 @@ export const FarmerApprovalBadge = ({
 		</Badge>
 	)
 }
+
 interface ProductListingStatusBadgeProps {
 	status: ProductListingStatus
 	className?: string
@@ -150,6 +151,14 @@ export const ProductListingStatusBadge = ({
 				return `text-green-800 ${showText ? "bg-green-100" : "bg-green-200"} hover:bg-green-200`
 			case "REJECTED":
 				return `text-red-800 ${showText ? "bg-red-100" : "bg-red-200"} hover:bg-red-200`
+			case "OUT_OF_STOCK":
+				return `text-gray-800 ${showText ? "bg-gray-100" : "bg-gray-200"} hover:bg-gray-200`
+			case "UNLISTED":
+				return `text-gray-800 ${showText ? "bg-gray-100" : "bg-gray-200"} hover:bg-gray-200`
+			case "EXPIRED":
+				return `text-orange-800 ${showText ? "bg-orange-100" : "bg-orange-200"} hover:bg-orange-200`
+			case "PAUSED":
+				return `text-blue-800 ${showText ? "bg-blue-100" : "bg-blue-200"} hover:bg-blue-200`
 			default:
 				return "bg-gray-100 text-gray-800 hover:bg-gray-200"
 		}
