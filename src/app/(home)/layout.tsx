@@ -1,6 +1,5 @@
 import { auth } from "@/auth"
 import { DeviceRestriction } from "@/components/device-restriction"
-import { LoginStatusIndicator } from "@/components/login-status-indicator"
 import { PushNotificationManagerWrapper } from "@/components/push-notification-manager-wrapper"
 import { CartProvider } from "@/contexts/cart-context"
 import { NotificationProvider } from "@/contexts/notification-context"
@@ -30,10 +29,6 @@ export default async function Layout({
 				<PushNotificationManagerWrapper />
 				<DeviceRestriction user={session?.user} role={userRole}>
 					{children}
-					{/* Show login status indicator for customers */}
-					{userRole === "CUSTOMER" && (
-						<LoginStatusIndicator user={session?.user} />
-					)}
 				</DeviceRestriction>
 			</CartProvider>
 		</NotificationProvider>
