@@ -2,6 +2,11 @@
 import { auth, unstable_update } from "@/auth"
 import { getErrorMessage } from "@/lib/handle-error"
 import { sendOTPEmail } from "@/lib/nodemailer"
+import {
+	buildRateLimitErrorMessage,
+	checkRateLimit,
+	getClientIdentifier
+} from "@/lib/rate-limit"
 import { isOtpExpired } from "@/lib/utils"
 import {
 	createEmailOtpUseCase,
@@ -16,6 +21,7 @@ import {
 	generateExpiration,
 	generateOTP
 } from "@/utils/generateVerificationCode"
+import { headers } from "next/headers"
 import { VerificationFormSchema, VerificationType } from "./types"
 
 export const verifyCode = async (
@@ -24,8 +30,25 @@ export const verifyCode = async (
 	const session = await auth()
 
 	if (!session?.user) throw new Error("Unauthorized")
+	if (session.user.id !== data.userId || session.user.email !== data.email) {
+		return { error: "Unauthorized" }
+	}
 
 	try {
+		const requestHeaders = await headers()
+		const rateLimitResult = await checkRateLimit({
+			namespace: "action-verify-email",
+			identifier: getClientIdentifier(requestHeaders),
+			limit: 20,
+			windowMs: 10 * 60_000
+		})
+
+		if (!rateLimitResult.allowed) {
+			return {
+				error: buildRateLimitErrorMessage(rateLimitResult.retryAfterSeconds)
+			}
+		}
+
 		const validations = VerificationFormSchema.safeParse(data)
 
 		if (!validations.success) {
@@ -42,7 +65,7 @@ export const verifyCode = async (
 				if (otp.otp !== data.code) {
 					throw new Error("Invalid code")
 				}
-				const [verifiedUser, _] = await Promise.all([
+				const [verifiedUser] = await Promise.all([
 					updateVerifiedUserUseCase(user!.id),
 					deleteEmailOtpByEmailUseCase(data.email)
 				])
@@ -68,6 +91,25 @@ export const verifyCode = async (
 
 export const resendCode = async (userId: string) => {
 	try {
+		const session = await auth()
+		if (!session?.user || session.user.id !== userId) {
+			return { error: "Unauthorized" }
+		}
+
+		const requestHeaders = await headers()
+		const rateLimitResult = await checkRateLimit({
+			namespace: "action-resend-verify-email",
+			identifier: getClientIdentifier(requestHeaders),
+			limit: 5,
+			windowMs: 10 * 60_000
+		})
+
+		if (!rateLimitResult.allowed) {
+			return {
+				error: buildRateLimitErrorMessage(rateLimitResult.retryAfterSeconds)
+			}
+		}
+
 		const user = await getUserByIdUseCase(userId)
 		if (!user) throw new Error("User not found")
 

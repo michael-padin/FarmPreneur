@@ -3,6 +3,11 @@ import { signIn } from "@/auth"
 import { getErrorMessage } from "@/lib/handle-error"
 import { sendOTPEmail } from "@/lib/nodemailer"
 import {
+	buildRateLimitErrorMessage,
+	checkRateLimit,
+	getClientIdentifier
+} from "@/lib/rate-limit"
+import {
 	createUserWithOTPUseCase,
 	getUserByEmailUseCase
 } from "@/use-cases/users"
@@ -11,10 +16,26 @@ import {
 	generateOTP
 } from "@/utils/generateVerificationCode"
 import { hash } from "bcryptjs"
+import { headers } from "next/headers"
 import { RegisterSchema } from "./_types"
 
 export const register = async (data: RegisterSchema) => {
 	try {
+		const requestHeaders = await headers()
+		const rateLimitResult = await checkRateLimit({
+			namespace: "action-signup",
+			identifier: getClientIdentifier(requestHeaders),
+			limit: 6,
+			windowMs: 15 * 60_000
+		})
+
+		if (!rateLimitResult.allowed) {
+			return {
+				error: buildRateLimitErrorMessage(rateLimitResult.retryAfterSeconds),
+				data: null
+			}
+		}
+
 		const hashedPassword = await hash(data.password, 10)
 
 		const existingUser = await getUserByEmailUseCase(data.email)

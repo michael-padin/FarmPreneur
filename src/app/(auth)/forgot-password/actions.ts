@@ -1,6 +1,12 @@
 "use server"
+import {
+	buildRateLimitErrorMessage,
+	checkRateLimit,
+	getClientIdentifier
+} from "@/lib/rate-limit"
 import { sendResetPasswordEmail } from "@/lib/nodemailer"
 import jwt from "jsonwebtoken"
+import { headers } from "next/headers"
 import { ForgotPasswordSchema, ForgotPasswordType } from "./types"
 
 export const sendPasswordResetEmail = async (data: ForgotPasswordType) => {
@@ -11,6 +17,20 @@ export const sendPasswordResetEmail = async (data: ForgotPasswordType) => {
 	}
 
 	try {
+		const requestHeaders = await headers()
+		const rateLimitResult = await checkRateLimit({
+			namespace: "action-forgot-password",
+			identifier: getClientIdentifier(requestHeaders),
+			limit: 4,
+			windowMs: 15 * 60_000
+		})
+
+		if (!rateLimitResult.allowed) {
+			return {
+				error: buildRateLimitErrorMessage(rateLimitResult.retryAfterSeconds)
+			}
+		}
+
 		const token = jwt.sign({ email: data.email }, process.env.JWT_SECRET!, {
 			expiresIn: "1h"
 		})

@@ -5,7 +5,13 @@ import { z } from "zod"
 import { signIn } from "@/auth"
 
 import { getErrorMessage } from "@/lib/handle-error"
+import {
+	buildRateLimitErrorMessage,
+	checkRateLimit,
+	getClientIdentifier
+} from "@/lib/rate-limit"
 import { getUserByEmailUseCase } from "@/use-cases/users"
+import { headers } from "next/headers"
 import { LoginSchema } from "./_types"
 
 export const signInWithCredentials = async (
@@ -20,6 +26,20 @@ export const signInWithCredentials = async (
 	const { email, password } = validatedFields.data
 
 	try {
+		const requestHeaders = await headers()
+		const rateLimitResult = await checkRateLimit({
+			namespace: "action-login",
+			identifier: getClientIdentifier(requestHeaders),
+			limit: 12,
+			windowMs: 10 * 60_000
+		})
+
+		if (!rateLimitResult.allowed) {
+			return {
+				error: buildRateLimitErrorMessage(rateLimitResult.retryAfterSeconds)
+			}
+		}
+
 		await signIn("credentials", {
 			email,
 			password,

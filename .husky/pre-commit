@@ -1,2 +1,12 @@
+#!/usr/bin/env sh
+set -e
 
-pnpm lint-staged
+# Git hooks run in non-interactive shells, so load nvm if available.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+if command -v pnpm >/dev/null 2>&1; then
+	pnpm lint-staged
+else
+	npx --no-install lint-staged
+fi
