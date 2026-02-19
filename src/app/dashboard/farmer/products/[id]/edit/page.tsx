@@ -4,7 +4,7 @@ import { EditProductSkeleton } from "./_components/edit-product-skeleton"
 import { EditProductFormWrapper } from "./edit-product-form-wrapper"
 
 type Params = Promise<{ id: string }>
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function EditProductPage({ params }: { params: Params }) {
 	return (

@@ -4,12 +4,12 @@ const nextConfig = {
 	eslint: {
 		ignoreDuringBuilds: true
 	},
-	experimental: {
-		ppr: "incremental",
-		serverActions: {
-			bodySizeLimit: "20mb"
-		}
-	},
+	// experimental: {
+	// 	ppr: "incremental",
+	// 	serverActions: {
+	// 		bodySizeLimit: "20mb"
+	// 	}
+	// },
 	typescript: {
 		ignoreBuildErrors: true
 	},

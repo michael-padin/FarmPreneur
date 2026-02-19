@@ -3,7 +3,7 @@ import { FPBackButton } from "@/components/fp/fp-back-button"
 import { Suspense } from "react"
 import { FormWrapper } from "./_components/form-wrapper"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function ProfileEditPage() {
 	return (

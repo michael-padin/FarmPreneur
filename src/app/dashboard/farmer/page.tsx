@@ -5,7 +5,7 @@ import { FarmerMetrics } from "./_components/farmer-metrics"
 import { GreetingsWrapper } from "./_components/greeting-wrapper"
 import { FarmerDashboardNavLink } from "./_components/nav-links"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function FarmerDashboard() {
 	return (

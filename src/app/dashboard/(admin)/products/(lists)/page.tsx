@@ -17,7 +17,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import { DataTable } from "./_components/data-table"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export const metadata: Metadata = {
 	title: "Products"

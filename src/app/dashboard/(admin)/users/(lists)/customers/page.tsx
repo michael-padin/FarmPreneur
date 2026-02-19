@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 	title: "Customers"
 }
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function CustomersPage() {
 	const customersPromise = getCustomersUseCase()

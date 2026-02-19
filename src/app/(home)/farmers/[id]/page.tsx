@@ -3,7 +3,7 @@ import { FarmerProducts } from "./_components/farmer-products"
 import { NavWrapper } from "./_components/nav-wrapper"
 import { FarmerProfile } from "./_components/profile-header"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 type Params = Promise<{ id: string }>
 

@@ -3,7 +3,7 @@ import { FPBackButton } from "@/components/fp/fp-back-button"
 import { Suspense } from "react"
 import { AddressListWrapper } from "./components/address-list-wrapper"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function FarmerAddressesPage() {
 	return (

@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import CartCheckOutListSkeleton from "./_components/checkout-list-skeleton"
 import { CheckoutWrapper } from "./_components/checkout-wrapper"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 const PickupCheckoutPage = ({
 	searchParams

@@ -5,7 +5,7 @@ import { OrderDetailsWrapper } from "./_components/order-details-wrapper"
 
 type Params = Promise<{ id: string }>
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 export default function FarmerOrderDetailsPage({ params }: { params: Params }) {
 	return (
 		<>

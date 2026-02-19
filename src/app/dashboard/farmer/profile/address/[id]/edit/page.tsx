@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import { EditAddressFormWrapper } from "./_components/edit-addres-form-wrapper"
 
 type Params = Promise<{ id: string }>
-export const experimental_ppr = true
+//export const experimental_ppr = true
 export default function CustomerEditAddressPage({
 	params
 }: {

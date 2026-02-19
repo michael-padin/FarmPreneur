@@ -3,7 +3,7 @@ import { FPBackButton } from "@/components/fp/fp-back-button"
 import { Suspense } from "react"
 import { CustomerNewAddressForm } from "./_components/new-address-form"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 export default function NewAddressPage() {
 	return (
 		<div className="h-screen">

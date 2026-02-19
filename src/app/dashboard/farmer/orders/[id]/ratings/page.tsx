@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import ReviewFormSkeleton from "../rate/_components/rate-form-skeleton.tsx"
 
 type Params = Promise<{ id: string }>
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function RatingsWrapper({ params }: { params: Params }) {
 	return (

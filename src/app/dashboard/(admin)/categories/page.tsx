@@ -13,7 +13,7 @@ import { DataTableSkeleton } from "../../_components/data-table-skeleton"
 import { AddCategoryDialog } from "./_components/add-category-dialog"
 import { DataTable } from "./_components/data-table"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function CategoriesPage() {
 	const categoriesPromise = getCategories()

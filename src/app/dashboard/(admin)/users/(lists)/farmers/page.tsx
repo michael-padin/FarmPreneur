@@ -16,7 +16,7 @@ import { DataTable } from "./_components/data-table"
 export const metadata: Metadata = {
 	title: "Farmers"
 }
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function FarmersPage() {
 	const farmerListPromise = getFarmersUseCase()

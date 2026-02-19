@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 	title: "Pending Farmers"
 }
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function UsersPage() {
 	const pendingFarmersPromise = getPendingFarmersUseCase()

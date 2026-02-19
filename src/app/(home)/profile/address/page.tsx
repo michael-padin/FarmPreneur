@@ -5,7 +5,7 @@ import { Suspense } from "react"
 import { AddressListWrapper } from "./components/address-list-wrapper"
 import { AddressSkeleton } from "./components/address-skeleton"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function ProfileAddressesPage() {
 	return (

@@ -3,7 +3,7 @@ import { FPBackButton } from "@/components/fp/fp-back-button"
 import { Suspense } from "react"
 import ChangePasswordForm from "./_components/change-password-form"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 export default function ChangePassword() {
 	return (
 		<div className="h-screen bg-secondary">

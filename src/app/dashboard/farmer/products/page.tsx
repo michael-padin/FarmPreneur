@@ -12,7 +12,7 @@ type PageProps = {
 	searchParams: Promise<SearchParams>
 }
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function ProductsPage({ searchParams }: PageProps) {
 	return (

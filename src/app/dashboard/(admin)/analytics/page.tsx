@@ -1,6 +1,6 @@
 import { AnalyticsDashboard } from "./_components/analytics-dashboard"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function AnalyticsPage() {
 	return (

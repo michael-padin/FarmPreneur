@@ -4,7 +4,7 @@ import ReviewFormSkeleton from "./_components/rate-form-skeleton.tsx"
 import { RateFormWrapper } from "./_components/rate-form-wrapper"
 
 type Params = Promise<{ id: string }>
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function RatePage({ params }: { params: Params }) {
 	return (

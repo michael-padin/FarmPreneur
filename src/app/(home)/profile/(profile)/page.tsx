@@ -8,7 +8,7 @@ import BottomNav from "../../_components/bottom-nav"
 import { CustomerProfileHeader } from "./_components/profile-header"
 import { SignOutBtn } from "./_components/sign-out-btn"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function CustomerProfilePage() {
 	const containerClasses = cn("bg-transparent text-primary")

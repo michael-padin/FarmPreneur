@@ -6,7 +6,7 @@ import { ProfileNavLinks } from "./_components/nav-links"
 import { FarmerProfile } from "./_components/profile-header"
 import { SignOutBtn } from "./_components/sign-out-btn"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function FarmerProfilePage() {
 	return (

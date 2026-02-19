@@ -16,7 +16,7 @@ import { RecentOrdersTable } from "./_components/recent-orders/data-table"
 import { TopFarmers } from "./_components/top-farmers"
 import TopFarmProducts from "./_components/top-selling-produce"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function AdminDashboardPage() {
 	const recentOrdersPromise = getRecentOrdersUseCase()

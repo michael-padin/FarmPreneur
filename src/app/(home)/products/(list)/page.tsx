@@ -6,7 +6,7 @@ import { ProductListWrapper } from "./_components/product-list-wrapper"
 import { SortTabs } from "./_components/tab-list"
 import { TopNav } from "./_components/top-nav"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 	? process.env.NEXT_PUBLIC_BASE_URL

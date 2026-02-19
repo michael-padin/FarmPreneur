@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react"
 import { Suspense } from "react"
 import { FarmerApplicationStatusWrapper } from "./farmer-application-status-wrapper"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function ApplicationStatusPage() {
 	return (

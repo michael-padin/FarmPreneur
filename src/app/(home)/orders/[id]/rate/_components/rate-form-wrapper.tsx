@@ -3,7 +3,7 @@ import { getCustomerUnReviewedOrderUseCase } from "@/use-cases/orders"
 import { RateForm } from "./rate-form"
 
 type Params = Promise<{ id: string }>
-export const experimental_ppr = true
+//export const experimental_ppr = true
 export async function RateFormWrapper({ params }: { params: Params }) {
 	const id = (await params).id
 	const userId = (await auth())?.user.id || ""

@@ -15,7 +15,7 @@ import { HomeNav } from "./_components/home-nav"
 import { LoginSignUpCTA } from "./_components/login-sign-up-cta"
 import { ProductCardSkeleton } from "./_components/product-card-skeleton"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function Home() {
 	const websiteJsonLd = generateHomeJsonLd()

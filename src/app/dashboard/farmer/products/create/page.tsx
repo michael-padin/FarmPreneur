@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { CreateProductSkeleton } from "./_components/create-product-skeleton"
 import { FormWrapper } from "./_components/form-wrapper"
 
-export const experimental_ppr = true
+//export const experimental_ppr = true
 
 export default function CreateProductPage() {
 	return (
